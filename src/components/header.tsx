@@ -43,7 +43,7 @@ interface NavigationItem {
 			))}
 			<li>
 			  <a
-				href="contact"
+				href="/contact"
 				className="px-4 py-2 bg-indigo-600 text-white rounded-full text-sm font-medium hover:bg-indigo-700 transition-colors"
 			  >
 				お問い合わせ
