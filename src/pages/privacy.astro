@@ -1,0 +1,127 @@
+---
+// src/pages/privacy-policy.astro
+import Layout from '@/layouts/layout.astro';
+import { Header } from '@/components/header';
+
+const lastUpdated = "2024年1月1日";
+---
+
+<Layout title="プライバシーポリシー | Beekle">
+  <Header client:load />
+  <main class="pt-20">
+    <!-- Hero Section -->
+    <section class="relative py-32 bg-gradient-to-br from-purple-600 to-pink-600">
+      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+      <div class="container mx-auto px-8">
+        <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-8">
+          プライバシーポリシー
+        </h1>
+        <p class="text-xl text-white/90 text-center max-w-3xl mx-auto">
+          最終更新日: {lastUpdated}
+        </p>
+      </div>
+    </section>
+
+    <!-- Policy Content -->
+    <section class="py-32">
+      <div class="container mx-auto px-8">
+        <div class="max-w-3xl mx-auto">
+          <div class="prose prose-lg max-w-none">
+            <p class="text-gray-600 mb-12">
+              株式会社Beekle（以下「当社」）は、お客様の個人情報保護の重要性を認識し、適切な管理・保護に努めています。
+              当社のプライバシーポリシーについて、以下の通り定めます。
+            </p>
+
+            <!-- 個人情報の定義 -->
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">1. 個人情報の定義</h2>
+            <p class="text-gray-600 mb-8">
+              本プライバシーポリシーにおける「個人情報」とは、生存する個人に関する情報であって、当該情報に含まれる氏名、生年月日その他の記述等により特定の個人を識別することができるもの（他の情報と容易に照合することができ、それにより特定の個人を識別することができることとなるものを含む）を指します。
+            </p>
+
+            <!-- 収集する情報 -->
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">2. 収集する情報</h2>
+            <p class="text-gray-600 mb-4">当社が収集する主な個人情報は以下の通りです：</p>
+            <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-8">
+              <li>氏名</li>
+              <li>メールアドレス</li>
+              <li>電話番号</li>
+              <li>会社名</li>
+              <li>お問い合わせ内容</li>
+              <li>その他、サービス提供に必要な情報</li>
+            </ul>
+
+            <!-- 利用目的 -->
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">3. 個人情報の利用目的</h2>
+            <p class="text-gray-600 mb-4">当社は、収集した個人情報を以下の目的で利用いたします：</p>
+            <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-8">
+              <li>お問い合わせ・ご相談への対応</li>
+              <li>サービスの提供および運営</li>
+              <li>契約の締結・履行</li>
+              <li>サービスの改善・新規サービスの開発</li>
+              <li>お知らせやメールマガジンの配信</li>
+              <li>アンケート調査の実施</li>
+              <li>法令等の遵守</li>
+            </ul>
+
+            <!-- 安全管理措置 -->
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">4. 個人情報の安全管理措置</h2>
+            <p class="text-gray-600 mb-4">
+              当社は、個人情報の漏えい、滅失またはき損を防止するために、以下のような安全管理措置を講じています：
+            </p>
+            <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-8">
+              <li>個人情報へのアクセス制御および認証機能の設置</li>
+              <li>個人情報を取り扱う従業者の教育・監督</li>
+              <li>セキュリティ対策の実施および定期的な見直し</li>
+              <li>個人情報保護に関する規程の整備および遵守の徹底</li>
+            </ul>
+
+            <!-- 第三者提供 -->
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">5. 個人情報の第三者提供</h2>
+            <p class="text-gray-600 mb-8">
+              当社は、以下のいずれかに該当する場合を除き、個人情報を第三者に提供いたしません：
+            </p>
+            <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-8">
+              <li>お客様の同意がある場合</li>
+              <li>法令に基づく場合</li>
+              <li>人の生命、身体または財産の保護のために必要がある場合</li>
+              <li>公衆衛生の向上または児童の健全な育成の推進のために特に必要がある場合</li>
+            </ul>
+
+            <!-- 開示請求 -->
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">6. 個人情報の開示・訂正・削除</h2>
+            <p class="text-gray-600 mb-8">
+              当社は、お客様ご本人からの個人情報の開示、訂正、削除等のご要請に対して、合理的な範囲で速やかに対応いたします。
+              ただし、法令等により開示等をお断りする場合もございます。
+            </p>
+
+            <!-- お問い合わせ窓口 -->
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">7. お問い合わせ窓口</h2>
+            <p class="text-gray-600 mb-4">
+              個人情報の取扱いに関するお問い合わせは、下記までご連絡ください：
+            </p>
+            <div class="bg-gray-50 p-6 rounded-lg mb-8">
+              <p class="text-gray-700 font-medium">株式会社Beekle</p>
+              <p class="text-gray-600">〒146-0082 東京都大田区池上3-7-9 304</p>
+              <p class="text-gray-600">Email: info@beekle.jp</p>
+            </div>
+
+            <!-- 改定 -->
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">8. プライバシーポリシーの改定</h2>
+            <p class="text-gray-600 mb-8">
+              当社は、法令変更や事業内容の変更等に応じて、本プライバシーポリシーを改定することがあります。
+              重要な変更がある場合は、当社ウェブサイト上でお知らせいたします。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .bg-grid-pattern {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+</style>

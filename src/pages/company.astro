@@ -1,0 +1,163 @@
+---
+// src/pages/company.astro
+import Layout from '@/layouts/layout.astro';
+import { Header } from '@/components/header';
+
+const companyInfo = {
+  name: "株式会社Beekle",
+  established: "2023年2月1日",
+  capital: "100万円",
+  ceo: "鶴岡邦夫",
+  address: "東京都大田区池上3-7-9 304",
+  email: "info@beekle.jp",
+  holiday: "土曜日、日曜日、祝日",
+  advisors: {
+    tax: "檜山税理士事務所",
+    legal: "猿渡法律事務所",
+    tech: "中村有貴",
+    labor: "TRIPORT社会保険労務士法人"
+  },
+  business: [
+    "コンピュータのソフトウェア・ハードウェアの企画、研究、開発、設計、製造、販売、保守、リース、賃貸、輸出入",
+    "インターネット等を利用した各種情報提供サービス",
+    "通信販売事業",
+    "各種業務に関するアウトソーシングの受託",
+    "人材育成・能力開発のための研修、教育",
+    "マーケティングに関する企画、調査",
+    "コンサルティング業務",
+    "前各号に附帯関連する一切の事業"
+  ]
+};
+---
+
+<Layout title="会社概要 | Beekle">
+  <Header client:load />
+  <main class="pt-20">
+    <!-- Hero Section -->
+    <section class="relative py-32 bg-gradient-to-br from-purple-600 to-pink-600">
+      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+      <div class="container mx-auto px-8">
+        <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-8">
+          COMPANY
+        </h1>
+        <p class="text-xl text-white/90 text-center max-w-3xl mx-auto leading-relaxed">
+          BeekleはWebアプリ、モバイルアプリやシステム開発の受託をしている制作チームです。
+          20名程度の小規模ながら、デザイナーからマーケター、プログラマーと様々な人が所属しており、幅広い案件を担当することが可能です。
+        </p>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-32">
+      <div class="container mx-auto px-8">
+        <div class="max-w-4xl mx-auto prose prose-lg">
+          <p class="text-gray-600 leading-relaxed mb-8">
+            Webサイトやシステムの構築については、上流から下流の工程でお手伝いさせていただきます。
+            多数のパートナーさんと共に、要件定義のヒアリングから、設計、画面設計、デザインの作成、コーディングまで一貫して引き受ける事が可能です。
+          </p>
+          <p class="text-gray-600 leading-relaxed">
+            また、「こんなサービスを作りたいんだけど、どういう技術で作れるだろう？」といったコンサルティングもお受けしております。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Culture Section -->
+    <section class="py-32 bg-gray-50">
+      <div class="container mx-auto px-8">
+        <div class="max-w-4xl mx-auto">
+          <h2 class="text-3xl font-bold text-center mb-16">会社のカルチャー</h2>
+          <div class="bg-white rounded-xl shadow-lg p-12">
+            <p class="text-xl text-gray-700 leading-relaxed text-center italic">
+              "その場に求められる最適解を物作りの場において出さないと我慢できない"
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CEO Profile Section -->
+    <section class="py-32">
+      <div class="container mx-auto px-8">
+        <div class="max-w-4xl mx-auto">
+          <h2 class="text-3xl font-bold text-center mb-16">代表プロフィール</h2>
+          <div class="bg-white rounded-xl shadow-lg p-12">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">代表 鶴岡邦夫</h3>
+            <div class="space-y-6 text-gray-600">
+              <p>
+                フロントエンド、バックエンド、インフラと一通り対応できるフルスタックエンジニア。
+                自分も案件を受ける傍でマネジメントとディレクションを行い案件を並行しています。
+              </p>
+              <p>
+                個人で事業を行う過程でITで困る人が多いと知り、Beekleを立ち上げチームで受託を開始するようになりました。
+                創業2018年、現在のbeekleとしてのチームの立ち上げが2022年になります。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Company Info Section -->
+    <section class="py-32 bg-gray-50">
+      <div class="container mx-auto px-8">
+        <div class="max-w-4xl mx-auto">
+          <h2 class="text-3xl font-bold text-center mb-16">会社概要</h2>
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="divide-y divide-gray-200">
+              {Object.entries({
+                会社名: companyInfo.name,
+                設立: companyInfo.established,
+                資本金: companyInfo.capital,
+                代表取締役: companyInfo.ceo,
+                所在地: companyInfo.address,
+                メールアドレス: companyInfo.email,
+                休日: companyInfo.holiday,
+              }).map(([key, value]) => (
+                <div class="flex py-4 px-6">
+                  <dt class="w-40 font-bold text-gray-700">{key}</dt>
+                  <dd class="flex-1 text-gray-600">{value}</dd>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Business Description -->
+          <div class="mt-12 bg-white rounded-xl shadow-lg p-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">事業内容</h3>
+            <ol class="list-decimal list-inside space-y-4 text-gray-600">
+              {companyInfo.business.map(item => (
+                <li class="leading-relaxed">{item}</li>
+              ))}
+            </ol>
+          </div>
+
+          <!-- Advisors -->
+          <div class="mt-12 bg-white rounded-xl shadow-lg p-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">顧問</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+              {Object.entries(companyInfo.advisors).map(([type, name]) => (
+                <div class="flex items-center">
+                  <dt class="w-40 font-bold text-gray-700">
+                    {type === 'tax' ? '税理士' : 
+                     type === 'legal' ? '弁護士' :
+                     type === 'tech' ? '技術顧問' : '労務顧問'}
+                  </dt>
+                  <dd class="flex-1 text-gray-600">{name}</dd>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .bg-grid-pattern {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+</style>

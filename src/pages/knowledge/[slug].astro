@@ -1,0 +1,109 @@
+---
+// src/pages/knowledge/[slug].astro
+import Layout from '@/layouts/layout.astro';
+import { Header } from '@/components/header';
+import { articleCategories, type ArticleCategory } from '@/data/article-categories';
+import { articles } from '@/data/articles';
+import { marked } from 'marked';
+
+export function getStaticPaths() {
+  const paths: { params: { slug: string; }; props: { article: { number: string; title: string; slug: string; }; category: ArticleCategory; content: string; }; }[] = [];
+  articleCategories.forEach(category => {
+    category.articles.forEach(article => {
+      paths.push({
+        params: { slug: article.slug },
+        props: { 
+          article,
+          category,
+          content: articles[article.slug]?.content || ''
+        }
+      });
+    });
+  });
+  return paths;
+}
+
+const { article, category, content } = Astro.props;
+const htmlContent = marked(content);
+---
+
+<Layout title={`${article.title} | Beekle`}>
+  <Header client:load />
+  <main class="pt-20">
+    <!-- Hero Section -->
+    <section class="relative py-32 bg-gradient-to-br from-purple-600 to-pink-600">
+      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+      <div class="container mx-auto px-8">
+        <div class="max-w-4xl mx-auto">
+          <p class="text-purple-200 font-medium mb-4">{category.title}</p>
+          <h1 class="text-4xl md:text-5xl font-bold text-white mb-8">
+            {article.title}
+          </h1>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-4xl mx-auto px-4 py-24">
+      <div class="prose prose-lg max-w-none prose-headings:text-gray-800 prose-p:text-gray-600 prose-a:text-purple-600">
+        <div set:html={htmlContent} />
+      </div>
+
+      <div class="mt-12 pt-8 border-t flex items-center justify-between">
+        <a
+          href="/knowledge"
+          class="inline-flex items-center text-purple-600 hover:text-purple-700"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          記事一覧に戻る
+        </a>
+      </div>
+    </article>
+  </main>
+</Layout>
+
+<style>
+  .bg-grid-pattern {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Tailwind Typography（prose）のカスタマイズ */
+  .prose {
+    --tw-prose-bullets: theme(colors.purple.500);
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    margin-top: 2em;
+    margin-bottom: 1em;
+  }
+
+  .prose h1:first-child {
+    margin-top: 0;
+  }
+
+  .prose ul {
+    list-style-type: disc;
+    padding-left: 1.5em;
+  }
+
+  .prose li {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+</style>

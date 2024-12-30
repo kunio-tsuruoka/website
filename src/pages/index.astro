@@ -1,11 +1,222 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// src/pages/index.astro
+// ... 他のimportは同じ
+import { ServiceCard } from '@/components/service-card';
+import { Header } from '@/components/header';
+import Layout from '@/layouts/layout.astro';  // .tsxは不要です
+import { services } from '@/data/service';
+// スタイルシートの追加（別ファイルに分けることも可能）
+// const services = [
+//   {
+//     id: "web-mobile-development",
+//     title: "WEBアプリ・モバイルアプリ開発",
+//     description: "モバイルアプリの設計・プロトタイプ制作・デザイン・構築を行います。"
+//   },
+//   {
+//     id: "prototype-poc",
+//     title: "プロトタイプ・POC作成",
+//     description: "プロダクトやサービスのアイデアをさまざまな形で具体化し、ニーズを検証。より良いアイデアへと昇華させます。"
+//   },
+//   {
+//     id: "global-service",
+//     title: "海外向けサービス・サイト作成",
+//     description: "海外向けのWebサイト・サービスのグロースハックを支援します。"
+//   }
+// ];
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Beekle - 技術を用いて人を幸せに">
+  <Header client:load />
+  <main >
+    <section class="pt-32 relative min-h-screen flex items-center justify-center overflow-hidden">
+      <!-- 動的な背景エフェクト -->
+      <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400">
+        <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+      </div>
+
+      <!-- 装飾的な要素 -->
+      <div class="absolute top-0 left-0 w-full h-full">
+        <div class="absolute top-20 left-20 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-20 right-20 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+      </div>
+
+      <!-- メインコンテンツ -->
+      <div class="container relative mx-auto px-4 text-center py-24">
+        <div class="space-y-8">
+          <!-- タイトル -->
+          <h1 class="relative">
+            <span class="block text-6xl md:text-8xl font-bold text-white mb-4 tracking-tight">
+              技術を用いて
+              <span class="relative inline-block">
+                <span class="relative z-10">人を幸せに</span>
+                <span class="absolute bottom-0 left-0 w-full h-3 bg-purple-400/50 transform -skew-x-12"></span>
+              </span>
+            </span>
+          </h1>
+
+          <!-- サブタイトル -->
+          <p class="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed backdrop-blur-sm rounded-lg p-4">
+            Beekleは、お客様のビジネスに寄り添った
+            <span class="font-semibold text-purple-200">マーケティング</span>・
+            <span class="font-semibold text-pink-200">情報設計</span>・
+            <span class="font-semibold text-orange-200">デザイン</span>・
+            <span class="font-semibold text-yellow-200">開発</span>
+            等トータルサポートを行います。
+          </p>
+
+          <!-- CTAボタン -->
+          <div class="flex justify-center gap-6 mt-12">
+          <!-- Services Section -->
+          <section id="services" class="py-20 ">
+            <div class="container mx-auto px-4">
+              <h2 class="text-3xl font-bold text-center mb-12">SERVICE</h2>
+              <div class="grid md:grid-cols-3 gap-8">
+                {services.map((service) => (
+                  <ServiceCard
+                    client:visible
+                    id={service.id}
+                    title={service.title}
+                    description={service.description}
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+            
+          </div>
+          <section>
+            <a href="contact" class="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-bold text-lg hover:bg-white/10 transition-all duration-300">
+              お問い合わせ
+            </a>
+            </section>
+        </div>
+
+
+    
+
+        <!-- スクロールダウンインジケーター -->
+        <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2">
+          <div class="animate-bounce">
+            <svg
+              class="h-12 w-12 text-white/70"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width={2}
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      
+      
+
+      <!-- 装飾的な浮遊要素 -->
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-1/4 left-1/4 w-2 h-2 bg-white rounded-full animate-float"></div>
+        <div class="absolute top-3/4 right-1/4 w-3 h-3 bg-purple-300 rounded-full animate-float-delay"></div>
+        <div class="absolute bottom-1/4 left-1/3 w-2 h-2 bg-pink-300 rounded-full animate-float-slow"></div>
+      </div>
+    </section>
+
+
+    <!-- FAQプレビューセクション -->
+<section class="mt-16 py-24 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl font-bold text-center mb-4">よくあるお悩み</h2>
+    <p class="text-gray-600 text-center mb-16 text-lg">お客様からよくいただくご相談をまとめました</p>
+    
+    <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
+      <!-- 代表的な質問を4つ程度表示 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <h4 class="font-bold text-gray-800 flex items-center mb-3">
+          <span class="text-purple-600 mr-2">Q.</span>
+          システム開発の予算が見えづらい
+        </h4>
+        <p class="text-gray-600 ml-6">
+          要件定義フェーズでの綿密な計画立案と、アジャイル開発による段階的な開発により、予算の透明性を確保します。
+        </p>
+      </div>
+      
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <h4 class="font-bold text-gray-800 flex items-center mb-3">
+          <span class="text-purple-600 mr-2">Q.</span>
+          最適な技術スタックが分からない
+        </h4>
+        <p class="text-gray-600 ml-6">
+          プロジェクトの規模、予算、期間、将来の拡張性を考慮し、実績のある技術スタックを提案いたします。
+        </p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <h4 class="font-bold text-gray-800 flex items-center mb-3">
+          <span class="text-purple-600 mr-2">Q.</span>
+          システムの安定性に不安がある
+        </h4>
+        <p class="text-gray-600 ml-6">
+          24時間365日のモニタリング体制と、自動化された障害検知システムにより、問題の早期発見・対応が可能です。
+        </p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <h4 class="font-bold text-gray-800 flex items-center mb-3">
+          <span class="text-purple-600 mr-2">Q.</span>
+          保守・運用コストが高騰している
+        </h4>
+        <p class="text-gray-600 ml-6">
+          自動化ツールの導入や運用プロセスの最適化により、保守コストを削減。クラウドの特性を活かした柔軟なリソース管理を実現します。
+        </p>
+      </div>
+    </div>
+
+    <div class="mt16 text-center">
+      <a
+        href="/knowledge"
+        class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-purple-600 border-2 border-purple-600 rounded-full hover:bg-purple-50 transition-all"
+      >
+        よくあるお悩みをもっと見る
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+    <!-- 他のセクション... -->
+  </main>
 </Layout>
+
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0) }
+    50% { transform: translateY(-20px) }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-float-delay {
+    animation: float 8s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+
+  .animate-float-slow {
+    animation: float 10s ease-in-out infinite;
+    animation-delay: 2s;
+  }
+
+  .bg-grid-pattern {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+</style>
