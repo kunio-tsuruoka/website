@@ -65,43 +65,42 @@ import Layout from '../layouts/layout.astro';
       <CTASection client:load />
     </section>
 
-    {/* よくあるお悩み */}
-    <section class="mt-16 py-24 bg-slate-50">
-      <div class="container mx-auto px-4">
-        <h2 class="text-4xl font-bold text-center mb-4">よくあるお悩み</h2>
-        <p class="text-gray-600 text-center mb-16 text-lg">お客様からよくいただくご相談をまとめました</p>
-        
-        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
-        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
-  <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-    <h4 class="font-bold text-gray-800 flex items-center mb-3">
-      <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
-      システム開発の予算が見えづらい
-    </h4>
-    <p class="text-gray-600 ml-6">
-      要件定義フェーズでの綿密な計画立案と、アジャイル開発による段階的な開発により、予算の透明性を確保します。
-    </p>
-  </div>
-  
-  <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-    <h4 class="font-bold text-gray-800 flex items-center mb-3">
-      <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
-      最適な技術スタックが分からない
-    </h4>
-    <p class="text-gray-600 ml-6">
-      プロジェクトの規模、予算、期間、将来の拡張性を考慮し、実績のある技術スタックを提案いたします。
-    </p>
-  </div>
+  {/* よくあるお悩み */}
+<section class="mt-16 py-24 bg-slate-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl font-bold text-center mb-4">よくあるお悩み</h2>
+    <p class="text-gray-600 text-center mb-16 text-lg">お客様からよくいただくご相談をまとめました</p>
+    
+    <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <h4 class="font-bold text-gray-800 flex items-center mb-3">
+          <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
+          システム開発の予算が見えづらい
+        </h4>
+        <p class="text-gray-600 ml-6">
+          要件定義フェーズでの綿密な計画立案と、アジャイル開発による段階的な開発により、予算の透明性を確保します。
+        </p>
+      </div>
+      
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <h4 class="font-bold text-gray-800 flex items-center mb-3">
+          <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
+          最適な技術スタックが分からない
+        </h4>
+        <p class="text-gray-600 ml-6">
+          プロジェクトの規模、予算、期間、将来の拡張性を考慮し、実績のある技術スタックを提案いたします。
+        </p>
+      </div>
 
-  <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-    <h4 class="font-bold text-gray-800 flex items-center mb-3">
-      <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
-      システムの安定性に不安がある
-    </h4>
-    <p class="text-gray-600 ml-6">
-      24時間365日のモニタリング体制と、自動化された障害検知システムにより、問題の早期発見・対応が可能です。
-    </p>
-  </div>
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <h4 class="font-bold text-gray-800 flex items-center mb-3">
+          <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
+          システムの安定性に不安がある
+        </h4>
+        <p class="text-gray-600 ml-6">
+          24時間365日のモニタリング体制と、自動化された障害検知システムにより、問題の早期発見・対応が可能です。
+        </p>
+      </div>
 
       <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
         <h4 class="font-bold text-gray-800 flex items-center mb-3">
@@ -113,22 +112,20 @@ import Layout from '../layouts/layout.astro';
         </p>
       </div>
     </div>
-            </div>
 
-        <div class="mt16 text-center">
-          <a
-            href="/knowledge"
-            class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-indigo-700 border border-indigo-600 rounded-full hover:bg-indigo-100 transition-all"
-          >
-            よくあるお悩みをもっと見る
-            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </a>
-        </div>
-      </div>
-    </section>
-
+    <div class="mt16 text-center">
+      <a
+        href="/knowledge"
+        class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-indigo-700 border border-indigo-600 rounded-full hover:bg-indigo-100 transition-all"
+      >
+        よくあるお悩みをもっと見る
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
     {/* スクロールダウンインジケーター */}
     <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2">
       <div class="animate-bounce">
