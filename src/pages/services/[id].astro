@@ -1,10 +1,10 @@
 ---
-import Layout from '../../layouts/layout.astro';
 import { Header } from '@/components/header';
 import { services } from '@/data/service';
+import Layout from '../../layouts/layout.astro';
 
 export function getStaticPaths() {
-  return services.map(service => ({
+  return services.map((service) => ({
     params: { id: service.id },
     props: { service },
   }));

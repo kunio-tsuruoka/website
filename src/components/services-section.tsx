@@ -1,23 +1,21 @@
-import { ServiceCard } from "./service-card"
+import { ServiceCard } from './service-card';
 
 export function ServicesSection() {
   const services = [
     {
-      title: "WEBアプリ・モバイルアプリ開発",
-      description:
-        "モバイルアプリの設計・プロトタイプ制作・デザイン・構築を行います。",
+      title: 'WEBアプリ・モバイルアプリ開発',
+      description: 'モバイルアプリの設計・プロトタイプ制作・デザイン・構築を行います。',
     },
     {
-      title: "プロトタイプ・POC作成",
+      title: 'プロトタイプ・POC作成',
       description:
-        "プロダクトやサービスのアイデアをさまざまな形で具体化し、ニーズを検証。より良いアイデアへと昇華させます。",
+        'プロダクトやサービスのアイデアをさまざまな形で具体化し、ニーズを検証。より良いアイデアへと昇華させます。',
     },
     {
-      title: "海外向けサービス・サイト作成",
-      description:
-        "海外向けのWebサイト・サービスのグロースハックを支援します。",
+      title: '海外向けサービス・サイト作成',
+      description: '海外向けのWebサイト・サービスのグロースハックを支援します。',
     },
-  ]
+  ];
 
   return (
     <section id="services" className="py-20">
@@ -29,11 +27,11 @@ export function ServicesSection() {
               id={service.title}
               key={service.title}
               title={service.title}
-              description={service.description}            />
+              description={service.description}
+            />
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }
-

@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react';
 
 export function NewsSection() {
   return (
@@ -17,6 +17,5 @@ export function NewsSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
-

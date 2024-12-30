@@ -1,22 +1,29 @@
 ---
+import { marked } from 'marked';
+import { Header } from '../../components/header';
+import { type ArticleCategory, articleCategories } from '../../data/article-categories';
+import { articles } from '../../data/articles';
 // src/pages/knowledge/[slug].astro
 import Layout from '../../layouts/layout.astro';
-import { Header } from '../../components/header';
-import { articleCategories, type ArticleCategory } from '../../data/article-categories';
-import { articles } from '../../data/articles';
-import { marked } from 'marked';
 
 export function getStaticPaths() {
-  const paths: { params: { slug: string; }; props: { article: { number: string; title: string; slug: string; }; category: ArticleCategory; content: string; }; }[] = [];
-  articleCategories.forEach(category => {
-    category.articles.forEach(article => {
+  const paths: {
+    params: { slug: string };
+    props: {
+      article: { number: string; title: string; slug: string };
+      category: ArticleCategory;
+      content: string;
+    };
+  }[] = [];
+  articleCategories.forEach((category) => {
+    category.articles.forEach((article) => {
       paths.push({
         params: { slug: article.slug },
-        props: { 
+        props: {
           article,
           category,
-          content: articles[article.slug]?.content || ''
-        }
+          content: articles[article.slug]?.content || '',
+        },
       });
     });
   });

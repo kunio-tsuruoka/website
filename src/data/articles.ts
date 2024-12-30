@@ -1,13 +1,13 @@
 interface Article {
   title: string;
-  category: "development-basics" | "tech-selection" | "modern-development" | "security";
+  category: 'development-basics' | 'tech-selection' | 'modern-development' | 'security';
   content: string;
 }
 
 export const articles: Record<string, Article> = {
-  "development-process": {
-    title: "システム開発プロセスの概要",
-    category: "development-basics",
+  'development-process': {
+    title: 'システム開発プロセスの概要',
+    category: 'development-basics',
     content: `
 # システム開発プロセスの概要
 
@@ -58,7 +58,7 @@ export const articles: Record<string, Article> = {
 - 定期的な進捗報告
 - ステークホルダーとの調整
 - チーム内の情報共有
-`
+`,
   },
   // 他の記事も同様に追加...
 };

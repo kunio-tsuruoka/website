@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import emailjs from '@emailjs/browser';
+import React, { useState } from 'react';
 
 emailjs.init(import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY);
 
@@ -54,10 +54,10 @@ const ContactForm = () => {
         </select>
       </div>
 
-       {/* 会社名 */}
-       <div>
+      {/* 会社名 */}
+      <div>
         <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="company_name">
-        会社名 <span>（任意）</span>
+          会社名 <span>（任意）</span>
         </label>
         <input
           type="text"
