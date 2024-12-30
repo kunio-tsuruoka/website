@@ -81,7 +81,7 @@ export const services: ServiceDetail[] = [
       '最新技術とベストプラクティスの採用',
       '継続的な改善と品質向上の実現',
     ],
-    
+
     faq: [
       {
         question: '開発期間はどのくらいですか？',
@@ -109,7 +109,8 @@ export const services: ServiceDetail[] = [
     painPoints: [
       {
         title: '顧客理解の不足',
-        description: 'ロイヤル顧客層の特定や顧客行動の把握が困難で、効果的なマーケティング施策を打てていない',
+        description:
+          'ロイヤル顧客層の特定や顧客行動の把握が困難で、効果的なマーケティング施策を打てていない',
       },
       {
         title: 'データ統合の課題',
@@ -121,7 +122,8 @@ export const services: ServiceDetail[] = [
       },
       {
         title: 'データ活用スキルの不足',
-        description: 'データ分析や活用のノウハウが不足しており、データの価値を最大限に引き出せていない',
+        description:
+          'データ分析や活用のノウハウが不足しており、データの価値を最大限に引き出せていない',
       },
     ],
     solutions: [

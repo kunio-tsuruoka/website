@@ -1,81 +1,135 @@
 ---
+import { CTASection } from '@/components/process-cta-section';
+import { ProcessFAQ } from '@/components/process-faq-section';
+import { ProcessHero } from '@/components/process-hero';
+import { ProcessSteps } from '@/components/process-steps';
 import { Header } from '../components/header';
-// src/pages/index.astro
-// ... 他のimportは同じ
 import { ServiceCard } from '../components/service-card';
 import { services } from '../data/service';
-import Layout from '../layouts/layout.astro'; // .tsxは不要です
-// スタイルシートの追加（別ファイルに分けることも可能）
-// const services = [
-//   {
-//     id: "web-mobile-development",
-//     title: "WEBアプリ・モバイルアプリ開発",
-//     description: "モバイルアプリの設計・プロトタイプ制作・デザイン・構築を行います。"
-//   },
-//   {
-//     id: "prototype-poc",
-//     title: "プロトタイプ・POC作成",
-//     description: "プロダクトやサービスのアイデアをさまざまな形で具体化し、ニーズを検証。より良いアイデアへと昇華させます。"
-//   },
-//   {
-//     id: "global-service",
-//     title: "海外向けサービス・サイト作成",
-//     description: "海外向けのWebサイト・サービスのグロースハックを支援します。"
-//   }
-// ];
+import Layout from '../layouts/layout.astro';
 ---
 
 <Layout title="Beekle - 技術を用いて人を幸せに">
   <Header client:load />
   <main class="">
     <section class="overflow-hidden">
-      <!-- 動的な背景エフェクト -->
-      <!-- <div>
-        <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      </div> -->
-      <!-- 装飾的な要素 -->
-      <!-- <div class="absolute top-0 left-0 w-full h-full">
-        <div class="absolute top-20 left-20 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div class="absolute bottom-20 right-20 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl animate-pulse delay-700"></div>
-      </div> -->
+      {/* 動的な背景エフェクト */}
     </section>
-    <!-- メインコンテンツ -->
-    <!-- タイトル -->
+    
+    {/* メインビジュアル */}
     <section class="h-[calc(100vh-120px)] lg:mx-12 mt-20 xl:p-24 p-12 border border-indigo-700 rounded-[48px] text-indigo-700 flex flex-col justify-center gap-16">
       <h1 class="text-7xl font-semibold leading-snug">
         売上を上げる
         <br>
         システム開発
       </h1>
-      <!-- サブタイトル -->
       <div class="text-xl">
         <p class="mb-2 font-Poppins text-2xl">Our mission :</p>
         <p>課題とニーズを深く調査し、最良の施策をご提案します。</p>
       </div>
     </section>
-    <!-- Services Section -->
+
+    {/* サービス一覧 */}
     <section id="services" class="container mx-auto px-12 py-24">
-        <h2 class="text-5xl font-Poppins text-indigo-700 mb-2">Services :</h2>
-        <p class="text-md mb-6 text-slate-500">
-          Beekleは、お客様のビジネスに寄り添ったマーケティング・情報設計・デザイン・開発等のトータルサポートを行います。
-        </p>
-        <div class="grid md:grid-cols-3 gap-8">
-          {services.map((service) => (
-            <ServiceCard
-              client:visible
-              id={service.id}
-              title={service.title}
-              description={service.description}
-            />
-          ))}
-        </div>
+      <h2 class="text-5xl font-Poppins text-indigo-700 mb-2">Services :</h2>
+      <p class="text-md mb-6 text-slate-500">
+        Beekleは、お客様のビジネスに寄り添ったマーケティング・情報設計・デザイン・開発等のトータルサポートを行います。
+      </p>
+      <div class="grid md:grid-cols-3 gap-8">
+        {services.map((service) => (
+          <ServiceCard
+            client:visible
+            id={service.id}
+            title={service.title}
+            description={service.description}
+          />
+        ))}
+      </div>
     </section>
-    <div class="text-center">
-      <a href="contact" class="px-8 py-4 border border-indigo-700 text-indigo-700 rounded-full font-normal text-lg hover:px-12 hover:py-6 hover:bg-indigo-100/20 transition-all duration-100">
-        お問い合わせはこちら
-      </a>
+
+    {/* 開発の流れ */}
+    <section id="process" class="bg-white py-24">
+      <ProcessHero client:load />
+      <div class="container mx-auto">
+        <ProcessSteps client:load />
+      </div>
+    </section>
+
+    {/* よくある質問 */}
+    <section id="faq" >
+      <ProcessFAQ client:load />
+    </section>
+
+    {/* お問い合わせCTA */}
+    <section class="py-24">
+      <CTASection client:load />
+    </section>
+
+    {/* よくあるお悩み */}
+    <section class="mt-16 py-24 bg-slate-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-4">よくあるお悩み</h2>
+        <p class="text-gray-600 text-center mb-16 text-lg">お客様からよくいただくご相談をまとめました</p>
+        
+        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
+        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
+  <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+    <h4 class="font-bold text-gray-800 flex items-center mb-3">
+      <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
+      システム開発の予算が見えづらい
+    </h4>
+    <p class="text-gray-600 ml-6">
+      要件定義フェーズでの綿密な計画立案と、アジャイル開発による段階的な開発により、予算の透明性を確保します。
+    </p>
+  </div>
+  
+  <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+    <h4 class="font-bold text-gray-800 flex items-center mb-3">
+      <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
+      最適な技術スタックが分からない
+    </h4>
+    <p class="text-gray-600 ml-6">
+      プロジェクトの規模、予算、期間、将来の拡張性を考慮し、実績のある技術スタックを提案いたします。
+    </p>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+    <h4 class="font-bold text-gray-800 flex items-center mb-3">
+      <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
+      システムの安定性に不安がある
+    </h4>
+    <p class="text-gray-600 ml-6">
+      24時間365日のモニタリング体制と、自動化された障害検知システムにより、問題の早期発見・対応が可能です。
+    </p>
+  </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <h4 class="font-bold text-gray-800 flex items-center mb-3">
+          <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
+          保守・運用コストが高騰している
+        </h4>
+        <p class="text-gray-600 ml-6">
+          自動化ツールの導入や運用プロセスの最適化により、保守コストを削減。クラウドの特性を活かした柔軟なリソース管理を実現します。
+        </p>
+      </div>
     </div>
-    <!-- スクロールダウンインジケーター -->
+            </div>
+
+        <div class="mt16 text-center">
+          <a
+            href="/knowledge"
+            class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-indigo-700 border border-indigo-600 rounded-full hover:bg-indigo-100 transition-all"
+          >
+            よくあるお悩みをもっと見る
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    {/* スクロールダウンインジケーター */}
     <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2">
       <div class="animate-bounce">
         <svg
@@ -93,76 +147,6 @@ import Layout from '../layouts/layout.astro'; // .tsxは不要です
         </svg>
       </div>
     </div>
-      <!-- 装飾的な浮遊要素 -->
-      <!-- <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute top-1/4 left-1/4 w-2 h-2 bg-white rounded-full animate-float"></div>
-        <div class="absolute top-3/4 right-1/4 w-3 h-3 bg-purple-300 rounded-full animate-float-delay"></div>
-        <div class="absolute bottom-1/4 left-1/3 w-2 h-2 bg-pink-300 rounded-full animate-float-slow"></div>
-      </div> -->
-
-    <!-- FAQプレビューセクション -->
-  <section class="mt-16 py-24 bg-slate-50">
-    <div class="container mx-auto px-4">
-      <h2 class="text-4xl font-bold text-center mb-4">よくあるお悩み</h2>
-      <p class="text-gray-600 text-center mb-16 text-lg">お客様からよくいただくご相談をまとめました</p>
-      
-      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
-        <!-- 代表的な質問を4つ程度表示 -->
-        <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-          <h4 class="font-bold text-gray-800 flex items-center mb-3">
-            <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
-            システム開発の予算が見えづらい
-          </h4>
-          <p class="text-gray-600 ml-6">
-            要件定義フェーズでの綿密な計画立案と、アジャイル開発による段階的な開発により、予算の透明性を確保します。
-          </p>
-        </div>
-        
-        <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-          <h4 class="font-bold text-gray-800 flex items-center mb-3">
-            <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
-            最適な技術スタックが分からない
-          </h4>
-          <p class="text-gray-600 ml-6">
-            プロジェクトの規模、予算、期間、将来の拡張性を考慮し、実績のある技術スタックを提案いたします。
-          </p>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-          <h4 class="font-bold text-gray-800 flex items-center mb-3">
-            <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
-            システムの安定性に不安がある
-          </h4>
-          <p class="text-gray-600 ml-6">
-            24時間365日のモニタリング体制と、自動化された障害検知システムにより、問題の早期発見・対応が可能です。
-          </p>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-          <h4 class="font-bold text-gray-800 flex items-center mb-3">
-            <span class="font-Poppins text-indigo-600 mr-2 font-normal">Q.</span>
-            保守・運用コストが高騰している
-          </h4>
-          <p class="text-gray-600 ml-6">
-            自動化ツールの導入や運用プロセスの最適化により、保守コストを削減。クラウドの特性を活かした柔軟なリソース管理を実現します。
-          </p>
-        </div>
-      </div>
-
-      <div class="mt16 text-center">
-        <a
-          href="/knowledge"
-          class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-indigo-700 border border-indigo-600 rounded-full hover:bg-indigo-100 transition-all"
-        >
-          よくあるお悩みをもっと見る
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </a>
-      </div>
-    </div>
-  </section>
-    <!-- 他のセクション... -->
   </main>
 </Layout>
 
