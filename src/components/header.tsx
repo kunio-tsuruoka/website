@@ -7,6 +7,7 @@ interface NavigationItem {
   const navigation: NavigationItem[] = [
 	{ label: "HOME", href: "/" },
 	{ label: "開発ガイド", href: "/knowledge" },
+	{ label: "会社概要", href: "/company" },
 	{ label: "CONTACT", href: "/contact" }
   ];
   
