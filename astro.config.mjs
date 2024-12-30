@@ -9,6 +9,8 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
+        "@components": path.resolve(path.dirname(''), './src/components'),
+        "@assets": path.resolve(path.dirname(''), './src/assets'),
         '@': resolve('./src'), // Resolve '@' as an alias to the 'src' directory
       },
     },
