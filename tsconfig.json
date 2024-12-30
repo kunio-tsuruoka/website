@@ -2,7 +2,6 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "strict": true,
-    "charset": "utf8",
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
