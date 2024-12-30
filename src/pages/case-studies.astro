@@ -1,15 +1,183 @@
 ---
-import { CTASection } from '../components/CTASection';
-import { CaseHero } from '../components/CaseHero';
-import { CaseStudyList } from '../components/CaseStudyList';
+import { Header } from '../components/header';
 // src/pages/case-studies.astro
-import Layout from '../layouts/Layout.astro';
+import Layout from '../layouts/layout.astro';
+
+const cases = [
+  {
+    title: 'ECサイトの売上130%達成',
+    industry: 'アパレル EC',
+    scale: '年商10億円規模',
+    period: '3ヶ月',
+    challenge: {
+      title: '課題',
+      description:
+        '在庫管理の非効率性と顧客データの活用不足により、機会損失が発生していました。特に季節商品の在庫回転率が低く、利益率に影響を与えていました。',
+      points: [
+        '在庫管理の手動オペレーションによる非効率',
+        'リピート顧客の離脱率上昇',
+        '季節商品の在庫偏り',
+      ],
+    },
+    solution: {
+      title: '解決策',
+      description: '在庫管理システムの自動化と顧客データ分析基盤の構築を実施。',
+      points: [
+        '在庫管理システムのクラウド化と自動発注の導入',
+        'リアルタイムな売上/在庫分析ダッシュボード構築',
+        'RFM分析に基づくパーソナライズドマーケティング実装',
+      ],
+    },
+    results: [
+      { label: '売上向上', value: '130%' },
+      { label: '在庫回転率改善', value: '40%' },
+      { label: '運用コスト削減', value: '50%' },
+    ],
+  },
+  {
+    title: '人材マッチングシステムの開発',
+    industry: 'HR Tech',
+    scale: 'スタートアップ（従業員20名）',
+    period: '6ヶ月',
+    challenge: {
+      title: '課題',
+      description:
+        'マッチングの精度が低く、手動での確認作業が多発。スケーラビリティに課題がありました。',
+      points: [
+        'マッチングアルゴリズムの精度不足',
+        'システムの拡張性の限界',
+        '管理画面の使いづらさ',
+      ],
+    },
+    solution: {
+      title: '解決策',
+      description: 'AIを活用したマッチングエンジンの刷新と管理システムの再構築。',
+      points: [
+        '機械学習モデルによるマッチング精度向上',
+        'マイクロサービスアーキテクチャの採用',
+        'React/Nextjsによる管理画面の刷新',
+      ],
+    },
+    results: [
+      { label: 'マッチング精度', value: '85%向上' },
+      { label: '業務効率化', value: '70%改善' },
+      { label: '月間マッチング数', value: '3倍増' },
+    ],
+  },
+];
 ---
 
-<Layout title="導入事例 | CDP構築サービス">
-  <main>
-    <CaseHero client:load />
-    <CaseStudyList client:load />
-    <CTASection client:load />
+<Layout title="導入事例 | Beekle">
+  <Header client:load />
+  <main class="pt-20">
+    <section class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl font-bold text-gray-900 sm:text-5xl">
+          導入事例
+        </h1>
+        <p class="mt-4 text-xl text-gray-600">
+          お客様の課題解決と事業成長をサポートした実績をご紹介します
+        </p>
+      </div>
+
+      <div class="space-y-24">
+        {cases.map((case_study, index) => (
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="p-8 lg:p-12">
+              <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                {/* ヘッダー情報 */}
+                <div class="lg:col-span-12 mb-8">
+                  <h2 class="text-3xl font-bold text-gray-900">{case_study.title}</h2>
+                  <div class="mt-4 flex flex-wrap gap-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
+                      {case_study.industry}
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
+                      {case_study.scale}
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
+                      開発期間：{case_study.period}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 課題と解決策 */}
+                <div class="lg:col-span-6">
+                  <div class="mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">{case_study.challenge.title}</h3>
+                    <p class="text-gray-600 mb-4">{case_study.challenge.description}</p>
+                    <ul class="space-y-2">
+                      {case_study.challenge.points.map((point) => (
+                        <li class="flex items-start">
+                          <span class="flex-shrink-0 h-6 w-6 text-indigo-600">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                          </span>
+                          <span class="ml-2 text-gray-600">{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="lg:col-span-6">
+                  <div class="mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">{case_study.solution.title}</h3>
+                    <p class="text-gray-600 mb-4">{case_study.solution.description}</p>
+                    <ul class="space-y-2">
+                      {case_study.solution.points.map((point) => (
+                        <li class="flex items-start">
+                          <span class="flex-shrink-0 h-6 w-6 text-indigo-600">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                          </span>
+                          <span class="ml-2 text-gray-600">{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* 成果 */}
+                <div class="lg:col-span-12">
+                  <div class="border-t pt-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">導入効果</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {case_study.results.map((result) => (
+                        <div class="bg-gray-50 rounded-lg p-6 text-center">
+                          <div class="text-4xl font-bold text-indigo-600">{result.value}</div>
+                          <div class="mt-2 text-sm text-gray-600">{result.label}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA セクション */}
+      <div class="mt-24 text-center">
+        <h2 class="text-3xl font-bold text-gray-900">お客様の事業成長をサポートします</h2>
+        <p class="mt-4 text-xl text-gray-600">
+          まずは無料相談からお気軽にお問い合わせください
+        </p>
+        <div class="mt-8">
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-indigo-600 border border-transparent rounded-full hover:bg-indigo-700"
+          >
+            無料相談を予約する
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
   </main>
 </Layout>
