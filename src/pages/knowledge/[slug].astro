@@ -1,9 +1,9 @@
 ---
 // src/pages/knowledge/[slug].astro
-import Layout from '@/layouts/layout.astro';
-import { Header } from '@/components/header';
-import { articleCategories, type ArticleCategory } from '@/data/article-categories';
-import { articles } from '@/data/articles';
+import Layout from '../../layouts/layout.astro';
+import { Header } from '../../components/header';
+import { articleCategories, type ArticleCategory } from '../../data/article-categories';
+import { articles } from '../../data/articles';
 import { marked } from 'marked';
 
 export function getStaticPaths() {
