@@ -1,0 +1,15 @@
+---
+import { CTASection } from '../components/CTASection';
+import { CaseHero } from '../components/CaseHero';
+import { CaseStudyList } from '../components/CaseStudyList';
+// src/pages/case-studies.astro
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="導入事例 | CDP構築サービス">
+  <main>
+    <CaseHero client:load />
+    <CaseStudyList client:load />
+    <CTASection client:load />
+  </main>
+</Layout>

@@ -53,8 +53,8 @@ export default {
       },
     },
     fontFamily: {
-        Poppins: ['Poppins', 'sans-serif'],
-        NotoSansJP: ['Noto Sans JP', 'sans-serif'],
+      Poppins: ['Poppins', 'sans-serif'],
+      NotoSansJP: ['Noto Sans JP', 'sans-serif'],
     },
   },
   plugins: [require('tailwindcss-animate')],
