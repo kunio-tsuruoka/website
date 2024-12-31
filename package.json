@@ -8,8 +8,15 @@
     "preview": "astro preview",
     "astro": "astro",
     "format": "biome format --write .",
+    "format:file": "biome format",
     "lint": "biome lint .",
-    "check": "biome check --apply ."
+    "lint:file": "biome lint",
+    "check": "biome check --apply .",
+    "check:file": "biome check",
+    "check:all": "biome check .",
+    "check:rules": "biome check --rules",
+    "check:ci": "biome ci .",
+    "biome:init": "biome init"
   },
   "dependencies": {
     "@astrojs/react": "^4.1.2",
@@ -21,6 +28,7 @@
     "biome": "^0.2.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^11.15.0",
     "lucide-react": "^0.469.0",
     "marked": "^15.0.4",
     "react": "^19.0.0",
