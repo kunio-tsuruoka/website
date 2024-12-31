@@ -93,18 +93,7 @@ export const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-12 left-1/2 transform -translate-x-1/2 cursor-pointer"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-        onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
-      >
-        <div className="flex flex-col items-center text-indigo-600/70">
-          <span className="text-sm mb-2">Scroll</span>
-          <ChevronDown className="h-6 w-6" />
-        </div>
-      </motion.div>
+      
     </div>
   );
 };
