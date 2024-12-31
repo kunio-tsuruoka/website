@@ -7,6 +7,7 @@ import { Header } from '../components/header';
 import { ServiceCard } from '../components/service-card';
 import { services } from '../data/service';
 import Layout from '../layouts/layout.astro';
+import { HeroSection } from '@/components/hero-section';
 ---
 
 <Layout title="Beekle - 技術を用いて人を幸せに">
@@ -17,17 +18,7 @@ import Layout from '../layouts/layout.astro';
     </section>
     
     {/* メインビジュアル */}
-    <section class="h-[calc(100vh-120px)] lg:mx-12 mt-20 xl:p-24 p-12 border border-indigo-700 rounded-[48px] text-indigo-700 flex flex-col justify-center gap-16">
-      <h1 class="text-7xl font-semibold leading-snug">
-        売上を上げる
-        <br>
-        システム開発
-      </h1>
-      <div class="text-xl">
-        <p class="mb-2 font-Poppins text-2xl">Our mission :</p>
-        <p>課題とニーズを深く調査し、最良の施策をご提案します。</p>
-      </div>
-    </section>
+    <HeroSection client:load />
 
     {/* サービス一覧 */}
     <section id="services" class="container mx-auto px-12 py-24">
