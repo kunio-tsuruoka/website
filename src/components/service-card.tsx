@@ -27,6 +27,7 @@ export function ServiceCard({ id, title, description }: ServiceCardProps) {
               stroke="white"
               className="size-6"
             >
+              <title>view more</title>
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"

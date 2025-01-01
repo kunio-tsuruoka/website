@@ -1,3 +1,4 @@
+
 import { Database, LineChart, PhoneCall, Settings, Users } from 'lucide-react';
 
 const processSteps = [
@@ -54,7 +55,7 @@ export const ProcessSteps = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="space-y-16">
           {processSteps.map((step, idx) => (
-            <div key={idx} className="relative pb-8">
+            <div key={step.title} className="relative pb-8">
               {idx !== processSteps.length - 1 && (
                 <div
                   className="absolute left-8 top-8 h-full w-0.5 bg-gray-200"
@@ -70,8 +71,8 @@ export const ProcessSteps = () => {
                   <p className="mt-1 text-sm text-gray-500">所要期間：{step.duration}</p>
                   <p className="mt-2 text-gray-600">{step.description}</p>
                   <ul className="mt-4 space-y-2">
-                    {step.details.map((detail, idx) => (
-                      <li key={idx} className="flex items-center text-gray-500">
+                    {step.details.map((detail) => (
+                      <li key={detail} className="flex items-center text-gray-500">
                         <span className="mr-2 h-1.5 w-1.5 rounded-full bg-indigo-600" />
                         {detail}
                       </li>
