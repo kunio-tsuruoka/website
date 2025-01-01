@@ -121,8 +121,8 @@ export const CaseStudyList = () => {
                   <div>
                     <h3 className="text-lg font-semibold mb-4">{study.challenge.title}</h3>
                     <ul className="space-y-2">
-                      {study.challenge.points.map((point, i) => (
-                        <li key={i} className="flex items-start">
+                      {study.challenge.points.map((point) => (
+                        <li key={point} className="flex items-start">
                           <span className="flex-shrink-0 h-5 w-5 text-red-500">⚠</span>
                           <span className="ml-2">{point}</span>
                         </li>
@@ -132,8 +132,8 @@ export const CaseStudyList = () => {
                   <div>
                     <h3 className="text-lg font-semibold mb-4">{study.solution.title}</h3>
                     <ul className="space-y-2">
-                      {study.solution.points.map((point, i) => (
-                        <li key={i} className="flex items-start">
+                      {study.solution.points.map((point) => (
+                        <li key={point} className="flex items-start">
                           <span className="flex-shrink-0 h-5 w-5 text-green-500">✓</span>
                           <span className="ml-2">{point}</span>
                         </li>
@@ -145,8 +145,8 @@ export const CaseStudyList = () => {
                 <div className="mt-8">
                   <h3 className="text-lg font-semibold mb-4">導入効果</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {study.results.map((result, i) => (
-                      <div key={i} className="bg-gray-50 p-4 rounded-lg">
+                    {study.results.map((result) => (
+                      <div key={result.detail} className="bg-gray-50 p-4 rounded-lg">
                         <div className="text-2xl font-bold text-blue-600">{result.improvement}</div>
                         <div className="text-sm font-medium text-gray-900">{result.metric}</div>
                         <div className="mt-1 text-sm text-gray-500">{result.detail}</div>
