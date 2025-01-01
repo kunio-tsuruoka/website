@@ -9,18 +9,18 @@ export const HeroSection = () => {
     <div className="relative min-h-[calc(100vh-120px)] lg:mx-12 mt-20">
       {/* Background with subtle pattern */}
       <div className="absolute inset-0 bg-white rounded-[48px] overflow-hidden">
-        <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
+        <div className="absolute inset-0 bg-grid-pattern opacity-20" />
 
         {/* Floating shapes with lighter colors */}
         <motion.div
           className="absolute top-20 right-20 w-32 h-32 bg-indigo-100/40 rounded-full blur-xl"
           animate={{ y: [-20, 20], scale: [1, 1.1] }}
-          transition={{ duration: 5, repeat: Infinity, repeatType: 'reverse' }}
+          transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY, repeatType: 'reverse' }}
         />
         <motion.div
           className="absolute bottom-40 left-40 w-48 h-48 bg-indigo-50/50 rounded-full blur-xl"
           animate={{ y: [20, -20], scale: [1.1, 1] }}
-          transition={{ duration: 7, repeat: Infinity, repeatType: 'reverse' }}
+          transition={{ duration: 7, repeat: Number.POSITIVE_INFINITY, repeatType: 'reverse' }}
         />
       </div>
 
@@ -55,6 +55,7 @@ export const HeroSection = () => {
               className="relative grid grid-cols-1 md:grid-cols-[1fr,auto] gap-8 items-center"
             >
               <div className="relative">
+                {/* biome-ignore lint/style/useSelfClosingElements: <explanation> */}
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-600/20 to-indigo-600/0"></div>
                 <p className="pl-6 text-2xl text-indigo-900 leading-relaxed">
                   <span className="font-medium">課題とニーズ</span>を深く調査し、
