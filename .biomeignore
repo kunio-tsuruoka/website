@@ -2,3 +2,5 @@ dist/
 node_modules/
 *.generated.*
 dist/_astro/*.js
+./dist/*
+astro.config.mjs

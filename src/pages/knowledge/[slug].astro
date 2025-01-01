@@ -15,7 +15,9 @@ export function getStaticPaths() {
       content: string;
     };
   }[] = [];
+  // biome-ignore lint/complexity/noForEach: <explanation>
   articleCategories.forEach((category) => {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     category.articles.forEach((article) => {
       paths.push({
         params: { slug: article.slug },

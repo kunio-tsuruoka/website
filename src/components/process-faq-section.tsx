@@ -32,8 +32,8 @@ export const ProcessFAQ = () => {
         </div>
         <div className="mt-12">
           <dl className="space-y-10">
-            {faqs.map((faq, idx) => (
-              <div key={idx}>
+            {faqs.map((faq) => (
+              <div key={faq.question}>
                 <dt className="text-lg font-semibold text-gray-900">{faq.question}</dt>
                 <dd className="mt-2 text-gray-500">{faq.answer}</dd>
               </div>

@@ -19,12 +19,15 @@ export function Header() {
         {/* ロゴ部分 */}
         <a href="/" className="flex items-center space-x-2">
           <div className="flex items-center space-x-2">
-            <svg
+
+            <svg   
+              aria-label="Your SVG Description"
               className="w-10 h-10"
               viewBox="0 0 100 100"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
+              <title>logo</title>
               <circle cx="50" cy="50" r="45" fill="#6366F1" />
               <circle cx="50" cy="50" r="35" fill="white" opacity="0.3" />
               <circle cx="50" cy="50" r="25" fill="white" opacity="0.5" />
