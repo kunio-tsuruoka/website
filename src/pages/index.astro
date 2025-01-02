@@ -8,6 +8,7 @@ import { ServiceCard } from '../components/service-card';
 import { services } from '../data/service';
 import Layout from '../layouts/layout.astro';
 import { HeroSection } from '@/components/hero-section';
+import ContactForm from '@/components/contact-form';
 ---
 
 <Layout title="Beekle - 技術を用いて人を幸せに">
@@ -117,6 +118,13 @@ import { HeroSection } from '@/components/hero-section';
     </div>
   </div>
 </section>
+<section class="py-24">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl font-bold text-center mb-6">お問い合わせ</h2>
+    <ContactForm />
+  </div>
+</section>
+
     {/* スクロールダウンインジケーター */}
     <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2">
       <div class="animate-bounce">
