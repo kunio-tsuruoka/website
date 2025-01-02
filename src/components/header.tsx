@@ -18,7 +18,7 @@ export function Header() {
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* ロゴ部分 */}
         <a href="/" className="flex items-center space-x-2">
-          <img src="logo.png" className="h-9 w-auto" />
+          <img src="/logo.png" alt="logo" className="h-9 w-auto" />
         </a>
 
         {/* ナビゲーションメニュー */}
