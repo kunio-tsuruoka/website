@@ -7,18 +7,17 @@
     "enabled": true,
     "rules": {
       "recommended": true
-    }
-    ,
-    "ignore": [".astro","dist/**","astro.config.mjs", "node_modules/**", "*.generated.*"]
+    },
+    "ignore": [".astro", "dist/**", "astro.config.mjs", "node_modules/**", "*.generated.*"]
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2,
     "lineWidth": 100,
-    "ignore": [".astro","dist/**", "node_modules/**", "*.generated.*"]
+    "ignore": [".astro", "dist/**", "node_modules/**", "*.generated.*"]
   },
-  
+
   "javascript": {
     "formatter": {
       "quoteStyle": "single",

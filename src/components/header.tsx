@@ -19,8 +19,7 @@ export function Header() {
         {/* ロゴ部分 */}
         <a href="/" className="flex items-center space-x-2">
           <div className="flex items-center space-x-2">
-
-            <svg   
+            <svg
               aria-label="Your SVG Description"
               className="w-10 h-10"
               viewBox="0 0 100 100"

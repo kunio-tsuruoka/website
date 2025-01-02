@@ -1,4 +1,3 @@
-
 import { Database, LineChart, PhoneCall, Settings, Users } from 'lucide-react';
 
 const processSteps = [
