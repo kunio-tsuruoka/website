@@ -1,0 +1,105 @@
+---
+import Layout from '@/layouts/layout.astro';
+import { Header } from '../components/header';
+import MemberCard from '../components/member-card';
+
+interface Member {
+  id: number;
+  name: string;
+  position: string;
+  description: string;
+}
+
+const members: Member[] = [
+  {
+    id: 1,
+    name: "鶴岡邦夫",
+    position: "代表取締役",
+    description: "【略歴】フリーでエンジニアとしてシステム開発をしてから起業いたしました。\n【得意分野】システム開発・データ分析\n【キャリア】新規事業に特化して、0からリサーチして要件定義してデザインに落とし込みアプリにするという事をしていました。営業マーケティング(プロモーション以外)ビズデブ　pmは一通り押さえています。0-1をやっていましたが、1-100も担当しています。\n【その他】日本語と英語のバイリンガルです。ロシア語も少し話せます。性格は好奇心が旺盛でいつも何か調べているか試してみたりしています。無駄にIQが高いです。カメラアイなので耳がポンコツです"
+  },
+    {
+    id: 2,
+    name: "中村 有貴",
+    position: "外部技術顧問",
+    description: "【経歴】中小規模のSIerからキャリアをスタートし、10年以上エンジニア・プログラマーとして従事。現在は香港の日系企業に所属しながら、個人事業として複数の日本企業の開発に参画。若手エンジニアのメンター活動も行っています。\n【専門技術】\n【フロントエンド】Bootstrap, Bulma, Tailwind CSS, Sass, PostCSS, Vue.js, Nuxt.js, Gatsby.js, Node.js\n【バックエンド】PHP (Laravel/Symfony/Zend Framework), Ruby (Ruby on Rails), Java (Struts/Seaser2/Spring), MySQL/MariaDB, Redis/Memcache\n【インフラ】AWS, Netlify, Sakura/XServer/お名前.com, Vultr\n【開発ツール】PhpStorm, Postman, Visual Studio Code\n【学習中】Golang, TypeScript, React"
+  },
+  {
+    id: 3,
+    name: "佐藤 瑛隆",
+    position: "データサイエンティスト",
+    description: "【学歴】京都大学理学部理学科 数理科学系 卒業、京都大学理学研究科 数学・数理解析専攻 修了\n【職歴】株式会社RUTILEA（業務委託）→ アクセンチュア株式会社\n【趣味】音楽(ジャズ)、ドラム、ピアノ(初心者)、DTM、スプラトゥーン\n【得意なこと】数学・統計を活かしたデータ分析、Python/Jupyter Notebookでのデータ処理、教員免許(専修・中高・数学)保有\n【やりたいこと】エンジニアリング(Python)、データ分析、MLモデリング、教育・講師(統計・ML/プログラミング)、検証結果のレポーティング"
+  },
+  {
+    id: 4,
+    name: "五十川 奈菜",
+    position: "デザイナー",
+    description: "【職歴】デザイン&開発会社 営業、デザイン制作会社 デザイナー、フリーランス（Webデザイン・動画制作）、株式会社Beekle デザイナー\n【専門】UI/UXデザイン・プロダクト設計・フロントエンド・バックエンド開発\n【趣味】旅行、バンド(シンセサイザー担当)、マインクラフト、3DCG / 動画\n【得意なこと】情報整理、黙々と作業すること、大体なんでも制作できます\n【苦手なこと】朝起きること、時間管理、マルチタスク\n"
+  },
+  {
+    id: 5,
+    name: "金子 ひろむ",
+    position: "エンジニア",
+    description: "【専門】バックエンドとフロントエンド開発\n【趣味】釣り"
+  },
+];
+---
+
+<Layout title="メンバー紹介 | Beekle">
+  <Header client:load />
+  <main class="pt-20">
+    <!-- ヒーローセクション -->
+    <section class="relative py-32 bg-gradient-to-br from-indigo-600 to-blue-600">
+      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+      <div class="container mx-auto px-8">
+        <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-8">
+          MEMBERS
+        </h1>
+        <p class="text-xl text-white/90 text-center max-w-3xl mx-auto leading-relaxed">
+          Beekleの開発チームをご紹介します。多様な専門知識と経験を持つ私たちが、お客様のビジネス成長を全力でサポートします。
+        </p>
+      </div>
+    </section>
+
+    <!-- メンバー紹介セクション -->
+    <section class="py-32 bg-gray-50">
+      <div class="container mx-auto px-8">
+        <h2 class="text-3xl font-bold text-center mb-16">メンバー紹介</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+          {members.map((member) => (
+            <MemberCard
+              name={member.name}
+              position={member.position}
+              description={member.description}
+              client:load
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 採用情報セクション -->
+    <section class="bg-indigo-50 py-24">
+      <div class="container mx-auto px-8 text-center">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">一緒に働きませんか？</h2>
+        <p class="text-lg text-gray-700 max-w-3xl mx-auto mb-10">
+          Beekleでは、共に成長し革新的なシステム開発に取り組む仲間を募集しています。
+          私たちのビジョンに共感いただける方は、ぜひご応募ください。
+        </p>
+        <a 
+          href="/contact" 
+          class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
+        >
+          採用情報を見る
+        </a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .bg-grid-pattern {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+</style>
