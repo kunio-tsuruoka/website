@@ -8,7 +8,7 @@ export function Header() {
   }
   const navigation: NavigationItem[] = [
     { label: 'HOME', href: '/' },
-    { label: '開発ガイド', href: '/knowledge' },
+    // { label: '開発ガイド', href: '/knowledge' },
     { label: '会社概要', href: '/company' },
     { label: '導入事例', href: '/case-studies' },
     { label: 'メンバー紹介', href: '/members' },
