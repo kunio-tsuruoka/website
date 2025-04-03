@@ -1,0 +1,15 @@
+---
+import Layout from '../layouts/layout.astro';
+import TestimonialSection from '../components/testimonial-section';
+import { Header } from '../components/header';
+---
+
+<Layout title="お客様の声 | Beekle">
+  <Header client:load />
+  <main class="pt-20">
+    <TestimonialSection client:load />
+    
+    <!-- 他のセクションがあればここに追加 -->
+  </main>
+</Layout>
+

@@ -12,6 +12,7 @@ export function Header() {
     { label: '会社概要', href: '/company' },
     { label: '導入事例', href: '/case-studies' },
     { label: 'メンバー紹介', href: '/members' },
+    { label: 'お客様の声', href: '/testimonial' },
   ];
 
   return (
