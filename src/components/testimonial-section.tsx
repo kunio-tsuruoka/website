@@ -109,14 +109,8 @@ const TestimonialSection: React.FC = () => {
   );
 
   return (
-    <section className="py-8 bg-gray-50">
+    <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold mb-2">お客様の声</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Beekleをご利用いただいているお客様からの貴重なフィードバックをご紹介します。皆様の満足がサービス向上の原動力です。
-          </p>
-        </div>
 
         {/* PC表示用グリッド */}
         <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">

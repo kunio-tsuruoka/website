@@ -11,6 +11,7 @@ export function Header() {
     // { label: '開発ガイド', href: '/knowledge' },
     { label: '会社概要', href: '/company' },
     { label: '導入事例', href: '/case-studies' },
+    { label: '開発問題事例', href: '/development-issues' },
     { label: 'メンバー紹介', href: '/members' },
     { label: 'お客様の声', href: '/testimonial' },
   ];
