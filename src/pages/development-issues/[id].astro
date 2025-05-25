@@ -1,0 +1,174 @@
+---
+import { Header } from '../../components/header';
+import Layout from '../../layouts/layout.astro';
+import { developmentIssues } from '../../data/development-issues';
+import type { DevelopmentIssue } from '../../data/development-issues';
+
+export function getStaticPaths() {
+  return developmentIssues.map((issue) => ({
+    params: { id: issue.id },
+    props: { issue },
+  }));
+}
+
+const { issue } = Astro.props as { issue: DevelopmentIssue };
+
+const categoryColors = {
+  'プロジェクト管理': 'bg-blue-100 text-blue-800',
+  '技術的課題': 'bg-purple-100 text-purple-800',
+  '組織・プロセス': 'bg-green-100 text-green-800',
+  '品質・保守': 'bg-orange-100 text-orange-800',
+};
+---
+
+<Layout title={`${issue.title} | システム開発問題ケーススタディ | Beekle`}>
+  <Header client:load />
+  <main class="pt-20">
+    <section class="bg-gray-50 py-12">
+      <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+        <nav class="mb-8">
+          <a href="/development-issues" class="text-indigo-600 hover:text-indigo-700 flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            ケーススタディ一覧に戻る
+          </a>
+        </nav>
+
+        <article class="bg-white rounded-2xl shadow-lg p-8 lg:p-12">
+          <header class="mb-8">
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${categoryColors[issue.category]}`}>
+                {issue.category}
+              </span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
+                {issue.industry}
+              </span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
+                {issue.scale}
+              </span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
+                対応期間：{issue.period}
+              </span>
+            </div>
+            <h1 class="text-3xl lg:text-4xl font-bold text-gray-900">
+              {issue.title}
+            </h1>
+          </header>
+
+          <section class="space-y-8">
+            <div class="bg-red-50 rounded-xl p-6">
+              <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                <span class="text-red-600 mr-2">⚠️</span>
+                {issue.issue.title}
+              </h2>
+              <p class="text-gray-700 mb-6 text-lg leading-relaxed">
+                {issue.issue.description}
+              </p>
+              <h3 class="font-semibold text-gray-900 mb-3">主な問題点：</h3>
+              <ul class="space-y-3">
+                {issue.issue.points.map((point) => (
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 h-6 w-6 text-red-600 mt-0.5">
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </span>
+                    <span class="ml-3 text-gray-700">{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="bg-blue-50 rounded-xl p-6">
+              <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                <span class="text-blue-600 mr-2">🔍</span>
+                {issue.diagnosis.title}
+              </h2>
+              <p class="text-gray-700 mb-6 text-lg leading-relaxed">
+                {issue.diagnosis.description}
+              </p>
+              <h3 class="font-semibold text-gray-900 mb-3">診断結果：</h3>
+              <ul class="space-y-3">
+                {issue.diagnosis.findings.map((finding) => (
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 h-6 w-6 text-blue-600 mt-0.5">
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="ml-3 text-gray-700">{finding}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="bg-green-50 rounded-xl p-6">
+              <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                <span class="text-green-600 mr-2">✅</span>
+                {issue.solution.title}
+              </h2>
+              <p class="text-gray-700 mb-6 text-lg leading-relaxed">
+                {issue.solution.description}
+              </p>
+              <h3 class="font-semibold text-gray-900 mb-3">実施したアプローチ：</h3>
+              <ul class="space-y-3">
+                {issue.solution.approach.map((approach) => (
+                  <li class="flex items-start">
+                    <span class="flex-shrink-0 h-6 w-6 text-green-600 mt-0.5">
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </span>
+                    <span class="ml-3 text-gray-700">{approach}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="border-t pt-8">
+              <h2 class="text-2xl font-bold text-gray-900 mb-6">改善効果</h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {issue.results.map((result) => (
+                  <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg p-6 text-center text-white">
+                    <div class="text-4xl font-bold mb-2">{result.value}</div>
+                    <div class="text-sm opacity-90">{result.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-6">
+              <h2 class="text-xl font-bold text-gray-900 mb-4">改革のポイント</h2>
+              <div class="flex flex-wrap gap-2">
+                {issue.keyPoints.map((point) => (
+                  <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-700 border border-gray-200">
+                    {point}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <div class="mt-12 pt-8 border-t">
+            <div class="bg-indigo-50 rounded-xl p-6">
+              <h3 class="text-lg font-bold text-gray-900 mb-3">このような課題でお悩みではありませんか？</h3>
+              <p class="text-gray-700 mb-4">
+                システム開発における様々な問題に対して、経験豊富な専門家がサポートいたします。
+              </p>
+              <a
+                href="/contact"
+                class="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-full hover:bg-indigo-700"
+              >
+                無料相談を予約する
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+</Layout>
