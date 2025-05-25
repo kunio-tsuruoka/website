@@ -6,9 +6,9 @@ export const HeroSection = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="relative min-h-[calc(100vh-120px)] lg:mx-12 mt-20">
+    <div className="relative min-h-[calc(100vh-120px)] lg:mx-12 pt-20">
       {/* Background with subtle pattern */}
-      <div className="absolute inset-0 bg-white rounded-[48px] overflow-hidden">
+      <div className="absolute inset-0 bg-white rounded-[48px] overflow-hidden mt-20">
         <div className="absolute inset-0 bg-grid-pattern opacity-20" />
 
         {/* Floating shapes with lighter colors */}
@@ -25,7 +25,7 @@ export const HeroSection = () => {
       </div>
 
       {/* Content */}
-      <div className="relative h-full flex flex-col justify-center p-12 xl:p-24 border border-indigo-700/20 rounded-[48px]">
+      <div className="relative h-full flex flex-col justify-center p-12 xl:p-24 border border-indigo-700/20 rounded-[48px] mt-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
