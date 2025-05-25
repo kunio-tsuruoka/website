@@ -32,9 +32,9 @@ export const HeroSection = () => {
           transition={{ duration: 0.8 }}
         >
           <h1 className="text-6xl md:text-7xl font-semibold leading-tight text-indigo-700 mb-8">
-            売上を上げる
+            共に創る
             <br />
-            システム開発
+            次世代システム
           </h1>
 
           <div className="mb-16 space-y-6">
@@ -58,10 +58,10 @@ export const HeroSection = () => {
                 {/* biome-ignore lint/style/useSelfClosingElements: <explanation> */}
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-600/20 to-indigo-600/0"></div>
                 <p className="pl-6 text-2xl text-indigo-900 leading-relaxed">
-                  <span className="font-medium">課題とニーズ</span>を深く調査し、
+                  <span className="font-medium">お客様のビジョン</span>を形にし、
                   <br className="hidden md:block" />
                   <span className="relative inline-block">
-                    最適解の施策
+                    成長を加速する
                     <motion.div
                       className="absolute -bottom-1 left-0 h-0.5 bg-indigo-600/20"
                       initial={{ width: 0 }}
@@ -69,7 +69,7 @@ export const HeroSection = () => {
                       transition={{ duration: 1, delay: 0.8 }}
                     />
                   </span>
-                  をご提案します。
+                  パートナーとして。
                 </p>
               </div>
             </motion.div>
