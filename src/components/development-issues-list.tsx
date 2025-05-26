@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { developmentIssues } from '../data/development-issues';
-import type { DevelopmentIssue } from '../data/development-issues';
 
 const categoryColors = {
   'プロジェクト管理': 'bg-blue-100 text-blue-800',
@@ -19,6 +18,7 @@ export const DevelopmentIssuesList = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* カテゴリーフィルター */}
       <div className="mb-8">
         <div className="flex flex-wrap gap-2 justify-center">
           {categories.map((category) => (
@@ -37,15 +37,16 @@ export const DevelopmentIssuesList = () => {
         </div>
       </div>
 
+      {/* ケーススタディカード */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredIssues.map((issue) => (
           <div key={issue.id} className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow">
             <div className="p-6">
-              <div className="flex items-start justify-between mb-4">
+              {/* カテゴリーバッジ */}
+              <div className="mb-4">
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${categoryColors[issue.category]}`}>
                   {issue.category}
                 </span>
-                <span className="text-sm text-gray-500">{issue.period}</span>
               </div>
               
               <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
@@ -53,17 +54,8 @@ export const DevelopmentIssuesList = () => {
               </h3>
               
               <p className="text-gray-600 mb-4 line-clamp-3">
-                {issue.issue.description}
+                {issue.description}
               </p>
-              
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                  {issue.industry}
-                </span>
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                  {issue.scale}
-                </span>
-              </div>
               
               <a
                 href={`/development-issues/${issue.id}`}
