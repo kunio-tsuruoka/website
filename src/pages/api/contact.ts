@@ -3,10 +3,27 @@ import axios from 'axios';
 
 export const prerender = false;
 
-const SLACK_WEBHOOK_URL = import.meta.env.SLACK_WEBHOOK_URL;
-
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
+    // Cloudflare Pages の環境変数を取得
+    const runtime = locals.runtime as { env: { SLACK_WEBHOOK_URL: string } };
+    const SLACK_WEBHOOK_URL = runtime?.env?.SLACK_WEBHOOK_URL;
+
+    if (!SLACK_WEBHOOK_URL) {
+      console.error('SLACK_WEBHOOK_URL is not set');
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Server configuration error',
+          details: 'SLACK_WEBHOOK_URL environment variable is not configured'
+        }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     const body = await request.json();
     const { message, email, name, type, company, phone } = body;
 
