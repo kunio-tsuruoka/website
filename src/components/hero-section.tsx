@@ -82,10 +82,10 @@ export const HeroSection = () => {
             className="inline-block"
           >
             <a
-              href="/contact"
+              href="/prooffirst"
               className="group inline-flex items-center px-8 py-4 text-lg font-medium text-white bg-indigo-600 rounded-full hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl"
             >
-              無料相談を始める
+              依頼の流れをまず確認する
               <motion.div animate={{ x: isHovered ? 5 : 0 }} transition={{ duration: 0.2 }}>
                 <ArrowRight className="ml-2 h-5 w-5" />
               </motion.div>
