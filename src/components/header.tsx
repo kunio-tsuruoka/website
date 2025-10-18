@@ -8,6 +8,7 @@ export function Header() {
   }
   const navigation: NavigationItem[] = [
     { label: 'HOME', href: '/' },
+    { label: 'ゼロスタート', href: '/prooffirst' },
     // { label: '開発ガイド', href: '/knowledge' },
     { label: '会社概要', href: '/company' },
     { label: 'Beekleの強み', href: '/strengths' },

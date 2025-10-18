@@ -2,6 +2,9 @@
 import { Header } from '@/components/header';
 import { services } from '@/data/service';
 import Layout from '../../layouts/layout.astro';
+import type { ServiceDetail } from '@/types/service';
+
+export const prerender = true;
 
 export function getStaticPaths() {
   return services.map((service) => ({
@@ -10,7 +13,11 @@ export function getStaticPaths() {
   }));
 }
 
-const { service } = Astro.props;
+interface Props {
+  service: ServiceDetail;
+}
+
+const { service } = Astro.props as Props;
 ---
 
 <Layout title={`${service.title} | Beekle`}>
