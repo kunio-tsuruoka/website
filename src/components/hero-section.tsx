@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronDown, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export const HeroSection = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -58,10 +58,8 @@ export const HeroSection = () => {
                 {/* biome-ignore lint/style/useSelfClosingElements: <explanation> */}
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-600/20 to-indigo-600/0"></div>
                 <p className="pl-6 text-2xl text-indigo-900 leading-relaxed">
-                  <span className="font-medium">お客様のビジョン</span>を形にし、
-                  <br className="hidden md:block" />
                   <span className="relative inline-block">
-                    成長を加速する
+                    課題に対する
                     <motion.div
                       className="absolute -bottom-1 left-0 h-0.5 bg-indigo-600/20"
                       initial={{ width: 0 }}
@@ -69,7 +67,8 @@ export const HeroSection = () => {
                       transition={{ duration: 1, delay: 0.8 }}
                     />
                   </span>
-                  パートナーとして。
+                  <br className="hidden md:block" />
+                  <span className="font-medium">最適解を届ける</span>
                 </p>
               </div>
             </motion.div>
