@@ -21,6 +21,6 @@ export const companyInfo = {
     tax: '檜山税理士事務所',
     legal: '猿渡法律事務所',
     technical: '中村有貴',
-    labor: 'TRIPORT社会保険労務士法人',
+    labor: '笠原労務管理事務所',
   },
 };

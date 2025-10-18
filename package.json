@@ -19,12 +19,14 @@
     "biome:init": "biome init"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.6.10",
     "@astrojs/react": "^4.1.2",
     "@astrojs/tailwind": "^5.1.4",
     "@emailjs/browser": "^4.4.1",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "astro": "^5.1.1",
+    "axios": "^1.12.2",
     "biome": "^0.2.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

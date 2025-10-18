@@ -17,6 +17,36 @@ import ContactForm from '@/components/contact-form';
     {/* メインビジュアル */}
     <HeroSection client:load />
 
+    {/* ゼロスタート訴求セクション */}
+    <section class="relative py-24 overflow-hidden bg-gradient-to-br from-indigo-600 to-purple-600">
+      <div class="absolute inset-0 bg-grid-pattern opacity-10" />
+
+      <div class="container mx-auto px-8 lg:px-12 relative">
+        <div class="max-w-4xl mx-auto text-center">
+          <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">
+            「まず、動くものを見よう。」
+          </h2>
+          <p class="text-xl text-white/90 mb-8 leading-relaxed">
+            不確実な見積もり、無限に長い要件定義、言葉のすれ違い。<br />
+            そうした開発の不安を、ゼロスタートがなくします。<br />
+            初期費用0円で、実際に動くAIシステムを試せる。<br />
+            動くプロトタイプを見てから判断する、新しい開発体験を。
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="/prooffirst"
+              class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-indigo-600 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+            >
+              ゼロスタートについて詳しく見る
+              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     {/* サービス一覧 */}
     <section id="services" class="relative py-32 overflow-hidden">
       {/* 背景装飾 */}
@@ -24,7 +54,7 @@ import ContactForm from '@/components/contact-form';
         <div class="absolute top-0 left-0 w-96 h-96 bg-purple-100/20 rounded-full blur-3xl" />
         <div class="absolute bottom-0 right-0 w-96 h-96 bg-indigo-100/20 rounded-full blur-3xl" />
       </div>
-      
+
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center mb-16">
           <h2 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
@@ -61,6 +91,38 @@ import ContactForm from '@/components/contact-form';
         <div class="container mx-auto">
           <ProcessSteps client:load />
         </div>
+
+        {/* CTA for Zero Start */}
+        <div class="container mx-auto px-8 lg:px-12 mt-16">
+          <div class="max-w-4xl mx-auto">
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-10 shadow-2xl text-center">
+              <h3 class="text-3xl font-bold text-white mb-4">
+                まずは、ゼロスタートから
+              </h3>
+              <p class="text-lg text-indigo-100 mb-8 leading-relaxed">
+                初期費用0円で、実際に動くものを体験できます。<br />
+                お気軽にお問い合わせください。
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="/contact"
+                  class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-indigo-600 bg-white rounded-full hover:bg-gray-50 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
+                >
+                  ゼロスタートを始める
+                  <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </a>
+                <a
+                  href="/prooffirst"
+                  class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-indigo-600 transition-all"
+                >
+                  詳しく見る
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -74,7 +136,7 @@ import ContactForm from '@/components/contact-form';
           </h2>
           <p class="text-xl text-gray-600">お客様からよくいただくご相談をまとめました</p>
         </div>
-        
+
         <div class="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           <div class="group relative">
             <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
@@ -83,16 +145,16 @@ import ContactForm from '@/components/contact-form';
                 <span class="text-4xl text-indigo-600 mr-4">Q</span>
                 <div>
                   <h4 class="text-xl font-bold text-gray-800 mb-3">
-                    システム開発の予算が見えづらい
+                    見積もりだけで判断を迫られるのが不安
                   </h4>
                   <p class="text-gray-600 leading-relaxed">
-                    要件定義フェーズでの綿密な計画立案と、アジャイル開発による段階的な開発により、予算の透明性を確保します。
+                    ゼロスタートなら、初期費用0円で実際に動くプロトタイプを体験してから判断できます。見積もりではなく、実物で納得してから進められます。
                   </p>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <div class="group relative">
             <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
             <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
@@ -100,10 +162,10 @@ import ContactForm from '@/components/contact-form';
                 <span class="text-4xl text-purple-600 mr-4">Q</span>
                 <div>
                   <h4 class="text-xl font-bold text-gray-800 mb-3">
-                    最適な技術スタックが分からない
+                    AIが本当に自社に合うか分からない
                   </h4>
                   <p class="text-gray-600 leading-relaxed">
-                    プロジェクトの規模、予算、期間、将来の拡張性を考慮し、実績のある技術スタックを提案いたします。
+                    無料PoCで実際の業務データを使って効果を検証。ROIを数値で確認してから本格導入を判断できます。
                   </p>
                 </div>
               </div>
@@ -117,10 +179,10 @@ import ContactForm from '@/components/contact-form';
                 <span class="text-4xl text-pink-600 mr-4">Q</span>
                 <div>
                   <h4 class="text-xl font-bold text-gray-800 mb-3">
-                    システムの安定性に不安がある
+                    完成まで実物が見えないのが心配
                   </h4>
                   <p class="text-gray-600 leading-relaxed">
-                    24時間365日のモニタリング体制と、自動化された障害検知システムにより、問題の早期発見・対応が可能です。
+                    数日で動くものを作り、そこから一緒に磨き込みます。「思ってたのと違う」を最小限に抑えられます。
                   </p>
                 </div>
               </div>
@@ -134,10 +196,10 @@ import ContactForm from '@/components/contact-form';
                 <span class="text-4xl text-indigo-600 mr-4">Q</span>
                 <div>
                   <h4 class="text-xl font-bold text-gray-800 mb-3">
-                    保守・運用コストが高騰している
+                    どこに頼んだらいいか分からない
                   </h4>
                   <p class="text-gray-600 leading-relaxed">
-                    自動化ツールの導入や運用プロセスの最適化により、保守コストを削減。クラウドの特性を活かした柔軟なリソース管理を実現します。
+                    まずはゼロスタートで試してみてください。リスクなく、私たちの開発力と提案力を実際に体験できます。
                   </p>
                 </div>
               </div>
@@ -146,10 +208,10 @@ import ContactForm from '@/components/contact-form';
         </div>
         
         <div class="text-center mt-12">
-          <a href="/development-issues" class="inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium text-lg group">
-            開発問題の事例を詳しく見る
-            <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          <a href="/prooffirst" class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl">
+            これらの悩みを解決するゼロスタートを見る
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </a>
         </div>
@@ -177,7 +239,7 @@ import ContactForm from '@/components/contact-form';
           <p class="text-xl text-gray-600">まずは無料相談から始めましょう</p>
         </div>
         <div class="max-w-2xl mx-auto">
-          <ContactForm />
+          <ContactForm client:load />
         </div>
       </div>
     </section>

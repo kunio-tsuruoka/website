@@ -207,39 +207,46 @@ import Layout from '../layouts/layout.astro';
 
 
 <script>
-    import emailjs from '@emailjs/browser';
-  
-    // EmailJSの初期化
-    emailjs.init("YOUR_PUBLIC_KEY");
-  
     const form = document.querySelector('form');
     const submitButton = form?.querySelector('button[type="submit"]');
-  
+
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       if (submitButton) {
-        // submitButton.disabled = true;
+        submitButton.disabled = true;
         submitButton.innerHTML = `
-          <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+          <svg class="animate-spin h-5 w-5 mr-3 inline-block" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
           送信中...
         `;
       }
-  
+
       try {
-        // EmailJSを使用してメール送信
-        const result = await emailjs.sendForm(
-        import.meta.env.PUBLIC_EMAILJS_SERVICE_ID,
-        import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID,
-        form,
-        import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY
-        );
-  
-        if (result.text === 'OK') {
-          alert('お問い合わせを受け付けました。');
+        const formData = new FormData(form);
+        const data = {
+          name: formData.get('from_name'),
+          email: formData.get('reply_to'),
+          message: formData.get('message'),
+          type: formData.get('type'),
+          company: formData.get('company_name'),
+          phone: formData.get('phone')
+        };
+
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          alert('お問い合わせを受け付けました。担当者より1-2営業日以内にご連絡いたします。');
           form.reset();
         } else {
           throw new Error('送信に失敗しました');
@@ -249,7 +256,7 @@ import Layout from '../layouts/layout.astro';
         alert('エラーが発生しました。しばらく時間をおいて再度お試しください。');
       } finally {
         if (submitButton) {
-        //   submitButton.disabled = false;
+          submitButton.disabled = false;
           submitButton.innerHTML = '送信する';
         }
       }
