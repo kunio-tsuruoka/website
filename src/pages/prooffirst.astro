@@ -1,0 +1,793 @@
+---
+import { Header } from '../components/header';
+import Layout from '../layouts/layout.astro';
+import { motion } from 'framer-motion';
+---
+
+<Layout title="ゼロスタート - まず、動くものを見よう | Beekle × TechBeans">
+  <Header client:load />
+  <main class="">
+    {/* Hero Section */}
+    <section class="relative min-h-[calc(100vh-120px)] lg:mx-12 pt-20">
+      {/* Background with subtle pattern */}
+      <div class="absolute inset-0 bg-white rounded-[48px] overflow-hidden mt-20">
+        <div class="absolute inset-0 bg-grid-pattern opacity-20" />
+
+        {/* Floating shapes with lighter colors */}
+        <div class="absolute top-20 right-20 w-32 h-32 bg-indigo-100/40 rounded-full blur-xl animate-float" />
+        <div class="absolute bottom-40 left-40 w-48 h-48 bg-indigo-50/50 rounded-full blur-xl animate-float-delay" />
+      </div>
+
+      {/* Content */}
+      <div class="relative h-full flex flex-col justify-center p-12 xl:p-24 border border-indigo-700/20 rounded-[48px] mt-20">
+        <div class="fade-in-up">
+          <div class="mb-6">
+            <span class="inline-block px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">
+              Beekle × TechBeans
+            </span>
+          </div>
+
+          <h1 class="text-5xl md:text-7xl font-semibold leading-tight text-indigo-700 mb-8">
+            「まず、動くものを見よう。」
+          </h1>
+
+          <div class="mb-12 space-y-6">
+            <p class="text-2xl text-indigo-900 leading-relaxed border-l-4 border-indigo-600/30 pl-6">
+              — 話すより、Proof（証拠）を。
+            </p>
+
+            <p class="text-xl text-gray-700 leading-relaxed max-w-3xl">
+              不確実な見積もり、無限に長い要件定義、言葉のすれ違い。そうした開発の不安を、<span class="font-semibold text-indigo-700">"ゼロスタート"</span>がなくします。初期費用0円で、実際に動くAIシステムを試せるゼロスタートモデル。動くプロトタイプを見てから判断する、新しい開発体験を。
+            </p>
+          </div>
+
+          {/* CTA Buttons */}
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a
+              href="/contact"
+              class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-indigo-600 rounded-full hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl"
+            >
+              無料でPoCを試す
+              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Problem Section */}
+    <section class="py-32 bg-gradient-to-br from-gray-50 to-white">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            「開発って、正直よくわからない。」
+          </h2>
+          <p class="text-xl text-gray-600">
+            そんな声からゼロスタートは生まれました。
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div class="group relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
+            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full">
+              <div class="mb-4 w-16 h-16 mx-auto">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" class="w-full h-full text-gray-400">
+                  <circle cx="24" cy="24" r="18" strokeLinecap="round"/>
+                  <circle cx="17" cy="20" r="2" fill="currentColor"/>
+                  <circle cx="31" cy="20" r="2" fill="currentColor"/>
+                  <path d="M16 30c2-2 6-3 8-3s6 1 8 3" strokeLinecap="round"/>
+                  <path d="M14 16c-2 4-2 8 0 12M34 16c2 4 2 8 0 12" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <h4 class="text-lg font-bold text-gray-800 mb-3">
+                エンジニアのことは<br />よくわからない
+              </h4>
+            </div>
+          </div>
+
+          <div class="group relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
+            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full">
+              <div class="mb-4 w-16 h-16 mx-auto">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" class="w-full h-full text-gray-400">
+                  <path d="M24 8l-6 12 6 12 6-12-6-12z" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M18 20l-6 4 6 4M30 20l6 4-6 4" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="24" cy="20" r="2" fill="currentColor"/>
+                  <circle cx="24" cy="28" r="1" fill="currentColor"/>
+                </svg>
+              </div>
+              <h4 class="text-lg font-bold text-gray-800 mb-3">
+                何が正解か<br />わからない
+              </h4>
+            </div>
+          </div>
+
+          <div class="group relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-pink-600 to-red-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
+            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full">
+              <div class="mb-4 w-16 h-16 mx-auto">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" class="w-full h-full text-gray-400">
+                  <path d="M12 24c0-6 4-12 12-12s12 6 12 12" strokeLinecap="round"/>
+                  <path d="M36 24c0 6-4 12-12 12s-12-6-12-12" strokeLinecap="round" strokeDasharray="3 3"/>
+                  <path d="M20 20l4 4 8-8" strokeLinecap="round" strokeLinejoin="round" opacity="0.3"/>
+                  <text x="24" y="32" textAnchor="middle" fontSize="16" fill="currentColor">?</text>
+                </svg>
+              </div>
+              <h4 class="text-lg font-bold text-gray-800 mb-3">
+                見積もりが<br />当てにならない
+              </h4>
+            </div>
+          </div>
+
+          <div class="group relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
+            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full">
+              <div class="mb-4 w-16 h-16 mx-auto">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" class="w-full h-full text-gray-400">
+                  <rect x="8" y="16" width="14" height="20" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <rect x="26" y="16" width="14" height="20" rx="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="3 3"/>
+                  <path d="M12 22h6M12 26h6M12 30h4" strokeLinecap="round" opacity="0.5"/>
+                  <path d="M30 22h6M30 26h6M30 30h4" strokeLinecap="round" opacity="0.3"/>
+                  <path d="M20 12l-2-4 8 0-2 4" strokeLinecap="round" strokeLinejoin="round" fill="currentColor" opacity="0.3"/>
+                </svg>
+              </div>
+              <h4 class="text-lg font-bold text-gray-800 mb-3">
+                頼んでも思ったのと<br />違うものが出てくる
+              </h4>
+            </div>
+          </div>
+
+          <div class="group relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-orange-600 to-yellow-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
+            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full">
+              <div class="mb-4 w-16 h-16 mx-auto">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" class="w-full h-full text-gray-400">
+                  <path d="M12 32l4-8 4 4 4-12 4 8 4-4 4 12" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="12" cy="24" r="3" strokeLinecap="round"/>
+                  <circle cx="24" cy="24" r="3" strokeLinecap="round"/>
+                  <circle cx="36" cy="24" r="3" strokeLinecap="round"/>
+                  <path d="M24 12v-4M18 14l-3-3M30 14l3-3" strokeLinecap="round" opacity="0.4"/>
+                </svg>
+              </div>
+              <h4 class="text-lg font-bold text-gray-800 mb-3">
+                どこに頼んだら<br />いいかすら不安
+              </h4>
+            </div>
+          </div>
+
+          <div class="group relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-yellow-600 to-indigo-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
+            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full">
+              <div class="mb-4 w-16 h-16 mx-auto">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" class="w-full h-full text-gray-400">
+                  <rect x="10" y="14" width="28" height="22" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M10 20h28" strokeLinecap="round"/>
+                  <circle cx="24" cy="28" r="4" strokeLinecap="round"/>
+                  <path d="M24 28h3" strokeLinecap="round"/>
+                  <text x="24" y="32" textAnchor="middle" fontSize="12" fill="currentColor" opacity="0.5">AI</text>
+                  <path d="M20 10l-2 4M24 8l0 6M28 10l2 4" strokeLinecap="round" opacity="0.4"/>
+                </svg>
+              </div>
+              <h4 class="text-lg font-bold text-gray-800 mb-3">
+                AIやPoCって聞くけど、<br />自分の会社に合うか分からない
+              </h4>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-16 max-w-3xl mx-auto">
+          <p class="text-xl text-gray-700 leading-relaxed">
+            表面的には「わからない・怖い・選べない」という不安。<br />
+            <span class="font-semibold text-indigo-700">不安なのは、当たり前。</span>だから私たちは、<br />
+            <span class="text-2xl font-bold text-indigo-700">まず動くものを見せることにしました。</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Solution Section */}
+    <section class="relative py-32 overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            正解を話し込むの、<br />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">やめました。</span>
+          </h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            会議や見積もりでは、まだ足りない。判断の材料になるのは、<br />
+            <span class="font-semibold text-indigo-700">会話でも資料でもなく、動くデモの証拠です。</span>
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+            <div class="mb-6 w-20 h-20 mx-auto">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" class="w-full h-full text-indigo-600">
+                <path d="M8 16c0-4 3-8 8-8h16c5 0 8 4 8 8v8c0 4-3 8-8 8h-4l-6 8v-8h-6c-5 0-8-4-8-8v-8z" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="16" cy="20" r="1.5" fill="currentColor"/>
+                <circle cx="24" cy="20" r="1.5" fill="currentColor"/>
+                <circle cx="32" cy="20" r="1.5" fill="currentColor"/>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-indigo-700 mb-4 text-center">実物で合意形成</h3>
+            <p class="text-gray-700 leading-relaxed text-center">
+              プロトタイプを前に合意形成が早まる
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+            <div class="mb-6 w-20 h-20 mx-auto">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" class="w-full h-full text-indigo-600">
+                <rect x="8" y="8" width="32" height="32" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M8 16h32M16 8v32" strokeLinecap="round"/>
+                <path d="M20 32l4-8 4 6 4-10" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-indigo-700 mb-4 text-center">ROIで判断</h3>
+            <p class="text-gray-700 leading-relaxed text-center">
+              効果を数値で可視化して意思決定
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+            <div class="mb-6 w-20 h-20 mx-auto">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" class="w-full h-full text-indigo-600">
+                <circle cx="24" cy="24" r="16" strokeLinecap="round"/>
+                <circle cx="24" cy="24" r="8" strokeLinecap="round"/>
+                <circle cx="24" cy="24" r="3" fill="currentColor"/>
+                <path d="M24 8v4M24 36v4M8 24h4M36 24h4" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-indigo-700 mb-4 text-center">上申が実演に</h3>
+            <p class="text-gray-700 leading-relaxed text-center">
+              上申資料が「実演デモ」へ置き換わる
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Freedom Section */}
+    <section class="py-32 bg-white">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-8">
+            決める自由を、<br />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">取り戻そう。</span>
+          </h2>
+        </div>
+
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl p-10 shadow-lg mb-12">
+            <p class="text-xl text-gray-800 leading-relaxed mb-6">
+              システム開発は<span class="font-semibold text-indigo-700">改善の連続</span>。<br />
+              ゼロスタートは終わりではなく、<span class="font-semibold text-indigo-700">始まり</span>です。
+            </p>
+
+            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+              「どこに頼んでいいかわからない」「何が正解かわからない」――<br />
+              そんな不安の中で、見えないものに投資を決めるのは難しい。
+            </p>
+
+            <p class="text-lg text-gray-700 leading-relaxed">
+              だからゼロスタートは、<span class="font-semibold text-indigo-700">判断するための材料</span>を提供します。<br />
+              実際に動くものを見て、触って、効果を確かめてから、<br />
+              本格的な開発をスタートする。<span class="font-semibold">判断を先送りにしない</span>、新しい始め方です。
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-100">
+              <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                <span class="text-3xl mr-3">🚫</span>
+                従来の開発
+              </h3>
+              <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start">
+                  <span class="text-red-500 mr-2 mt-1">×</span>
+                  <span>見積もりだけで判断を迫られる</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="text-red-500 mr-2 mt-1">×</span>
+                  <span>完成するまで実物が見えない</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="text-red-500 mr-2 mt-1">×</span>
+                  <span>期待とのギャップが後から発覚</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="text-red-500 mr-2 mt-1">×</span>
+                  <span>大きな初期投資が必要</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl p-8 shadow-lg text-white">
+              <h3 class="text-xl font-bold mb-4 flex items-center">
+                <span class="text-3xl mr-3">✨</span>
+                ゼロスタート
+              </h3>
+              <ul class="space-y-3">
+                <li class="flex items-start">
+                  <span class="text-yellow-300 mr-2 mt-1">✓</span>
+                  <span>実物を見てから判断できる</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="text-yellow-300 mr-2 mt-1">✓</span>
+                  <span>初期費用0円でリスクなし</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="text-yellow-300 mr-2 mt-1">✓</span>
+                  <span>効果を数値で確認してから投資</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="text-yellow-300 mr-2 mt-1">✓</span>
+                  <span>ここから本格開発がスタート</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="text-center mt-12">
+            <p class="text-2xl font-bold text-indigo-700">
+              Proofは、あなたの意思決定の証拠です。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Sustainability Section */}
+    <section class="py-32 bg-gradient-to-br from-gray-50 to-white">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            無料で作って、<br />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">本当に怪しくないの？</span>
+          </h2>
+          <p class="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+            「動くデモが触れるなら安心だけど、無料って正直ちょっと怖い」――<br />
+            <span class="font-semibold text-indigo-700">そう感じるのは自然です。</span>
+          </p>
+        </div>
+
+        <div class="max-w-4xl mx-auto mb-16">
+          <div class="bg-white rounded-3xl p-10 shadow-xl border-2 border-indigo-100">
+            <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">
+              ゼロスタートは"タダだから"できるのではなく、<br />
+              <span class="text-indigo-700">"一緒に証明する"仕組みだからできる。</span>
+            </h3>
+
+            <div class="space-y-6 text-lg text-gray-700 leading-relaxed">
+              <p>
+                正直に言います。<br />
+                <span class="font-semibold text-indigo-700">言葉でごちゃごちゃやってプロジェクトが炎上したら、私たちも損をします。</span>
+              </p>
+
+              <p>
+                要件定義にコストをかけて、延々と仕様を詰めても、結局「思ってたのと違う」で終わることが多い。<br />
+                それより<span class="font-semibold text-indigo-700">数日で最低のコア機能のmvpとして動くものを作って、そこから一緒に磨き込む方がずっと楽</span>なのです。
+              </p>
+
+              <p>
+                一番大変なのは、プロダクトを<span class="font-semibold text-indigo-700">実際に出せるレベルまで磨き込むところ</span>。<br />
+                だから最初の数日分の販管費なんて、どうってことありません。
+              </p>
+
+              <p class="pt-6 border-t-2 border-indigo-100">
+                さらに、私たちはPoCを単なる試作品ではなく、<span class="font-semibold text-indigo-700">事業を成長させる研究素材</span>として捉えています。<br />
+                開発で得た知見や仕組みは、次のプロジェクトや自社SaaSに還元され、再利用されます。
+              </p>
+
+              <p class="text-center font-semibold text-xl text-indigo-700">
+                お互いにとって、動くものから始めるのが一番リスクが少ない。<br />
+                それがゼロスタートです。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-12">
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+            <div class="mb-4 w-16 h-16 mx-auto">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" class="w-full h-full text-indigo-600">
+                <rect x="8" y="16" width="14" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <rect x="26" y="16" width="14" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M15 30v8h18v-8M15 16v-6h18v6" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M24 10v28" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <h4 class="text-lg font-bold text-indigo-700 mb-3 text-center">PoC成果をSaaS基盤として再利用</h4>
+            <p class="text-gray-700 leading-relaxed text-center text-sm">
+              機能・設計は次のPoCやSaaS基盤に転用
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+            <div class="mb-4 w-16 h-16 mx-auto">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" class="w-full h-full text-indigo-600">
+                <circle cx="24" cy="24" r="16" strokeLinecap="round"/>
+                <path d="M24 8v8M8 24h8M32 24h8M24 32v8" strokeLinecap="round"/>
+                <circle cx="24" cy="24" r="6" strokeLinecap="round"/>
+                <path d="M18 18l-4-4M30 18l4-4M30 30l4 4M18 30l-4 4" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <h4 class="text-lg font-bold text-indigo-700 mb-3 text-center">技術・UI・AIモデルは自社IPに蓄積</h4>
+            <p class="text-gray-700 leading-relaxed text-center text-sm">
+              AIモデル・UIパターンは自社IPとして蓄積
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+            <div class="mb-4 w-16 h-16 mx-auto">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" class="w-full h-full text-indigo-600">
+                <path d="M12 8h24l4 32H8l4-32z" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M16 14h16M17 20h14M18 26h12M19 32h10" strokeLinecap="round"/>
+                <circle cx="24" cy="4" r="2" fill="currentColor"/>
+              </svg>
+            </div>
+            <h4 class="text-lg font-bold text-indigo-700 mb-3 text-center">お客様の課題分析が次の革新に繋がる</h4>
+            <p class="text-gray-700 leading-relaxed text-center text-sm">
+              課題データはR&Dの学習素材に還元
+            </p>
+          </div>
+        </div>
+
+        <div class="text-center max-w-3xl mx-auto">
+          <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-8 mb-8">
+            <p class="text-xl text-gray-800 leading-relaxed mb-4">
+              <span class="font-semibold text-indigo-700">あなたにとっては</span>リスクのない実証チャンス。<br />
+              <span class="font-semibold text-purple-700">私たちにとっては</span>、未来の技術を磨く実験の場。
+            </p>
+            <p class="text-2xl font-bold text-indigo-700">
+              それが、ゼロスタートの"無料の正体"です。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* How It Works */}
+    <section class="relative py-32 overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">ゼロスタート</span>の仕組み
+          </h2>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div class="relative">
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+              <div class="mb-6 w-20 h-20 mx-auto">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" class="w-full h-full text-indigo-600">
+                  <circle cx="24" cy="18" r="10" strokeLinecap="round"/>
+                  <path d="M24 8v4M14 14l-2-2M34 14l2-2M8 40h32M16 40l2-12M32 40l-2-12" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-indigo-700 mb-4">試す</h3>
+              <p class="text-gray-700 leading-relaxed">
+                初期費用0円でPoCを開発。リスクなくアイデアを形に。
+              </p>
+            </div>
+            <div class="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 text-4xl text-indigo-300">→</div>
+          </div>
+
+          <div class="relative">
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+              <div class="mb-6 w-20 h-20 mx-auto">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" class="w-full h-full text-indigo-600">
+                  <circle cx="24" cy="24" r="16" strokeLinecap="round"/>
+                  <circle cx="24" cy="24" r="6" fill="currentColor"/>
+                  <path d="M24 8v4M24 36v4" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-indigo-700 mb-4">確かめる</h3>
+              <p class="text-gray-700 leading-relaxed">
+                実際に動くものを触って判断。体験が判断材料に。
+              </p>
+            </div>
+            <div class="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 text-4xl text-indigo-300">→</div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+            <div class="mb-6 w-20 h-20 mx-auto">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" class="w-full h-full text-indigo-600">
+                <path d="M24 8l4 8 8 4-8 4-4 8-4-8-8-4 8-4 4-8z" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M36 12l2 4 4 2-4 2-2 4-2-4-4-2 4-2 2-4z" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-indigo-700 mb-4">進める</h3>
+            <p class="text-gray-700 leading-relaxed">
+              納得したら導入・拡張へ。検証済みの基盤だから安全。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Process Flow */}
+    <section class="py-32 bg-white">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            開発の流れ
+          </h2>
+        </div>
+
+        <div class="max-w-4xl mx-auto">
+          <div class="space-y-6">
+            <div class="flex items-start gap-6 bg-gradient-to-r from-indigo-50 to-white p-6 rounded-2xl shadow-md">
+              <div class="flex-shrink-0 w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
+                1
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">ヒアリング・課題整理</h3>
+                <p class="text-gray-700">お客様の課題とニーズを丁寧にヒアリングします</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-6 bg-gradient-to-r from-purple-50 to-white p-6 rounded-2xl shadow-md">
+              <div class="flex-shrink-0 w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
+                2
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">無料PoC開発（ゼロスタート）</h3>
+                <p class="text-gray-700">初期費用0円で動くプロトタイプを開発します</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-6 bg-gradient-to-r from-pink-50 to-white p-6 rounded-2xl shadow-md">
+              <div class="flex-shrink-0 w-12 h-12 bg-pink-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
+                3
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">成果レビュー・体験</h3>
+                <p class="text-gray-700">実際に動くものを触って効果を確認いただきます</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-6 bg-gradient-to-r from-indigo-50 to-white p-6 rounded-2xl shadow-md">
+              <div class="flex-shrink-0 w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
+                4
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">投資判断・契約</h3>
+                <p class="text-gray-700">納得いただいた上で本開発への投資を決定</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-6 bg-gradient-to-r from-purple-50 to-white p-6 rounded-2xl shadow-md">
+              <div class="flex-shrink-0 w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold">
+                5
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">本開発・拡張フェーズへ</h3>
+                <p class="text-gray-700">検証済みの基盤を活かして本格開発を進めます</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Case Studies */}
+    <section class="py-32 bg-gradient-to-br from-gray-50 to-white">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            Proofから始めて、<br />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">成功した企業</span>
+          </h2>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+            <h3 class="text-xl font-bold text-indigo-700 mb-4">医療DX企業</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+              OCR自動化で事務時間70％削減。Proof後に即導入。
+            </p>
+            <div class="text-4xl font-bold text-indigo-600">70%</div>
+            <p class="text-sm text-gray-500">事務時間削減</p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+            <h3 class="text-xl font-bold text-indigo-700 mb-4">製造業</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+              検査AIのPoCから最短45日で本番稼働。
+            </p>
+            <div class="text-4xl font-bold text-indigo-600">45日</div>
+            <p class="text-sm text-gray-500">本番稼働まで</p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+            <h3 class="text-xl font-bold text-indigo-700 mb-4">人材会社</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+              AIスクリーニングで面談時間30％短縮。
+            </p>
+            <div class="text-4xl font-bold text-indigo-600">30%</div>
+            <p class="text-sm text-gray-500">面談時間短縮</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* FAQ Section */}
+    <section class="py-32 bg-white">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            よくある質問
+          </h2>
+        </div>
+
+        <div class="max-w-3xl mx-auto space-y-6">
+          <details class="group bg-gradient-to-r from-indigo-50 to-white p-6 rounded-2xl shadow-md">
+            <summary class="text-xl font-bold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              無料PoCの範囲は？
+              <svg class="w-6 h-6 text-indigo-600 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <p class="text-gray-700 leading-relaxed mt-4">
+              基本的な機能実装とデモンストレーションが可能なレベルまで開発します。具体的な範囲はヒアリング時にご相談の上、決定いたします。
+            </p>
+          </details>
+
+          <details class="group bg-gradient-to-r from-purple-50 to-white p-6 rounded-2xl shadow-md">
+            <summary class="text-xl font-bold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              買取しない場合は？
+              <svg class="w-6 h-6 text-purple-600 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <p class="text-gray-700 leading-relaxed mt-4">
+              ご契約に至らない場合でも費用は一切発生しません。PoCの成果物は当社で再利用し、次のプロジェクトやサービス基盤として活用します。
+            </p>
+          </details>
+
+          <details class="group bg-gradient-to-r from-pink-50 to-white p-6 rounded-2xl shadow-md">
+            <summary class="text-xl font-bold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              買取価格は？
+              <svg class="w-6 h-6 text-pink-600 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <p class="text-gray-700 leading-relaxed mt-4">
+              PoCの成果確認後、本開発への拡張費用をお見積もりいたします。既に動くものがあるため、見積もりの精度も高く、開発期間も短縮できます。
+            </p>
+          </details>
+
+          <details class="group bg-gradient-to-r from-indigo-50 to-white p-6 rounded-2xl shadow-md">
+            <summary class="text-xl font-bold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              保守や追加開発は？
+              <svg class="w-6 h-6 text-indigo-600 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <p class="text-gray-700 leading-relaxed mt-4">
+              本開発契約後は、保守運用サポートや追加機能開発も承ります。お客様のニーズに合わせた柔軟なプランをご提案いたします。
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    {/* Final CTA Section */}
+    <section class="relative py-32 overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-600" />
+      <div class="absolute inset-0 bg-grid-pattern opacity-10" />
+
+      <div class="container mx-auto px-8 lg:px-12 relative">
+        <div class="max-w-5xl mx-auto">
+          {/* メインメッセージ */}
+          <div class="text-center mb-12">
+            <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">
+              まずはデモを見てください。<br />
+              言葉より早く、安心できるから。
+            </h2>
+            <p class="text-xl text-white/90 mb-8 leading-relaxed">
+              「失敗したらどうしよう」ではなく、「デモを見てから考えよう」。<br />
+              初期費用0円で、"動くもの"から始める。<br />
+              それがBeekleのゼロスタートです。
+            </p>
+          </div>
+
+          {/* 念押しメッセージボックス */}
+          <div class="bg-white/10 backdrop-blur-sm rounded-3xl p-8 mb-10 border border-white/20">
+            <div class="text-white space-y-6 text-lg leading-relaxed">
+              <p class="font-semibold text-xl text-center mb-6">
+                ゼロスタートは"タダだから"できるのではなく、<br />
+                <span class="text-yellow-300">"一緒に証明する"仕組みだからできる。</span>
+              </p>
+
+              <div class="space-y-4 text-white/90">
+                <p>
+                  正直に言います。<br />
+                  <span class="font-semibold text-yellow-300">言葉でごちゃごちゃやってプロジェクトが炎上したら、こっちだって損</span>なんです。
+                </p>
+
+                <p>
+                  要件定義にコストをかけて、延々と仕様を詰めても、結局「思ってたのと違う」で終わる。<br />
+                  それより<span class="font-semibold text-yellow-300">数日で動くものを作って、そこから一緒に磨き込む方が早い</span>。
+                </p>
+
+                <p>
+                  一番大変なのは、プロダクトを<span class="font-semibold text-yellow-300">実際に出せるレベルまで磨き込むところ</span>。<br />
+                  だから最初の数日の販管費なんて、どうってことない。
+                </p>
+
+                <p class="text-center font-semibold text-xl border-t border-white/20 pt-6 mt-6">
+                  お互いにとって、<span class="text-yellow-300">動くものから始める</span>のが一番リスクが少ない。<br />
+                  それがゼロスタートです。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div class="text-center">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="/contact"
+                class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-indigo-600 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+              >
+                無料でPoCを試す
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </a>
+            </div>
+            <p class="text-white/80 mt-6 text-sm">
+              ※お問い合わせ後、1-2営業日以内にご連絡いたします
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0) }
+    50% { transform: translateY(-20px) }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-float-delay {
+    animation: float 8s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+
+  .bg-grid-pattern {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+</style>
