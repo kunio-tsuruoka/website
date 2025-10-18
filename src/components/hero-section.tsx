@@ -59,7 +59,7 @@ export const HeroSection = () => {
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-600/20 to-indigo-600/0"></div>
                 <p className="pl-6 text-2xl text-indigo-900 leading-relaxed">
                   <span className="relative inline-block">
-                    課題に対する
+                    未来から逆算し、
                     <motion.div
                       className="absolute -bottom-1 left-0 h-0.5 bg-indigo-600/20"
                       initial={{ width: 0 }}
@@ -68,7 +68,7 @@ export const HeroSection = () => {
                     />
                   </span>
                   <br className="hidden md:block" />
-                  <span className="font-medium">最適解を届ける</span>
+                  <span className="font-medium">今を創る</span>
                 </p>
               </div>
             </motion.div>
