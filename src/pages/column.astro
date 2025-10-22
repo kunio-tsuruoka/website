@@ -5,6 +5,8 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
+export const prerender = true;
+
 // カテゴリーメタデータを読み込み
 const categoriesPath = path.join(process.cwd(), 'src/content/columns/_categories.json');
 const categoriesMetadata = JSON.parse(fs.readFileSync(categoriesPath, 'utf8'));
