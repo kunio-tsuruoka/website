@@ -9,11 +9,11 @@ export function Header() {
   const navigation: NavigationItem[] = [
     { label: 'HOME', href: '/' },
     { label: 'ゼロスタート', href: '/prooffirst' },
-    // { label: '開発ガイド', href: '/knowledge' },
+    { label: 'コラム', href: '/column' },
+    // { label: '関連資料', href: '/materials' },
     { label: '会社概要', href: '/company' },
     { label: 'Beekleの強み', href: '/strengths' },
     { label: '導入事例', href: '/case-studies' },
-    { label: '開発問題事例', href: '/development-issues' },
     { label: 'メンバー紹介', href: '/members' },
     { label: 'お客様の声', href: '/testimonial' },
   ];
