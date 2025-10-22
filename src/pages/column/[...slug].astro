@@ -6,8 +6,34 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
-// SSRモードではgetStaticPathsは使用しない
-// 動的にコンテンツをロード
+export const prerender = true;
+
+// 静的生成のためのパス生成
+export async function getStaticPaths() {
+  const columnsDir = path.join(process.cwd(), 'src/content/columns');
+  const categoryFolders = fs.readdirSync(columnsDir)
+    .filter(item => {
+      const itemPath = path.join(columnsDir, item);
+      return fs.statSync(itemPath).isDirectory() && !item.startsWith('_');
+    });
+
+  const paths = [];
+  for (const categoryId of categoryFolders) {
+    const categoryPath = path.join(columnsDir, categoryId);
+    const files = fs.readdirSync(categoryPath)
+      .filter(file => file.endsWith('.md'));
+
+    for (const file of files) {
+      const slug = file.replace('.md', '');
+      paths.push({
+        params: { slug: `${categoryId}/${slug}` }
+      });
+    }
+  }
+
+  return paths;
+}
+
 const { slug } = Astro.params;
 const slugPath = Array.isArray(slug) ? slug.join('/') : slug;
 
