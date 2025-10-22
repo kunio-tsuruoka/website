@@ -1,0 +1,496 @@
+---
+import { Header } from '../../components/header';
+import Layout from '../../layouts/layout.astro';
+import { marked } from 'marked';
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+
+// SSRモードではgetStaticPathsは使用しない
+// 動的にコンテンツをロード
+const { slug } = Astro.params;
+const slugPath = Array.isArray(slug) ? slug.join('/') : slug;
+
+// slugからカテゴリーとファイル名を抽出
+const columnsDir = path.join(process.cwd(), 'src/content/columns');
+const filePath = path.join(columnsDir, `${slugPath}.md`);
+
+let frontmatter = {};
+let markdownContent = '';
+
+if (fs.existsSync(filePath)) {
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const { data, content } = matter(fileContents);
+  frontmatter = data;
+  markdownContent = content || '';
+} else {
+  // ファイルが見つからない場合は404
+  return Astro.redirect('/404');
+}
+
+// Markedの設定
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+});
+
+const htmlContent = marked(markdownContent || '');
+
+// 関連記事（仮データ）
+const relatedArticles = [
+  {
+    title: '「見積もりが当てにならない」を防ぐ正しい見積もりの見方',
+    slug: 'how-to-read-estimates',
+    category: 'avoid-failure'
+  },
+  {
+    title: '要件定義で失敗しないための実践チェックリスト',
+    slug: 'requirement-checklist',
+    category: 'avoid-failure'
+  },
+  {
+    title: '無料PoCで効果検証する方法',
+    slug: 'fast-development/01-free-poc-guide',
+    category: 'fast-development'
+  }
+];
+---
+
+<Layout title={`${frontmatter.title} | Beekle`}>
+  <Header client:load />
+  <main class="pt-20">
+    {/* Breadcrumb */}
+    <section class="py-6 bg-gray-50 border-b border-gray-200">
+      <div class="container mx-auto px-6 md:px-8">
+        <nav class="flex items-center gap-2 text-sm text-gray-600">
+          <a href="/" class="hover:text-indigo-600 transition-colors">ホーム</a>
+          <span>/</span>
+          <a href="/column" class="hover:text-indigo-600 transition-colors">コラム</a>
+          <span>/</span>
+          <span class="text-gray-900">{frontmatter.title}</span>
+        </nav>
+      </div>
+    </section>
+
+    {/* Article Header */}
+    <section class="py-12 md:py-16 bg-gradient-to-br from-indigo-50 to-purple-50">
+      <div class="container mx-auto px-6 md:px-8 max-w-4xl">
+        {/* Meta Info */}
+        <div class="flex flex-wrap items-center gap-3 mb-6">
+          <span class={`px-3 py-1 rounded-full text-xs font-medium ${
+            frontmatter.difficulty === '初級' ? 'bg-green-100 text-green-700' :
+            frontmatter.difficulty === '中級' ? 'bg-yellow-100 text-yellow-700' :
+            'bg-red-100 text-red-700'
+          }`}>
+            {frontmatter.difficulty}
+          </span>
+          <span class="flex items-center gap-1 text-sm text-gray-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {frontmatter.readTime}
+          </span>
+          <span class="text-sm text-gray-600">{frontmatter.publishedAt}</span>
+        </div>
+
+        {/* Title */}
+        <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+          {frontmatter.title}
+        </h1>
+
+        {/* Description */}
+        <p class="text-xl text-gray-700 leading-relaxed mb-8">
+          {frontmatter.description}
+        </p>
+
+        {/* Tags */}
+        {frontmatter.tags && (
+          <div class="flex flex-wrap gap-2">
+            {frontmatter.tags.map((tag) => (
+              <span class="px-3 py-1 bg-white rounded-full text-sm text-indigo-600 border border-indigo-200">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+
+    {/* Article Content */}
+    <article class="py-16 md:py-20 bg-white">
+      <div class="container mx-auto px-6 md:px-8 max-w-4xl">
+        <div class="markdown-content">
+          <Fragment set:html={htmlContent} />
+        </div>
+      </div>
+    </article>
+
+    {/* Author Info */}
+    <section class="py-12 bg-gray-50">
+      <div class="container mx-auto px-6 md:px-8 max-w-4xl">
+        <div class="bg-white rounded-2xl p-8 shadow-md border border-gray-200">
+          <div class="flex items-start gap-6">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+              B
+            </div>
+            <div class="flex-1">
+              <div class="font-bold text-lg text-gray-900 mb-2">{frontmatter.author}</div>
+              <p class="text-gray-600 leading-relaxed">
+                Beekleは「技術を用いて人を幸せに」をミッションに、システム開発の不安を解消し、動くプロトタイプから始める新しい開発体験を提供しています。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Related Articles */}
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-6 md:px-8 max-w-4xl">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8">関連記事</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          {relatedArticles.map((article) => (
+            <a
+              href={`/column/${article.slug}`}
+              class="group bg-gray-50 rounded-xl p-6 hover:bg-indigo-50 transition-all border border-gray-200 hover:border-indigo-300"
+            >
+              <h3 class="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors leading-tight mb-3">
+                {article.title}
+              </h3>
+              <div class="flex items-center text-indigo-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+                <span>読む</span>
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* CTA Section */}
+    <section class="py-20 bg-gradient-to-br from-indigo-600 to-purple-600">
+      <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+          この知識を実践してみませんか？
+        </h2>
+        <p class="text-xl text-white/90 mb-10">
+          ゼロスタートなら、初期費用0円で動くプロトタイプを体験できます。
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/prooffirst"
+            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-indigo-600 bg-white rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl"
+          >
+            ゼロスタートを詳しく見る
+            <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-indigo-600 transition-all"
+          >
+            無料相談を予約する
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  /* マークダウンコンテンツのデザインシステム - Tailwind設定を使用 */
+  .markdown-content {
+    @apply text-gray-800 text-body;
+  }
+
+  /* 見出しスタイル - 明確な階層を作る */
+  .markdown-content :global(h1) {
+    @apply font-bold text-gray-900 text-h1 mt-8 mb-4;
+  }
+
+  .markdown-content :global(h2) {
+    @apply font-bold text-gray-900 text-h2 mt-10 mb-4 pb-2 border-b-[3px] border-indigo-200;
+  }
+
+  .markdown-content :global(h3) {
+    @apply font-bold text-gray-900 text-h3 mt-7 mb-3 relative pl-2;
+  }
+
+  .markdown-content :global(h3)::before {
+    content: '';
+    @apply absolute left-0 w-1 bg-gradient-to-b from-indigo-600 to-purple-600 rounded;
+    top: 0.35em;
+    height: 1.2em;
+  }
+
+  .markdown-content :global(h4) {
+    @apply font-bold text-gray-800 text-h4 mt-5 mb-2;
+  }
+
+  .markdown-content :global(h5) {
+    @apply font-bold text-gray-800 text-h5 mt-4 mb-2;
+  }
+
+  /* 段落スタイル - 読みやすい行間と余白 */
+  .markdown-content :global(p) {
+    @apply text-gray-700 text-body mb-3;
+  }
+
+  /* リンクスタイル - 目立つがエレガント */
+  .markdown-content :global(a) {
+    @apply text-indigo-600 font-medium no-underline;
+    position: relative;
+    transition: all 0.2s ease;
+    border-bottom: 2px solid transparent;
+  }
+
+  .markdown-content :global(a):hover {
+    @apply text-indigo-700;
+    border-bottom-color: currentColor;
+  }
+
+  .markdown-content :global(a)::after {
+    content: '→';
+    margin-left: 0.25rem;
+    opacity: 0;
+    transition: all 0.2s ease;
+    display: inline-block;
+  }
+
+  .markdown-content :global(a):hover::after {
+    opacity: 1;
+    margin-left: 0.375rem;
+  }
+
+  /* 強調テキスト */
+  .markdown-content :global(strong) {
+    @apply font-bold text-indigo-900;
+    background: linear-gradient(180deg, transparent 60%, rgba(199, 210, 254, 0.4) 60%);
+    padding: 0 0.2em;
+  }
+
+  .markdown-content :global(em) {
+    @apply italic text-gray-700;
+  }
+
+  /* リストスタイル - 視覚的に明確 + 8pxベーススペーシング */
+  .markdown-content :global(ul) {
+    margin-top: 32px;    /* 8 × 4 */
+    margin-bottom: 32px; /* 8 × 4 */
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .markdown-content :global(ul li) {
+    @apply relative text-gray-700;
+    padding-left: 32px;  /* 8 × 4 */
+    margin-bottom: 16px; /* 8 × 2 */
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .markdown-content :global(ul li):last-child {
+    margin-bottom: 0;
+  }
+
+  .markdown-content :global(ul li)::before {
+    content: '';
+    position: absolute;
+    left: 8px;           /* 8 × 1 */
+    top: 0.65em;
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  /* チェックリスト用のスタイル - ✅と❌のサポート */
+  .markdown-content :global(ul li:has(> :first-child:is([style*="color: green"], [style*="✅"]))) {
+    padding-left: 40px;  /* 8 × 5 */
+  }
+
+  .markdown-content :global(ul li:has(> :first-child:is([style*="color: green"], [style*="✅"])))::before {
+    content: '✅';
+    font-size: 1.25rem;
+    background: none;
+    box-shadow: none;
+    width: auto;
+    height: auto;
+    top: 0;
+    left: 8px;           /* 8 × 1 */
+  }
+
+  .markdown-content :global(ul li:has(> :first-child:is([style*="color: red"], [style*="❌"])))::before {
+    content: '❌';
+    font-size: 1.25rem;
+    background: none;
+    box-shadow: none;
+    width: auto;
+    height: auto;
+    top: 0;
+    left: 8px;           /* 8 × 1 */
+  }
+
+  /* 番号付きリスト */
+  .markdown-content :global(ol) {
+    margin-top: 32px;    /* 8 × 4 */
+    margin-bottom: 32px; /* 8 × 4 */
+    counter-reset: item;
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .markdown-content :global(ol li) {
+    @apply relative text-gray-700;
+    padding-left: 80px;  /* 8 × 10 */
+    margin-bottom: 16px; /* 8 × 2 */
+    font-size: 16px;
+    line-height: 1.5;
+    counter-increment: item;
+  }
+
+  .markdown-content :global(ol li):last-child {
+    margin-bottom: 0;
+  }
+
+  .markdown-content :global(ol li)::before {
+    content: counter(item);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 32px;         /* 8 × 4 */
+    height: 32px;        /* 8 × 4 */
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+
+  /* 引用ブロック */
+  .markdown-content :global(blockquote) {
+    @apply bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl;
+    margin-top: 40px;    /* 8 × 5 */
+    margin-bottom: 40px; /* 8 × 5 */
+    padding: 24px;       /* 8 × 3 */
+    border-left: 4px solid #6366f1;
+    font-style: italic;
+    position: relative;
+  }
+
+  .markdown-content :global(blockquote)::before {
+    content: '"';
+    position: absolute;
+    top: -8px;           /* 8 × -1 */
+    left: 16px;          /* 8 × 2 */
+    font-size: 4rem;
+    color: rgba(99, 102, 241, 0.2);
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+
+  .markdown-content :global(blockquote p) {
+    @apply text-gray-700 mb-0;
+  }
+
+  /* コードブロック */
+  .markdown-content :global(code) {
+    @apply bg-gray-100 text-indigo-600 rounded;
+    padding: 4px 8px;    /* 上下4px (0.5×8), 左右8px (1×8) */
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 14px;     /* 本文より少し小さく */
+  }
+
+  .markdown-content :global(pre) {
+    @apply bg-gray-900 text-gray-100 rounded-xl overflow-x-auto shadow-lg;
+    margin-top: 40px;    /* 8 × 5 */
+    margin-bottom: 40px; /* 8 × 5 */
+    padding: 24px;       /* 8 × 3 */
+  }
+
+  .markdown-content :global(pre code) {
+    @apply bg-transparent text-gray-100;
+    padding: 0;
+  }
+
+  /* テーブル */
+  .markdown-content :global(table) {
+    @apply w-full border-collapse rounded-lg overflow-hidden shadow-md;
+    margin-top: 40px;    /* 8 × 5 */
+    margin-bottom: 40px; /* 8 × 5 */
+  }
+
+  .markdown-content :global(thead) {
+    @apply bg-gradient-to-r from-indigo-600 to-purple-600;
+  }
+
+  .markdown-content :global(th) {
+    @apply text-left text-white font-bold;
+    padding: 16px;       /* 8 × 2 */
+    font-size: 16px;
+  }
+
+  .markdown-content :global(td) {
+    @apply border-t border-gray-200 text-gray-700;
+    padding: 16px;       /* 8 × 2 */
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .markdown-content :global(tbody tr):hover {
+    @apply bg-indigo-50;
+  }
+
+  /* 画像 */
+  .markdown-content :global(img) {
+    @apply rounded-xl shadow-lg mx-auto;
+    margin-top: 40px;    /* 8 × 5 */
+    margin-bottom: 40px; /* 8 × 5 */
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* 水平線 */
+  .markdown-content :global(hr) {
+    @apply border-0;
+    margin-top: 64px;    /* 8 × 8 */
+    margin-bottom: 64px; /* 8 × 8 */
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e0e7ff, transparent);
+  }
+
+  /* カスタムボックススタイル（もし使われていれば） */
+  .markdown-content :global(div[style*="background"]) {
+    @apply rounded-xl;
+    padding: 24px;       /* 8 × 3 */
+    margin-top: 32px;    /* 8 × 4 */
+    margin-bottom: 32px; /* 8 × 4 */
+  }
+
+  /* CTAボタンスタイル */
+  .markdown-content :global(a[href^="/prooffirst"]),
+  .markdown-content :global(a[href^="/contact"]) {
+    @apply inline-flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-full no-underline;
+    padding: 12px 24px;  /* 上下12px (1.5×8), 左右24px (3×8) */
+    transition: all 0.3s ease;
+    border-bottom: none;
+  }
+
+  .markdown-content :global(a[href^="/prooffirst"])::after,
+  .markdown-content :global(a[href^="/contact"])::after {
+    content: none;
+  }
+
+  .markdown-content :global(a[href^="/prooffirst"]:hover),
+  .markdown-content :global(a[href^="/contact"]:hover) {
+    @apply shadow-xl;
+    transform: translateY(-2px);
+  }
+</style>

@@ -1,0 +1,365 @@
+---
+import { Header } from '../components/header';
+import Layout from '../layouts/layout.astro';
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+
+// カテゴリーメタデータを読み込み
+const categoriesPath = path.join(process.cwd(), 'src/content/columns/_categories.json');
+const categoriesMetadata = JSON.parse(fs.readFileSync(categoriesPath, 'utf8'));
+
+// フォルダ構造から記事を動的に読み込む
+const columnsDir = path.join(process.cwd(), 'src/content/columns');
+const categoryFolders = fs.readdirSync(columnsDir)
+  .filter(item => {
+    const itemPath = path.join(columnsDir, item);
+    return fs.statSync(itemPath).isDirectory() && !item.startsWith('_');
+  });
+
+// カテゴリーごとに記事を収集
+const columnCategories = categoryFolders
+  .map(categoryId => {
+    const categoryPath = path.join(columnsDir, categoryId);
+    const files = fs.readdirSync(categoryPath)
+      .filter(file => file.endsWith('.md'))
+      .sort(); // ファイル名でソート（01-, 02-...）
+
+    const articles = files.map((file, index) => {
+      const filePath = path.join(categoryPath, file);
+      const fileContents = fs.readFileSync(filePath, 'utf8');
+      const { data } = matter(fileContents);
+      const slug = file.replace('.md', '');
+
+      return {
+        number: String(index + 1).padStart(2, '0'),
+        title: data.title || 'タイトルなし',
+        description: data.description || '',
+        slug: `${categoryId}/${slug}`,
+        readTime: data.readTime || '10分',
+        difficulty: data.difficulty || '中級',
+      };
+    });
+
+    const metadata = categoriesMetadata[categoryId] || {
+      title: categoryId,
+      description: '',
+      order: 999
+    };
+
+    return {
+      ...metadata,
+      articles
+    };
+  })
+  .sort((a, b) => a.order - b.order);
+
+// 統計情報
+const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.length, 0);
+---
+
+<Layout title="コラムで学ぶ - システム開発の知識 | Beekle">
+  <Header client:load />
+  <main class="pt-20">
+    {/* Hero Section */}
+    <section class="relative py-24 md:py-32 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 overflow-hidden">
+      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+
+      {/* Floating shapes */}
+      <div class="absolute top-20 right-20 w-32 h-32 bg-white/10 rounded-full blur-xl animate-float"></div>
+      <div class="absolute bottom-40 left-40 w-48 h-48 bg-white/10 rounded-full blur-xl animate-float-delay"></div>
+
+      <div class="container mx-auto px-6 md:px-8 relative">
+        <div class="text-center max-w-4xl mx-auto">
+          <div class="inline-block mb-6">
+            <span class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-full text-sm font-medium">
+              Knowledge Base
+            </span>
+          </div>
+
+          <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            コラムで学ぶ<br />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-pink-200">システム開発の知識</span>
+          </h1>
+
+          <p class="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
+            「開発って、正直よくわからない」という不安を解消。<br class="hidden md:block" />
+            失敗しないための実践的な知識を、体系的にお届けします。
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="#categories"
+              class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-indigo-600 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+            >
+              記事を読む
+              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </a>
+            <a
+              href="/prooffirst"
+              class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-indigo-600 transition-all"
+            >
+              ゼロスタートを見る
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Column Categories */}
+    <section id="categories" class="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-white">
+      <div class="container mx-auto px-6 md:px-8">
+        {columnCategories.map((category) => (
+          <div id={category.id} class="mb-20 scroll-mt-24">
+            {/* Category Header */}
+            <div class="mb-12">
+              <div class="mb-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                  {category.title}
+                </h2>
+                <p class="text-lg text-gray-600">
+                  {category.description}
+                </p>
+              </div>
+              <div class="border-t-2 border-indigo-200"></div>
+            </div>
+
+            {/* Articles Grid */}
+            {category.articles.length > 0 ? (
+              <div class="grid md:grid-cols-2 gap-6">
+                {category.articles.map((article) => (
+                  <a
+                    href={`/column/${article.slug}`}
+                    class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all p-6 md:p-8 border border-gray-100 hover:border-indigo-200"
+                  >
+                    <div class="flex items-start gap-6">
+                      {/* Article Number */}
+                      <div class="flex-shrink-0">
+                        <div class="w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 text-indigo-700 font-bold text-lg">
+                          {article.number}
+                        </div>
+                      </div>
+
+                      {/* Article Content */}
+                      <div class="flex-1 min-w-0">
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-3 leading-tight">
+                          {article.title}
+                        </h3>
+                        <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-4">
+                          {article.description}
+                        </p>
+
+                        {/* Meta Info */}
+                        <div class="flex items-center gap-4 text-sm text-gray-500">
+                          <span class="flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {article.readTime}
+                          </span>
+                          <span class={`px-3 py-1 rounded-full text-xs font-medium ${
+                            article.difficulty === '初級' ? 'bg-green-100 text-green-700' :
+                            article.difficulty === '中級' ? 'bg-yellow-100 text-yellow-700' :
+                            'bg-red-100 text-red-700'
+                          }`}>
+                            {article.difficulty}
+                          </span>
+                        </div>
+
+                        {/* Read More */}
+                        <div class="flex items-center text-indigo-600 font-semibold text-sm mt-4 group-hover:translate-x-1 transition-transform">
+                          <span>記事を読む</span>
+                          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <div class="text-center py-12 bg-gray-50 rounded-xl">
+                <p class="text-gray-500">このカテゴリーの記事はまだありません</p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* Quick Navigation */}
+    <section class="py-12 bg-white border-y border-gray-200">
+      <div class="container mx-auto px-6 md:px-8">
+        <h3 class="text-xl font-bold text-gray-900 mb-6 text-center">カテゴリーから探す</h3>
+        <div class="flex flex-wrap justify-center gap-4">
+          {columnCategories.map((category) => (
+            <a
+              href={`#${category.id}`}
+              class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 text-indigo-700 rounded-full font-medium transition-all shadow-sm hover:shadow-md"
+            >
+              <span>{category.title}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* Templates & Checklists */}
+    <section class="relative py-20 md:py-28 bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 text-white overflow-hidden">
+      <div class="absolute inset-0 bg-grid-pattern opacity-20"></div>
+
+      <div class="container mx-auto px-6 md:px-8 relative">
+        <div class="max-w-3xl mx-auto text-center mb-16">
+          <span class="inline-flex items-center px-4 py-2 mb-6 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium">
+            Templates & Checklists
+          </span>
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">型・テンプレート・チェックリスト</h2>
+          <p class="text-lg text-white/80 leading-relaxed">
+            実務でそのまま使えるドキュメントの型や、開発の抜け漏れを防ぐチェックリストを準備中です。
+            公開まで今しばらくお待ちください。
+          </p>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div
+            class="group relative block rounded-2xl bg-white/10 hover:bg-white/15 transition-all p-8 shadow-xl hover:shadow-2xl border border-white/10 cursor-not-allowed"
+            aria-disabled="true"
+          >
+            <div class="flex items-start justify-between mb-6">
+              <span class="px-3 py-1 text-xs font-semibold rounded-full bg-white/20 text-white/90 border border-white/20">
+                準備中
+              </span>
+            </div>
+
+            <h3 class="text-2xl font-semibold mb-3 group-hover:text-white">要件定義テンプレート集</h3>
+            <p class="text-sm text-white/80 leading-relaxed mb-6">
+              要件整理からスコープ合意までをスムーズに進めるためのドキュメントセット。
+              公開後はチェックリスト付きで利用できます。
+            </p>
+
+            <div class="absolute inset-0 rounded-2xl border border-white/0 group-hover:border-white/40 transition-colors"></div>
+          </div>
+
+          <div
+            class="group relative block rounded-2xl bg-white/10 hover:bg-white/15 transition-all p-8 shadow-xl hover:shadow-2xl border border-white/10 cursor-not-allowed"
+            aria-disabled="true"
+          >
+            <div class="flex items-start justify-between mb-6">
+              <span class="px-3 py-1 text-xs font-semibold rounded-full bg-white/20 text-white/90 border border-white/20">
+                準備中
+              </span>
+            </div>
+
+            <h3 class="text-2xl font-semibold mb-3 group-hover:text-white">開発プロセス・チェックリスト</h3>
+            <p class="text-sm text-white/80 leading-relaxed mb-6">
+              プロジェクトの立ち上げからリリース後の運用まで、フェーズごとの確認ポイントを網羅予定です。
+            </p>
+
+            <div class="absolute inset-0 rounded-2xl border border-white/0 group-hover:border-white/40 transition-colors"></div>
+          </div>
+
+          <div
+            class="group relative block rounded-2xl bg-white/10 hover:bg-white/15 transition-all p-8 shadow-xl hover:shadow-2xl border border-white/10 cursor-not-allowed"
+            aria-disabled="true"
+          >
+            <div class="flex items-start justify-between mb-6">
+              <span class="px-3 py-1 text-xs font-semibold rounded-full bg-white/20 text-white/90 border border-white/20">
+                準備中
+              </span>
+            </div>
+
+            <h3 class="text-2xl font-semibold mb-3 group-hover:text-white">マネジメント・ドキュメントセット</h3>
+            <p class="text-sm text-white/80 leading-relaxed mb-6">
+              プロジェクト計画書やステークホルダー連絡テンプレートなど、進行管理を支える資料を順次公開予定です。
+            </p>
+
+            <div class="absolute inset-0 rounded-2xl border border-white/0 group-hover:border-white/40 transition-colors"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* CTA Section - Zero Start */}
+    <section class="relative py-20 md:py-32 overflow-hidden bg-gradient-to-br from-indigo-600 to-purple-600">
+      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+
+      <div class="container mx-auto px-6 md:px-8 relative">
+        <div class="max-w-4xl mx-auto text-center">
+          <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">
+            知識を得たら、次は<br class="md:hidden" />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-pink-200">実際に体験しませんか？</span>
+          </h2>
+
+          <p class="text-xl text-white/90 mb-10 leading-relaxed">
+            コラムで学んだ「失敗しない開発」を、ゼロスタートで実践。<br />
+            初期費用0円で、動くプロトタイプを体験できます。
+          </p>
+
+          <div class="bg-white/10 backdrop-blur-sm rounded-3xl p-8 mb-10">
+            <div class="grid md:grid-cols-3 gap-6 text-white">
+              <div>
+                <div class="text-4xl font-bold mb-2">0円</div>
+                <div class="text-white/80">初期費用</div>
+              </div>
+              <div>
+                <div class="text-4xl font-bold mb-2">1-2週間</div>
+                <div class="text-white/80">プロトタイプ完成</div>
+              </div>
+              <div>
+                <div class="text-4xl font-bold mb-2">動くデモ</div>
+                <div class="text-white/80">で判断できる</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="/prooffirst"
+              class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-indigo-600 bg-white rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
+            >
+              ゼロスタートについて詳しく見る
+              <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+            <a
+              href="/contact"
+              class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-indigo-600 transition-all"
+            >
+              無料相談を予約する
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0) }
+    50% { transform: translateY(-20px) }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-float-delay {
+    animation: float 8s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+
+  .bg-grid-pattern {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .scroll-mt-24 {
+    scroll-margin-top: 6rem;
+  }
+</style>
