@@ -144,28 +144,18 @@ const relatedArticles = [
       </div>
     </section>
 
-    {/* Related Articles */}
+    {/* Back to Column List */}
     <section class="py-16 bg-white">
       <div class="container mx-auto px-6 md:px-8 max-w-4xl">
-        <h2 class="text-3xl font-bold text-gray-900 mb-8">関連記事</h2>
-        <div class="grid md:grid-cols-3 gap-6">
-          {relatedArticles.map((article) => (
-            <a
-              href={`/column/${article.slug}`}
-              class="group bg-gray-50 rounded-xl p-6 hover:bg-indigo-50 transition-all border border-gray-200 hover:border-indigo-300"
-            >
-              <h3 class="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors leading-tight mb-3">
-                {article.title}
-              </h3>
-              <div class="flex items-center text-indigo-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
-                <span>読む</span>
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </a>
-          ))}
-        </div>
+        <a
+          href="/column"
+          class="inline-flex items-center text-indigo-600 hover:text-indigo-700 font-semibold transition-colors group"
+        >
+          <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span>コラム一覧に戻る</span>
+        </a>
       </div>
     </section>
 
@@ -203,20 +193,20 @@ const relatedArticles = [
 <style>
   /* マークダウンコンテンツのデザインシステム - Tailwind設定を使用 */
   .markdown-content {
-    @apply text-gray-800 text-body;
+    @apply text-gray-800 text-base leading-relaxed;
   }
 
   /* 見出しスタイル - 明確な階層を作る */
   .markdown-content :global(h1) {
-    @apply font-bold text-gray-900 text-h1 mt-8 mb-4;
+    @apply font-bold text-gray-900 text-3xl md:text-4xl mt-8 mb-4;
   }
 
   .markdown-content :global(h2) {
-    @apply font-bold text-gray-900 text-h2 mt-10 mb-4 pb-2 border-b-[3px] border-indigo-200;
+    @apply font-bold text-gray-900 text-2xl md:text-3xl mt-10 mb-4 pb-2 border-b-[3px] border-indigo-200;
   }
 
   .markdown-content :global(h3) {
-    @apply font-bold text-gray-900 text-h3 mt-7 mb-3 relative pl-2;
+    @apply font-bold text-gray-900 text-xl md:text-2xl mt-7 mb-3 relative pl-2;
   }
 
   .markdown-content :global(h3)::before {
@@ -227,16 +217,16 @@ const relatedArticles = [
   }
 
   .markdown-content :global(h4) {
-    @apply font-bold text-gray-800 text-h4 mt-5 mb-2;
+    @apply font-bold text-gray-800 text-lg md:text-xl mt-5 mb-2;
   }
 
   .markdown-content :global(h5) {
-    @apply font-bold text-gray-800 text-h5 mt-4 mb-2;
+    @apply font-bold text-gray-800 text-base md:text-lg mt-4 mb-2;
   }
 
   /* 段落スタイル - 読みやすい行間と余白 */
   .markdown-content :global(p) {
-    @apply text-gray-700 text-body mb-3;
+    @apply text-gray-700 text-base leading-relaxed mb-3;
   }
 
   /* リンクスタイル - 目立つがエレガント */
@@ -276,102 +266,75 @@ const relatedArticles = [
     @apply italic text-gray-700;
   }
 
-  /* リストスタイル - 視覚的に明確 + 8pxベーススペーシング */
+  /* リストスタイル - 視覚的に明確 */
   .markdown-content :global(ul) {
-    margin-top: 32px;    /* 8 × 4 */
-    margin-bottom: 32px; /* 8 × 4 */
-    padding-left: 0;
-    list-style: none;
+    @apply my-4 pl-0 list-none;
   }
 
   .markdown-content :global(ul li) {
-    @apply relative text-gray-700;
-    padding-left: 32px;  /* 8 × 4 */
-    margin-bottom: 16px; /* 8 × 2 */
-    font-size: 16px;
-    line-height: 1.5;
+    @apply relative text-gray-700 text-base leading-relaxed pl-4 mb-2;
   }
 
   .markdown-content :global(ul li):last-child {
-    margin-bottom: 0;
+    @apply mb-0;
   }
 
   .markdown-content :global(ul li)::before {
     content: '';
-    position: absolute;
-    left: 8px;           /* 8 × 1 */
+    @apply absolute left-1 rounded-full;
     top: 0.65em;
     width: 6px;
     height: 6px;
     background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    border-radius: 50%;
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
   }
 
   /* チェックリスト用のスタイル - ✅と❌のサポート */
   .markdown-content :global(ul li:has(> :first-child:is([style*="color: green"], [style*="✅"]))) {
-    padding-left: 40px;  /* 8 × 5 */
+    @apply pl-5;
   }
 
   .markdown-content :global(ul li:has(> :first-child:is([style*="color: green"], [style*="✅"])))::before {
     content: '✅';
+    @apply left-1;
     font-size: 1.25rem;
     background: none;
     box-shadow: none;
     width: auto;
     height: auto;
     top: 0;
-    left: 8px;           /* 8 × 1 */
   }
 
   .markdown-content :global(ul li:has(> :first-child:is([style*="color: red"], [style*="❌"])))::before {
     content: '❌';
+    @apply left-1;
     font-size: 1.25rem;
     background: none;
     box-shadow: none;
     width: auto;
     height: auto;
     top: 0;
-    left: 8px;           /* 8 × 1 */
   }
 
   /* 番号付きリスト */
   .markdown-content :global(ol) {
-    margin-top: 32px;    /* 8 × 4 */
-    margin-bottom: 32px; /* 8 × 4 */
+    @apply my-4 pl-0 list-none;
     counter-reset: item;
-    list-style: none;
-    padding-left: 0;
   }
 
   .markdown-content :global(ol li) {
-    @apply relative text-gray-700;
-    padding-left: 80px;  /* 8 × 10 */
-    margin-bottom: 16px; /* 8 × 2 */
-    font-size: 16px;
-    line-height: 1.5;
+    @apply relative text-gray-700 text-base leading-relaxed pl-10 mb-2;
     counter-increment: item;
   }
 
   .markdown-content :global(ol li):last-child {
-    margin-bottom: 0;
+    @apply mb-0;
   }
 
   .markdown-content :global(ol li)::before {
     content: counter(item);
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 32px;         /* 8 × 4 */
-    height: 32px;        /* 8 × 4 */
+    @apply absolute left-0 top-0 w-4 h-4 text-white rounded-full flex items-center justify-center font-bold text-xs;
     background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.875rem;
   }
 
   /* 引用ブロック */
