@@ -333,8 +333,9 @@ const relatedArticles = [
 
   .markdown-content :global(ol li)::before {
     content: counter(item);
-    @apply absolute left-0 top-0 w-4 h-4 text-white rounded-full flex items-center justify-center font-bold text-xs;
+    @apply absolute left-0 w-6 h-6 text-white rounded-full flex items-center justify-center font-bold text-xs;
     background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    top: 0.15em;
   }
 
   /* 引用ブロック */
