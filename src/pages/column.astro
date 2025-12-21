@@ -1,66 +1,41 @@
 ---
 import { Header } from '../components/header';
 import Layout from '../layouts/layout.astro';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import { getCategories, getColumns } from '../lib/microcms';
 
 export const prerender = true;
 
-// カテゴリーメタデータを読み込み
-const categoriesPath = path.join(process.cwd(), 'src/content/columns/_categories.json');
-const categoriesMetadata = JSON.parse(fs.readFileSync(categoriesPath, 'utf8'));
-
-// フォルダ構造から記事を動的に読み込む
-const columnsDir = path.join(process.cwd(), 'src/content/columns');
-const categoryFolders = fs.readdirSync(columnsDir)
-  .filter(item => {
-    const itemPath = path.join(columnsDir, item);
-    return fs.statSync(itemPath).isDirectory() && !item.startsWith('_');
-  });
+// MicroCMSからカテゴリーとコラムを取得
+const categories = await getCategories();
+const allColumns = await getColumns();
 
 // カテゴリーごとに記事を収集
-const columnCategories = categoryFolders
-  .map(categoryId => {
-    const categoryPath = path.join(columnsDir, categoryId);
-    const files = fs.readdirSync(categoryPath)
-      .filter(file => file.endsWith('.md'))
-      .sort(); // ファイル名でソート（01-, 02-...）
+const columnCategories = categories.map(category => {
+  const categoryColumns = allColumns.filter(
+    column => column.category.id === category.id
+  );
 
-    const articles = files.map((file, index) => {
-      const filePath = path.join(categoryPath, file);
-      const fileContents = fs.readFileSync(filePath, 'utf8');
-      const { data } = matter(fileContents);
-      const slug = file.replace('.md', '');
+  const articles = categoryColumns.map((column, index) => ({
+    number: String(index + 1).padStart(2, '0'),
+    title: column.title,
+    slug: column.id,
+  }));
 
-      return {
-        number: String(index + 1).padStart(2, '0'),
-        title: data.title || 'タイトルなし',
-        description: data.description || '',
-        slug: `${categoryId}/${slug}`,
-        readTime: data.readTime || '10分',
-        difficulty: data.difficulty || '中級',
-      };
-    });
-
-    const metadata = categoriesMetadata[categoryId] || {
-      title: categoryId,
-      description: '',
-      order: 999
-    };
-
-    return {
-      ...metadata,
-      articles
-    };
-  })
-  .sort((a, b) => a.order - b.order);
+  return {
+    id: category.id,
+    title: category.title,
+    description: category.description,
+    icon: category.icon,
+    order: category.order,
+    articles,
+  };
+}).sort((a, b) => a.order - b.order);
 
 // 統計情報
 const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.length, 0);
 ---
 
-<Layout title="コラムで学ぶ - システム開発の知識 | Beekle">
+<Layout title="コラムで学ぶ - システム開発を成功させる発注側の技術 | Beekle">
   <Header client:load />
   <main class="pt-20">
     {/* Hero Section */}
@@ -177,32 +152,12 @@ const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.l
 
                       {/* Article Content */}
                       <div class="flex-1 min-w-0">
-                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-3 leading-tight">
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-4 leading-tight">
                           {article.title}
                         </h3>
-                        <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-4">
-                          {article.description}
-                        </p>
-
-                        {/* Meta Info */}
-                        <div class="flex items-center gap-4 text-sm text-gray-500">
-                          <span class="flex items-center gap-1">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            {article.readTime}
-                          </span>
-                          <span class={`px-3 py-1 rounded-full text-xs font-medium ${
-                            article.difficulty === '初級' ? 'bg-green-100 text-green-700' :
-                            article.difficulty === '中級' ? 'bg-yellow-100 text-yellow-700' :
-                            'bg-red-100 text-red-700'
-                          }`}>
-                            {article.difficulty}
-                          </span>
-                        </div>
 
                         {/* Read More */}
-                        <div class="flex items-center text-indigo-600 font-semibold text-sm mt-4 group-hover:translate-x-1 transition-transform">
+                        <div class="flex items-center text-indigo-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
                           <span>記事を読む</span>
                           <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
