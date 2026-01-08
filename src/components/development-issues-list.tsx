@@ -3,7 +3,7 @@ import { developmentIssues } from '../data/development-issues';
 
 const categoryColors = {
   'プロジェクト管理': 'bg-blue-100 text-blue-800',
-  '技術的課題': 'bg-purple-100 text-purple-800',
+  '技術的課題': 'bg-primary-100 text-primary-700',
   '組織・プロセス': 'bg-green-100 text-green-800',
   '品質・保守': 'bg-orange-100 text-orange-800',
 };
@@ -27,7 +27,7 @@ export const DevelopmentIssuesList = () => {
               onClick={() => setSelectedCategory(category)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 selectedCategory === category
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-primary-500 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -59,7 +59,7 @@ export const DevelopmentIssuesList = () => {
               
               <a
                 href={`/development-issues/${issue.id}`}
-                className="inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium"
+                className="inline-flex items-center text-primary-500 hover:text-primary-600 font-medium"
               >
                 詳細を見る
                 <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

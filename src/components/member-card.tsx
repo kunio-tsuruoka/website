@@ -18,13 +18,13 @@ const MemberCard: React.FC<MemberCardProps> = ({
   // 説明文に改行があれば段落に分割
   const paragraphs = description.split('\n').filter((p) => p.trim() !== '');
 
-  // ポジションに基づいた色のマッピング
+  // ポジションに基づいた色のマッピング - Beekle Pop Style
   const getGradientByPosition = (pos: string) => {
-    if (pos.includes('CEO') || pos.includes('代表')) return 'from-indigo-600 to-purple-600';
-    if (pos.includes('デザイン')) return 'from-purple-600 to-pink-600';
-    if (pos.includes('エンジニア')) return 'from-blue-600 to-indigo-600';
-    if (pos.includes('ディレクター')) return 'from-pink-600 to-purple-600';
-    return 'from-indigo-600 to-blue-600';
+    if (pos.includes('CEO') || pos.includes('代表')) return 'from-primary-500 to-primary-600';
+    if (pos.includes('デザイン')) return 'from-secondary-500 to-secondary-600';
+    if (pos.includes('エンジニア')) return 'from-primary-400 to-primary-500';
+    if (pos.includes('ディレクター')) return 'from-primary-500 to-secondary-500';
+    return 'from-primary-500 to-primary-600';
   };
 
   const gradient = getGradientByPosition(position);
@@ -64,7 +64,7 @@ const MemberCard: React.FC<MemberCardProps> = ({
                   const content = paragraph.substring(titleEndIndex);
 
                   return (
-                    <div key={idx} className="border-l-2 border-gray-200 pl-4 group-hover:border-indigo-400 transition-colors">
+                    <div key={idx} className="border-l-2 border-gray-200 pl-4 group-hover:border-primary-400 transition-colors">
                       <p className="text-gray-700">
                         <span className={`font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}>
                           {title}

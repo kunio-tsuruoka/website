@@ -50,14 +50,14 @@ const testimonialData: Testimonial[] = [
   },
 ];
 
-// 星評価を表示するコンポーネント
+// 星評価を表示するコンポーネント（ブランドカラー：highlight-500）
 const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
   return (
     <div className="flex">
       {[...Array(5)].map((_, index) => (
         <svg
           key={index}
-          className={`w-5 h-5 ${index < rating ? 'text-yellow-400' : 'text-gray-300'}`}
+          className={`w-5 h-5 ${index < rating ? 'text-highlight-500' : 'text-neutral-200'}`}
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
@@ -69,20 +69,20 @@ const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
   );
 };
 
-// 個別のお客様の声カード
+// 個別のお客様の声カード（ブランドガイドライン準拠）
 const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-5 flex flex-col h-full">
+    <div className="bg-white rounded-[32px] shadow-soft p-6 flex flex-col h-full hover:shadow-medium transition-shadow">
       <div className="flex flex-col mb-3">
         <div>
-          <h3 className="font-bold text-lg">{testimonial.name}</h3>
-          <p className="text-gray-600 text-sm">{testimonial.role}</p>
+          <h3 className="font-bold text-xl text-neutral-900">{testimonial.name}</h3>
+          <p className="text-neutral-600 text-base">{testimonial.role}</p>
         </div>
       </div>
       <div className="mb-3">
         <StarRating rating={testimonial.rating} />
       </div>
-      <p className="text-gray-700 italic flex-grow text-sm">"{testimonial.quote}"</p>
+      <p className="text-neutral-600 italic flex-grow text-base">"{testimonial.quote}"</p>
     </div>
   );
 };
@@ -109,7 +109,7 @@ const TestimonialSection: React.FC = () => {
   );
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-neutral-50">
       <div className="container mx-auto px-4">
 
         {/* PC表示用グリッド */}
@@ -130,11 +130,11 @@ const TestimonialSection: React.FC = () => {
         <div className="flex justify-center items-center gap-3 mt-6">
           <button
             onClick={handlePrevPage}
-            className="p-1.5 rounded-full bg-white border border-gray-300 hover:bg-gray-100"
+            className="p-1.5 rounded-full bg-white border border-neutral-200 hover:bg-accent-50 hover:border-accent-300 transition-colors"
             aria-label="前のページ"
           >
             <svg
-              className="w-4 h-4 text-gray-600"
+              className="w-4 h-4 text-neutral-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -154,8 +154,8 @@ const TestimonialSection: React.FC = () => {
               <button
                 key={i}
                 onClick={() => setCurrentPage(i)}
-                className={`w-2 h-2 rounded-full ${
-                  currentPage === i ? 'bg-blue-600' : 'bg-gray-300'
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  currentPage === i ? 'bg-accent-600' : 'bg-neutral-300'
                 }`}
                 aria-label={`${i + 1}ページ目に移動`}
               />
@@ -164,11 +164,11 @@ const TestimonialSection: React.FC = () => {
 
           <button
             onClick={handleNextPage}
-            className="p-1.5 rounded-full bg-white border border-gray-300 hover:bg-gray-100"
+            className="p-1.5 rounded-full bg-white border border-neutral-200 hover:bg-accent-50 hover:border-accent-300 transition-colors"
             aria-label="次のページ"
           >
             <svg
-              className="w-4 h-4 text-gray-600"
+              className="w-4 h-4 text-neutral-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
