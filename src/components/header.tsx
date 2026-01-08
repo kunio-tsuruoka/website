@@ -33,7 +33,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)} // isOpenをトグルして開閉
-            className="text-gray-600 hover:text-indigo-600 focus:outline-none"
+            className="text-neutral-600 hover:text-accent-600 focus:outline-none"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +61,7 @@ export function Header() {
             <li key={item.href}>
               <a
                 href={item.href}
-                className="text-gray-600 hover:text-indigo-600 transition-colors text-sm font-medium"
+                className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
               >
                 {item.label}
               </a>
@@ -70,7 +70,7 @@ export function Header() {
           <li>
             <a
               href="/contact"
-              className="px-4 py-2 bg-indigo-600 text-white rounded-full text-sm font-medium hover:bg-indigo-700 transition-colors"
+              className="px-4 py-2 bg-primary-500 text-white rounded-full text-sm font-semibold hover:bg-primary-600 transition-colors shadow-soft hover:shadow-medium"
             >
               お問い合わせ
             </a>
@@ -81,14 +81,14 @@ export function Header() {
       {/* モーダル */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-indigo-600 text-white p-8 rounded-lg w-full h-full flex flex-col justify-center items-center">
-            <h2 className="text-3xl font-semibold mb-4">メニュー</h2>
+          <div className="bg-navy-950 text-white p-8 rounded-[32px] w-full h-full flex flex-col justify-center items-center">
+            <h2 className="text-3xl font-bold mb-4">メニュー</h2>
             <ul className="flex flex-col items-center space-y-4">
               {navigation.map((item) => (
                 <li key={item.href}>
                   <a
                     href={item.href}
-                    className="hover:text-indigo-300 transition-colors text-lg"
+                    className="hover:text-accent-300 transition-colors text-lg"
                     onClick={() => setIsOpen(false)} // ナビゲーションクリックでモーダル閉じる
                   >
                     {item.label}
@@ -98,7 +98,7 @@ export function Header() {
               <li>
                 <a
                   href="/contact"
-                  className="px-4 py-2 bg-indigo-500 rounded-full text-white hover:bg-indigo-400 transition-colors"
+                  className="px-4 py-2 bg-primary-500 rounded-full text-white hover:bg-primary-600 transition-colors shadow-soft"
                   onClick={() => setIsOpen(false)} // お問い合わせボタンでモーダル閉じる
                 >
                   お問い合わせ
