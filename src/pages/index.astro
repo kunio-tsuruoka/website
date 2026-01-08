@@ -9,6 +9,7 @@ import { services } from '../data/service';
 import Layout from '../layouts/layout.astro';
 import { HeroSection } from '@/components/hero-section';
 import ContactForm from '@/components/contact-form';
+import { ButtonLink } from '@/components/ui/button';
 ---
 
 <Layout title="Beekle - 技術を用いて人を幸せに">
@@ -17,12 +18,27 @@ import ContactForm from '@/components/contact-form';
     {/* メインビジュアル */}
     <HeroSection client:load />
 
-    {/* ゼロスタート訴求セクション */}
-    <section class="relative py-24 overflow-hidden bg-gradient-to-br from-indigo-600 to-purple-600">
-      <div class="absolute inset-0 bg-grid-pattern opacity-10" />
+    {/* ゼロスタート訴求セクション - Pop Style */}
+    <section class="relative py-24 overflow-hidden bg-accent-950">
+      {/* Pop decorations */}
+      <div class="absolute -top-20 -right-10 w-40 h-80 decoration-bar-purple opacity-20 animate-float"></div>
+      <div class="absolute top-40 right-32 w-24 h-64 decoration-bar-cyan opacity-20 animate-float-delay"></div>
+      <div class="absolute bottom-20 left-10 w-32 h-72 decoration-bar-yellow opacity-15 animate-float-slow"></div>
+
+      {/* Dots */}
+      <div class="absolute top-32 left-20 w-4 h-4 rounded-full bg-secondary-500 opacity-60"></div>
+      <div class="absolute top-48 left-32 w-6 h-6 rounded-full bg-highlight-500 opacity-50"></div>
+      <div class="absolute bottom-40 right-40 w-5 h-5 rounded-full bg-primary-500 opacity-50"></div>
+
+      <div class="absolute inset-0 bg-grid-pattern-light opacity-5" />
 
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="max-w-4xl mx-auto text-center">
+          {/* Section Label */}
+          <span class="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wide text-primary-300 bg-primary-500/20 rounded-full">
+            ZERO START
+          </span>
+
           <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">
             「まず、動くものを見よう。」
           </h2>
@@ -35,7 +51,7 @@ import ContactForm from '@/components/contact-form';
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/prooffirst"
-              class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-indigo-600 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+              class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-accent-950 bg-white rounded-full hover:bg-gray-100 transition-all shadow-soft hover:shadow-medium"
             >
               ゼロスタートについて詳しく見る
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,14 +63,22 @@ import ContactForm from '@/components/contact-form';
       </div>
     </section>
 
-    {/* こんな不安、ありませんか？ */}
-    <section class="py-24 bg-gradient-to-br from-gray-50 to-white">
-      <div class="container mx-auto px-8 lg:px-12">
+    {/* こんな不安、ありませんか？ - Pop Style */}
+    <section class="py-24 bg-neutral-50 relative overflow-hidden">
+      {/* Pop decorations */}
+      <div class="absolute -top-10 left-10 w-32 h-64 decoration-bar-purple opacity-10"></div>
+      <div class="absolute bottom-20 right-20 w-24 h-48 decoration-bar-cyan opacity-10"></div>
+
+      <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center mb-16">
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            こんな<span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">不安</span>、ありませんか？
+          {/* Number Label */}
+          <span class="number-label">01</span>
+          <span class="section-label ml-4">CONCERNS</span>
+
+          <h2 class="text-4xl lg:text-5xl font-bold text-navy-950 mb-6 mt-4">
+            こんな<span class="text-primary-500">不安</span>、ありませんか？
           </h2>
-          <p class="text-xl text-gray-600">
+          <p class="text-xl text-neutral-600">
             開発の不安を、動くプロトタイプが解消します
           </p>
         </div>
@@ -62,24 +86,23 @@ import ContactForm from '@/components/contact-form';
         <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* カード1: 見積もりが当てにならない */}
           <a href="/prooffirst" class="group relative block">
-            <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full flex flex-col">
-              <div class="mb-6 w-16 h-16 mx-auto bg-indigo-50 rounded-full flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" class="w-10 h-10 text-indigo-600">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
+            <div class="card-base card-hover card-lift p-8 h-full flex flex-col">
+              <div class="mb-6 w-16 h-16 mx-auto bg-primary-50 rounded-full flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-10 h-10 text-primary-500">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
                 </svg>
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">
+              <h3 class="text-xl font-bold text-navy-950 mb-4 text-center">
                 見積もりが<br />当てにならない
               </h3>
-              <p class="text-gray-600 leading-relaxed text-center flex-grow">
+              <p class="text-neutral-600 leading-relaxed text-center flex-grow">
                 「本当にこの金額で実現できるの？」見積もりだけでは判断できない不安を、動くプロトタイプが解消します。
               </p>
               <div class="mt-6 text-center">
-                <span class="inline-flex items-center text-indigo-600 font-semibold group-hover:text-indigo-700 transition-colors">
+                <span class="inline-flex items-center text-primary-500 font-semibold group-hover:text-primary-600 transition-colors">
                   ゼロスタートで解決
                   <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
                 </span>
               </div>
@@ -88,24 +111,23 @@ import ContactForm from '@/components/contact-form';
 
           {/* カード2: 思ったのと違うものが出てくる */}
           <a href="/prooffirst" class="group relative block">
-            <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full flex flex-col">
-              <div class="mb-6 w-16 h-16 mx-auto bg-indigo-50 rounded-full flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" class="w-10 h-10 text-indigo-600">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z" />
+            <div class="card-base card-hover card-lift p-8 h-full flex flex-col">
+              <div class="mb-6 w-16 h-16 mx-auto bg-secondary-50 rounded-full flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-10 h-10 text-secondary-500">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z" />
                 </svg>
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">
+              <h3 class="text-xl font-bold text-navy-950 mb-4 text-center">
                 頼んでも思ったのと<br />違うものが出てくる
               </h3>
-              <p class="text-gray-600 leading-relaxed text-center flex-grow">
+              <p class="text-neutral-600 leading-relaxed text-center flex-grow">
                 「こんなはずじゃなかった」を防ぐ。数日で動くものを作り、一緒に磨き込むから期待とのズレがない。
               </p>
               <div class="mt-6 text-center">
-                <span class="inline-flex items-center text-indigo-600 font-semibold group-hover:text-indigo-700 transition-colors">
+                <span class="inline-flex items-center text-secondary-500 font-semibold group-hover:text-secondary-600 transition-colors">
                   ゼロスタートで解決
                   <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
                 </span>
               </div>
@@ -114,24 +136,23 @@ import ContactForm from '@/components/contact-form';
 
           {/* カード3: AI/PoCが自社に合うか分からない */}
           <a href="/prooffirst" class="group relative block">
-            <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full flex flex-col">
-              <div class="mb-6 w-16 h-16 mx-auto bg-indigo-50 rounded-full flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" class="w-10 h-10 text-indigo-600">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m6.75 7.5 3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2 2 0 0 0 2.25 2.25Z" />
+            <div class="card-base card-hover card-lift p-8 h-full flex flex-col">
+              <div class="mb-6 w-16 h-16 mx-auto bg-highlight-100 rounded-full flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-10 h-10 text-highlight-600">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m6.75 7.5 3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2 2 0 0 0 2.25 2.25Z" />
                 </svg>
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">
+              <h3 class="text-xl font-bold text-navy-950 mb-4 text-center">
                 AIやPoCって聞くけど、<br />自分の会社に合うか分からない
               </h3>
-              <p class="text-gray-600 leading-relaxed text-center flex-grow">
+              <p class="text-neutral-600 leading-relaxed text-center flex-grow">
                 実際の要件で効果を検証。システムを触って確認してから本格導入を判断できます。
               </p>
               <div class="mt-6 text-center">
-                <span class="inline-flex items-center text-indigo-600 font-semibold group-hover:text-indigo-700 transition-colors">
+                <span class="inline-flex items-center text-highlight-600 font-semibold group-hover:text-highlight-500 transition-colors">
                   ゼロスタートで解決
                   <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
                 </span>
               </div>
@@ -141,40 +162,47 @@ import ContactForm from '@/components/contact-form';
 
         {/* CTA */}
         <div class="text-center mt-12">
-          <p class="text-lg text-gray-600 mb-6">
+          <p class="text-lg text-neutral-600 mb-6">
             これらの不安、すべてゼロスタートが解消します
           </p>
           <a
             href="/prooffirst"
-            class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
+            class="btn-base px-8 py-4 text-lg btn-primary"
           >
             ゼロスタートについて詳しく見る
             <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </a>
         </div>
       </div>
     </section>
 
-    {/* サービス一覧 */}
-    <section id="services" class="relative py-32 overflow-hidden">
-      {/* 背景装飾 */}
-      <div class="absolute inset-0">
-        <div class="absolute top-0 left-0 w-96 h-96 bg-purple-100/20 rounded-full blur-3xl" />
-        <div class="absolute bottom-0 right-0 w-96 h-96 bg-indigo-100/20 rounded-full blur-3xl" />
-      </div>
+    {/* サービス一覧 - Pop Style */}
+    <section id="services" class="relative py-32 overflow-hidden bg-white">
+      {/* Pop decorations */}
+      <div class="absolute top-20 left-0 w-40 h-80 decoration-bar-cyan opacity-10 animate-float"></div>
+      <div class="absolute bottom-10 right-10 w-32 h-64 decoration-bar-purple opacity-10 animate-float-delay"></div>
+
+      {/* Dots */}
+      <div class="absolute top-40 right-32 w-6 h-6 rounded-full bg-secondary-500 opacity-30"></div>
+      <div class="absolute bottom-60 left-40 w-4 h-4 rounded-full bg-highlight-500 opacity-40"></div>
+      <div class="absolute top-80 left-20 w-5 h-5 rounded-full bg-primary-500 opacity-30"></div>
 
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center mb-16">
-          <h2 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-            Our <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Services</span>
+          {/* Number Label */}
+          <span class="number-label">02</span>
+          <span class="section-label ml-4">SERVICES</span>
+
+          <h2 class="text-5xl lg:text-6xl font-bold text-navy-950 mb-6 mt-4">
+            Our <span class="text-primary-500">Services</span>
           </h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p class="text-xl text-neutral-600 max-w-3xl mx-auto">
             お客様のビジネスに寄り添ったマーケティング・情報設計・デザイン・開発等のトータルサポートを行います
           </p>
         </div>
-        
+
         <div class="grid md:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <div
@@ -193,30 +221,46 @@ import ContactForm from '@/components/contact-form';
       </div>
     </section>
 
-    {/* 開発の流れ */}
-    <section id="process" class="relative bg-gradient-to-br from-gray-50 to-white py-32">
-      <div class="absolute inset-0 bg-grid-pattern opacity-5" />
+    {/* 開発の流れ - Pop Style */}
+    <section id="process" class="relative bg-neutral-50 py-32 overflow-hidden">
+      {/* Pop decorations */}
+      <div class="absolute -top-10 right-20 w-36 h-72 decoration-bar-yellow opacity-10"></div>
+      <div class="absolute bottom-40 left-10 w-28 h-56 decoration-bar-purple opacity-10"></div>
+
+      <div class="absolute inset-0 bg-grid-pattern opacity-3" />
       <div class="relative">
+        {/* Number Label */}
+        <div class="container mx-auto px-8 lg:px-12 mb-8">
+          <div class="text-center">
+            <span class="number-label">03</span>
+            <span class="section-label ml-4">PROCESS</span>
+          </div>
+        </div>
+
         <ProcessHero client:load />
         <div class="container mx-auto">
           <ProcessSteps client:load />
         </div>
 
-        {/* CTA for Zero Start */}
+        {/* CTA for Zero Start - Pop Style */}
         <div class="container mx-auto px-8 lg:px-12 mt-16">
           <div class="max-w-4xl mx-auto">
-            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-10 shadow-2xl text-center">
-              <h3 class="text-3xl font-bold text-white mb-4">
+            <div class="bg-primary-500 rounded-[40px] p-10 shadow-medium text-center relative overflow-hidden">
+              {/* Inner decorations */}
+              <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full"></div>
+              <div class="absolute -bottom-5 -left-5 w-24 h-24 bg-white/10 rounded-full"></div>
+
+              <h3 class="text-3xl font-bold text-white mb-4 relative">
                 まずは、ゼロスタートから
               </h3>
-              <p class="text-lg text-indigo-100 mb-8 leading-relaxed">
+              <p class="text-lg text-white/90 mb-8 leading-relaxed relative">
                 初期費用0円で、実際に動くものを体験できます。<br />
                 お気軽にお問い合わせください。
               </p>
-              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <div class="flex flex-col sm:flex-row gap-4 justify-center relative">
                 <a
                   href="/contact"
-                  class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-indigo-600 bg-white rounded-full hover:bg-gray-50 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
+                  class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-50 transition-all shadow-soft hover:shadow-medium hover:scale-105 transform"
                 >
                   ゼロスタートを始める
                   <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -225,7 +269,7 @@ import ContactForm from '@/components/contact-form';
                 </a>
                 <a
                   href="/prooffirst"
-                  class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-indigo-600 transition-all"
+                  class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
                 >
                   詳しく見る
                 </a>
@@ -237,128 +281,154 @@ import ContactForm from '@/components/contact-form';
     </section>
 
 
-    {/* よくあるお悩み */}
-    <section class="py-32 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <div class="container mx-auto px-8 lg:px-12">
+    {/* よくあるお悩み - Pop Style */}
+    <section class="py-32 bg-white relative overflow-hidden">
+      {/* Pop decorations */}
+      <div class="absolute top-20 right-0 w-40 h-80 decoration-bar-cyan opacity-8"></div>
+      <div class="absolute bottom-20 left-0 w-32 h-64 decoration-bar-purple opacity-8"></div>
+
+      {/* Dots */}
+      <div class="absolute top-48 left-24 w-5 h-5 rounded-full bg-highlight-500 opacity-40"></div>
+      <div class="absolute bottom-32 right-48 w-4 h-4 rounded-full bg-secondary-500 opacity-30"></div>
+
+      <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center mb-16">
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            よくある<span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">お悩み</span>
+          {/* Number Label */}
+          <span class="number-label">04</span>
+          <span class="section-label ml-4">Q&A</span>
+
+          <h2 class="text-4xl lg:text-5xl font-bold text-navy-950 mb-4 mt-4">
+            よくある<span class="text-primary-500">お悩み</span>
           </h2>
-          <p class="text-xl text-gray-600">お客様からよくいただくご相談をまとめました</p>
+          <p class="text-xl text-neutral-600">お客様からよくいただくご相談をまとめました</p>
         </div>
 
         <div class="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-              <div class="flex items-start">
-                <span class="text-4xl text-indigo-600 mr-4">Q</span>
-                <div>
-                  <h4 class="text-xl font-bold text-gray-800 mb-3">
-                    見積もりだけで判断を迫られるのが不安
-                  </h4>
-                  <p class="text-gray-600 leading-relaxed">
-                    ゼロスタートなら、初期費用0円で実際に動くプロトタイプを体験してから判断できます。見積もりではなく、実物で納得してから進められます。
-                  </p>
-                </div>
+          <div class="card-base card-hover p-8">
+            <div class="flex items-start">
+              <span class="text-4xl font-bold text-primary-500 mr-4">Q</span>
+              <div>
+                <h4 class="text-xl font-bold text-navy-950 mb-3">
+                  見積もりだけで判断を迫られるのが不安
+                </h4>
+                <p class="text-neutral-600 leading-relaxed">
+                  ゼロスタートなら、初期費用0円で実際に動くプロトタイプを体験してから判断できます。見積もりではなく、実物で納得してから進められます。
+                </p>
               </div>
             </div>
           </div>
 
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-              <div class="flex items-start">
-                <span class="text-4xl text-purple-600 mr-4">Q</span>
-                <div>
-                  <h4 class="text-xl font-bold text-gray-800 mb-3">
-                    AIが本当に自社に合うか分からない
-                  </h4>
-                  <p class="text-gray-600 leading-relaxed">
-                    無料PoCで実際の業務データを使って効果を検証。ROIを数値で確認してから本格導入を判断できます。
-                  </p>
-                </div>
+          <div class="card-base card-hover p-8">
+            <div class="flex items-start">
+              <span class="text-4xl font-bold text-secondary-500 mr-4">Q</span>
+              <div>
+                <h4 class="text-xl font-bold text-navy-950 mb-3">
+                  AIが本当に自社に合うか分からない
+                </h4>
+                <p class="text-neutral-600 leading-relaxed">
+                  無料PoCで実際の業務データを使って効果を検証。ROIを数値で確認してから本格導入を判断できます。
+                </p>
               </div>
             </div>
           </div>
 
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-              <div class="flex items-start">
-                <span class="text-4xl text-pink-600 mr-4">Q</span>
-                <div>
-                  <h4 class="text-xl font-bold text-gray-800 mb-3">
-                    完成まで実物が見えないのが心配
-                  </h4>
-                  <p class="text-gray-600 leading-relaxed">
-                    数日で動くものを作り、そこから一緒に磨き込みます。「思ってたのと違う」を最小限に抑えられます。
-                  </p>
-                </div>
+          <div class="card-base card-hover p-8">
+            <div class="flex items-start">
+              <span class="text-4xl font-bold text-highlight-500 mr-4">Q</span>
+              <div>
+                <h4 class="text-xl font-bold text-navy-950 mb-3">
+                  完成まで実物が見えないのが心配
+                </h4>
+                <p class="text-neutral-600 leading-relaxed">
+                  数日で動くものを作り、そこから一緒に磨き込みます。「思ってたのと違う」を最小限に抑えられます。
+                </p>
               </div>
             </div>
           </div>
 
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-              <div class="flex items-start">
-                <span class="text-4xl text-indigo-600 mr-4">Q</span>
-                <div>
-                  <h4 class="text-xl font-bold text-gray-800 mb-3">
-                    どこに頼んだらいいか分からない
-                  </h4>
-                  <p class="text-gray-600 leading-relaxed">
-                    まずはゼロスタートで試してみてください。リスクなく、私たちの開発力と提案力を実際に体験できます。
-                  </p>
-                </div>
+          <div class="card-base card-hover p-8">
+            <div class="flex items-start">
+              <span class="text-4xl font-bold text-primary-500 mr-4">Q</span>
+              <div>
+                <h4 class="text-xl font-bold text-navy-950 mb-3">
+                  どこに頼んだらいいか分からない
+                </h4>
+                <p class="text-neutral-600 leading-relaxed">
+                  まずはゼロスタートで試してみてください。リスクなく、私たちの開発力と提案力を実際に体験できます。
+                </p>
               </div>
             </div>
           </div>
         </div>
-        
+
         <div class="text-center mt-12">
-          <a href="/prooffirst" class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl">
+          <ButtonLink href="/prooffirst" variant="primary" size="lg">
             これらの悩みを解決するゼロスタートを見る
             <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
-          </a>
+          </ButtonLink>
         </div>
       </div>
     </section>
 
     {/* よくある質問 */}
-    <section id="faq" class="py-32 bg-white">
+    <section id="faq" class="py-32 bg-neutral-50">
+      <div class="container mx-auto px-8 lg:px-12 mb-8">
+        <div class="text-center">
+          <span class="number-label">05</span>
+          <span class="section-label ml-4">FAQ</span>
+        </div>
+      </div>
       <ProcessFAQ client:load />
     </section>
 
-    {/* お問い合わせフォーム */}
-    <section class="py-32 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
-      {/* 背景装飾 */}
-      <div class="absolute inset-0">
-        <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-100/30 rounded-full blur-3xl" />
-        <div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-100/30 rounded-full blur-3xl" />
-      </div>
-      
+    {/* お問い合わせフォーム - Pop Style */}
+    <section class="py-32 bg-white relative overflow-hidden">
+      {/* Pop decorations */}
+      <div class="absolute top-10 right-20 w-36 h-72 decoration-bar-purple opacity-10 animate-float"></div>
+      <div class="absolute bottom-20 left-10 w-28 h-56 decoration-bar-cyan opacity-10 animate-float-delay"></div>
+
+      {/* Dots */}
+      <div class="absolute top-40 left-32 w-5 h-5 rounded-full bg-highlight-500 opacity-40"></div>
+      <div class="absolute bottom-48 right-40 w-6 h-6 rounded-full bg-secondary-500 opacity-30"></div>
+      <div class="absolute top-60 right-24 w-4 h-4 rounded-full bg-primary-500 opacity-40"></div>
+
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center mb-12">
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            お気軽に<span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">ご相談</span>ください
+          {/* Number Label */}
+          <span class="number-label">06</span>
+          <span class="section-label ml-4">CONTACT</span>
+
+          <h2 class="text-4xl lg:text-5xl font-bold text-navy-950 mb-4 mt-4">
+            お気軽に<span class="text-primary-500">ご相談</span>ください
           </h2>
-          <p class="text-xl text-gray-600">まずは無料相談から始めましょう</p>
+          <p class="text-xl text-neutral-600">まずは無料相談から始めましょう</p>
         </div>
         <div class="max-w-2xl mx-auto">
-          <ContactForm client:load />
+          <div class="card-base p-8">
+            <ContactForm client:load />
+          </div>
         </div>
       </div>
     </section>
 
-    {/* CTA Section */}
+    {/* CTA Section - Pop Style */}
     <section class="relative py-32 overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-600" />
-      <div class="absolute inset-0 bg-grid-pattern opacity-10" />
-      
+      <div class="absolute inset-0 bg-accent-950" />
+
+      {/* Pop decorations */}
+      <div class="absolute -top-20 -left-10 w-48 h-96 decoration-bar-purple opacity-20 animate-float"></div>
+      <div class="absolute top-20 right-10 w-40 h-80 decoration-bar-cyan opacity-20 animate-float-delay"></div>
+      <div class="absolute bottom-10 left-1/3 w-32 h-64 decoration-bar-yellow opacity-15 animate-float-slow"></div>
+
+      {/* Dots */}
+      <div class="absolute top-32 right-32 w-6 h-6 rounded-full bg-secondary-500 opacity-50"></div>
+      <div class="absolute bottom-40 left-40 w-5 h-5 rounded-full bg-highlight-500 opacity-40"></div>
+      <div class="absolute top-48 left-24 w-4 h-4 rounded-full bg-white opacity-30"></div>
+
+      <div class="absolute inset-0 bg-grid-pattern-light opacity-5" />
+
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center">
           <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">
@@ -370,7 +440,7 @@ import ContactForm from '@/components/contact-form';
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/contact"
-              class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-indigo-600 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+              class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-accent-950 bg-white rounded-full hover:bg-gray-100 transition-all shadow-soft hover:shadow-medium"
             >
               無料相談を予約する
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -379,7 +449,7 @@ import ContactForm from '@/components/contact-form';
             </a>
             <a
               href="/case-studies"
-              class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-indigo-600 transition-all"
+              class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-accent-950 transition-all"
             >
               導入事例を見る
             </a>
@@ -392,8 +462,8 @@ import ContactForm from '@/components/contact-form';
 
 <style>
   @keyframes float {
-    0%, 100% { transform: translateY(0) }
-    50% { transform: translateY(-20px) }
+    0%, 100% { transform: translateY(0) rotate(-25deg) }
+    50% { transform: translateY(-20px) rotate(-25deg) }
   }
 
   .animate-float {
@@ -411,8 +481,33 @@ import ContactForm from '@/components/contact-form';
   }
 
   .bg-grid-pattern {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .bg-grid-pattern-light {
     background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
     background-size: 20px 20px;
+  }
+
+  /* Pop decoration bars */
+  .decoration-bar-purple {
+    background: linear-gradient(135deg, #3D4DB7, #a0b0ff);
+    border-radius: 9999px;
+    transform: rotate(-25deg);
+  }
+
+  .decoration-bar-cyan {
+    background: linear-gradient(135deg, #00c4cc, #26c6da);
+    border-radius: 9999px;
+    transform: rotate(25deg);
+  }
+
+  .decoration-bar-yellow {
+    background: linear-gradient(135deg, #ffd600, #fff176);
+    border-radius: 9999px;
+    transform: rotate(-15deg);
   }
 </style>
