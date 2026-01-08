@@ -23,22 +23,31 @@ const faqs = [
 
 export const ProcessFAQ = () => {
   return (
-    <div className="bg-white py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="lg:text-center">
-          <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            よくあるご質問
+    <div className="py-4">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl lg:text-5xl font-bold text-navy-950 mb-4">
+            よくある<span className="text-primary-500">ご質問</span>
           </h2>
+          <p className="text-xl text-neutral-600">導入に関するご質問にお答えします</p>
         </div>
-        <div className="mt-12">
-          <dl className="space-y-10">
-            {faqs.map((faq) => (
-              <div key={faq.question}>
-                <dt className="text-lg font-semibold text-gray-900">{faq.question}</dt>
-                <dd className="mt-2 text-gray-500">{faq.answer}</dd>
+        <div className="space-y-6">
+          {faqs.map((faq, index) => (
+            <div
+              key={faq.question}
+              className="bg-white rounded-[24px] shadow-soft p-8 hover:shadow-medium transition-shadow"
+            >
+              <div className="flex items-start gap-4">
+                <span className="flex-shrink-0 w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center text-white font-bold">
+                  Q
+                </span>
+                <div className="flex-1">
+                  <dt className="text-lg font-bold text-navy-950 mb-3">{faq.question}</dt>
+                  <dd className="text-neutral-600 leading-relaxed">{faq.answer}</dd>
+                </div>
               </div>
-            ))}
-          </dl>
+            </div>
+          ))}
         </div>
       </div>
     </div>
