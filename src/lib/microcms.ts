@@ -93,7 +93,7 @@ export async function getAllColumnIds() {
       endpoint: 'columns',
       queries: {
         fields: 'id',
-        limit: 1000,
+        limit: 100,
       },
     });
     return data.contents.map((content: any) => content.id);
