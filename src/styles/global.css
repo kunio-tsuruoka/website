@@ -22,7 +22,12 @@
   }
 
   /* 見出しのデフォルトスタイル */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-bold text-gray-900;
   }
 }
@@ -38,15 +43,13 @@
 
   /* グリッドパターン背景 */
   .bg-grid-pattern {
-    background-image:
-      linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
     background-size: 20px 20px;
   }
 
   .bg-grid-pattern-light {
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
     background-size: 20px 20px;
   }
@@ -136,7 +139,7 @@
 
   /* 斜めバー - Beekle Purple */
   .decoration-bar-purple {
-    background: linear-gradient(135deg, #3D4DB7, #a0b0ff);
+    background: linear-gradient(135deg, #3d4db7, #a0b0ff);
     border-radius: 9999px;
     transform: rotate(-25deg);
   }
@@ -161,7 +164,7 @@
   }
 
   .dot-purple {
-    background: #3D4DB7;
+    background: #3d4db7;
   }
 
   .dot-cyan {
@@ -244,7 +247,8 @@
    Animations
    =========================== */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {

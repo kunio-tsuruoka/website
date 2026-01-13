@@ -53,7 +53,7 @@ export async function getCategories() {
 // コラム一覧を取得（カテゴリーでフィルタリング可能）
 export async function getColumns(categoryId?: string) {
   try {
-    const queries: any = {
+    const queries: { orders: string; filters?: string } = {
       orders: '-publishedAt',
     };
 
@@ -96,7 +96,7 @@ export async function getAllColumnIds() {
         limit: 100,
       },
     });
-    return data.contents.map((content: any) => content.id);
+    return data.contents.map((content: { id: string }) => content.id);
   } catch (error) {
     console.error('Failed to fetch column IDs:', error);
     return [];

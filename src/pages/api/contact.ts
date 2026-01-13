@@ -15,7 +15,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         JSON.stringify({
           success: false,
           error: 'Server configuration error',
-          details: 'SLACK_WEBHOOK_URL environment variable is not configured'
+          details: 'SLACK_WEBHOOK_URL environment variable is not configured',
         }),
         {
           status: 500,
@@ -33,56 +33,56 @@ export const POST: APIRoute = async ({ request, locals }) => {
       mobile: 'モバイルアプリ開発について',
       prototype: 'プロトタイプ・POC作成について',
       global: '海外向けサービス開発について',
-      other: 'その他のご相談'
+      other: 'その他のご相談',
     };
 
     // Slackメッセージの構築
     const slackMessage = {
-      text: `📬 新しいお問い合わせが届きました！`,
+      text: '📬 新しいお問い合わせが届きました！',
       blocks: [
         {
           type: 'header',
           text: {
             type: 'plain_text',
-            text: '📬 新しいお問い合わせ'
-          }
+            text: '📬 新しいお問い合わせ',
+          },
         },
         {
           type: 'section',
           fields: [
             {
               type: 'mrkdwn',
-              text: `*種別:*\n${typeLabels[type] || '未選択'}`
+              text: `*種別:*\n${typeLabels[type] || '未選択'}`,
             },
             {
               type: 'mrkdwn',
-              text: `*お名前:*\n${name || '未記入'}`
+              text: `*お名前:*\n${name || '未記入'}`,
             },
             {
               type: 'mrkdwn',
-              text: `*会社名:*\n${company || '未記入'}`
+              text: `*会社名:*\n${company || '未記入'}`,
             },
             {
               type: 'mrkdwn',
-              text: `*メール:*\n${email || '未記入'}`
+              text: `*メール:*\n${email || '未記入'}`,
             },
             {
               type: 'mrkdwn',
-              text: `*電話番号:*\n${phone || '未記入'}`
-            }
-          ]
+              text: `*電話番号:*\n${phone || '未記入'}`,
+            },
+          ],
         },
         {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `*お問い合わせ内容:*\n${message || '未記入'}`
-          }
+            text: `*お問い合わせ内容:*\n${message || '未記入'}`,
+          },
         },
         {
-          type: 'divider'
-        }
-      ]
+          type: 'divider',
+        },
+      ],
     };
 
     // axiosでSlackに送信
@@ -105,7 +105,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       JSON.stringify({
         success: false,
         error: 'Failed to send message',
-        details: errorMessage
+        details: errorMessage,
       }),
       {
         status: 500,

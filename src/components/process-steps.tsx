@@ -1,11 +1,5 @@
+import { CheckCircle, Lightbulb, PhoneCall, Rocket, TestTube } from 'lucide-react';
 import React from 'react';
-import {
-  CheckCircle,
-  Lightbulb,
-  PhoneCall,
-  Rocket,
-  TestTube,
-} from 'lucide-react';
 
 interface ProcessStep {
   icon: React.ComponentType<{ className?: string }>;
@@ -32,8 +26,7 @@ const processSteps: ProcessStep[] = [
     title: 'ゼロスタート開発',
     duration: '1-2週間',
     cost: '初期費用0円',
-    description:
-      '初期費用0円で、動くプロトタイプを開発。実際の業務で試せる形でお届けします。',
+    description: '初期費用0円で、動くプロトタイプを開発。実際の業務で試せる形でお届けします。',
     details: [
       'コア機能のMVP開発',
       '実業務で試せる形での納品',
@@ -75,14 +68,8 @@ const processSteps: ProcessStep[] = [
     title: '運用開始・継続改善',
     duration: '継続的に対応',
     cost: '保守契約',
-    description:
-      '本番環境での運用を開始。保守サポートや追加機能開発も柔軟に対応します。',
-    details: [
-      'システムの本番稼働',
-      '保守サポート対応',
-      '追加機能の開発',
-      '継続的な改善提案',
-    ],
+    description: '本番環境での運用を開始。保守サポートや追加機能開発も柔軟に対応します。',
+    details: ['システムの本番稼働', '保守サポート対応', '追加機能の開発', '継続的な改善提案'],
   },
 ];
 
@@ -92,18 +79,20 @@ export const ProcessSteps = () => {
   React.useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        for (const entry of entries) {
           if (entry.isIntersecting) {
-            const idx = parseInt(entry.target.getAttribute('data-step-index') || '0');
+            const idx = Number.parseInt(entry.target.getAttribute('data-step-index') || '0');
             setVisibleSteps((prev) => new Set(prev).add(idx));
           }
-        });
+        }
       },
       { threshold: 0.2, rootMargin: '0px 0px -100px 0px' }
     );
 
     const elements = document.querySelectorAll('[data-step-index]');
-    elements.forEach((el) => observer.observe(el));
+    for (const el of elements) {
+      observer.observe(el);
+    }
 
     return () => observer.disconnect();
   }, []);
@@ -119,9 +108,7 @@ export const ProcessSteps = () => {
               data-step-index={idx}
               style={{
                 opacity: visibleSteps.has(idx) ? 1 : 0,
-                transform: visibleSteps.has(idx)
-                  ? 'translateY(0)'
-                  : 'translateY(30px)',
+                transform: visibleSteps.has(idx) ? 'translateY(0)' : 'translateY(30px)',
                 transition: `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${idx * 0.15}s`,
               }}
             >
@@ -211,12 +198,8 @@ export const ProcessSteps = () => {
                         className="flex items-start text-gray-600"
                         style={{
                           opacity: visibleSteps.has(idx) ? 1 : 0,
-                          transform: visibleSteps.has(idx)
-                            ? 'translateX(0)'
-                            : 'translateX(-20px)',
-                          transition: `all 0.4s ease ${
-                            idx * 0.15 + 0.3 + detailIdx * 0.1
-                          }s`,
+                          transform: visibleSteps.has(idx) ? 'translateX(0)' : 'translateX(-20px)',
+                          transition: `all 0.4s ease ${idx * 0.15 + 0.3 + detailIdx * 0.1}s`,
                         }}
                       >
                         <span className="mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary-500" />

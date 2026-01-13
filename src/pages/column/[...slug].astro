@@ -1,7 +1,7 @@
 ---
+import { marked } from 'marked';
 import { Header } from '../../components/header';
 import Layout from '../../layouts/layout.astro';
-import { marked } from 'marked';
 import { getAllColumnIds, getColumn } from '../../lib/microcms';
 
 export const prerender = true;
@@ -11,7 +11,7 @@ export async function getStaticPaths() {
   const columnIds = await getAllColumnIds();
 
   return columnIds.map((id: string) => ({
-    params: { slug: id }
+    params: { slug: id },
   }));
 }
 
@@ -42,18 +42,18 @@ const relatedArticles = [
   {
     title: '「見積もりが当てにならない」を防ぐ正しい見積もりの見方',
     slug: 'how-to-read-estimates',
-    category: 'avoid-failure'
+    category: 'avoid-failure',
   },
   {
     title: '要件定義で失敗しないための実践チェックリスト',
     slug: 'requirement-checklist',
-    category: 'avoid-failure'
+    category: 'avoid-failure',
   },
   {
     title: '無料PoCで効果検証する方法',
     slug: 'fast-development/01-free-poc-guide',
-    category: 'fast-development'
-  }
+    category: 'fast-development',
+  },
 ];
 ---
 

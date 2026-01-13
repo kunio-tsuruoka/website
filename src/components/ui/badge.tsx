@@ -1,74 +1,71 @@
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { type VariantProps, cva } from 'class-variance-authority';
+import * as React from 'react';
 
 /**
  * Badge コンポーネント
  *
  * タグ、ラベル、ステップ番号などに使用
  */
-const badgeVariants = cva(
-  'inline-flex items-center justify-center font-medium transition-all',
-  {
-    variants: {
-      variant: {
-        // プライマリ: パープル背景（ブランドガイドライン準拠）
-        primary: 'bg-accent-600 text-white',
+const badgeVariants = cva('inline-flex items-center justify-center font-medium transition-all', {
+  variants: {
+    variant: {
+      // プライマリ: パープル背景（ブランドガイドライン準拠）
+      primary: 'bg-accent-600 text-white',
 
-        // プライマリライト: ライトパープル背景
-        primaryLight: 'bg-accent-50 text-accent-700',
+      // プライマリライト: ライトパープル背景
+      primaryLight: 'bg-accent-50 text-accent-700',
 
-        // セカンダリ: シアン背景
-        secondary: 'bg-secondary-500 text-white',
+      // セカンダリ: シアン背景
+      secondary: 'bg-secondary-500 text-white',
 
-        // セカンダリライト: ライトシアン背景
-        secondaryLight: 'bg-secondary-50 text-secondary-600',
+      // セカンダリライト: ライトシアン背景
+      secondaryLight: 'bg-secondary-50 text-secondary-600',
 
-        // アクセント: ネイビー背景
-        accent: 'bg-navy-950 text-white',
+      // アクセント: ネイビー背景
+      accent: 'bg-navy-950 text-white',
 
-        // アウトライン: パープルボーダー
-        outline: 'border border-accent-600 text-accent-600 bg-transparent',
+      // アウトライン: パープルボーダー
+      outline: 'border border-accent-600 text-accent-600 bg-transparent',
 
-        // ミュート
-        muted: 'bg-neutral-100 text-neutral-600',
+      // ミュート
+      muted: 'bg-neutral-100 text-neutral-600',
 
-        // サクセス
-        success: 'bg-green-50 text-green-700',
+      // サクセス
+      success: 'bg-green-50 text-green-700',
 
-        // 警告
-        warning: 'bg-highlight-100 text-highlight-600',
+      // 警告
+      warning: 'bg-highlight-100 text-highlight-600',
 
-        // エラー
-        error: 'bg-red-50 text-red-700',
+      // エラー
+      error: 'bg-red-50 text-red-700',
 
-        // ステップ番号用: パープル
-        step: 'bg-accent-600 text-white font-bold',
-      },
-
-      size: {
-        xs: 'px-2 py-0.5 text-xs rounded-md',
-        sm: 'px-3 py-1 text-xs rounded-full',
-        md: 'px-4 py-1.5 text-sm rounded-full',
-        lg: 'px-5 py-2 text-base rounded-full',
-        // 円形（ステップ番号用）
-        circle: 'w-8 h-8 rounded-full text-sm',
-        circleLg: 'w-12 h-12 rounded-full text-lg',
-      },
-
-      hover: {
-        none: '',
-        scale: 'hover:scale-105',
-        opacity: 'hover:opacity-80',
-      },
+      // ステップ番号用: パープル
+      step: 'bg-accent-600 text-white font-bold',
     },
-    defaultVariants: {
-      variant: 'primary',
-      size: 'sm',
-      hover: 'none',
+
+    size: {
+      xs: 'px-2 py-0.5 text-xs rounded-md',
+      sm: 'px-3 py-1 text-xs rounded-full',
+      md: 'px-4 py-1.5 text-sm rounded-full',
+      lg: 'px-5 py-2 text-base rounded-full',
+      // 円形（ステップ番号用）
+      circle: 'w-8 h-8 rounded-full text-sm',
+      circleLg: 'w-12 h-12 rounded-full text-lg',
     },
-  }
-);
+
+    hover: {
+      none: '',
+      scale: 'hover:scale-105',
+      opacity: 'hover:opacity-80',
+    },
+  },
+  defaultVariants: {
+    variant: 'primary',
+    size: 'sm',
+    hover: 'none',
+  },
+});
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>,

@@ -54,9 +54,7 @@ export function PageHero({
           </span>
 
           {/* 日本語タイトル - デザイントークン typography.heading.h1 準拠 */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            {title}
-          </h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">{title}</h1>
 
           {/* サブタイトル */}
           {subtitle && (

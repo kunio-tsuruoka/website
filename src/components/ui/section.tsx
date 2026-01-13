@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { type VariantProps, cva } from 'class-variance-authority';
+import * as React from 'react';
 
 /**
  * Section コンポーネント
@@ -183,10 +183,7 @@ const Section = React.forwardRef<HTMLElement, SectionProps>(
         {/* グリッドパターン */}
         {showGrid && (
           <div
-            className={cn(
-              'absolute inset-0 grid-pattern',
-              isDark ? 'opacity-10' : 'opacity-5'
-            )}
+            className={cn('absolute inset-0 grid-pattern', isDark ? 'opacity-10' : 'opacity-5')}
             style={{
               backgroundImage: `linear-gradient(rgba(${isDark ? '255, 255, 255' : '0, 0, 0'}, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(${isDark ? '255, 255, 255' : '0, 0, 0'}, 0.1) 1px, transparent 1px)`,
               backgroundSize: '20px 20px',
@@ -248,35 +245,34 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
       {(number || label) && (
         <div className="mb-4">
           {number && (
-            <span className={cn(
-              'font-Poppins text-5xl font-bold',
-              dark ? 'text-white/80' : 'text-primary-500'
-            )}>
+            <span
+              className={cn(
+                'font-Poppins text-5xl font-bold',
+                dark ? 'text-white/80' : 'text-primary-500'
+              )}
+            >
               {number}
             </span>
           )}
           {label && (
-            <span className={cn(
-              'ml-4 text-sm font-semibold tracking-wide uppercase',
-              dark ? 'text-white/70' : 'text-primary-500'
-            )}>
+            <span
+              className={cn(
+                'ml-4 text-sm font-semibold tracking-wide uppercase',
+                dark ? 'text-white/70' : 'text-primary-500'
+              )}
+            >
               {label}
             </span>
           )}
         </div>
       )}
       <h2
-        className={cn(
-          'text-4xl lg:text-5xl font-bold mb-6',
-          dark ? 'text-white' : 'text-navy-950'
-        )}
+        className={cn('text-4xl lg:text-5xl font-bold mb-6', dark ? 'text-white' : 'text-navy-950')}
       >
         {typeof title === 'string' && highlight ? (
           <>
             {title.split(highlight)[0]}
-            <span className={dark ? 'text-secondary-400' : 'text-primary-500'}>
-              {highlight}
-            </span>
+            <span className={dark ? 'text-secondary-400' : 'text-primary-500'}>{highlight}</span>
             {title.split(highlight)[1]}
           </>
         ) : (

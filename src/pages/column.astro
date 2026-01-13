@@ -1,7 +1,7 @@
 ---
 import { Header } from '../components/header';
-import Layout from '../layouts/layout.astro';
 import { PageHero } from '../components/ui/page-hero';
+import Layout from '../layouts/layout.astro';
 import { getCategories, getColumns } from '../lib/microcms';
 
 export const prerender = true;
@@ -11,26 +11,26 @@ const categories = await getCategories();
 const allColumns = await getColumns();
 
 // カテゴリーごとに記事を収集
-const columnCategories = categories.map(category => {
-  const categoryColumns = allColumns.filter(
-    column => column.category.id === category.id
-  );
+const columnCategories = categories
+  .map((category) => {
+    const categoryColumns = allColumns.filter((column) => column.category.id === category.id);
 
-  const articles = categoryColumns.map((column, index) => ({
-    number: String(index + 1).padStart(2, '0'),
-    title: column.title,
-    slug: column.id,
-  }));
+    const articles = categoryColumns.map((column, index) => ({
+      number: String(index + 1).padStart(2, '0'),
+      title: column.title,
+      slug: column.id,
+    }));
 
-  return {
-    id: category.id,
-    title: category.title,
-    description: category.description,
-    icon: category.icon,
-    order: category.order,
-    articles,
-  };
-}).sort((a, b) => a.order - b.order);
+    return {
+      id: category.id,
+      title: category.title,
+      description: category.description,
+      icon: category.icon,
+      order: category.order,
+      articles,
+    };
+  })
+  .sort((a, b) => a.order - b.order);
 
 // 統計情報
 const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.length, 0);

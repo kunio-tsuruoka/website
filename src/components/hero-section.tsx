@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { useState } from 'react';
 
 export const HeroSection = () => {
   const [isHovered, setIsHovered] = useState(false);

@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { type VariantProps, cva } from 'class-variance-authority';
+import * as React from 'react';
 
 /**
  * Card コンポーネント
@@ -39,7 +39,8 @@ const cardVariants = cva('relative overflow-hidden transition-all duration-300',
       gradientPurple: 'bg-gradient-to-br from-primary-500 to-primary-600 text-white rounded-[32px]',
 
       // グラデーション（パープル → シアン）
-      gradientMix: 'bg-gradient-to-br from-primary-500 via-primary-400 to-secondary-500 text-white rounded-[32px]',
+      gradientMix:
+        'bg-gradient-to-br from-primary-500 via-primary-400 to-secondary-500 text-white rounded-[32px]',
 
       // アウトライン
       outlined: 'bg-white rounded-[32px] border-2 border-neutral-200',
@@ -133,8 +134,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     },
     ref
   ) => {
-    const isDark = variant === 'navy' || variant === 'primary' || variant === 'cyan' ||
-                   variant === 'gradientPurple' || variant === 'gradientMix';
+    const isDark =
+      variant === 'navy' ||
+      variant === 'primary' ||
+      variant === 'cyan' ||
+      variant === 'gradientPurple' ||
+      variant === 'gradientMix';
 
     const content = (
       <>
@@ -176,7 +181,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     }
 
     return (
-      <div ref={ref} className={cn(cardVariants({ variant, padding, hover, className }))} {...props}>
+      <div
+        ref={ref}
+        className={cn(cardVariants({ variant, padding, hover, className }))}
+        {...props}
+      >
         {content}
       </div>
     );
@@ -231,11 +240,7 @@ const CardDescription = React.forwardRef<HTMLDivElement, CardDescriptionProps>(
   ({ className, dark = false, ...props }, ref) => (
     <p
       ref={ref}
-      className={cn(
-        'leading-relaxed',
-        dark ? 'text-white/90' : 'text-neutral-600',
-        className
-      )}
+      className={cn('leading-relaxed', dark ? 'text-white/90' : 'text-neutral-600', className)}
       {...props}
     />
   )
@@ -321,9 +326,7 @@ const CardLink: React.FC<CardLinkProps> = ({ children, className, dark = false }
   <span
     className={cn(
       'inline-flex items-center font-semibold transition-colors',
-      dark
-        ? 'text-white hover:text-secondary-400'
-        : 'text-primary-500 hover:text-primary-600',
+      dark ? 'text-white hover:text-secondary-400' : 'text-primary-500 hover:text-primary-600',
       className
     )}
   >
@@ -364,13 +367,16 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   const isDark = variant === 'primary' || variant === 'navy' || variant === 'cyan';
 
   return (
-    <Card variant={variant} number={number} decoration={isDark ? 'dotsDark' : 'dots'} className={className}>
-      {icon && (
-        <CardIcon variant={isDark ? 'white' : 'purple'}>
-          {icon}
-        </CardIcon>
-      )}
-      <CardTitle dark={isDark} className="text-2xl mb-4">{title}</CardTitle>
+    <Card
+      variant={variant}
+      number={number}
+      decoration={isDark ? 'dotsDark' : 'dots'}
+      className={className}
+    >
+      {icon && <CardIcon variant={isDark ? 'white' : 'purple'}>{icon}</CardIcon>}
+      <CardTitle dark={isDark} className="text-2xl mb-4">
+        {title}
+      </CardTitle>
       <CardDescription dark={isDark}>{description}</CardDescription>
     </Card>
   );

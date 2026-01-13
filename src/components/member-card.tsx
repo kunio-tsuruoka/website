@@ -1,6 +1,6 @@
-// src/components/member-card.tsx
-import React from 'react';
 import { motion } from 'framer-motion';
+// src/components/member-card.tsx
+import type React from 'react';
 
 interface MemberCardProps {
   name: string;
@@ -9,12 +9,7 @@ interface MemberCardProps {
   index?: number;
 }
 
-const MemberCard: React.FC<MemberCardProps> = ({
-  name,
-  position,
-  description,
-  index = 0,
-}) => {
+const MemberCard: React.FC<MemberCardProps> = ({ name, position, description, index = 0 }) => {
   // 説明文に改行があれば段落に分割
   const paragraphs = description.split('\n').filter((p) => p.trim() !== '');
 
@@ -37,18 +32,22 @@ const MemberCard: React.FC<MemberCardProps> = ({
       className="group relative"
     >
       {/* 背景のグラデーション効果 */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300`} />
-      
+      <div
+        className={`absolute inset-0 bg-gradient-to-br ${gradient} rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300`}
+      />
+
       {/* カード本体 */}
       <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
         {/* 上部のアクセントライン */}
         <div className={`h-1 bg-gradient-to-r ${gradient}`} />
-        
+
         <div className="p-8">
           {/* ヘッダー部分 */}
           <div className="mb-6">
             <h3 className="text-2xl font-bold text-gray-900 mb-2">{name}</h3>
-            <p className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r ${gradient} text-white`}>
+            <p
+              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r ${gradient} text-white`}
+            >
               {position}
             </p>
           </div>
@@ -64,9 +63,14 @@ const MemberCard: React.FC<MemberCardProps> = ({
                   const content = paragraph.substring(titleEndIndex);
 
                   return (
-                    <div key={idx} className="border-l-2 border-gray-200 pl-4 group-hover:border-primary-400 transition-colors">
+                    <div
+                      key={idx}
+                      className="border-l-2 border-gray-200 pl-4 group-hover:border-primary-400 transition-colors"
+                    >
                       <p className="text-gray-700">
-                        <span className={`font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}>
+                        <span
+                          className={`font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}
+                        >
                           {title}
                         </span>
                         {content}
