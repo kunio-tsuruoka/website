@@ -1,18 +1,28 @@
-import { createClient } from 'microcms-js-sdk';
+import { createClient, type MicroCMSClient } from 'microcms-js-sdk';
 
-if (!import.meta.env.MICROCMS_SERVICE_DOMAIN) {
-  throw new Error('MICROCMS_SERVICE_DOMAIN is required');
+// MicroCMS APIクライアント（遅延初期化）
+let _client: MicroCMSClient | null = null;
+
+function getClient(): MicroCMSClient {
+  if (_client) return _client;
+
+  const serviceDomain = import.meta.env.MICROCMS_SERVICE_DOMAIN;
+  const apiKey = import.meta.env.MICROCMS_API_KEY;
+
+  if (!serviceDomain || !apiKey) {
+    throw new Error(
+      'MicroCMS environment variables are not set. Please set MICROCMS_SERVICE_DOMAIN and MICROCMS_API_KEY.'
+    );
+  }
+
+  _client = createClient({ serviceDomain, apiKey });
+  return _client;
 }
 
-if (!import.meta.env.MICROCMS_API_KEY) {
-  throw new Error('MICROCMS_API_KEY is required');
-}
-
-// MicroCMS APIクライアントの作成
-export const client = createClient({
-  serviceDomain: import.meta.env.MICROCMS_SERVICE_DOMAIN,
-  apiKey: import.meta.env.MICROCMS_API_KEY,
-});
+// 後方互換性のためexport
+export const client = {
+  get: (params: Parameters<MicroCMSClient['get']>[0]) => getClient().get(params),
+};
 
 // カテゴリーの型定義
 export type Category = {
