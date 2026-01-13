@@ -282,13 +282,13 @@ export const presets = {
   gradientText: `text-transparent bg-clip-text bg-gradient-to-r ${gradients.textAccent}`,
 
   // プライマリ背景（ネイビー）
-  bgNavy: `bg-navy-950 text-white`,
+  bgNavy: 'bg-navy-950 text-white',
 
   // アクセント背景（パープル）
-  bgAccent: `bg-accent-600 text-white`,
+  bgAccent: 'bg-accent-600 text-white',
 
   // セカンダリ背景（シアン）
-  bgSecondary: `bg-secondary-500 text-white`,
+  bgSecondary: 'bg-secondary-500 text-white',
 
   // カードベース（ブランドガイドライン準拠）
   cardBase: `bg-white ${radius['2xl']} ${shadows.soft} ${hover.shadow}`,

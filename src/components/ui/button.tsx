@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { type VariantProps, cva } from 'class-variance-authority';
+import * as React from 'react';
 
 /**
  * Button コンポーネント
@@ -162,7 +162,10 @@ export interface ButtonLinkProps
 }
 
 const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
-  ({ className, variant, size, fullWidth, icon, iconPosition = 'right', children, ...props }, ref) => {
+  (
+    { className, variant, size, fullWidth, icon, iconPosition = 'right', children, ...props },
+    ref
+  ) => {
     return (
       <a
         className={cn(buttonVariants({ variant, size, fullWidth, className }))}

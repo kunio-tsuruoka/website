@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { cn } from '@/lib/utils';
+import type * as React from 'react';
 import { Card, CardIcon, CardLink } from './card';
 
 /**
@@ -118,12 +118,7 @@ export const CTABox: React.FC<CTABoxProps> = ({
   className,
 }) => {
   return (
-    <div
-      className={cn(
-        'bg-navy-950 rounded-[40px] p-10 shadow-strong text-center',
-        className
-      )}
-    >
+    <div className={cn('bg-navy-950 rounded-[40px] p-10 shadow-strong text-center', className)}>
       <h3 className="text-3xl font-bold text-white mb-4">{title}</h3>
       <p className="text-lg text-white/90 mb-8 leading-relaxed">{description}</p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">

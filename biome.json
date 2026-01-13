@@ -1,12 +1,22 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.4.1/schema.json",
+  "files": {
+    "ignore": ["dist/**", "node_modules/**", ".astro/**", ".vscode/**", "*.generated.*"]
+  },
   "organizeImports": {
     "enabled": true
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useButtonType": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
+      }
     },
     "ignore": [".astro", "dist/**", "astro.config.mjs", "node_modules/**", "*.generated.*"]
   },

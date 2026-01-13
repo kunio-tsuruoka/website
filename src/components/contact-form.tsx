@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,7 +20,7 @@ const ContactForm = () => {
         message: formData.get('message'),
         type: formData.get('type'),
         company: formData.get('company_name'),
-        phone: formData.get('phone')
+        phone: formData.get('phone'),
       };
 
       console.log('Sending contact form data:', data);
@@ -29,7 +30,7 @@ const ContactForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();
@@ -52,7 +53,9 @@ const ContactForm = () => {
       console.error('Contact form error:', error);
       setSubmitStatus('error');
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      alert(`❌ エラーが発生しました。\n\n詳細: ${errorMessage}\n\nしばらく時間をおいて再度お試しください。`);
+      alert(
+        `❌ エラーが発生しました。\n\n詳細: ${errorMessage}\n\nしばらく時間をおいて再度お試しください。`
+      );
 
       // 3秒後にステータスをリセット
       setTimeout(() => {
@@ -160,11 +163,7 @@ const ContactForm = () => {
         </div>
 
         {/* 受信者名（非表示） */}
-        <input
-          type="hidden"
-          name="to_name"
-          value="管理者"
-        />
+        <input type="hidden" name="to_name" value="管理者" />
 
         {/* プライバシーポリシー */}
         <div className="flex items-start">
@@ -179,7 +178,9 @@ const ContactForm = () => {
           </div>
           <div className="ml-3">
             <label className="text-base text-foreground/80" htmlFor="privacy">
-              <a href="/privacy" className="text-primary hover:text-primary/80 underline">プライバシーポリシー</a>
+              <a href="/privacy" className="text-primary hover:text-primary/80 underline">
+                プライバシーポリシー
+              </a>
               に同意します
             </label>
           </div>
@@ -190,7 +191,8 @@ const ContactForm = () => {
           {submitStatus === 'success' && (
             <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-[16px]">
               <p className="text-green-800 font-medium">
-                お問い合わせを受け付けました！<br />
+                お問い合わせを受け付けました！
+                <br />
                 <span className="text-base">担当者より1-2営業日以内にご連絡いたします。</span>
               </p>
             </div>
@@ -198,7 +200,8 @@ const ContactForm = () => {
           {submitStatus === 'error' && (
             <div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 rounded-[16px]">
               <p className="text-destructive font-medium">
-                エラーが発生しました<br />
+                エラーが発生しました
+                <br />
                 <span className="text-base">しばらく時間をおいて再度お試しください。</span>
               </p>
             </div>
@@ -210,8 +213,8 @@ const ContactForm = () => {
               isSubmitting || submitStatus === 'success'
                 ? 'bg-neutral-300 cursor-not-allowed'
                 : submitStatus === 'error'
-                ? 'bg-destructive hover:bg-destructive/90 focus:ring-destructive'
-                : 'bg-primary-500 hover:bg-primary-600 shadow-soft hover:shadow-medium focus:ring-primary-500'
+                  ? 'bg-destructive hover:bg-destructive/90 focus:ring-destructive'
+                  : 'bg-primary-500 hover:bg-primary-600 shadow-soft hover:shadow-medium focus:ring-primary-500'
             }`}
           >
             {isSubmitting ? (
@@ -237,7 +240,11 @@ const ContactForm = () => {
             ) : submitStatus === 'success' ? (
               <>
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 送信完了
               </>

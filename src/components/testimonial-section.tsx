@@ -1,5 +1,6 @@
 // TestimonialsSection.tsx
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 
 // 型定義
 interface Testimonial {
@@ -111,7 +112,6 @@ const TestimonialSection: React.FC = () => {
   return (
     <section className="py-16 bg-neutral-50">
       <div className="container mx-auto px-4">
-
         {/* PC表示用グリッド */}
         <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
           {currentTestimonials.map((testimonial) => (

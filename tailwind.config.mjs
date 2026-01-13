@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const themePath = path.join(process.cwd(), 'src', 'theme.json');
 const themeConfig = JSON.parse(fs.readFileSync(themePath, 'utf-8'));
@@ -48,17 +48,9 @@ export default {
           800: '#242f70',
           900: '#1c2556',
         },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
-        },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
           foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
@@ -83,7 +75,7 @@ export default {
           950: 'hsl(var(--navy-950))',
         },
         // Brand Colors - Dark Navy (Accent) (#001738)
-        'accent': {
+        accent: {
           50: 'hsl(var(--accent-50))',
           100: 'hsl(var(--accent-100))',
           300: 'hsl(var(--accent-300))',
@@ -95,7 +87,7 @@ export default {
           foreground: 'hsl(var(--accent-foreground))',
         },
         // Brand Colors - Vivid Cyan (Secondary) (#00c4cc)
-        'secondary': {
+        secondary: {
           50: '#e6fafa',
           100: '#ccf5f6',
           200: '#99ebec',
@@ -154,7 +146,7 @@ export default {
       },
       animation: {
         'fade-in-up': 'fadeInUp 0.5s ease-out',
-        'float': 'float 3s ease-in-out infinite',
+        float: 'float 3s ease-in-out infinite',
       },
       keyframes: {
         fadeInUp: {
@@ -173,7 +165,7 @@ export default {
   },
   plugins: [
     require('tailwindcss-animate'),
-    function ({ addBase }) {
+    ({ addBase }) => {
       addBase({
         ':root': {
           ...Object.entries(themeConfig.colors.light).reduce((acc, [key, value]) => {
