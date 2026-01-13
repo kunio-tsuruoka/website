@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beekle Brand Guidelines - Pop Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Montserrat', 'Poppins', 'Noto Sans JP', 'sans-serif'],
+                        sans: ['Noto Sans JP', 'sans-serif'],
+                        accent: ['Lato', 'sans-serif'],
+                    },
+                    colors: {
+                        // Primary - Beekle Purple (Logo Color)
+                        primary: {
+                            50:  '#eef0ff',
+                            100: '#dde3ff',
+                            300: '#a0b0ff',
+                            500: '#3D4DB7',
+                            600: '#3342a0',
+                            700: '#2a378a',
+                        },
+                        // Accent - Dark Navy
+                        accent: {
+                            50:  '#e6eaf0',
+                            100: '#c0c9d9',
+                            500: '#2d4b80',
+                            800: '#183263',
+                            950: '#001738',
+                        },
+                        // Secondary - Cyan
+                        secondary: {
+                            50:  '#e0f7fa',
+                            100: '#b2ebf2',
+                            400: '#26c6da',
+                            500: '#00c4cc',
+                            600: '#00b4b8',
+                        },
+                        // Highlight - Yellow
+                        highlight: {
+                            100: '#fff9c4',
+                            300: '#fff176',
+                            500: '#ffd600',
+                            600: '#ffc400',
+                        },
+                        // Neutral
+                        neutral: {
+                            0:   '#ffffff',
+                            50:  '#f5f8fa',
+                            100: '#eef2f5',
+                            200: '#e1e7ec',
+                            300: '#cdd5dc',
+                            400: '#a8b5c1',
+                            500: '#7d8d9c',
+                            600: '#5c6d7d',
+                            700: '#455563',
+                            800: '#2f3d4a',
+                            900: '#1a2632',
+                        },
+                        // Semantic
+                        success: { 500: '#00c853' },
+                        warning: { 500: '#ffc107' },
+                        danger:  { 500: '#ff3d00' },
+                        info:    { 500: '#2196f3' },
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -4px rgba(0, 23, 56, 0.08)',
+                        'medium': '0 8px 30px -8px rgba(0, 23, 56, 0.12)',
+                        'strong': '0 16px 50px -12px rgba(0, 23, 56, 0.18)',
+                    },
+                    borderRadius: {
+                        'xl': '24px',
+                        '2xl': '32px',
+                        '3xl': '40px',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.4s ease-out',
+                        'fade-in-up': 'fadeInUp 0.5s ease-out',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        float: { '0%, 100%': { transform: 'translateY(0) rotate(0deg)' }, '50%': { transform: 'translateY(-10px) rotate(2deg)' } },
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .decoration-bar {
+            border-radius: 9999px;
+            position: absolute;
+        }
+        .decoration-bar-purple {
+            background: linear-gradient(135deg, #3D4DB7, #a0b0ff);
+        }
+        .decoration-bar-cyan {
+            background: linear-gradient(135deg, #00c4cc, #26c6da);
+        }
+        .decoration-bar-yellow {
+            background: linear-gradient(135deg, #ffd600, #fff176);
+        }
+        .decoration-dot {
+            border-radius: 50%;
+        }
+        .gradient-hero {
+            background: linear-gradient(135deg, #f5f8fa 0%, #eef2f5 100%);
+        }
+    </style>
+</head>
+<body class="bg-neutral-50 font-sans text-neutral-900">
+
+    <!-- Hero Section -->
+    <header class="relative overflow-hidden bg-primary-500 px-4 py-20 text-white">
+        <!-- Decorative Elements -->
+        <div class="decoration-bar decoration-bar-cyan w-20 h-48 -rotate-[25deg] absolute -top-10 -right-10 opacity-80"></div>
+        <div class="decoration-bar decoration-bar-yellow w-16 h-36 rotate-[25deg] absolute top-20 right-32 opacity-80"></div>
+        <div class="decoration-bar decoration-bar-purple w-12 h-28 -rotate-[15deg] absolute bottom-10 right-20 opacity-60"></div>
+        <div class="decoration-dot bg-secondary-500 w-6 h-6 absolute top-16 left-1/4"></div>
+        <div class="decoration-dot bg-highlight-500 w-4 h-4 absolute bottom-20 left-1/3"></div>
+        <div class="decoration-dot bg-accent-950 w-5 h-5 absolute top-32 right-1/3"></div>
+
+        <div class="relative mx-auto max-w-6xl">
+            <span class="font-display text-sm font-semibold tracking-wider text-highlight-500">BRAND GUIDELINES</span>
+            <h1 class="mt-2 font-display text-5xl font-extrabold md:text-6xl">
+                Beekle Pop Style
+            </h1>
+            <p class="mt-4 text-xl text-white/70">
+                システム開発会社 デザインシステム
+            </p>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-4 py-12">
+
+        <!-- Design Philosophy -->
+        <section class="mb-16">
+            <span class="font-display text-sm font-semibold tracking-wider text-primary-500">Philosophy</span>
+            <h2 class="mt-2 mb-8 font-display text-3xl font-bold text-accent-950">デザイン哲学</h2>
+            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <div class="rounded-3xl bg-white p-6 shadow-soft">
+                    <span class="font-display text-4xl font-bold text-primary-500">01</span>
+                    <h3 class="mt-4 text-lg font-bold text-accent-950">Professional & Vibrant</h3>
+                    <p class="mt-2 text-sm text-neutral-600">信頼感のあるダークネイビーと華やかなパープルの組み合わせ</p>
+                </div>
+                <div class="rounded-3xl bg-white p-6 shadow-soft">
+                    <span class="font-display text-4xl font-bold text-primary-500">02</span>
+                    <h3 class="mt-4 text-lg font-bold text-accent-950">Playful Decorations</h3>
+                    <p class="mt-2 text-sm text-neutral-600">カラフルな装飾要素で躍動感を演出</p>
+                </div>
+                <div class="rounded-3xl bg-white p-6 shadow-soft">
+                    <span class="font-display text-4xl font-bold text-primary-500">03</span>
+                    <h3 class="mt-4 text-lg font-bold text-accent-950">Clean Cards</h3>
+                    <p class="mt-2 text-sm text-neutral-600">白背景のカードで情報を整理</p>
+                </div>
+                <div class="rounded-3xl bg-white p-6 shadow-soft">
+                    <span class="font-display text-4xl font-bold text-primary-500">04</span>
+                    <h3 class="mt-4 text-lg font-bold text-accent-950">Bold Typography</h3>
+                    <p class="mt-2 text-sm text-neutral-600">大きな見出しと番号で視認性を確保</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Color Palettes -->
+        <section class="mb-16">
+            <span class="font-display text-sm font-semibold tracking-wider text-primary-500">Colors</span>
+            <h2 class="mt-2 mb-8 font-display text-3xl font-bold text-accent-950">カラーパレット</h2>
+
+            <div class="mb-8 rounded-3xl gradient-hero p-8">
+                <h3 class="mb-6 font-display text-xl font-bold text-accent-950">Brand Colors</h3>
+
+                <!-- Primary - Beets Purple -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-12 h-12 rounded-2xl bg-primary-500 shadow-soft"></div>
+                        <div>
+                            <h4 class="font-bold text-accent-950">Primary - Beekle Purple (Logo Color)</h4>
+                            <p class="text-sm text-neutral-600">ブランドアイデンティティ・信頼・プロフェッショナル</p>
+                            <code class="text-xs text-neutral-500">#3D4DB7</code>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-6 gap-2">
+                        <div><div class="h-12 rounded-lg bg-primary-50"></div><span class="text-xs text-neutral-500">50</span></div>
+                        <div><div class="h-12 rounded-lg bg-primary-100"></div><span class="text-xs text-neutral-500">100</span></div>
+                        <div><div class="h-12 rounded-lg bg-primary-300"></div><span class="text-xs text-neutral-500">300</span></div>
+                        <div><div class="h-12 rounded-lg bg-primary-500"></div><span class="text-xs text-neutral-500">500</span></div>
+                        <div><div class="h-12 rounded-lg bg-primary-600"></div><span class="text-xs text-neutral-500">600</span></div>
+                        <div><div class="h-12 rounded-lg bg-primary-700"></div><span class="text-xs text-neutral-500">700</span></div>
+                    </div>
+                </div>
+
+                <!-- Accent - Dark Navy -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-12 h-12 rounded-2xl bg-accent-950 shadow-soft"></div>
+                        <div>
+                            <h4 class="font-bold text-accent-950">Accent - Dark Navy</h4>
+                            <p class="text-sm text-neutral-600">プロフェッショナル・コントラスト</p>
+                            <code class="text-xs text-neutral-500">#001738</code>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-5 gap-2">
+                        <div><div class="h-12 rounded-lg bg-accent-50"></div><span class="text-xs text-neutral-500">50</span></div>
+                        <div><div class="h-12 rounded-lg bg-accent-100"></div><span class="text-xs text-neutral-500">100</span></div>
+                        <div><div class="h-12 rounded-lg bg-accent-500"></div><span class="text-xs text-neutral-500">500</span></div>
+                        <div><div class="h-12 rounded-lg bg-accent-800"></div><span class="text-xs text-neutral-500">800</span></div>
+                        <div><div class="h-12 rounded-lg bg-accent-950"></div><span class="text-xs text-neutral-500">950</span></div>
+                    </div>
+                </div>
+
+                <!-- Secondary - Cyan -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-12 h-12 rounded-2xl bg-secondary-500 shadow-soft"></div>
+                        <div>
+                            <h4 class="font-bold text-accent-950">Secondary - Vivid Cyan</h4>
+                            <p class="text-sm text-neutral-600">活気・クリエイティブ</p>
+                            <code class="text-xs text-neutral-500">#00c4cc</code>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2">
+                        <div><div class="h-12 rounded-lg bg-secondary-50"></div><span class="text-xs text-neutral-500">50</span></div>
+                        <div><div class="h-12 rounded-lg bg-secondary-400"></div><span class="text-xs text-neutral-500">400</span></div>
+                        <div><div class="h-12 rounded-lg bg-secondary-500"></div><span class="text-xs text-neutral-500">500</span></div>
+                        <div><div class="h-12 rounded-lg bg-secondary-600"></div><span class="text-xs text-neutral-500">600</span></div>
+                    </div>
+                </div>
+
+                <!-- Highlight - Yellow -->
+                <div>
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-12 h-12 rounded-2xl bg-highlight-500 shadow-soft"></div>
+                        <div>
+                            <h4 class="font-bold text-accent-950">Highlight - Yellow</h4>
+                            <p class="text-sm text-neutral-600">注目・ポイント</p>
+                            <code class="text-xs text-neutral-500">#ffd600</code>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2">
+                        <div><div class="h-12 rounded-lg bg-highlight-100"></div><span class="text-xs text-neutral-500">100</span></div>
+                        <div><div class="h-12 rounded-lg bg-highlight-300"></div><span class="text-xs text-neutral-500">300</span></div>
+                        <div><div class="h-12 rounded-lg bg-highlight-500"></div><span class="text-xs text-neutral-500">500</span></div>
+                        <div><div class="h-12 rounded-lg bg-highlight-600"></div><span class="text-xs text-neutral-500">600</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Semantic Colors -->
+            <div class="rounded-3xl bg-white p-8 shadow-soft">
+                <h3 class="mb-6 font-display text-xl font-bold text-accent-950">Semantic Colors</h3>
+                <div class="grid grid-cols-4 gap-4">
+                    <div class="text-center">
+                        <div class="w-full h-16 rounded-2xl bg-success-500 mb-2"></div>
+                        <p class="font-medium text-accent-950">Success</p>
+                        <code class="text-xs text-neutral-500">#00c853</code>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-full h-16 rounded-2xl bg-warning-500 mb-2"></div>
+                        <p class="font-medium text-accent-950">Warning</p>
+                        <code class="text-xs text-neutral-500">#ffc107</code>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-full h-16 rounded-2xl bg-danger-500 mb-2"></div>
+                        <p class="font-medium text-accent-950">Danger</p>
+                        <code class="text-xs text-neutral-500">#ff3d00</code>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-full h-16 rounded-2xl bg-info-500 mb-2"></div>
+                        <p class="font-medium text-accent-950">Info</p>
+                        <code class="text-xs text-neutral-500">#2196f3</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Decorative Elements -->
+        <section class="mb-16">
+            <span class="font-display text-sm font-semibold tracking-wider text-primary-500">Decorations</span>
+            <h2 class="mt-2 mb-8 font-display text-3xl font-bold text-accent-950">装飾要素</h2>
+
+            <div class="rounded-3xl bg-accent-950 p-8 relative overflow-hidden">
+                <h3 class="mb-6 font-display text-xl font-bold text-white">Diagonal Bars & Dots</h3>
+
+                <div class="relative h-64 rounded-2xl bg-accent-800/50 flex items-center justify-center">
+                    <!-- Bars -->
+                    <div class="decoration-bar decoration-bar-purple w-20 h-48 -rotate-[25deg] absolute -top-4 right-20"></div>
+                    <div class="decoration-bar decoration-bar-cyan w-16 h-36 rotate-[25deg] absolute top-10 right-48"></div>
+                    <div class="decoration-bar decoration-bar-yellow w-12 h-28 -rotate-[15deg] absolute bottom-4 right-32"></div>
+
+                    <!-- Dots -->
+                    <div class="decoration-dot bg-secondary-500 w-8 h-8 absolute top-8 left-16"></div>
+                    <div class="decoration-dot bg-highlight-500 w-6 h-6 absolute bottom-12 left-32"></div>
+                    <div class="decoration-dot bg-primary-500 w-5 h-5 absolute top-20 left-48"></div>
+
+                    <!-- Exclamation Mark -->
+                    <span class="font-display text-8xl font-bold text-highlight-500">!</span>
+                </div>
+
+                <div class="mt-6 grid grid-cols-3 gap-4">
+                    <div class="text-center text-white">
+                        <p class="font-medium">Purple Bar</p>
+                        <code class="text-xs text-white/60">.decoration-bar-purple</code>
+                    </div>
+                    <div class="text-center text-white">
+                        <p class="font-medium">Cyan Bar</p>
+                        <code class="text-xs text-white/60">.decoration-bar-cyan</code>
+                    </div>
+                    <div class="text-center text-white">
+                        <p class="font-medium">Yellow Bar</p>
+                        <code class="text-xs text-white/60">.decoration-bar-yellow</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography -->
+        <section class="mb-16">
+            <span class="font-display text-sm font-semibold tracking-wider text-primary-500">Typography</span>
+            <h2 class="mt-2 mb-8 font-display text-3xl font-bold text-accent-950">タイポグラフィ</h2>
+
+            <div class="rounded-3xl bg-white p-8 shadow-soft space-y-8">
+                <!-- Display Font -->
+                <div>
+                    <p class="mb-2 text-xs uppercase tracking-wide text-neutral-500">Display Font - Montserrat / Poppins</p>
+                    <h1 class="font-display text-6xl font-extrabold text-accent-950">Beekle Pop Style</h1>
+                    <p class="mt-2 text-sm text-neutral-500">font-display / font-extrabold</p>
+                </div>
+
+                <!-- Number Labels -->
+                <div>
+                    <p class="mb-2 text-xs uppercase tracking-wide text-neutral-500">Number Labels</p>
+                    <div class="flex gap-6">
+                        <span class="font-display text-5xl font-bold text-primary-500">01</span>
+                        <span class="font-display text-5xl font-bold text-primary-500">02</span>
+                        <span class="font-display text-5xl font-bold text-primary-500">03</span>
+                    </div>
+                    <p class="mt-2 text-sm text-neutral-500">font-display / font-bold / text-primary-500</p>
+                </div>
+
+                <!-- Section Labels -->
+                <div>
+                    <p class="mb-2 text-xs uppercase tracking-wide text-neutral-500">Section Labels</p>
+                    <span class="font-display text-sm font-semibold tracking-wider text-primary-500">Feature</span>
+                    <h2 class="mt-1 font-display text-4xl font-bold text-accent-950">特徴</h2>
+                </div>
+
+                <!-- Body Text -->
+                <div>
+                    <p class="mb-2 text-xs uppercase tracking-wide text-neutral-500">Body Text - Noto Sans JP</p>
+                    <p class="text-lg text-neutral-700 leading-relaxed">
+                        私たちはお客様のビジネスを成功に導くシステム開発パートナーです。
+                        高品質なソリューションで、デジタルトランスフォーメーションを実現します。
+                    </p>
+                    <p class="mt-2 text-sm text-neutral-500">font-sans / text-lg / text-neutral-700</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Buttons -->
+        <section class="mb-16">
+            <span class="font-display text-sm font-semibold tracking-wider text-primary-500">Components</span>
+            <h2 class="mt-2 mb-8 font-display text-3xl font-bold text-accent-950">ボタン</h2>
+
+            <div class="rounded-3xl bg-white p-8 shadow-soft space-y-8">
+                <!-- Primary Buttons -->
+                <div>
+                    <h4 class="mb-4 text-sm font-medium text-neutral-700">Primary Buttons (Beets Purple)</h4>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="inline-flex items-center gap-2 rounded-full bg-primary-500 px-8 py-4 font-semibold text-white transition-colors hover:bg-primary-600">
+                            資料をダウンロード
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </button>
+                        <button class="rounded-full border-2 border-primary-500 px-8 py-4 font-semibold text-primary-500 transition-colors hover:bg-primary-500 hover:text-white">
+                            お問い合わせ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Accent Buttons -->
+                <div>
+                    <h4 class="mb-4 text-sm font-medium text-neutral-700">Accent Buttons (Dark Navy)</h4>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="rounded-full bg-accent-950 px-8 py-4 font-semibold text-white transition-colors hover:bg-accent-800">
+                            今すぐ始める
+                        </button>
+                        <button class="rounded-full border-2 border-accent-950 px-8 py-4 font-semibold text-accent-950 transition-colors hover:bg-accent-950 hover:text-white">
+                            詳しく見る
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Secondary Buttons -->
+                <div>
+                    <h4 class="mb-4 text-sm font-medium text-neutral-700">Secondary Buttons (Cyan)</h4>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="rounded-full bg-secondary-500 px-8 py-4 font-semibold text-white transition-colors hover:bg-secondary-600">
+                            検索する
+                        </button>
+                        <button class="rounded-full border-2 border-secondary-500 px-8 py-4 font-semibold text-secondary-500 transition-colors hover:bg-secondary-500 hover:text-white">
+                            フィルター
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cards -->
+        <section class="mb-16">
+            <span class="font-display text-sm font-semibold tracking-wider text-primary-500">Components</span>
+            <h2 class="mt-2 mb-8 font-display text-3xl font-bold text-accent-950">カード</h2>
+
+            <div class="grid gap-6 md:grid-cols-3">
+                <!-- Feature Card -->
+                <div class="rounded-3xl bg-white p-8 shadow-soft">
+                    <span class="font-display text-4xl font-bold text-primary-500">01</span>
+                    <h3 class="mt-4 text-xl font-bold text-accent-950">Webシステム開発</h3>
+                    <p class="mt-2 text-neutral-600">最新技術を活用した高品質なWebアプリケーション開発</p>
+                </div>
+
+                <!-- Highlight Card (Cyan) -->
+                <div class="rounded-3xl bg-secondary-500 p-8 text-white">
+                    <span class="text-sm font-medium opacity-80">300件以上</span>
+                    <h3 class="mt-2 text-2xl font-bold">豊富な開発実績で<br/>信頼されるパートナー</h3>
+                </div>
+
+                <!-- Stats Card -->
+                <div class="rounded-3xl bg-white p-8 shadow-soft">
+                    <div class="flex items-baseline gap-1">
+                        <span class="font-display text-6xl font-extrabold text-primary-500">98</span>
+                        <span class="text-xl text-primary-500">%</span>
+                    </div>
+                    <p class="mt-2 text-sm text-accent-950">クライアント満足度</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Badges -->
+        <section class="mb-16">
+            <span class="font-display text-sm font-semibold tracking-wider text-primary-500">Components</span>
+            <h2 class="mt-2 mb-8 font-display text-3xl font-bold text-accent-950">バッジ & タグ</h2>
+
+            <div class="rounded-3xl bg-white p-8 shadow-soft">
+                <div class="flex flex-wrap gap-3">
+                    <span class="inline-flex items-center rounded-full bg-primary-50 px-4 py-1.5 text-sm font-medium text-primary-700">Web開発</span>
+                    <span class="inline-flex items-center rounded-full bg-secondary-50 px-4 py-1.5 text-sm font-medium text-secondary-600">モバイル</span>
+                    <span class="inline-flex items-center rounded-full bg-highlight-100 px-4 py-1.5 text-sm font-medium text-highlight-600">AI/ML</span>
+                    <span class="inline-flex items-center rounded-full bg-accent-50 px-4 py-1.5 text-sm font-medium text-accent-800">クラウド</span>
+                    <span class="inline-flex items-center rounded-full bg-primary-500 px-4 py-1.5 text-sm font-medium text-white">人気</span>
+                    <span class="inline-flex items-center rounded-full bg-success-500 px-4 py-1.5 text-sm font-medium text-white">完了</span>
+                    <span class="inline-flex items-center rounded-full bg-warning-500 px-4 py-1.5 text-sm font-medium text-white">進行中</span>
+                    <span class="inline-flex items-center rounded-full bg-danger-500 px-4 py-1.5 text-sm font-medium text-white">緊急</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Animations -->
+        <section class="mb-16">
+            <span class="font-display text-sm font-semibold tracking-wider text-primary-500">Motion</span>
+            <h2 class="mt-2 mb-8 font-display text-3xl font-bold text-accent-950">アニメーション</h2>
+
+            <div class="rounded-3xl bg-white p-8 shadow-soft">
+                <div class="grid grid-cols-2 gap-6 md:grid-cols-4">
+                    <div class="text-center">
+                        <div class="mx-auto mb-3 h-16 w-16 animate-fade-in rounded-2xl bg-primary-500"></div>
+                        <p class="text-sm font-medium text-accent-950">fade-in</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="mx-auto mb-3 h-16 w-16 animate-fade-in-up rounded-2xl bg-accent-950"></div>
+                        <p class="text-sm font-medium text-accent-950">fade-in-up</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="mx-auto mb-3 h-16 w-16 animate-float rounded-2xl bg-secondary-500"></div>
+                        <p class="text-sm font-medium text-accent-950">float</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="mx-auto mb-3 h-16 w-16 animate-float rounded-2xl bg-highlight-500" style="animation-delay: 0.5s;"></div>
+                        <p class="text-sm font-medium text-accent-950">float (delayed)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Usage Guide -->
+        <section class="mb-16">
+            <span class="font-display text-sm font-semibold tracking-wider text-primary-500">Guidelines</span>
+            <h2 class="mt-2 mb-8 font-display text-3xl font-bold text-accent-950">使用ガイド</h2>
+
+            <div class="grid gap-6 md:grid-cols-2">
+                <div class="rounded-3xl border-2 border-success-500/30 bg-success-500/10 p-8">
+                    <h3 class="mb-4 font-display text-xl font-bold text-success-500">DO</h3>
+                    <ul class="space-y-3 text-neutral-700">
+                        <li class="flex items-start gap-2">
+                            <span class="text-success-500">&#10004;</span>
+                            <span>Beekle Purple(#3D4DB7)をメインカラーとして使用</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-success-500">&#10004;</span>
+                            <span>装飾要素（斜め棒、ドット）で画面に動きを出す</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-success-500">&#10004;</span>
+                            <span>白背景のカードで情報を整理</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-success-500">&#10004;</span>
+                            <span>大きな番号（01, 02, 03...）でセクションを区切る</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-success-500">&#10004;</span>
+                            <span>角丸を大きめに取って柔らかい印象に</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="rounded-3xl border-2 border-danger-500/30 bg-danger-500/10 p-8">
+                    <h3 class="mb-4 font-display text-xl font-bold text-danger-500">DON'T</h3>
+                    <ul class="space-y-3 text-neutral-700">
+                        <li class="flex items-start gap-2">
+                            <span class="text-danger-500">&#10008;</span>
+                            <span>装飾要素を過剰に配置しない</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-danger-500">&#10008;</span>
+                            <span>パープルを本文テキストに使わない（見出し・アクセントのみ）</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-danger-500">&#10008;</span>
+                            <span>カードに強いシャドウをかけない（軽めに）</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-danger-500">&#10008;</span>
+                            <span>複雑なグラデーションを多用しない</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-danger-500">&#10008;</span>
+                            <span>小さすぎるボタン・タップターゲット</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary-500 px-4 py-12 text-center">
+        <p class="font-display text-xl font-bold text-white">Beekle</p>
+        <p class="mt-2 text-white/70">Pop Style Design System v1.0</p>
+    </footer>
+
+</body>
+</html>

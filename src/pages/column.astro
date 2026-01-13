@@ -1,57 +1,33 @@
 ---
 import { Header } from '../components/header';
+import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import { getCategories, getColumns } from '../lib/microcms';
 
 export const prerender = true;
 
-// カテゴリーメタデータを読み込み
-const categoriesPath = path.join(process.cwd(), 'src/content/columns/_categories.json');
-const categoriesMetadata = JSON.parse(fs.readFileSync(categoriesPath, 'utf8'));
-
-// フォルダ構造から記事を動的に読み込む
-const columnsDir = path.join(process.cwd(), 'src/content/columns');
-const categoryFolders = fs.readdirSync(columnsDir)
-  .filter(item => {
-    const itemPath = path.join(columnsDir, item);
-    return fs.statSync(itemPath).isDirectory() && !item.startsWith('_');
-  });
+// MicroCMSからカテゴリーとコラムを取得
+const categories = await getCategories();
+const allColumns = await getColumns();
 
 // カテゴリーごとに記事を収集
-const columnCategories = categoryFolders
-  .map(categoryId => {
-    const categoryPath = path.join(columnsDir, categoryId);
-    const files = fs.readdirSync(categoryPath)
-      .filter(file => file.endsWith('.md'))
-      .sort(); // ファイル名でソート（01-, 02-...）
+const columnCategories = categories
+  .map((category) => {
+    const categoryColumns = allColumns.filter((column) => column.category.id === category.id);
 
-    const articles = files.map((file, index) => {
-      const filePath = path.join(categoryPath, file);
-      const fileContents = fs.readFileSync(filePath, 'utf8');
-      const { data } = matter(fileContents);
-      const slug = file.replace('.md', '');
-
-      return {
-        number: String(index + 1).padStart(2, '0'),
-        title: data.title || 'タイトルなし',
-        description: data.description || '',
-        slug: `${categoryId}/${slug}`,
-        readTime: data.readTime || '10分',
-        difficulty: data.difficulty || '中級',
-      };
-    });
-
-    const metadata = categoriesMetadata[categoryId] || {
-      title: categoryId,
-      description: '',
-      order: 999
-    };
+    const articles = categoryColumns.map((column, index) => ({
+      number: String(index + 1).padStart(2, '0'),
+      title: column.title,
+      slug: column.id,
+    }));
 
     return {
-      ...metadata,
-      articles
+      id: category.id,
+      title: category.title,
+      description: category.description,
+      icon: category.icon,
+      order: category.order,
+      articles,
     };
   })
   .sort((a, b) => a.order - b.order);
@@ -60,55 +36,34 @@ const columnCategories = categoryFolders
 const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.length, 0);
 ---
 
-<Layout title="コラムで学ぶ - システム開発の知識 | Beekle">
+<Layout title="コラムで学ぶ - システム開発を成功させる発注側の技術 | Beekle">
   <Header client:load />
   <main class="pt-20">
     {/* Hero Section */}
-    <section class="relative py-24 md:py-32 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 overflow-hidden">
-      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-
-      {/* Floating shapes */}
-      <div class="absolute top-20 right-20 w-32 h-32 bg-white/10 rounded-full blur-xl animate-float"></div>
-      <div class="absolute bottom-40 left-40 w-48 h-48 bg-white/10 rounded-full blur-xl animate-float-delay"></div>
-
-      <div class="container mx-auto px-6 md:px-8 relative">
-        <div class="text-center max-w-4xl mx-auto">
-          <div class="inline-block mb-6">
-            <span class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-full text-sm font-medium">
-              Knowledge Base
-            </span>
-          </div>
-
-          <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-            コラムで学ぶ<br />
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-pink-200">システム開発の知識</span>
-          </h1>
-
-          <p class="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
-            「開発って、正直よくわからない」という不安を解消。<br class="hidden md:block" />
-            失敗しないための実践的な知識を、体系的にお届けします。
-          </p>
-
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="#categories"
-              class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-indigo-600 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
-            >
-              記事を読む
-              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </a>
-            <a
-              href="/prooffirst"
-              class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-indigo-600 transition-all"
-            >
-              ゼロスタートを見る
-            </a>
-          </div>
-        </div>
+    <PageHero
+      englishTitle="COLUMN"
+      title="コラムで学ぶ システム開発の知識"
+      subtitle="「開発って、正直よくわからない」という不安を解消。失敗しないための実践的な知識を、体系的にお届けします。"
+      badge="Knowledge Base"
+    >
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="#categories"
+          class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+        >
+          記事を読む
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </a>
+        <a
+          href="/prooffirst"
+          class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
+        >
+          ゼロスタートを見る
+        </a>
       </div>
-    </section>
+    </PageHero>
 
     {/* Column Categories */}
     <section id="categories" class="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-white">
@@ -119,7 +74,7 @@ const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.l
             <div class="mb-12">
               <div class="flex items-center gap-4 mb-4">
                 {/* Category Icon */}
-                <div class="w-16 h-16 flex-shrink-0 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg">
+                <div class="w-16 h-16 flex-shrink-0 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg">
                   {category.id === 'avoid-failure' && (
                     <svg class="w-9 h-9 text-white" viewBox="0 0 512 512" fill="currentColor">
                       <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>
@@ -156,7 +111,7 @@ const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.l
                   </p>
                 </div>
               </div>
-              <div class="border-t-2 border-indigo-200"></div>
+              <div class="border-t-2 border-primary-200"></div>
             </div>
 
             {/* Articles Grid */}
@@ -165,44 +120,24 @@ const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.l
                 {category.articles.map((article) => (
                   <a
                     href={`/column/${article.slug}`}
-                    class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all p-6 md:p-8 border border-gray-100 hover:border-indigo-200"
+                    class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all p-6 md:p-8 border border-gray-100 hover:border-primary-200"
                   >
                     <div class="flex items-start gap-6">
                       {/* Article Number */}
                       <div class="flex-shrink-0">
-                        <div class="w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 text-indigo-700 font-bold text-lg">
+                        <div class="w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-br from-primary-100 to-primary-200 text-primary-600 font-bold text-lg">
                           {article.number}
                         </div>
                       </div>
 
                       {/* Article Content */}
                       <div class="flex-1 min-w-0">
-                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-3 leading-tight">
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary-500 transition-colors mb-4 leading-tight">
                           {article.title}
                         </h3>
-                        <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-4">
-                          {article.description}
-                        </p>
-
-                        {/* Meta Info */}
-                        <div class="flex items-center gap-4 text-sm text-gray-500">
-                          <span class="flex items-center gap-1">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            {article.readTime}
-                          </span>
-                          <span class={`px-3 py-1 rounded-full text-xs font-medium ${
-                            article.difficulty === '初級' ? 'bg-green-100 text-green-700' :
-                            article.difficulty === '中級' ? 'bg-yellow-100 text-yellow-700' :
-                            'bg-red-100 text-red-700'
-                          }`}>
-                            {article.difficulty}
-                          </span>
-                        </div>
 
                         {/* Read More */}
-                        <div class="flex items-center text-indigo-600 font-semibold text-sm mt-4 group-hover:translate-x-1 transition-transform">
+                        <div class="flex items-center text-primary-500 font-semibold text-sm group-hover:translate-x-1 transition-transform">
                           <span>記事を読む</span>
                           <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -231,7 +166,7 @@ const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.l
           {columnCategories.map((category) => (
             <a
               href={`#${category.id}`}
-              class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 text-indigo-700 rounded-full font-medium transition-all shadow-sm hover:shadow-md"
+              class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-50 to-primary-100 hover:from-primary-100 hover:to-primary-200 text-primary-600 rounded-full font-medium transition-all shadow-sm hover:shadow-md"
             >
               <span>{category.title}</span>
             </a>
@@ -241,7 +176,7 @@ const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.l
     </section>
 
     {/* Templates & Checklists */}
-    <section class="relative py-20 md:py-28 bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 text-white overflow-hidden">
+    <section class="relative py-20 md:py-28 bg-accent-950 text-white overflow-hidden">
       <div class="absolute inset-0 bg-grid-pattern opacity-20"></div>
 
       <div class="container mx-auto px-6 md:px-8 relative">
@@ -316,7 +251,7 @@ const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.l
     </section>
 
     {/* CTA Section - Zero Start */}
-    <section class="relative py-20 md:py-32 overflow-hidden bg-gradient-to-br from-indigo-600 to-purple-600">
+    <section class="relative py-20 md:py-32 overflow-hidden bg-gradient-to-br from-primary-500 to-primary-600">
       <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
 
       <div class="container mx-auto px-6 md:px-8 relative">
@@ -351,7 +286,7 @@ const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.l
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/prooffirst"
-              class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-indigo-600 bg-white rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
+              class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
             >
               ゼロスタートについて詳しく見る
               <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -360,7 +295,7 @@ const totalArticles = columnCategories.reduce((sum, cat) => sum + cat.articles.l
             </a>
             <a
               href="/contact"
-              class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-indigo-600 transition-all"
+              class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
             >
               無料相談を予約する
             </a>

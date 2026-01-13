@@ -1,5 +1,6 @@
 ---
 import { Header } from '../components/header';
+import { PageHero } from '../components/ui/page-hero';
 // src/pages/privacy-policy.astro
 import Layout from '../layouts/layout.astro';
 
@@ -10,17 +11,11 @@ const lastUpdated = '2024年1月1日';
   <Header client:load />
   <main class="pt-20">
     <!-- Hero Section -->
-    <section class="relative py-32 bg-gradient-to-br from-purple-600 to-pink-600">
-      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      <div class="container mx-auto px-8">
-        <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-8">
-          プライバシーポリシー
-        </h1>
-        <p class="text-xl text-white/90 text-center max-w-3xl mx-auto">
-          最終更新日: {lastUpdated}
-        </p>
-      </div>
-    </section>
+    <PageHero
+      englishTitle="PRIVACY"
+      title="プライバシーポリシー"
+      subtitle={`最終更新日: ${lastUpdated}`}
+    />
 
     <!-- Policy Content -->
     <section class="py-32">

@@ -1,0 +1,103 @@
+# Beekle Website - Cursor Rules
+
+## Project Overview
+企業向け開発サービス「Beekle」のコーポレートサイト。Astro + React + Tailwind CSS で構築され、Cloudflare Pages にデプロイ。
+
+## Tech Stack
+- **Framework**: Astro 5.x (SSR mode with Cloudflare adapter)
+- **UI**: React 18 + Tailwind CSS 3.x + Framer Motion
+- **CMS**: microCMS (コラム記事管理)
+- **Linter/Formatter**: Biome
+- **Deploy**: Cloudflare Pages
+
+## Project Structure
+```
+src/
+├── components/     # React コンポーネント (.tsx)
+├── content/        # ローカルコンテンツ (columns/*.md)
+├── layouts/        # Astro レイアウト
+├── lib/            # ユーティリティ (utils.ts, microcms.ts)
+├── pages/          # Astro ページ (.astro)
+├── styles/         # グローバルCSS
+└── theme.json      # デザイントークン
+```
+
+## Commands
+```bash
+bun dev          # 開発サーバー起動
+bun build        # プロダクションビルド
+bun preview      # ビルドプレビュー
+bun check        # Biome lint + format (自動修正)
+bun check:all    # Biome 全体チェック
+```
+
+## Coding Conventions
+
+### General
+- 日本語コメント推奨（ユーザー向けサービスのため）
+- ファイル名: kebab-case (例: `hero-section.tsx`)
+- コンポーネント名: PascalCase (例: `HeroSection`)
+- 関数名: camelCase (例: `getColumns`)
+
+### TypeScript
+- 型定義は明示的に記述
+- `any` の使用は最小限に
+- Path alias: `@/` → `src/`
+
+### React Components
+- 関数コンポーネントを使用
+- Props は型定義を明示
+- Framer Motion でアニメーション実装
+
+### Astro Pages
+- `.astro` ファイルでページ作成
+- 動的ルート: `[slug].astro`, `[...slug].astro`
+- SSR モード (output: 'server')
+
+### Styling
+- Tailwind CSS ユーティリティクラス優先
+- カスタムカラーは `theme.json` で定義
+- CSS変数: `hsl(var(--primary))` 形式
+- フォント: Poppins (英語), Noto Sans JP (日本語)
+
+### Biome Settings
+- インデント: スペース 2
+- 行幅: 100文字
+- クォート: シングルクォート
+- トレイリングカンマ: ES5
+
+## microCMS Integration
+- Service Domain: `MICROCMS_SERVICE_DOMAIN` env
+- API Key: `MICROCMS_API_KEY` env
+- エンドポイント: `categories`, `columns`
+- 型定義: `src/lib/microcms.ts`
+
+## Key Files
+- `astro.config.mjs` - Astro設定
+- `tailwind.config.mjs` - Tailwind設定
+- `src/theme.json` - デザイントークン
+- `biome.json` - Linter/Formatter設定
+- `src/lib/microcms.ts` - CMS クライアント
+
+## UI Components
+- `src/components/ui/card.tsx` - Card コンポーネント
+- lucide-react でアイコン
+- class-variance-authority (cva) でバリアント管理
+- clsx + tailwind-merge でクラス結合
+
+## Content
+- コラム記事: `src/content/columns/{category}/{filename}.md`
+- カテゴリ定義: `src/content/columns/_categories.json`
+- Markdownフロントマター: title, publishedAt, etc.
+
+## Environment Variables
+```env
+MICROCMS_SERVICE_DOMAIN=xxx
+MICROCMS_API_KEY=xxx
+```
+
+## Important Notes
+- Cloudflare Pages の制限を考慮
+- SSR でビルド時間短縮
+- 画像最適化: sharp 使用
+- SEO: Layout でメタタグ設定

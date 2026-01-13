@@ -1,5 +1,4 @@
 {
-
   "avoid-failure": {
     "id": "avoid-failure",
     "title": "システム開発で失敗しないために",
@@ -7,7 +6,7 @@
     "icon": "🛡️",
     "order": 1
   },
-    "common-issues": {
+  "common-issues": {
     "id": "common-issues",
     "title": "システム開発よくある問題",
     "description": "実際の現場でよく起きる問題事例とその対処法",

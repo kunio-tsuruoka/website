@@ -5,7 +5,8 @@ import Layout from '../layouts/layout.astro';
 const materials = [
   {
     title: 'ワンテクワールドd-popsアライアンス',
-    description: '弊社はワンテクワールドという開発アライアンスを組んで開発を行っています。その関連資料になります。',
+    description:
+      '弊社はワンテクワールドという開発アライアンスを組んで開発を行っています。その関連資料になります。',
     fileName: 'ワンテクワールドd-popsアライアンス.pdf',
     fileUrl: '/pdf/ワンテクワールドd-popsアライアンス.pdf',
     category: '提携資料',
@@ -16,7 +17,7 @@ const materials = [
 <Layout title="関連資料 | Beekle">
   <Header client:load />
   <main class="pt-20">
-    <section class="bg-gradient-to-br from-indigo-600 to-purple-600 py-20">
+    <section class="bg-primary-500 py-20">
       <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl text-center">
         <h1 class="text-4xl font-bold text-white sm:text-5xl mb-6">
           関連資料
@@ -34,7 +35,7 @@ const materials = [
             <div class="p-8">
               {/* カテゴリバッジ */}
               <div class="mb-4">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-700">
                   {material.category}
                 </span>
               </div>
@@ -53,7 +54,7 @@ const materials = [
               <a
                 href={material.fileUrl}
                 download={material.fileName}
-                class="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+                class="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors duration-200"
               >
                 <svg
                   class="w-5 h-5 mr-2"
@@ -84,7 +85,7 @@ const materials = [
         <div class="mt-8">
           <a
             href="/contact"
-            class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-indigo-600 border border-transparent rounded-full hover:bg-indigo-700"
+            class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-primary-500 border border-transparent rounded-full hover:bg-primary-600"
           >
             お問い合わせ
             <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

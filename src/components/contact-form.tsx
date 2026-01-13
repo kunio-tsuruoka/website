@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,7 +20,7 @@ const ContactForm = () => {
         message: formData.get('message'),
         type: formData.get('type'),
         company: formData.get('company_name'),
-        phone: formData.get('phone')
+        phone: formData.get('phone'),
       };
 
       console.log('Sending contact form data:', data);
@@ -29,7 +30,7 @@ const ContactForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();
@@ -52,7 +53,9 @@ const ContactForm = () => {
       console.error('Contact form error:', error);
       setSubmitStatus('error');
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      alert(`❌ エラーが発生しました。\n\n詳細: ${errorMessage}\n\nしばらく時間をおいて再度お試しください。`);
+      alert(
+        `❌ エラーが発生しました。\n\n詳細: ${errorMessage}\n\nしばらく時間をおいて再度お試しください。`
+      );
 
       // 3秒後にステータスをリセット
       setTimeout(() => {
@@ -64,18 +67,18 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+    <div className="bg-white rounded-[32px] shadow-soft p-8 md:p-12">
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* お問い合わせ種別 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="type">
-            お問い合わせ種別 <span className="text-red-500">*</span>
+          <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="type">
+            お問い合わせ種別 <span className="text-destructive">*</span>
           </label>
           <select
             id="type"
             name="type"
             required
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
           >
             <option value="">選択してください</option>
             <option value="web">Webアプリ開発について</option>
@@ -88,83 +91,79 @@ const ContactForm = () => {
 
         {/* 会社名 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="company">
-            会社名 <span className="text-gray-500">(任意)</span>
+          <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="company">
+            会社名 <span className="text-muted-foreground">(任意)</span>
           </label>
           <input
             type="text"
             id="company"
             name="company_name"
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="株式会社Beekle"
           />
         </div>
 
         {/* お名前 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="name">
-            お名前 <span className="text-red-500">*</span>
+          <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="name">
+            お名前 <span className="text-destructive">*</span>
           </label>
           <input
             type="text"
             id="name"
             name="from_name"
             required
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="山田 太郎"
           />
         </div>
 
         {/* メールアドレス */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="email">
-            メールアドレス <span className="text-red-500">*</span>
+          <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="email">
+            メールアドレス <span className="text-destructive">*</span>
           </label>
           <input
             type="email"
             id="email"
             name="reply_to"
             required
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="your-email@example.com"
           />
         </div>
 
         {/* 電話番号 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="phone">
-            電話番号 <span className="text-gray-500">(任意)</span>
+          <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="phone">
+            電話番号 <span className="text-muted-foreground">(任意)</span>
           </label>
           <input
             type="tel"
             id="phone"
             name="phone"
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="03-1234-5678"
           />
         </div>
 
         {/* お問い合わせ内容 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="message">
-            お問い合わせ内容 <span className="text-red-500">*</span>
+          <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="message">
+            お問い合わせ内容 <span className="text-destructive">*</span>
           </label>
           <textarea
             id="message"
             name="message"
             rows={6}
             required
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="具体的な内容をご記入ください"
           />
         </div>
 
         {/* 受信者名（非表示） */}
-        <input
-          type="hidden"
-          name="to_name"
-          value="管理者"
-        />
+        <input type="hidden" name="to_name" value="管理者" />
 
         {/* プライバシーポリシー */}
         <div className="flex items-start">
@@ -174,12 +173,14 @@ const ContactForm = () => {
               name="privacy"
               type="checkbox"
               required
-              className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+              className="w-4 h-4 rounded border-input text-primary focus:ring-primary"
             />
           </div>
           <div className="ml-3">
-            <label className="text-sm text-gray-700" htmlFor="privacy">
-              <a href="/privacy" className="text-purple-600 hover:text-purple-500 underline">プライバシーポリシー</a>
+            <label className="text-base text-foreground/80" htmlFor="privacy">
+              <a href="/privacy" className="text-primary hover:text-primary/80 underline">
+                プライバシーポリシー
+              </a>
               に同意します
             </label>
           </div>
@@ -188,30 +189,32 @@ const ContactForm = () => {
         {/* 送信ボタン */}
         <div className="text-center">
           {submitStatus === 'success' && (
-            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-[16px]">
               <p className="text-green-800 font-medium">
-                ✅ お問い合わせを受け付けました！<br />
-                <span className="text-sm">担当者より1-2営業日以内にご連絡いたします。</span>
+                お問い合わせを受け付けました！
+                <br />
+                <span className="text-base">担当者より1-2営業日以内にご連絡いたします。</span>
               </p>
             </div>
           )}
           {submitStatus === 'error' && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-800 font-medium">
-                ❌ エラーが発生しました<br />
-                <span className="text-sm">しばらく時間をおいて再度お試しください。</span>
+            <div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 rounded-[16px]">
+              <p className="text-destructive font-medium">
+                エラーが発生しました
+                <br />
+                <span className="text-base">しばらく時間をおいて再度お試しください。</span>
               </p>
             </div>
           )}
           <button
             type="submit"
             disabled={isSubmitting || submitStatus === 'success'}
-            className={`inline-flex justify-center items-center px-8 py-4 rounded-full font-bold text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+            className={`inline-flex justify-center items-center px-8 py-4 rounded-full font-semibold text-white transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${
               isSubmitting || submitStatus === 'success'
-                ? 'bg-gray-400 cursor-not-allowed'
+                ? 'bg-neutral-300 cursor-not-allowed'
                 : submitStatus === 'error'
-                ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500'
-                : 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500'
+                  ? 'bg-destructive hover:bg-destructive/90 focus:ring-destructive'
+                  : 'bg-primary-500 hover:bg-primary-600 shadow-soft hover:shadow-medium focus:ring-primary-500'
             }`}
           >
             {isSubmitting ? (
@@ -237,7 +240,11 @@ const ContactForm = () => {
             ) : submitStatus === 'success' ? (
               <>
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 送信完了
               </>
