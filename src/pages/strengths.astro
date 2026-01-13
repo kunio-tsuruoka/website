@@ -1,553 +1,418 @@
 ---
 import { Header } from '../components/header';
+import { ButtonLink } from '../components/ui/button';
+import { Card, CardDescription, CardIcon, CardTitle } from '../components/ui/card';
+import { PageHero } from '../components/ui/page-hero';
+import { Section, SectionHeader } from '../components/ui/section';
 import Layout from '../layouts/layout.astro';
 ---
 
 <Layout title="Beekleの強み | Beekle">
   <Header client:load />
   <main class="pt-20">
-    <section class="bg-gradient-to-br from-indigo-600 to-purple-600 py-32 relative overflow-hidden">
-      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      <div class="absolute top-20 right-20 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-20 left-20 w-96 h-96 bg-purple-300/10 rounded-full blur-3xl"></div>
-      
-      <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl text-center relative">
-        <h1 class="text-5xl lg:text-7xl font-bold text-white mb-6 animate-fade-in">
-          Beekleの強み
-        </h1>
-        <p class="text-2xl text-white/90 max-w-3xl mx-auto animate-fade-in-delay">
-          お客様のビジネス成功を実現する、私たちの3つの強み
-        </p>
-      </div>
-    </section>
+    <!-- Hero Section -->
+    <PageHero
+      englishTitle="STRENGTHS"
+      title="Beekleの強み"
+      subtitle="お客様のビジネス成功を実現する、私たちの3つの強み"
+    />
 
-    {/* 強み1: 要件定義力 */}
-    <section class="py-32 bg-white relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-      
-      <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
-          <div class="relative">
-            <div class="absolute -top-20 -left-20 text-[200px] font-bold text-indigo-100 select-none">
-              01
-            </div>
-            <div class="relative z-10">
-              <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-8">
-                卓越した<br />
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">要件定義力</span>
-              </h2>
-              <p class="text-xl text-gray-700 leading-relaxed">
-                UX設計、デザイン、マーケティングを総合的に捉え、真に必要な機能を見極めることで、プロジェクトのリスクを最小化します。
+    <!-- 強み1: 要件定義力 -->
+    <Section variant="white" padding="lg" decoration="blursPurple">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="relative">
+          <span class="font-Poppins text-[120px] lg:text-[180px] font-bold text-primary-500/10 absolute -top-16 -left-8 select-none">
+            01
+          </span>
+          <div class="relative z-10">
+            <h2 class="text-3xl md:text-4xl font-bold text-accent-950 mb-4">
+              卓越した<br /><span class="text-primary-500">要件定義力</span>
+            </h2>
+            <span class="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-sm font-medium mb-8">
+              Strength
+            </span>
+            <p class="text-xl text-neutral-700 leading-relaxed">
+              UX設計、デザイン、マーケティングを総合的に捉え、真に必要な機能を見極めることで、プロジェクトのリスクを最小化します。
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <Card variant="outlinedPrimary" padding="lg" hover="none">
+            <h3 class="text-2xl font-bold text-accent-950 mb-6 flex items-center">
+              <span class="w-2 h-8 bg-primary-500 rounded-full mr-4"></span>
+              なぜ要件定義が重要なのか
+            </h3>
+            <p class="text-neutral-700 mb-4 leading-relaxed">
+              プロジェクトの炎上は、多くの場合、下流工程ではなく上流工程のミスに起因します。
+            </p>
+            <p class="text-neutral-700 mb-6 leading-relaxed">
+              AI活用によってコーディングの効率化が進む現代でも、上流工程での適切な設計と綿密な協議がなければ、ビジネス価値のないシステムを構築してしまうリスクがあります。
+            </p>
+            <div class="bg-primary-50 rounded-xl p-6">
+              <p class="font-bold text-primary-500 text-lg">
+                Beekleは、この要件定義において圧倒的な強みを持っています。
               </p>
             </div>
+          </Card>
+
+          <Card variant="light" padding="md" hover="none" className="mt-8">
+            <p class="text-neutral-700">
+              弊社のクリエイターは専門領域に留まらず、幅広い知識を持つジェネラリストが多数在籍。多角的な視点からの質の高いコミュニケーションが可能です。
+            </p>
+          </Card>
+        </div>
+      </div>
+    </Section>
+
+    <!-- 強み2: 問題解決能力 -->
+    <Section variant="lightPurple" padding="lg" decoration="blursMix">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="order-2 lg:order-1">
+          <Card variant="outlinedPrimary" padding="lg" hover="none">
+            <h3 class="text-2xl font-bold text-accent-950 mb-6 flex items-center">
+              <span class="w-2 h-8 bg-primary-500 rounded-full mr-4"></span>
+              プロアクティブなアプローチ
+            </h3>
+            <p class="text-neutral-700 mb-8 leading-relaxed">
+              システム開発は本質的に複雑で、仕様を最初から完璧に定義することは不可能です。プロジェクトの進行に応じて柔軟に対応する必要があります。
+            </p>
+
+            <div class="space-y-6">
+              <div class="flex items-start gap-4 group">
+                <div class="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <p class="text-neutral-700">開発依頼の背景と事業詳細の徹底的なヒアリング</p>
+              </div>
+              <div class="flex items-start gap-4 group">
+                <div class="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <p class="text-neutral-700">顧客企業の強みを正確に把握した上での提案</p>
+              </div>
+              <div class="flex items-start gap-4 group">
+                <div class="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <p class="text-neutral-700">運用段階での価値最大化を見据えた機能設計</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <div class="order-1 lg:order-2 relative">
+          <span class="font-Poppins text-[120px] lg:text-[180px] font-bold text-primary-500/10 absolute -top-16 -right-8 select-none">
+            02
+          </span>
+          <div class="relative z-10">
+            <h2 class="text-3xl md:text-4xl font-bold text-accent-950 mb-4">
+              高度な<br /><span class="text-primary-500">問題解決能力</span>
+            </h2>
+            <span class="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-sm font-medium mb-8">
+              Strength
+            </span>
+            <p class="text-xl text-neutral-700 leading-relaxed mb-8">
+              単に指示された内容を実装するのではなく、お客様の真のニーズを理解し、プロフェッショナルとして最適なソリューションをご提案します。
+            </p>
+            <Card variant="lightPurple" padding="md" hover="none">
+              <p class="text-neutral-700">
+                弊社の強みは、高いコンサルティング能力にあります。技術的な専門性とビジネス理解を兼ね備えたメンバーが、お客様の課題に対して本質的な解決策を提供します。
+              </p>
+            </Card>
           </div>
-          
-          <div class="relative">
-            <div class="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl p-1">
-              <div class="bg-white rounded-3xl p-10">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                  <span class="w-2 h-8 bg-gradient-to-b from-indigo-600 to-purple-600 rounded-full mr-4"></span>
-                  なぜ要件定義が重要なのか
-                </h3>
-                <p class="text-gray-700 mb-4 leading-relaxed">
-                  プロジェクトの炎上は、多くの場合、下流工程ではなく上流工程のミスに起因します。
+        </div>
+      </div>
+    </Section>
+
+    <!-- 強み3: 学習意欲の高いチーム -->
+    <Section variant="white" padding="lg" decoration="bars">
+      <div class="text-center mb-16 relative">
+        <span class="font-Poppins text-[120px] lg:text-[180px] font-bold text-primary-500/10 absolute -top-16 right-1/4 select-none">
+          03
+        </span>
+        <span class="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-sm font-medium mb-4">
+          Strength
+        </span>
+        <h2 class="text-3xl md:text-4xl font-bold text-accent-950 mb-4">
+          学習と創造を愛する<br /><span class="text-primary-500">チーム</span>
+        </h2>
+        <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+          Beekleには、知的好奇心が旺盛で、新しい技術や知識を積極的に吸収し、実務に活かすことができる優秀なメンバーが集まっています。
+        </p>
+      </div>
+
+      <div class="max-w-4xl mx-auto mb-16">
+        <Card variant="lightPurple" padding="lg" hover="none">
+          <p class="text-lg text-accent-950 leading-relaxed">
+            高品質なコンサルティングとシステム設計には、確かな技術力と継続的な学習が不可欠です。付け焼き刃では対応できない複雑な課題にも、日々の研鑽によって培われた実力で対応します。
+          </p>
+        </Card>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-8">
+        <Card variant="white" padding="lg" hover="lift" decoration="barPurple">
+          <CardIcon variant="purple">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+          </CardIcon>
+          <CardTitle className="text-xl mb-3">週次勉強会</CardTitle>
+          <CardDescription>
+            毎週開催される任意参加の勉強会で、最新技術や業界動向について学び合っています。
+          </CardDescription>
+        </Card>
+
+        <Card variant="white" padding="lg" hover="lift" decoration="barPurple">
+          <CardIcon variant="purple">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </CardIcon>
+          <CardTitle className="text-xl mb-3">知識共有文化</CardTitle>
+          <CardDescription>
+            学んだ知識や経験を積極的に共有し、チーム全体のレベルアップを図っています。
+          </CardDescription>
+        </Card>
+
+        <Card variant="white" padding="lg" hover="lift" decoration="barPurple">
+          <CardIcon variant="purple">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+          </CardIcon>
+          <CardTitle className="text-xl mb-3">実践的な学習</CardTitle>
+          <CardDescription>
+            新しい技術を実際のプロジェクトに適用し、最適なソリューションを提供します。
+          </CardDescription>
+        </Card>
+      </div>
+    </Section>
+
+    <!-- よくある不安・質問セクション -->
+    <Section variant="light" padding="lg" decoration="blursPurple">
+      <SectionHeader
+        number="Q&A"
+        label="FAQ"
+        title="よくあるご不安にお答えします"
+        subtitle="お客様からよくいただくご質問について、率直にお答えいたします"
+      />
+
+      <div class="max-w-4xl mx-auto space-y-12">
+        <!-- Q1 -->
+        <Card variant="outlinedPrimary" padding="lg" hover="none">
+          <div class="flex items-start gap-6">
+            <div class="flex-shrink-0">
+              <div class="w-16 h-16 bg-primary-500 rounded-2xl flex items-center justify-center">
+                <span class="text-2xl font-bold text-white">Q</span>
+              </div>
+            </div>
+            <div class="flex-grow">
+              <h3 class="text-2xl font-bold text-accent-950 mb-6">
+                会社の規模が小さいけど大丈夫？
+              </h3>
+
+              <div class="space-y-6">
+                <p class="text-lg text-neutral-700 leading-relaxed">
+                  <span class="font-bold text-primary-500">結論：むしろ小規模だからこその強みがあります。</span>
                 </p>
-                <p class="text-gray-700 mb-6 leading-relaxed">
-                  AI活用によってコーディングの効率化が進む現代でも、上流工程での適切な設計と綿密な協議がなければ、ビジネス価値のないシステムを構築してしまうリスクがあります。
-                </p>
-                <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6">
-                  <p class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 text-lg">
-                    Beekleは、この要件定義において圧倒的な強みを持っています。
+
+                <Card variant="lightPurple" padding="md" hover="none">
+                  <h4 class="text-xl font-bold text-accent-950 mb-3 flex items-center">
+                    <span class="w-2 h-6 bg-primary-500 rounded-full mr-3"></span>
+                    大手案件の実態
+                  </h4>
+                  <p class="text-neutral-700 leading-relaxed">
+                    実は大手企業が受注した案件も、最終的には複数の協力会社を経由して、私たちのような専門会社が実装を担当することがほとんどです。
+                  </p>
+                </Card>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                  <Card variant="white" padding="md" hover="lift">
+                    <h5 class="font-bold text-accent-950 mb-3 flex items-center">
+                      <svg class="w-6 h-6 text-primary-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      コスト面のメリット
+                    </h5>
+                    <p class="text-neutral-700 text-sm">
+                      中間マージンが発生しない分、同じ品質のシステムをより適正な価格で提供できます。
+                    </p>
+                  </Card>
+
+                  <Card variant="white" padding="md" hover="lift">
+                    <h5 class="font-bold text-accent-950 mb-3 flex items-center">
+                      <svg class="w-6 h-6 text-primary-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                      </svg>
+                      コミュニケーション
+                    </h5>
+                    <p class="text-neutral-700 text-sm">
+                      お客様と開発チームが直接やり取りできるため、要望が正確に伝わり、迅速な対応が可能です。
+                    </p>
+                  </Card>
+                </div>
+
+                <div class="border-l-4 border-primary-500 pl-6">
+                  <p class="text-lg font-semibold text-accent-950">
+                    小規模だからこそ、お客様に寄り添い、<br />
+                    真に価値のあるシステムを共に創ることができます。
                   </p>
                 </div>
               </div>
             </div>
-            
-            <div class="mt-8 bg-gray-50 rounded-2xl p-8">
-              <p class="text-gray-700">
-                弊社のクリエイターは専門領域に留まらず、幅広い知識を持つジェネラリストが多数在籍。多角的な視点からの質の高いコミュニケーションが可能です。
-              </p>
-            </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </Card>
 
-    {/* 強み2: 問題解決能力 */}
-    <section class="py-32 bg-gradient-to-br from-purple-50 via-white to-pink-50 relative overflow-hidden">
-      <div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-100 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
-      
-      <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
-          <div class="order-2 lg:order-1">
-            <div class="bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl p-1">
-              <div class="bg-white rounded-3xl p-10">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                  <span class="w-2 h-8 bg-gradient-to-b from-purple-600 to-pink-600 rounded-full mr-4"></span>
-                  プロアクティブなアプローチ
-                </h3>
-                <p class="text-gray-700 mb-8 leading-relaxed">
-                  システム開発は本質的に複雑で、仕様を最初から完璧に定義することは不可能です。プロジェクトの進行に応じて柔軟に対応する必要があります。
+        <!-- Q2 -->
+        <Card variant="outlinedPrimary" padding="lg" hover="none">
+          <div class="flex items-start gap-6">
+            <div class="flex-shrink-0">
+              <div class="w-16 h-16 bg-primary-500 rounded-2xl flex items-center justify-center">
+                <span class="text-2xl font-bold text-white">Q</span>
+              </div>
+            </div>
+            <div class="flex-grow">
+              <h3 class="text-2xl font-bold text-accent-950 mb-6">
+                システムのことがよくわからないけど、ちゃんと相談できる？
+              </h3>
+
+              <div class="space-y-6">
+                <p class="text-lg text-neutral-700 leading-relaxed">
+                  <span class="font-bold text-primary-500">もちろんです。むしろ「わからない」と言っていただける方が助かります。</span>
                 </p>
-                
-                <div class="space-y-6">
-                  <div class="flex items-start gap-4 group">
-                    <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
+
+                <Card variant="lightPurple" padding="md" hover="none">
+                  <h4 class="text-xl font-bold text-accent-950 mb-3 flex items-center">
+                    <span class="w-2 h-6 bg-primary-500 rounded-full mr-3"></span>
+                    専門用語を使わない説明
+                  </h4>
+                  <p class="text-neutral-700 leading-relaxed">
+                    私たちは、お客様の業務を理解することから始めます。システムの話ではなく、「今、どんなことにお困りですか？」という会話から始めさせていただきます。
+                  </p>
+                </Card>
+
+                <div class="space-y-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span class="text-primary-600 font-bold">1</span>
                     </div>
-                    <p class="text-gray-700">開発依頼の背景と事業詳細の徹底的なヒアリング</p>
+                    <div>
+                      <h5 class="font-bold text-accent-950 mb-1">まずは業務の課題をお聞きします</h5>
+                      <p class="text-neutral-700 text-sm">「在庫管理が大変」「顧客情報がバラバラ」など、日常の困りごとをそのままお話しください。</p>
+                    </div>
                   </div>
-                  <div class="flex items-start gap-4 group">
-                    <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
+
+                  <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span class="text-primary-600 font-bold">2</span>
                     </div>
-                    <p class="text-gray-700">顧客企業の強みを正確に把握した上での提案</p>
+                    <div>
+                      <h5 class="font-bold text-accent-950 mb-1">解決策を一緒に考えます</h5>
+                      <p class="text-neutral-700 text-sm">システムありきではなく、エクセルで十分な部分、システム化すべき部分を整理してご提案します。</p>
+                    </div>
                   </div>
-                  <div class="flex items-start gap-4 group">
-                    <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
+
+                  <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span class="text-primary-600 font-bold">3</span>
                     </div>
-                    <p class="text-gray-700">運用段階での価値最大化を見据えた機能設計</p>
+                    <div>
+                      <h5 class="font-bold text-accent-950 mb-1">段階的な導入をサポート</h5>
+                      <p class="text-neutral-700 text-sm">いきなり大きなシステムではなく、小さく始めて効果を確認しながら拡張していくことも可能です。</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          
-          <div class="order-1 lg:order-2 relative">
-            <div class="absolute -top-20 -right-20 text-[200px] font-bold text-purple-100 select-none">
-              02
+        </Card>
+
+        <!-- Q3 -->
+        <Card variant="outlinedPrimary" padding="lg" hover="none">
+          <div class="flex items-start gap-6">
+            <div class="flex-shrink-0">
+              <div class="w-16 h-16 bg-primary-500 rounded-2xl flex items-center justify-center">
+                <span class="text-2xl font-bold text-white">Q</span>
+              </div>
             </div>
-            <div class="relative z-10">
-              <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-8">
-                高度な<br />
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">問題解決能力</span>
-              </h2>
-              <p class="text-xl text-gray-700 leading-relaxed mb-8">
-                単に指示された内容を実装するのではなく、お客様の真のニーズを理解し、プロフェッショナルとして最適なソリューションをご提案します。
-              </p>
-              <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-8">
-                <p class="text-gray-700">
-                  弊社の強みは、高いコンサルティング能力にあります。技術的な専門性とビジネス理解を兼ね備えたメンバーが、お客様の課題に対して本質的な解決策を提供します。
+            <div class="flex-grow">
+              <h3 class="text-2xl font-bold text-accent-950 mb-6">
+                どこに頼めばいいか判断基準がわからない
+              </h3>
+
+              <div class="space-y-6">
+                <p class="text-lg text-neutral-700 leading-relaxed">
+                  <span class="font-bold text-primary-500">選ぶ基準は「話を聞いてくれるか」と「実績があるか」です。</span>
                 </p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                  <Card variant="light" padding="md" hover="none">
+                    <h4 class="font-bold text-accent-950 mb-3 flex items-center">
+                      <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      良い開発会社の特徴
+                    </h4>
+                    <ul class="space-y-2 text-neutral-700 text-sm">
+                      <li>• 業務内容を詳しく聞いてくれる</li>
+                      <li>• 予算に合わせた提案ができる</li>
+                      <li>• 小さく始める提案をしてくれる</li>
+                      <li>• 運用後のサポートが明確</li>
+                    </ul>
+                  </Card>
+
+                  <Card variant="light" padding="md" hover="none">
+                    <h4 class="font-bold text-accent-950 mb-3 flex items-center">
+                      <svg class="w-6 h-6 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      避けるべき会社の特徴
+                    </h4>
+                    <ul class="space-y-2 text-neutral-700 text-sm">
+                      <li>• いきなり大規模な提案をする</li>
+                      <li>• 技術の話ばかりする</li>
+                      <li>• 「なんでもできます」と言う</li>
+                      <li>• 見積もりの内訳が不明確</li>
+                    </ul>
+                  </Card>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
-    </section>
+    </Section>
 
-    {/* 強み3: 学習意欲の高いチーム */}
-    <section class="py-32 bg-white relative overflow-hidden">
-      <div class="absolute top-0 left-0 w-96 h-96 bg-pink-50 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2"></div>
-      
-      <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        <div class="text-center mb-16">
-          <div class="relative inline-block">
-            <div class="absolute -top-32 -right-40 text-[200px] font-bold text-pink-100 select-none">
-              03
-            </div>
-            <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 relative z-10">
-              学習と創造を愛する<br />
-              <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-indigo-600">チーム</span>
-            </h2>
-          </div>
-          <p class="text-xl text-gray-700 leading-relaxed mt-8 max-w-3xl mx-auto">
-            Beekleには、知的好奇心が旺盛で、新しい技術や知識を積極的に吸収し、実務に活かすことができる優秀なメンバーが集まっています。
-          </p>
-        </div>
-        
-        <div class="max-w-4xl mx-auto mb-16">
-          <div class="bg-gradient-to-br from-pink-600 to-indigo-600 rounded-3xl p-1">
-            <div class="bg-white rounded-3xl p-10">
-              <p class="text-lg text-gray-700 leading-relaxed">
-                高品質なコンサルティングとシステム設計には、確かな技術力と継続的な学習が不可欠です。付け焼き刃では対応できない複雑な課題にも、日々の研鑽によって培われた実力で対応します。
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="grid lg:grid-cols-3 gap-8">
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-br from-pink-600 to-purple-600 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-            <div class="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
-              <div class="w-16 h-16 bg-gradient-to-br from-pink-600 to-purple-600 rounded-xl flex items-center justify-center mb-6">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-3">週次勉強会</h3>
-              <p class="text-gray-700">
-                毎週開催される任意参加の勉強会で、最新技術や業界動向について学び合っています。
-              </p>
-            </div>
-          </div>
-          
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-            <div class="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
-              <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center mb-6">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-3">知識共有文化</h3>
-              <p class="text-gray-700">
-                学んだ知識や経験を積極的に共有し、チーム全体のレベルアップを図っています。
-              </p>
-            </div>
-          </div>
-          
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-pink-600 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-            <div class="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
-              <div class="w-16 h-16 bg-gradient-to-br from-indigo-600 to-pink-600 rounded-xl flex items-center justify-center mb-6">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-3">実践的な学習</h3>
-              <p class="text-gray-700">
-                新しい技術を実際のプロジェクトに適用し、最適なソリューションを提供します。
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {/* よくある不安・質問セクション */}
-    <section class="py-32 bg-gray-50 relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-100 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-      
-      <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            よくあるご不安にお答えします
-          </h2>
-          <p class="text-xl text-gray-700 max-w-3xl mx-auto">
-            お客様からよくいただくご質問について、率直にお答えいたします
-          </p>
-        </div>
-
-        <div class="max-w-4xl mx-auto">
-          <div class="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl p-1">
-            <div class="bg-white rounded-3xl p-10 lg:p-12">
-              <div class="flex items-start gap-6">
-                <div class="flex-shrink-0">
-                  <div class="w-20 h-20 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center">
-                    <span class="text-3xl font-bold text-white">Q</span>
-                  </div>
-                </div>
-                <div class="flex-grow">
-                  <h3 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-6">
-                    会社の規模が小さいけど大丈夫？
-                  </h3>
-                  
-                  <div class="space-y-6">
-                    <p class="text-lg text-gray-700 leading-relaxed">
-                      <span class="font-bold text-indigo-600">結論：むしろ小規模だからこその強みがあります。</span>
-                    </p>
-                    
-                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6">
-                      <h4 class="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                        <span class="w-2 h-8 bg-gradient-to-b from-indigo-600 to-purple-600 rounded-full mr-3"></span>
-                        大手案件の実態
-                      </h4>
-                      <p class="text-gray-700 leading-relaxed">
-                        実は大手企業が受注した案件も、最終的には複数の協力会社を経由して、私たちのような専門会社が実装を担当することがほとんどです。
-                      </p>
-                    </div>
-
-                    <div class="grid md:grid-cols-2 gap-6">
-                      <div class="group relative">
-                        <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl blur opacity-10 group-hover:opacity-20 transition-opacity"></div>
-                        <div class="relative bg-white rounded-xl p-6 border border-gray-100">
-                          <h5 class="font-bold text-gray-900 mb-3 flex items-center">
-                            <svg class="w-6 h-6 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            コスト面のメリット
-                          </h5>
-                          <p class="text-gray-700 text-sm">
-                            中間マージンが発生しない分、同じ品質のシステムをより適正な価格で提供できます。
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div class="group relative">
-                        <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl blur opacity-10 group-hover:opacity-20 transition-opacity"></div>
-                        <div class="relative bg-white rounded-xl p-6 border border-gray-100">
-                          <h5 class="font-bold text-gray-900 mb-3 flex items-center">
-                            <svg class="w-6 h-6 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                            コミュニケーション
-                          </h5>
-                          <p class="text-gray-700 text-sm">
-                            お客様と開発チームが直接やり取りできるため、要望が正確に伝わり、迅速な対応が可能です。
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="bg-gray-50 rounded-xl p-6">
-                      <p class="text-gray-700 leading-relaxed">
-                        <span class="font-semibold">直接取引だからこそ実現できること：</span><br />
-                        • 伝言ゲームによる認識のズレがない<br />
-                        • 意思決定が早く、柔軟な対応が可能<br />
-                        • お客様の真のニーズを理解した提案<br />
-                      </p>
-                    </div>
-
-                    <div class="border-l-4 border-indigo-600 pl-6">
-                      <p class="text-lg font-semibold text-gray-900">
-                        小規模だからこそ、お客様に寄り添い、<br />
-                        真に価値のあるシステムを共に創ることができます。
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 追加の質問1 */}
-        <div class="max-w-4xl mx-auto mt-12">
-          <div class="bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl p-1">
-            <div class="bg-white rounded-3xl p-10 lg:p-12">
-              <div class="flex items-start gap-6">
-                <div class="flex-shrink-0">
-                  <div class="w-20 h-20 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center">
-                    <span class="text-3xl font-bold text-white">Q</span>
-                  </div>
-                </div>
-                <div class="flex-grow">
-                  <h3 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-6">
-                    システムのことがよくわからないけど、ちゃんと相談できる？
-                  </h3>
-                  
-                  <div class="space-y-6">
-                    <p class="text-lg text-gray-700 leading-relaxed">
-                      <span class="font-bold text-purple-600">もちろんです。むしろ「わからない」と言っていただける方が助かります。</span>
-                    </p>
-                    
-                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
-                      <h4 class="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                        <span class="w-2 h-8 bg-gradient-to-b from-purple-600 to-pink-600 rounded-full mr-3"></span>
-                        専門用語を使わない説明
-                      </h4>
-                      <p class="text-gray-700 leading-relaxed">
-                        私たちは、お客様の業務を理解することから始めます。システムの話ではなく、「今、どんなことにお困りですか？」という会話から始めさせていただきます。
-                      </p>
-                    </div>
-
-                    <div class="space-y-4">
-                      <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <span class="text-purple-600 font-bold">1</span>
-                        </div>
-                        <div>
-                          <h5 class="font-bold text-gray-900 mb-1">まずは業務の課題をお聞きします</h5>
-                          <p class="text-gray-700 text-sm">「在庫管理が大変」「顧客情報がバラバラ」など、日常の困りごとをそのままお話しください。</p>
-                        </div>
-                      </div>
-                      
-                      <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <span class="text-purple-600 font-bold">2</span>
-                        </div>
-                        <div>
-                          <h5 class="font-bold text-gray-900 mb-1">解決策を一緒に考えます</h5>
-                          <p class="text-gray-700 text-sm">システムありきではなく、エクセルで十分な部分、システム化すべき部分を整理してご提案します。</p>
-                        </div>
-                      </div>
-                      
-                      <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <span class="text-purple-600 font-bold">3</span>
-                        </div>
-                        <div>
-                          <h5 class="font-bold text-gray-900 mb-1">段階的な導入をサポート</h5>
-                          <p class="text-gray-700 text-sm">いきなり大きなシステムではなく、小さく始めて効果を確認しながら拡張していくことも可能です。</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="bg-gray-50 rounded-xl p-6">
-                      <p class="text-gray-700 font-semibold mb-2">
-                        <svg class="w-5 h-5 inline-block mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        実際のお客様の声
-                      </p>
-                      <p class="text-gray-700 italic">
-                        「最初は『システム化』と聞いて身構えていましたが、普段の仕事の話をしているうちに、自然と必要なものが見えてきました。」
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 追加の質問2 */}
-        <div class="max-w-4xl mx-auto mt-12">
-          <div class="bg-gradient-to-br from-pink-600 to-indigo-600 rounded-3xl p-1">
-            <div class="bg-white rounded-3xl p-10 lg:p-12">
-              <div class="flex items-start gap-6">
-                <div class="flex-shrink-0">
-                  <div class="w-20 h-20 bg-gradient-to-br from-pink-600 to-indigo-600 rounded-2xl flex items-center justify-center">
-                    <span class="text-3xl font-bold text-white">Q</span>
-                  </div>
-                </div>
-                <div class="flex-grow">
-                  <h3 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-6">
-                    どこに頼めばいいか判断基準がわからない
-                  </h3>
-                  
-                  <div class="space-y-6">
-                    <p class="text-lg text-gray-700 leading-relaxed">
-                      <span class="font-bold text-pink-600">選ぶ基準は「話を聞いてくれるか」と「実績があるか」です。</span>
-                    </p>
-                    
-                    <div class="grid md:grid-cols-2 gap-6">
-                      <div class="bg-gradient-to-br from-pink-50 to-indigo-50 rounded-xl p-6">
-                        <h4 class="font-bold text-gray-900 mb-3 flex items-center">
-                          <svg class="w-6 h-6 text-pink-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          良い開発会社の特徴
-                        </h4>
-                        <ul class="space-y-2 text-gray-700 text-sm">
-                          <li>• 業務内容を詳しく聞いてくれる</li>
-                          <li>• 予算に合わせた提案ができる</li>
-                          <li>• 小さく始める提案をしてくれる</li>
-                          <li>• 運用後のサポートが明確</li>
-                        </ul>
-                      </div>
-                      
-                      <div class="bg-gradient-to-br from-indigo-50 to-pink-50 rounded-xl p-6">
-                        <h4 class="font-bold text-gray-900 mb-3 flex items-center">
-                          <svg class="w-6 h-6 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          避けるべき会社の特徴
-                        </h4>
-                        <ul class="space-y-2 text-gray-700 text-sm">
-                          <li>• いきなり大規模な提案をする</li>
-                          <li>• 技術の話ばかりする</li>
-                          <li>• 「なんでもできます」と言う</li>
-                          <li>• 見積もりの内訳が不明確</li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div class="bg-white border-2 border-pink-200 rounded-xl p-6">
-                      <h5 class="font-bold text-gray-900 mb-3">Beekleなら安心できる理由</h5>
-                      <div class="space-y-3">
-                        <div class="flex items-start gap-3">
-                          <svg class="w-5 h-5 text-pink-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                          </svg>
-                          <p class="text-gray-700 text-sm">
-                            <span class="font-semibold">無料相談で相性を確認</span><br />
-                            まずは無料でご相談いただき、私たちがお客様のパートナーとして適切か判断してください。
-                          </p>
-                        </div>
-                        <div class="flex items-start gap-3">
-                          <svg class="w-5 h-5 text-pink-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                          </svg>
-                          <p class="text-gray-700 text-sm">
-                            <span class="font-semibold">同業他社の実績多数</span><br />
-                            製造業、小売業、サービス業など、様々な中小企業様のシステム化を成功させてきました。
-                          </p>
-                        </div>
-                        <div class="flex items-start gap-3">
-                          <svg class="w-5 h-5 text-pink-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                          </svg>
-                          <p class="text-gray-700 text-sm">
-                            <span class="font-semibold">顔の見える関係</span><br />
-                            担当者が最初から最後まで一貫してサポート。いつでも相談できる関係を大切にしています。
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {/* CTA Section */}
-    <section class="relative py-32 overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600"></div>
-      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      
-      <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl text-center relative">
+    <!-- CTA Section: Primary背景でブランドカラーを強調 -->
+    <Section variant="primary" padding="lg" decoration="fullDark">
+      <div class="text-center">
         <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">
           Beekleの強みを活かして、<br />
           ビジネスを成功へ
         </h2>
-        <p class="text-2xl text-white/90 mb-12 max-w-3xl mx-auto">
+        <p class="text-xl text-white/90 mb-12 max-w-3xl mx-auto">
           要件定義力、問題解決能力、そして学習意欲の高いチームが、<br />
           お客様のプロジェクトを成功に導きます。
         </p>
         <div class="flex flex-col sm:flex-row gap-6 justify-center">
-          <a
-            href="/contact"
-            class="group inline-flex items-center justify-center px-10 py-5 text-lg font-medium text-indigo-600 bg-white rounded-full hover:bg-gray-100 transition-all shadow-2xl hover:shadow-3xl hover:scale-105"
-          >
+          <ButtonLink href="/contact" variant="white" size="lg">
             無料相談を予約する
-            <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
-          </a>
-          <a
-            href="/case-studies"
-            class="group inline-flex items-center justify-center px-10 py-5 text-lg font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-indigo-600 transition-all hover:scale-105"
-          >
-            導入事例を見る
-            <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </a>
+          </ButtonLink>
+          <ButtonLink href="/prooffirst" variant="outline" size="lg">
+            ゼロスタートを見る
+          </ButtonLink>
         </div>
       </div>
-    </section>
+    </Section>
   </main>
 </Layout>
-
-<style>
-  @keyframes fade-in {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .animate-fade-in {
-    animation: fade-in 0.8s ease-out;
-  }
-  
-  .animate-fade-in-delay {
-    animation: fade-in 0.8s ease-out 0.2s both;
-  }
-  
-  .bg-grid-pattern {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-</style>

@@ -1,7 +1,9 @@
 ---
 import { Header } from '../components/header';
+import { ButtonLink } from '../components/ui/button';
+import { Card, CardDescription, CardIcon, CardTitle } from '../components/ui/card';
+import { Section, SectionHeader } from '../components/ui/section';
 import Layout from '../layouts/layout.astro';
-import { motion } from 'framer-motion';
 ---
 
 <Layout title="ゼロスタート - まず、動くものを見よう | Beekle × TechBeans">
@@ -9,820 +11,775 @@ import { motion } from 'framer-motion';
   <main class="">
     {/* Hero Section */}
     <section class="relative min-h-[calc(100vh-120px)] lg:mx-12 pt-20">
-      {/* Background with subtle pattern */}
+      {/* Background with Pop Style decorations */}
       <div class="absolute inset-0 bg-white rounded-[48px] overflow-hidden mt-20">
-        <div class="absolute inset-0 bg-grid-pattern opacity-20" />
+        {/* Pop decoration bars */}
+        <div class="absolute -top-10 right-10 w-32 h-96 bg-gradient-to-b from-primary-500 to-primary-300 rounded-full -rotate-[25deg] opacity-10" />
+        <div class="absolute top-20 right-32 w-20 h-64 bg-gradient-to-b from-secondary-500 to-secondary-400 rounded-full rotate-[25deg] opacity-10" />
+        <div class="absolute -bottom-20 left-20 w-24 h-72 bg-gradient-to-b from-highlight-500 to-highlight-100 rounded-full -rotate-[15deg] opacity-10" />
 
-        {/* Floating shapes with lighter colors */}
-        <div class="absolute top-20 right-20 w-32 h-32 bg-indigo-100/40 rounded-full blur-xl animate-float" />
-        <div class="absolute bottom-40 left-40 w-48 h-48 bg-indigo-50/50 rounded-full blur-xl animate-float-delay" />
+        {/* Floating shapes */}
+        <div class="absolute top-20 right-20 w-32 h-32 bg-primary-100/40 rounded-full blur-xl animate-float" />
+        <div class="absolute bottom-40 left-40 w-48 h-48 bg-secondary-50/50 rounded-full blur-xl animate-float-delay" />
       </div>
 
       {/* Content */}
-      <div class="relative h-full flex flex-col justify-center p-12 xl:p-24 border border-indigo-700/20 rounded-[48px] mt-20">
+      <div class="relative h-full flex flex-col justify-center p-12 xl:p-24 border border-primary-500/20 rounded-[48px] mt-20">
         <div class="fade-in-up">
           <div class="mb-6">
-            <span class="inline-block px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">
+            <span class="inline-block px-4 py-2 bg-primary-500/10 text-primary-500 rounded-full text-sm font-medium">
               Beekle × techbeans × AmpTech
             </span>
           </div>
 
-          <h1 class="text-5xl md:text-7xl font-semibold leading-tight text-indigo-700 mb-8">
+          <h1 class="text-5xl md:text-7xl font-semibold leading-tight text-accent-950 mb-8">
             「まず、動くものを見よう。」
           </h1>
 
           <div class="mb-12 space-y-6">
-            <p class="text-2xl text-indigo-900 leading-relaxed border-l-4 border-indigo-600/30 pl-6">
+            <p class="text-2xl text-primary-500 leading-relaxed border-l-4 border-primary-500/30 pl-6">
               — 話すより、Proof（証拠）を。
             </p>
 
-            <p class="text-xl text-gray-700 leading-relaxed max-w-3xl">
-              不確実な見積もり、無限に長い要件定義、言葉のすれ違い。そうした開発の不安を、<span class="font-semibold text-indigo-700">"ゼロスタート"</span>がなくします。初期費用0円で、実際に動くシステムを試せるゼロスタートモデル。動くプロトタイプを見てから判断する、新しい開発体験を。
+            <p class="text-xl text-neutral-700 leading-relaxed max-w-3xl">
+              不確実な見積もり、無限に長い要件定義、言葉のすれ違い。そうした開発の不安を、<span class="font-semibold text-primary-500">"ゼロスタート"</span>がなくします。初期費用0円で、実際に動くシステムを試せるゼロスタートモデル。動くプロトタイプを見てから判断する、新しい開発体験を。
             </p>
           </div>
 
           {/* CTA Buttons */}
           <div class="flex flex-col sm:flex-row gap-4">
-            <a
-              href="/contact"
-              class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-indigo-600 rounded-full hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl"
-            >
+            <ButtonLink href="/contact" variant="primary" size="lg">
               証拠から始める開発を体験する
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
-            </a>
+            </ButtonLink>
           </div>
         </div>
       </div>
     </section>
 
     {/* Problem Section */}
-    <section class="py-32 bg-gradient-to-br from-gray-50 to-white">
-      <div class="container mx-auto px-8 lg:px-12">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            「開発って、正直よくわからない。」
-          </h2>
-          <p class="text-xl text-gray-600">
-            そんな声からゼロスタートは生まれました。
-          </p>
-        </div>
+    <Section variant="lightPurple" padding="lg" decoration="blursMix">
+      <SectionHeader
+        number="01"
+        label="Problem"
+        title="「開発って、正直よくわからない。」"
+        subtitle="そんな声からゼロスタートは生まれました。"
+      />
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full">
-              <div class="mb-4 w-16 h-16 mx-auto">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" class="w-full h-full text-gray-400">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 1.332-7.257 3 3 0 0 0-3.758-3.848 5.25 5.25 0 0 0-10.233 2.33A4.502 4.502 0 0 0 2.25 15Z" />
-                </svg>
-              </div>
-              <h4 class="text-lg font-bold text-gray-800 mb-3">
-                エンジニアのことは<br />よくわからない
-              </h4>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <Card variant="white" padding="md" hover="lift" decoration="barPurple">
+          <div class="text-center">
+            <div class="mb-4 w-16 h-16 mx-auto text-neutral-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 1.332-7.257 3 3 0 0 0-3.758-3.848 5.25 5.25 0 0 0-10.233 2.33A4.502 4.502 0 0 0 2.25 15Z" />
+              </svg>
             </div>
+            <h4 class="text-lg font-bold text-accent-950 mb-3">
+              エンジニアのことは<br />よくわからない
+            </h4>
           </div>
+        </Card>
 
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full">
-              <div class="mb-4 w-16 h-16 mx-auto">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" class="w-full h-full text-gray-400">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
-                </svg>
-              </div>
-              <h4 class="text-lg font-bold text-gray-800 mb-3">
-                何が正解か<br />わからない
-              </h4>
+        <Card variant="white" padding="md" hover="lift" decoration="barCyan">
+          <div class="text-center">
+            <div class="mb-4 w-16 h-16 mx-auto text-neutral-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
+              </svg>
             </div>
+            <h4 class="text-lg font-bold text-accent-950 mb-3">
+              何が正解か<br />わからない
+            </h4>
           </div>
+        </Card>
 
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-pink-600 to-red-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full">
-              <div class="mb-4 w-16 h-16 mx-auto">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" class="w-full h-full text-gray-400">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
-                </svg>
-              </div>
-              <h4 class="text-lg font-bold text-gray-800 mb-3">
-                見積もりが<br />当てにならない
-              </h4>
+        <Card variant="white" padding="md" hover="lift" decoration="dots">
+          <div class="text-center">
+            <div class="mb-4 w-16 h-16 mx-auto text-neutral-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
+              </svg>
             </div>
+            <h4 class="text-lg font-bold text-accent-950 mb-3">
+              見積もりが<br />当てにならない
+            </h4>
           </div>
+        </Card>
 
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full">
-              <div class="mb-4 w-16 h-16 mx-auto">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" class="w-full h-full text-gray-400">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z" />
-                </svg>
-              </div>
-              <h4 class="text-lg font-bold text-gray-800 mb-3">
-                頼んでも思ったのと<br />違うものが出てくる
-              </h4>
+        <Card variant="white" padding="md" hover="lift" decoration="barPurple">
+          <div class="text-center">
+            <div class="mb-4 w-16 h-16 mx-auto text-neutral-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z" />
+              </svg>
             </div>
+            <h4 class="text-lg font-bold text-accent-950 mb-3">
+              頼んでも思ったのと<br />違うものが出てくる
+            </h4>
           </div>
+        </Card>
 
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-orange-600 to-yellow-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full">
-              <div class="mb-4 w-16 h-16 mx-auto">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" class="w-full h-full text-gray-400">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
-                </svg>
-              </div>
-              <h4 class="text-lg font-bold text-gray-800 mb-3">
-                どこに頼んだら<br />いいかすら不安
-              </h4>
+        <Card variant="white" padding="md" hover="lift" decoration="barCyan">
+          <div class="text-center">
+            <div class="mb-4 w-16 h-16 mx-auto text-neutral-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+              </svg>
             </div>
+            <h4 class="text-lg font-bold text-accent-950 mb-3">
+              どこに頼んだら<br />いいかすら不安
+            </h4>
           </div>
+        </Card>
 
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-yellow-600 to-indigo-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full">
-              <div class="mb-4 w-16 h-16 mx-auto">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" class="w-full h-full text-gray-400">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m6.75 7.5 3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z" />
-                </svg>
-              </div>
-              <h4 class="text-lg font-bold text-gray-800 mb-3">
-                AIやPoCって聞くけど、<br />自分の会社に合うか分からない
-              </h4>
+        <Card variant="white" padding="md" hover="lift" decoration="dots">
+          <div class="text-center">
+            <div class="mb-4 w-16 h-16 mx-auto text-neutral-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m6.75 7.5 3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z" />
+              </svg>
             </div>
+            <h4 class="text-lg font-bold text-accent-950 mb-3">
+              AIやPoCって聞くけど、<br />自分の会社に合うか分からない
+            </h4>
           </div>
-        </div>
-
-        <div class="text-center mt-16 max-w-3xl mx-auto">
-          <p class="text-xl text-gray-700 leading-relaxed mb-8">
-            表面的には「わからない・怖い・選べない」という不安。<br />
-            <span class="font-semibold text-indigo-700">不安なのは、当たり前。</span>だから私たちは、<br />
-            <span class="text-2xl font-bold text-indigo-700">まず動くものを見せることにしました。</span>
-          </p>
-          <a
-            href="/contact"
-            class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-indigo-600 rounded-full hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl"
-          >
-            証拠から始める開発を体験する
-            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </a>
-        </div>
+        </Card>
       </div>
-    </section>
+
+      <div class="text-center mt-16 max-w-3xl mx-auto">
+        <p class="text-xl text-neutral-700 leading-relaxed mb-8">
+          表面的には「わからない・怖い・選べない」という不安。<br />
+          <span class="font-semibold text-primary-500">不安なのは、当たり前。</span>だから私たちは、<br />
+          <span class="text-2xl font-bold text-primary-500">まず動くものを見せることにしました。</span>
+        </p>
+        <ButtonLink href="/contact" variant="primary" size="lg">
+          証拠から始める開発を体験する
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </ButtonLink>
+      </div>
+    </Section>
 
     {/* Solution Section */}
-    <section class="relative py-32 overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <div class="container mx-auto px-8 lg:px-12">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            正解を話し込むの、<br />
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">やめました。</span>
-          </h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-            会議や見積もりでは、まだ足りない。判断の材料になるのは、<br />
-            <span class="font-semibold text-indigo-700">会話でも資料でもなく、動くデモの証拠です。</span>
-          </p>
-        </div>
+    <Section variant="white" padding="lg" decoration="blursPurple">
+      <SectionHeader
+        number="02"
+        label="Solution"
+        title="正解を話し込むの、やめました。"
+        subtitle="会議や見積もりでは、まだ足りない。判断の材料になるのは、会話でも資料でもなく、動くデモの証拠です。"
+      />
 
-        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-            <div class="mb-6 w-20 h-20 mx-auto">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" class="w-full h-full text-indigo-600">
-                <path d="M8 16c0-4 3-8 8-8h16c5 0 8 4 8 8v8c0 4-3 8-8 8h-4l-6 8v-8h-6c-5 0-8-4-8-8v-8z" strokeLinecap="round" strokeLinejoin="round"/>
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <Card variant="white" padding="lg" hover="lift">
+          <div class="text-center">
+            <CardIcon variant="purple">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8">
+                <path d="M8 16c0-4 3-8 8-8h16c5 0 8 4 8 8v8c0 4-3 8-8 8h-4l-6 8v-8h-6c-5 0-8-4-8-8v-8z" stroke-linecap="round" stroke-linejoin="round"/>
                 <circle cx="16" cy="20" r="1.5" fill="currentColor"/>
                 <circle cx="24" cy="20" r="1.5" fill="currentColor"/>
                 <circle cx="32" cy="20" r="1.5" fill="currentColor"/>
               </svg>
-            </div>
-            <h3 class="text-2xl font-bold text-indigo-700 mb-4 text-center">実物で合意形成</h3>
-            <p class="text-gray-700 leading-relaxed text-center">
-              プロトタイプを前に合意形成が早まる
-            </p>
+            </CardIcon>
+            <CardTitle className="text-2xl text-primary-500 mb-4">実物で合意形成</CardTitle>
+            <CardDescription>プロトタイプを前に合意形成が早まる</CardDescription>
           </div>
+        </Card>
 
-          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-            <div class="mb-6 w-20 h-20 mx-auto">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" class="w-full h-full text-indigo-600">
-                <rect x="8" y="8" width="32" height="32" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M8 16h32M16 8v32" strokeLinecap="round"/>
-                <path d="M20 32l4-8 4 6 4-10" strokeLinecap="round" strokeLinejoin="round"/>
+        <Card variant="white" padding="lg" hover="lift">
+          <div class="text-center">
+            <CardIcon variant="purple">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8">
+                <rect x="8" y="8" width="32" height="32" rx="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 16h32M16 8v32" stroke-linecap="round"/>
+                <path d="M20 32l4-8 4 6 4-10" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-            </div>
-            <h3 class="text-2xl font-bold text-indigo-700 mb-4 text-center">ROIで判断</h3>
-            <p class="text-gray-700 leading-relaxed text-center">
-              効果を数値で可視化して意思決定
-            </p>
+            </CardIcon>
+            <CardTitle className="text-2xl text-primary-500 mb-4">ROIで判断</CardTitle>
+            <CardDescription>効果を数値で可視化して意思決定</CardDescription>
           </div>
+        </Card>
 
-          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-            <div class="mb-6 w-20 h-20 mx-auto">
-              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2" class="w-full h-full text-indigo-600">
-                <circle cx="24" cy="24" r="16" strokeLinecap="round"/>
-                <circle cx="24" cy="24" r="8" strokeLinecap="round"/>
+        <Card variant="white" padding="lg" hover="lift">
+          <div class="text-center">
+            <CardIcon variant="purple">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8">
+                <circle cx="24" cy="24" r="16" stroke-linecap="round"/>
+                <circle cx="24" cy="24" r="8" stroke-linecap="round"/>
                 <circle cx="24" cy="24" r="3" fill="currentColor"/>
-                <path d="M24 8v4M24 36v4M8 24h4M36 24h4" strokeLinecap="round"/>
+                <path d="M24 8v4M24 36v4M8 24h4M36 24h4" stroke-linecap="round"/>
               </svg>
-            </div>
-            <h3 class="text-2xl font-bold text-indigo-700 mb-4 text-center">上申が実演に</h3>
-            <p class="text-gray-700 leading-relaxed text-center">
-              上申資料が「実演デモ」へ置き換わる
-            </p>
+            </CardIcon>
+            <CardTitle className="text-2xl text-primary-500 mb-4">上申が実演に</CardTitle>
+            <CardDescription>上申資料が「実演デモ」へ置き換わる</CardDescription>
           </div>
-        </div>
+        </Card>
       </div>
-    </section>
+    </Section>
 
     {/* Freedom Section */}
-    <section class="py-32 bg-white">
-      <div class="container mx-auto px-8 lg:px-12">
-        <div class="text-center mb-12">
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-8">
-            決める自由を、<br />
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">取り戻そう。</span>
-          </h2>
+    <Section variant="light" padding="lg" decoration="bars">
+      <SectionHeader
+        number="03"
+        label="Freedom"
+        title="決める自由を、取り戻そう。"
+      />
+
+      <div class="max-w-4xl mx-auto">
+        <Card variant="lightPurple" padding="lg" hover="none" className="mb-12">
+          <p class="text-xl text-accent-950 leading-relaxed mb-6">
+            システム開発は<span class="font-semibold text-primary-500">改善の連続</span>。<br />
+            ゼロスタートは終わりではなく、<span class="font-semibold text-primary-500">始まり</span>です。
+          </p>
+
+          <p class="text-lg text-neutral-700 leading-relaxed mb-6">
+            「どこに頼んでいいかわからない」「何が正解かわからない」――<br />
+            そんな不安の中で、見えないものに投資を決めるのは難しい。
+          </p>
+
+          <p class="text-lg text-neutral-700 leading-relaxed">
+            だからゼロスタートは、<span class="font-semibold text-primary-500">判断するための材料</span>を提供します。<br />
+            実際に動くものを見て、触って、効果を確かめてから、<br />
+            本格的な開発をスタートする。<span class="font-semibold">判断を先送りにしない</span>、新しい始め方です。
+          </p>
+        </Card>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <Card variant="outlined" padding="lg" hover="none">
+            <h3 class="text-xl font-bold text-accent-950 mb-4 flex items-center">
+              <span class="text-3xl mr-3">🚫</span>
+              従来の開発
+            </h3>
+            <ul class="space-y-3 text-neutral-700">
+              <li class="flex items-start">
+                <span class="text-red-500 mr-2 mt-1">×</span>
+                <span>見積もりだけで判断を迫られる</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-red-500 mr-2 mt-1">×</span>
+                <span>完成するまで実物が見えない</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-red-500 mr-2 mt-1">×</span>
+                <span>期待とのギャップが後から発覚</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-red-500 mr-2 mt-1">×</span>
+                <span>大きな初期投資が必要</span>
+              </li>
+            </ul>
+          </Card>
+
+          <Card variant="primary" padding="lg" hover="none" decoration="dotsDark">
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+              <span class="text-3xl mr-3">✨</span>
+              ゼロスタート
+            </h3>
+            <ul class="space-y-3 text-white/90">
+              <li class="flex items-start">
+                <span class="text-highlight-500 mr-2 mt-1">✓</span>
+                <span>実物を見てから判断できる</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-highlight-500 mr-2 mt-1">✓</span>
+                <span>初期費用0円でリスクなし</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-highlight-500 mr-2 mt-1">✓</span>
+                <span>効果を数値で確認してから投資</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-highlight-500 mr-2 mt-1">✓</span>
+                <span>ここから本格開発がスタート</span>
+              </li>
+            </ul>
+          </Card>
         </div>
 
-        <div class="max-w-4xl mx-auto">
-          <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl p-10 shadow-lg mb-12">
-            <p class="text-xl text-gray-800 leading-relaxed mb-6">
-              システム開発は<span class="font-semibold text-indigo-700">改善の連続</span>。<br />
-              ゼロスタートは終わりではなく、<span class="font-semibold text-indigo-700">始まり</span>です。
-            </p>
-
-            <p class="text-lg text-gray-700 leading-relaxed mb-6">
-              「どこに頼んでいいかわからない」「何が正解かわからない」――<br />
-              そんな不安の中で、見えないものに投資を決めるのは難しい。
-            </p>
-
-            <p class="text-lg text-gray-700 leading-relaxed">
-              だからゼロスタートは、<span class="font-semibold text-indigo-700">判断するための材料</span>を提供します。<br />
-              実際に動くものを見て、触って、効果を確かめてから、<br />
-              本格的な開発をスタートする。<span class="font-semibold">判断を先送りにしない</span>、新しい始め方です。
-            </p>
-          </div>
-
-          <div class="grid md:grid-cols-2 gap-8">
-            <div class="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-100">
-              <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                <span class="text-3xl mr-3">🚫</span>
-                従来の開発
-              </h3>
-              <ul class="space-y-3 text-gray-700">
-                <li class="flex items-start">
-                  <span class="text-red-500 mr-2 mt-1">×</span>
-                  <span>見積もりだけで判断を迫られる</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-red-500 mr-2 mt-1">×</span>
-                  <span>完成するまで実物が見えない</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-red-500 mr-2 mt-1">×</span>
-                  <span>期待とのギャップが後から発覚</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-red-500 mr-2 mt-1">×</span>
-                  <span>大きな初期投資が必要</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl p-8 shadow-lg text-white">
-              <h3 class="text-xl font-bold mb-4 flex items-center">
-                <span class="text-3xl mr-3">✨</span>
-                ゼロスタート
-              </h3>
-              <ul class="space-y-3">
-                <li class="flex items-start">
-                  <span class="text-yellow-300 mr-2 mt-1">✓</span>
-                  <span>実物を見てから判断できる</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-yellow-300 mr-2 mt-1">✓</span>
-                  <span>初期費用0円でリスクなし</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-yellow-300 mr-2 mt-1">✓</span>
-                  <span>効果を数値で確認してから投資</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-yellow-300 mr-2 mt-1">✓</span>
-                  <span>ここから本格開発がスタート</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="text-center mt-12">
-            <p class="text-2xl font-bold text-indigo-700">
-              Proofは、あなたの意思決定の証拠です。
-            </p>
-          </div>
+        <div class="text-center mt-12">
+          <p class="text-2xl font-bold text-primary-500">
+            Proofは、あなたの意思決定の証拠です。
+          </p>
         </div>
       </div>
-    </section>
+    </Section>
 
     {/* Sustainability Section */}
-    <section class="py-32 bg-gradient-to-br from-gray-50 to-white">
-      <div class="container mx-auto px-8 lg:px-12">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            無料で作ってくれるって、<br />
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">本当に怪しくないの？</span>
-          </h2>
-          <p class="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-            「動くデモが触れるなら安心だけど、無料って正直ちょっと怖い」――<br />
-            <span class="font-semibold text-indigo-700">そう感じるのは自然です。</span>
-          </p>
-        </div>
+    <Section variant="white" padding="lg" decoration="blursCyan">
+      <SectionHeader
+        number="04"
+        label="Why Free"
+        title="無料で作ってくれるって、本当に怪しくないの？"
+        subtitle="「動くデモが触れるなら安心だけど、無料って正直ちょっと怖い」――そう感じるのは自然です。"
+      />
 
-        <div class="max-w-4xl mx-auto mb-16">
-          <div class="bg-white rounded-3xl p-10 shadow-xl border-2 border-indigo-100">
-            <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">
-              ゼロスタートは"タダだから"できるのではなく、<br />
-              <span class="text-indigo-700">"一緒に証明する"仕組みだからできる。</span>
-            </h3>
+      <div class="max-w-4xl mx-auto mb-16">
+        <Card variant="white" padding="lg" hover="none" className="border-2 border-primary-500/10">
+          <h3 class="text-2xl font-bold text-accent-950 mb-6 text-center">
+            ゼロスタートは"タダだから"できるのではなく、<br />
+            <span class="text-primary-500">"一緒に証明する"仕組みだからできる。</span>
+          </h3>
 
-            <div class="space-y-6 text-lg text-gray-700 leading-relaxed">
-              <p>
-                正直に言います。<br />
-                <span class="font-semibold text-indigo-700">言葉でごちゃごちゃやってプロジェクトが炎上したら、私たちも損をします。</span>
-              </p>
+          <div class="space-y-6 text-lg text-neutral-700 leading-relaxed">
+            <p>
+              正直に言います。<br />
+              <span class="font-semibold text-primary-500">言葉でごちゃごちゃやってプロジェクトが炎上したら、私たちも損をします。</span>
+            </p>
 
-              <p>
-                要件定義にコストをかけて、延々と仕様を詰めても、結局「思ってたのと違う」で終わることが多い。<br />
-                それより<span class="font-semibold text-indigo-700">数日で最低のコア機能のmvpとして動くものを作って、そこから一緒に磨き込む方がずっと楽</span>なのです。
-              </p>
+            <p>
+              要件定義にコストをかけて、延々と仕様を詰めても、結局「思ってたのと違う」で終わることが多い。<br />
+              それより<span class="font-semibold text-primary-500">数日で最低のコア機能のmvpとして動くものを作って、そこから一緒に磨き込む方がずっと楽</span>なのです。
+            </p>
 
-              <p>
-                一番大変なのは、<span class="font-semibold text-indigo-700">コミュニケーションを取りつつ、プロダクトを実際に出せるレベルまで磨き込むところ</span>。<br />
-                だから最初の数日分の販管費なんて、どうってことありません。
-              </p>
+            <p>
+              一番大変なのは、<span class="font-semibold text-primary-500">コミュニケーションを取りつつ、プロダクトを実際に出せるレベルまで磨き込むところ</span>。<br />
+              だから最初の数日分の販管費なんて、どうってことありません。
+            </p>
 
-              <p class="pt-6 border-t-2 border-indigo-100">
-                さらに、私たちはPoCを単なる試作品ではなく、<span class="font-semibold text-indigo-700">事業を成長させる研究素材</span>として捉えています。<br />
-                開発で得た知見や仕組みは、次のプロジェクトや自社SaaSに還元され、再利用されます。
-              </p>
+            <p class="pt-6 border-t-2 border-primary-500/10">
+              さらに、私たちはPoCを単なる試作品ではなく、<span class="font-semibold text-primary-500">事業を成長させる研究素材</span>として捉えています。<br />
+              開発で得た知見や仕組みは、次のプロジェクトや自社SaaSに還元され、再利用されます。
+            </p>
 
-              <p class="text-center font-semibold text-xl text-indigo-700">
-                お互いにとって、動くものから始めるのが一番リスクが少ない。<br />
-                それがゼロスタートです。
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-12">
-          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-            <div class="mb-4 w-16 h-16 mx-auto">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" class="w-full h-full text-indigo-600">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-              </svg>
-            </div>
-            <h4 class="text-lg font-bold text-indigo-700 mb-3 text-center">PoC成果をSaaS基盤として再利用</h4>
-            <p class="text-gray-700 leading-relaxed text-center text-sm">
-              機能・設計は次のPoCやSaaS基盤に転用
+            <p class="text-center font-semibold text-xl text-primary-500">
+              お互いにとって、動くものから始めるのが一番リスクが少ない。<br />
+              それがゼロスタートです。
             </p>
           </div>
-
-          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-            <div class="mb-4 w-16 h-16 mx-auto">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" class="w-full h-full text-indigo-600">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
-              </svg>
-            </div>
-            <h4 class="text-lg font-bold text-indigo-700 mb-3 text-center">技術・UI・AIモデルは自社IPに蓄積</h4>
-            <p class="text-gray-700 leading-relaxed text-center text-sm">
-              AIモデル・UIパターンは自社IPとして蓄積
-            </p>
-          </div>
-
-          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-            <div class="mb-4 w-16 h-16 mx-auto">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" class="w-full h-full text-indigo-600">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
-              </svg>
-            </div>
-            <h4 class="text-lg font-bold text-indigo-700 mb-3 text-center">お客様の課題分析が次の革新に繋がる</h4>
-            <p class="text-gray-700 leading-relaxed text-center text-sm">
-              課題データはR&Dの学習素材に還元
-            </p>
-          </div>
-        </div>
-
-        <div class="text-center max-w-3xl mx-auto">
-          <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-8 mb-8">
-            <p class="text-xl text-gray-800 leading-relaxed mb-4">
-              <span class="font-semibold text-indigo-700">あなたにとっては</span>リスクのない実証チャンス。<br />
-              <span class="font-semibold text-purple-700">私たちにとっては</span>、未来の技術を磨く実験の場。
-            </p>
-            <p class="text-2xl font-bold text-indigo-700">
-              それが、ゼロスタートの"無料の正体"です。
-            </p>
-          </div>
-        </div>
+        </Card>
       </div>
-    </section>
+
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-12">
+        <Card variant="white" padding="md" hover="lift">
+          <div class="text-center">
+            <CardIcon variant="purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-8 h-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+              </svg>
+            </CardIcon>
+            <CardTitle className="text-lg text-primary-500 mb-3">PoC成果をSaaS基盤として再利用</CardTitle>
+            <CardDescription className="text-sm">機能・設計は次のPoCやSaaS基盤に転用</CardDescription>
+          </div>
+        </Card>
+
+        <Card variant="white" padding="md" hover="lift">
+          <div class="text-center">
+            <CardIcon variant="purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-8 h-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+              </svg>
+            </CardIcon>
+            <CardTitle className="text-lg text-primary-500 mb-3">技術・UI・AIモデルは自社IPに蓄積</CardTitle>
+            <CardDescription className="text-sm">AIモデル・UIパターンは自社IPとして蓄積</CardDescription>
+          </div>
+        </Card>
+
+        <Card variant="white" padding="md" hover="lift">
+          <div class="text-center">
+            <CardIcon variant="purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-8 h-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+              </svg>
+            </CardIcon>
+            <CardTitle className="text-lg text-primary-500 mb-3">お客様の課題分析が次の革新に繋がる</CardTitle>
+            <CardDescription className="text-sm">課題データはR&Dの学習素材に還元</CardDescription>
+          </div>
+        </Card>
+      </div>
+
+      <div class="text-center max-w-3xl mx-auto">
+        <Card variant="lightPurple" padding="lg" hover="none">
+          <p class="text-xl text-accent-950 leading-relaxed mb-4">
+            <span class="font-semibold text-primary-500">あなたにとっては</span>リスクのない実証チャンス。<br />
+            <span class="font-semibold text-secondary-500">私たちにとっては</span>、未来の技術を磨く実験の場。
+          </p>
+          <p class="text-2xl font-bold text-primary-500">
+            それが、ゼロスタートの"無料の正体"です。
+          </p>
+        </Card>
+      </div>
+    </Section>
 
     {/* How It Works - Flow */}
-    <section class="relative py-32 overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <div class="container mx-auto px-8 lg:px-12">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">導入の流れ</span>
-          </h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-            お問い合わせから運用開始まで、段階的に進めていきます
-          </p>
+    <Section variant="lightCyan" padding="lg" decoration="blursMix">
+      <SectionHeader
+        number="05"
+        label="Flow"
+        title="導入の流れ"
+        subtitle="お問い合わせから運用開始まで、段階的に進めていきます"
+      />
+
+      <div class="max-w-4xl mx-auto space-y-8">
+        {/* Step 1 */}
+        <div class="relative">
+          <div class="flex items-start gap-6">
+            <div class="flex-shrink-0 w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+              1
+            </div>
+            <Card variant="white" padding="md" hover="lift" className="flex-1">
+              <h3 class="text-xl md:text-2xl font-bold text-primary-500 mb-3">お問い合わせ・ヒアリング</h3>
+              <p class="text-sm md:text-base text-neutral-700 leading-relaxed mb-4">
+                課題や実現したいことをお聞かせください。オンラインまたは訪問でのヒアリングを実施します。
+              </p>
+              <div class="inline-flex items-center text-sm text-primary-500 font-medium bg-primary-50 px-4 py-2 rounded-full">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                所要時間: 1-2時間
+              </div>
+            </Card>
+          </div>
+          <div class="absolute left-8 top-20 bottom-0 w-0.5 bg-gradient-to-b from-primary-500/50 to-transparent"></div>
         </div>
 
-        <div class="max-w-4xl mx-auto space-y-8">
-          {/* Step 1 */}
-          <div class="relative">
-            <div class="flex items-start gap-6">
-              <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                1
-              </div>
-              <div class="flex-1 bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all">
-                <h3 class="text-xl md:text-2xl font-bold text-indigo-700 mb-3">お問い合わせ・<br class="md:hidden" />ヒアリング</h3>
-                <p class="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
-                  課題や実現したいことをお聞かせください。オンラインまたは訪問でのヒアリングを実施します。
-                </p>
-                <div class="inline-flex items-center text-sm text-indigo-600 font-medium bg-indigo-50 px-4 py-2 rounded-full">
-                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  所要時間: 1-2時間
-                </div>
-              </div>
+        {/* Step 2 */}
+        <div class="relative">
+          <div class="flex items-start gap-6">
+            <div class="flex-shrink-0 w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+              2
             </div>
-            <div class="absolute left-8 top-20 bottom-0 w-0.5 bg-gradient-to-b from-indigo-300 to-transparent"></div>
-          </div>
-
-          {/* Step 2 */}
-          <div class="relative">
-            <div class="flex items-start gap-6">
-              <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                2
-              </div>
-              <div class="flex-1 bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all">
-                <h3 class="text-xl md:text-2xl font-bold text-indigo-700 mb-3">ゼロスタート開発<br class="md:hidden" />(初期費用0円)</h3>
-                <p class="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
-                  <span class="font-semibold text-indigo-700">初期費用0円</span>で、動くプロトタイプを開発。実際の業務で試せる形でお届けします。
-                </p>
-                <div class="flex flex-wrap gap-3">
-                  <div class="inline-flex items-center text-sm text-indigo-600 font-medium bg-indigo-50 px-4 py-2 rounded-full">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    期間: 1-2週間
-                  </div>
-                  <div class="inline-flex items-center text-sm text-purple-600 font-medium bg-purple-50 px-4 py-2 rounded-full">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    費用: 0円
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="absolute left-8 top-20 bottom-0 w-0.5 bg-gradient-to-b from-indigo-300 to-transparent"></div>
-          </div>
-
-          {/* Step 3 */}
-          <div class="relative">
-            <div class="flex items-start gap-6">
-              <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                3
-              </div>
-              <div class="flex-1 bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all">
-                <h3 class="text-xl md:text-2xl font-bold text-indigo-700 mb-3">実機テスト・<br class="md:hidden" />効果検証</h3>
-                <p class="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
-                  実際の業務環境で試用いただき、効果を数値で確認。ROIやコスト削減効果を可視化します。
-                </p>
-                <div class="inline-flex items-center text-sm text-indigo-600 font-medium bg-indigo-50 px-4 py-2 rounded-full">
+            <Card variant="white" padding="md" hover="lift" className="flex-1">
+              <h3 class="text-xl md:text-2xl font-bold text-primary-500 mb-3">ゼロスタート開発 (初期費用0円)</h3>
+              <p class="text-sm md:text-base text-neutral-700 leading-relaxed mb-4">
+                <span class="font-semibold text-primary-500">初期費用0円</span>で、動くプロトタイプを開発。実際の業務で試せる形でお届けします。
+              </p>
+              <div class="flex flex-wrap gap-3">
+                <div class="inline-flex items-center text-sm text-primary-500 font-medium bg-primary-50 px-4 py-2 rounded-full">
                   <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   期間: 1-2週間
                 </div>
-              </div>
-            </div>
-            <div class="absolute left-8 top-20 bottom-0 w-0.5 bg-gradient-to-b from-indigo-300 to-transparent"></div>
-          </div>
-
-          {/* Step 4 */}
-          <div class="relative">
-            <div class="flex items-start gap-6">
-              <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                4
-              </div>
-              <div class="flex-1 bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all">
-                <h3 class="text-xl md:text-2xl font-bold text-indigo-700 mb-3">導入判断・<br class="md:hidden" />本開発へ</h3>
-                <p class="text-sm md:text-base text-gray-700 leading-relaxed mb-6">
-                  効果を確認できたら、本格開発へ進みます。既に動く基盤があるため、精度の高い見積もりと短期間での展開が可能です。
-                </p>
-
-                {/* 開発モデルの選択 */}
-                <div class="mb-6 p-3 md:p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl">
-                  <h4 class="text-xs md:text-sm font-bold text-indigo-900 mb-3">💡 2つの開発モデルからお選びいただけます</h4>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                    <div class="bg-white rounded-lg p-4 border-2 border-indigo-200">
-                      <div class="flex items-center mb-2">
-                        <span class="text-xl mr-2">📦</span>
-                        <div class="text-sm font-bold text-indigo-700">請負開発モデル</div>
-                      </div>
-                      <p class="text-xs text-gray-700 leading-relaxed mb-2">
-                        完成形を定義し、プロダクトをしっかり仕上げて納品
-                      </p>
-                      <ul class="text-xs text-gray-600 space-y-1">
-                        <li class="flex items-start">
-                          <span class="text-indigo-600 mr-1">✓</span>
-                          <span>明確な要件・仕様がある場合に最適</span>
-                        </li>
-                        <li class="flex items-start">
-                          <span class="text-indigo-600 mr-1">✓</span>
-                          <span>固定費用・固定スケジュール</span>
-                        </li>
-                        <li class="flex items-start">
-                          <span class="text-indigo-600 mr-1">✓</span>
-                          <span>納品後は保守契約へ移行可能</span>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div class="bg-white rounded-lg p-4 border-2 border-purple-200">
-                      <div class="flex items-center mb-2">
-                        <span class="text-xl mr-2">🔄</span>
-                        <div class="text-sm font-bold text-purple-700">準委任開発モデル</div>
-                      </div>
-                      <p class="text-xs text-gray-700 leading-relaxed mb-2">
-                        毎月定額で継続的にブラッシュアップ・改善を実施
-                      </p>
-                      <ul class="text-xs text-gray-600 space-y-1">
-                        <li class="flex items-start">
-                          <span class="text-purple-600 mr-1">✓</span>
-                          <span>市場の変化に合わせて柔軟に対応</span>
-                        </li>
-                        <li class="flex items-start">
-                          <span class="text-purple-600 mr-1">✓</span>
-                          <span>毎月の定額制で予算が立てやすい</span>
-                        </li>
-                        <li class="flex items-start">
-                          <span class="text-purple-600 mr-1">✓</span>
-                          <span>継続的な機能追加・改善が可能</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 判断パターン */}
-                <div class="grid grid-cols-2 gap-3">
-                  <div class="bg-indigo-50 rounded-lg p-4">
-                    <div class="text-sm text-indigo-600 font-medium mb-1">採用の場合</div>
-                    <div class="text-gray-700 text-sm">開発モデルを選択して本格開発へ</div>
-                  </div>
-                  <div class="bg-purple-50 rounded-lg p-4">
-                    <div class="text-sm text-purple-600 font-medium mb-1">見送りの場合</div>
-                    <div class="text-gray-700 text-sm">費用負担なし・リスクゼロ</div>
-                  </div>
+                <div class="inline-flex items-center text-sm text-secondary-600 font-medium bg-secondary-50 px-4 py-2 rounded-full">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  費用: 0円
                 </div>
               </div>
-            </div>
-            <div class="absolute left-8 top-20 bottom-0 w-0.5 bg-gradient-to-b from-indigo-300 to-transparent"></div>
+            </Card>
           </div>
-
-          {/* Step 5 */}
-          <div class="flex items-start gap-6">
-            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-              5
-            </div>
-            <div class="flex-1 bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all">
-              <h3 class="text-xl md:text-2xl font-bold text-indigo-700 mb-3">運用開始・<br class="md:hidden" />継続改善</h3>
-              <p class="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
-                本番環境での運用を開始。保守サポートや追加機能開発も柔軟に対応します。
-              </p>
-              <div class="inline-flex items-center text-sm text-green-600 font-medium bg-green-50 px-4 py-2 rounded-full">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                継続的な改善サポート
-              </div>
-            </div>
-          </div>
+          <div class="absolute left-8 top-20 bottom-0 w-0.5 bg-gradient-to-b from-primary-500/50 to-transparent"></div>
         </div>
 
-        {/* CTA */}
-        <div class="text-center mt-16">
-          <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-10 max-w-3xl mx-auto shadow-2xl">
-            <h3 class="text-3xl font-bold text-white mb-4">
-              まずは、ゼロスタートから
-            </h3>
-            <p class="text-lg text-indigo-100 mb-8 leading-relaxed">
-              初期費用0円で、実際に動くものを体験できます。<br />
-              お気軽にお問い合わせください。
-            </p>
-            <a
-              href="/contact"
-              class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-indigo-600 bg-white rounded-full hover:bg-gray-50 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
-            >
-              ゼロスタートを始める
-              <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </a>
+        {/* Step 3 */}
+        <div class="relative">
+          <div class="flex items-start gap-6">
+            <div class="flex-shrink-0 w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+              3
+            </div>
+            <Card variant="white" padding="md" hover="lift" className="flex-1">
+              <h3 class="text-xl md:text-2xl font-bold text-primary-500 mb-3">実機テスト・効果検証</h3>
+              <p class="text-sm md:text-base text-neutral-700 leading-relaxed mb-4">
+                実際の業務環境で試用いただき、効果を数値で確認。ROIやコスト削減効果を可視化します。
+              </p>
+              <div class="inline-flex items-center text-sm text-primary-500 font-medium bg-primary-50 px-4 py-2 rounded-full">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                期間: 1-2週間
+              </div>
+            </Card>
           </div>
+          <div class="absolute left-8 top-20 bottom-0 w-0.5 bg-gradient-to-b from-primary-500/50 to-transparent"></div>
+        </div>
+
+        {/* Step 4 */}
+        <div class="relative">
+          <div class="flex items-start gap-6">
+            <div class="flex-shrink-0 w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+              4
+            </div>
+            <Card variant="white" padding="md" hover="lift" className="flex-1">
+              <h3 class="text-xl md:text-2xl font-bold text-primary-500 mb-3">導入判断・本開発へ</h3>
+              <p class="text-sm md:text-base text-neutral-700 leading-relaxed mb-6">
+                効果を確認できたら、本格開発へ進みます。既に動く基盤があるため、精度の高い見積もりと短期間での展開が可能です。
+              </p>
+
+              {/* 開発モデルの選択 */}
+              <div class="mb-6 p-3 md:p-4 bg-primary-50 rounded-xl">
+                <h4 class="text-xs md:text-sm font-bold text-primary-500 mb-3">💡 2つの開発モデルからお選びいただけます</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                  <div class="bg-white rounded-lg p-4 border-2 border-primary-500/20">
+                    <div class="flex items-center mb-2">
+                      <span class="text-xl mr-2">📦</span>
+                      <div class="text-sm font-bold text-primary-500">請負開発モデル</div>
+                    </div>
+                    <p class="text-xs text-neutral-700 leading-relaxed mb-2">
+                      完成形を定義し、プロダクトをしっかり仕上げて納品
+                    </p>
+                    <ul class="text-xs text-neutral-600 space-y-1">
+                      <li class="flex items-start">
+                        <span class="text-primary-500 mr-1">✓</span>
+                        <span>明確な要件・仕様がある場合に最適</span>
+                      </li>
+                      <li class="flex items-start">
+                        <span class="text-primary-500 mr-1">✓</span>
+                        <span>固定費用・固定スケジュール</span>
+                      </li>
+                      <li class="flex items-start">
+                        <span class="text-primary-500 mr-1">✓</span>
+                        <span>納品後は保守契約へ移行可能</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="bg-white rounded-lg p-4 border-2 border-secondary-500/20">
+                    <div class="flex items-center mb-2">
+                      <span class="text-xl mr-2">🔄</span>
+                      <div class="text-sm font-bold text-secondary-600">準委任開発モデル</div>
+                    </div>
+                    <p class="text-xs text-neutral-700 leading-relaxed mb-2">
+                      毎月定額で継続的にブラッシュアップ・改善を実施
+                    </p>
+                    <ul class="text-xs text-neutral-600 space-y-1">
+                      <li class="flex items-start">
+                        <span class="text-secondary-600 mr-1">✓</span>
+                        <span>市場の変化に合わせて柔軟に対応</span>
+                      </li>
+                      <li class="flex items-start">
+                        <span class="text-secondary-600 mr-1">✓</span>
+                        <span>毎月の定額制で予算が立てやすい</span>
+                      </li>
+                      <li class="flex items-start">
+                        <span class="text-secondary-600 mr-1">✓</span>
+                        <span>継続的な機能追加・改善が可能</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* 判断パターン */}
+              <div class="grid grid-cols-2 gap-3">
+                <div class="bg-primary-50 rounded-lg p-4">
+                  <div class="text-sm text-primary-500 font-medium mb-1">採用の場合</div>
+                  <div class="text-neutral-700 text-sm">開発モデルを選択して本格開発へ</div>
+                </div>
+                <div class="bg-secondary-50 rounded-lg p-4">
+                  <div class="text-sm text-secondary-600 font-medium mb-1">見送りの場合</div>
+                  <div class="text-neutral-700 text-sm">費用負担なし・リスクゼロ</div>
+                </div>
+              </div>
+            </Card>
+          </div>
+          <div class="absolute left-8 top-20 bottom-0 w-0.5 bg-gradient-to-b from-primary-500/50 to-transparent"></div>
+        </div>
+
+        {/* Step 5 */}
+        <div class="flex items-start gap-6">
+          <div class="flex-shrink-0 w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+            5
+          </div>
+          <Card variant="white" padding="md" hover="lift" className="flex-1">
+            <h3 class="text-xl md:text-2xl font-bold text-primary-500 mb-3">運用開始・継続改善</h3>
+            <p class="text-sm md:text-base text-neutral-700 leading-relaxed mb-4">
+              本番環境での運用を開始。保守サポートや追加機能開発も柔軟に対応します。
+            </p>
+            <div class="inline-flex items-center text-sm text-green-600 font-medium bg-green-50 px-4 py-2 rounded-full">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              継続的な改善サポート
+            </div>
+          </Card>
         </div>
       </div>
-    </section>
+
+      {/* CTA */}
+      <div class="text-center mt-16">
+        <Card variant="primary" padding="lg" hover="none" decoration="fullDark" className="max-w-3xl mx-auto">
+          <h3 class="text-3xl font-bold text-white mb-4">
+            まずは、ゼロスタートから
+          </h3>
+          <p class="text-lg text-white/90 mb-8 leading-relaxed">
+            初期費用0円で、実際に動くものを体験できます。<br />
+            お気軽にお問い合わせください。
+          </p>
+          <ButtonLink href="/contact" variant="white" size="lg">
+            ゼロスタートを始める
+            <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </ButtonLink>
+        </Card>
+      </div>
+    </Section>
 
     {/* Case Studies */}
-    <section class="py-32 bg-gradient-to-br from-gray-50 to-white">
-      <div class="container mx-auto px-8 lg:px-12">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            ゼロスタートから始めて、<br />
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">成功した企業</span>
-          </h2>
-        </div>
+    <Section variant="lightPurple" padding="lg" decoration="blursPurple">
+      <SectionHeader
+        number="06"
+        label="Cases"
+        title="ゼロスタートから始めて、成功した企業"
+      />
 
-        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all flex flex-col h-full">
-            <h3 class="text-xl font-bold text-indigo-700 mb-4">医療DX企業</h3>
-            <p class="text-gray-700 leading-relaxed mb-4 flex-grow">
-              RFPがしっかり書かれていたのでそこからデモを作成。要件を満たしていて大体問題なかったのでヒアリング後多少の修正をしてそのままシステムを引き渡して買い取ってもらって終了。明確な要件定義からスムーズに実装へ。
-            </p>
-            <div class="mt-auto pt-4 border-t border-indigo-100">
-              <p class="text-indigo-600 font-semibold text-center">✓ スムーズに買い取り完了</p>
-            </div>
+      <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <Card variant="white" padding="lg" hover="lift" number="01">
+          <CardTitle className="text-xl text-primary-500 mb-4">医療DX企業</CardTitle>
+          <CardDescription className="mb-4">
+            RFPがしっかり書かれていたのでそこからデモを作成。要件を満たしていて大体問題なかったのでヒアリング後多少の修正をしてそのままシステムを引き渡して買い取ってもらって終了。明確な要件定義からスムーズに実装へ。
+          </CardDescription>
+          <div class="pt-4 border-t border-primary-500/10">
+            <p class="text-primary-500 font-semibold text-center">✓ スムーズに買い取り完了</p>
           </div>
+        </Card>
 
-          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all flex flex-col h-full">
-            <h3 class="text-xl font-bold text-indigo-700 mb-4">製造業</h3>
-            <p class="text-gray-700 leading-relaxed mb-4 flex-grow">
-              複雑なドメイン知識が必要な製造業のシステム。値段重視でオフショア企業を考えられていたが、AI駆動開発でしっかり要件を詰めた方がいいと説得し、契約。結果、プロトタイプをもとに要件を話し合い業務効率化のための最高のアプリ開発ができ、満足されていました。
-            </p>
-            <div class="mt-auto pt-4 border-t border-indigo-100">
-              <p class="text-indigo-600 font-semibold text-center">✓ 最高のアプリ開発に成功</p>
-            </div>
+        <Card variant="white" padding="lg" hover="lift" number="02">
+          <CardTitle className="text-xl text-primary-500 mb-4">製造業</CardTitle>
+          <CardDescription className="mb-4">
+            複雑なドメイン知識が必要な製造業のシステム。値段重視でオフショア企業を考えられていたが、AI駆動開発でしっかり要件を詰めた方がいいと説得し、契約。結果、プロトタイプをもとに要件を話し合い業務効率化のための最高のアプリ開発ができ、満足されていました。
+          </CardDescription>
+          <div class="pt-4 border-t border-primary-500/10">
+            <p class="text-primary-500 font-semibold text-center">✓ 最高のアプリ開発に成功</p>
           </div>
+        </Card>
 
-          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all flex flex-col h-full">
-            <h3 class="text-xl font-bold text-indigo-700 mb-4">人材会社</h3>
-            <p class="text-gray-700 leading-relaxed mb-4 flex-grow">
-              現場の全ての人がどのような人を選んだらいいか解像度が高くないという悩みの採用代行会社。まずは自社の心理学の知識を活かしてAIで人の適性が見抜けるプロトタイプを一日で作成。そこから、さらなる精度で実現できるなら欲しいと購入を依頼されたので、開発開始。デモを改善していくアジャイル開発に移行。
-            </p>
-            <div class="mt-auto pt-4 border-t border-indigo-100">
-              <p class="text-indigo-600 font-semibold text-center">✓ アジャイル開発で継続改善中</p>
-            </div>
+        <Card variant="white" padding="lg" hover="lift" number="03">
+          <CardTitle className="text-xl text-primary-500 mb-4">人材会社</CardTitle>
+          <CardDescription className="mb-4">
+            現場の全ての人がどのような人を選んだらいいか解像度が高くないという悩みの採用代行会社。まずは自社の心理学の知識を活かしてAIで人の適性が見抜けるプロトタイプを一日で作成。そこから、さらなる精度で実現できるなら欲しいと購入を依頼されたので、開発開始。デモを改善していくアジャイル開発に移行。
+          </CardDescription>
+          <div class="pt-4 border-t border-primary-500/10">
+            <p class="text-primary-500 font-semibold text-center">✓ アジャイル開発で継続改善中</p>
           </div>
-        </div>
+        </Card>
       </div>
-    </section>
+    </Section>
 
     {/* FAQ Section */}
-    <section class="py-32 bg-white">
-      <div class="container mx-auto px-8 lg:px-12">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            よくある質問
-          </h2>
-        </div>
+    <Section variant="white" padding="lg" decoration="bars">
+      <SectionHeader
+        number="07"
+        label="FAQ"
+        title="よくある質問"
+      />
 
-        <div class="max-w-3xl mx-auto space-y-6">
-          <details class="group bg-gradient-to-r from-indigo-50 to-white p-6 rounded-2xl shadow-md">
-            <summary class="text-xl font-bold text-gray-900 cursor-pointer list-none flex items-center justify-between">
-              無料PoCの範囲は？
-              <svg class="w-6 h-6 text-indigo-600 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </summary>
-            <p class="text-gray-700 leading-relaxed mt-4">
-              基本的な機能実装とデモンストレーションが可能なレベルまで開発します。具体的な範囲はヒアリング時にご相談の上、決定いたします。
-            </p>
-          </details>
-
-          <details class="group bg-gradient-to-r from-purple-50 to-white p-6 rounded-2xl shadow-md">
-            <summary class="text-xl font-bold text-gray-900 cursor-pointer list-none flex items-center justify-between">
-              買取しない場合は？
-              <svg class="w-6 h-6 text-purple-600 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </summary>
-            <p class="text-gray-700 leading-relaxed mt-4">
-              ご契約に至らない場合でも費用は一切発生しません。PoCの成果物は当社で再利用し、次のプロジェクトやサービス基盤として活用します。
-            </p>
-          </details>
-
-          <details class="group bg-gradient-to-r from-pink-50 to-white p-6 rounded-2xl shadow-md">
-            <summary class="text-xl font-bold text-gray-900 cursor-pointer list-none flex items-center justify-between">
-              買取価格は？
-              <svg class="w-6 h-6 text-pink-600 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </summary>
-            <p class="text-gray-700 leading-relaxed mt-4">
-              PoCの成果確認後、本開発への拡張費用をお見積もりいたします。既に動くものがあるため、見積もりの精度も高く、開発期間も短縮できます。
-            </p>
-          </details>
-
-          <details class="group bg-gradient-to-r from-indigo-50 to-white p-6 rounded-2xl shadow-md">
-            <summary class="text-xl font-bold text-gray-900 cursor-pointer list-none flex items-center justify-between">
-              保守や追加開発は？
-              <svg class="w-6 h-6 text-indigo-600 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </summary>
-            <p class="text-gray-700 leading-relaxed mt-4">
-              本開発契約後は、保守運用サポートや追加機能開発も承ります。お客様のニーズに合わせた柔軟なプランをご提案いたします。
-            </p>
-          </details>
-
-          <details class="group bg-gradient-to-r from-purple-50 to-white p-6 rounded-2xl shadow-md">
-            <summary class="text-xl font-bold text-gray-900 cursor-pointer list-none flex items-center justify-between">
-              ゼロスタートに含まれないものは？
-              <svg class="w-6 h-6 text-purple-600 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </summary>
-            <div class="text-gray-700 leading-relaxed mt-4">
-              <p class="mb-3">ゼロスタートは動くプロトタイプの開発に特化しているため、以下の成果物は含まれません：</p>
-              <ul class="space-y-2 ml-4">
-                <li class="flex items-start">
-                  <span class="text-purple-600 mr-2">・</span>
-                  <span>デザイン（UI/UXデザイン、ビジュアルデザイン）</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-purple-600 mr-2">・</span>
-                  <span>要件定義書</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-purple-600 mr-2">・</span>
-                  <span>詳細設計書類一式</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-purple-600 mr-2">・</span>
-                  <span>テストシート</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-purple-600 mr-2">・</span>
-                  <span>システム運用マニュアル</span>
-                </li>
-              </ul>
-              <p class="mt-3 text-sm text-gray-600">
-                ※これらは本開発フェーズにて必要に応じてご提供いたします。
-              </p>
-            </div>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    {/* Final CTA Section */}
-    <section class="relative py-24 overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <div class="container mx-auto px-8 lg:px-12">
-        <div class="max-w-4xl mx-auto text-center">
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            迷う前に、まず"触って"みてください。
-          </h2>
-
-          <p class="text-xl text-gray-700 mb-8 leading-relaxed">
-            資料でも会議でもなく、動くデモがあなたの判断を変えます。<br />
-            不安を感じるのは当然。でも、動く証拠を見ることで、次の一歩が見えてきます。
+      <div class="max-w-3xl mx-auto space-y-6">
+        <details class="group bg-primary-50 p-6 rounded-[32px] shadow-md">
+          <summary class="text-xl font-bold text-accent-950 cursor-pointer list-none flex items-center justify-between">
+            無料PoCの範囲は？
+            <svg class="w-6 h-6 text-primary-500 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <p class="text-neutral-700 leading-relaxed mt-4">
+            基本的な機能実装とデモンストレーションが可能なレベルまで開発します。具体的な範囲はヒアリング時にご相談の上、決定いたします。
           </p>
+        </details>
 
-          <div class="bg-white rounded-3xl p-10 shadow-xl mb-10 border-2 border-indigo-100">
-            <p class="text-2xl font-bold text-gray-900 mb-4">
-              ゼロスタートは、<span class="text-indigo-600">"無料"</span>ではなく、<br />
-              <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">"未来を試す"体験</span>です。
-            </p>
-            <p class="text-lg text-gray-700 leading-relaxed">
-              Proof（証拠）から始めることで、確信を持って前に進める。<br />
-              私たちと一緒に、あなたのアイデアを「動くかたち」で検証しましょう。
+        <details class="group bg-secondary-50 p-6 rounded-[32px] shadow-md">
+          <summary class="text-xl font-bold text-accent-950 cursor-pointer list-none flex items-center justify-between">
+            買取しない場合は？
+            <svg class="w-6 h-6 text-secondary-600 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <p class="text-neutral-700 leading-relaxed mt-4">
+            ご契約に至らない場合でも費用は一切発生しません。PoCの成果物は当社で再利用し、次のプロジェクトやサービス基盤として活用します。
+          </p>
+        </details>
+
+        <details class="group bg-primary-50 p-6 rounded-[32px] shadow-md">
+          <summary class="text-xl font-bold text-accent-950 cursor-pointer list-none flex items-center justify-between">
+            買取価格は？
+            <svg class="w-6 h-6 text-primary-500 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <p class="text-neutral-700 leading-relaxed mt-4">
+            PoCの成果確認後、本開発への拡張費用をお見積もりいたします。既に動くものがあるため、見積もりの精度も高く、開発期間も短縮できます。
+          </p>
+        </details>
+
+        <details class="group bg-secondary-50 p-6 rounded-[32px] shadow-md">
+          <summary class="text-xl font-bold text-accent-950 cursor-pointer list-none flex items-center justify-between">
+            保守や追加開発は？
+            <svg class="w-6 h-6 text-secondary-600 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <p class="text-neutral-700 leading-relaxed mt-4">
+            本開発契約後は、保守運用サポートや追加機能開発も承ります。お客様のニーズに合わせた柔軟なプランをご提案いたします。
+          </p>
+        </details>
+
+        <details class="group bg-primary-50 p-6 rounded-[32px] shadow-md">
+          <summary class="text-xl font-bold text-accent-950 cursor-pointer list-none flex items-center justify-between">
+            ゼロスタートに含まれないものは？
+            <svg class="w-6 h-6 text-primary-500 transform group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <div class="text-neutral-700 leading-relaxed mt-4">
+            <p class="mb-3">ゼロスタートは動くプロトタイプの開発に特化しているため、以下の成果物は含まれません：</p>
+            <ul class="space-y-2 ml-4">
+              <li class="flex items-start">
+                <span class="text-primary-500 mr-2">・</span>
+                <span>デザイン（UI/UXデザイン、ビジュアルデザイン）</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-primary-500 mr-2">・</span>
+                <span>要件定義書</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-primary-500 mr-2">・</span>
+                <span>詳細設計書類一式</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-primary-500 mr-2">・</span>
+                <span>テストシート</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-primary-500 mr-2">・</span>
+                <span>システム運用マニュアル</span>
+              </li>
+            </ul>
+            <p class="mt-3 text-sm text-neutral-600">
+              ※これらは本開発フェーズにて必要に応じてご提供いたします。
             </p>
           </div>
-
-          <a
-            href="/contact"
-            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
-          >
-            証拠から始める開発を体験する
-            <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </a>
-
-          <p class="text-gray-600 mt-6 text-sm">
-            ※お問い合わせ後、1-2営業日以内にご連絡いたします
-          </p>
-        </div>
+        </details>
       </div>
-    </section>
+    </Section>
+
+    {/* Final CTA Section: Primary背景でブランドカラーを強調 */}
+    <Section variant="primary" padding="lg" decoration="fullDark">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">
+          迷う前に、まず"触って"みてください。
+        </h2>
+
+        <p class="text-xl text-white/90 mb-8 leading-relaxed">
+          資料でも会議でもなく、動くデモがあなたの判断を変えます。<br />
+          不安を感じるのは当然。でも、動く証拠を見ることで、次の一歩が見えてきます。
+        </p>
+
+        <Card variant="glass" padding="lg" hover="none" className="mb-10 border-2 border-white/20">
+          <p class="text-2xl font-bold text-white mb-4">
+            ゼロスタートは、<span class="text-highlight-500">"無料"</span>ではなく、<br />
+            <span class="text-secondary-400">"未来を試す"体験</span>です。
+          </p>
+          <p class="text-lg text-white/90 leading-relaxed">
+            Proof（証拠）から始めることで、確信を持って前に進める。<br />
+            私たちと一緒に、あなたのアイデアを「動くかたち」で検証しましょう。
+          </p>
+        </Card>
+
+        <ButtonLink href="/contact" variant="white" size="xl">
+          証拠から始める開発を体験する
+          <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </ButtonLink>
+
+        <p class="text-white/60 mt-6 text-sm">
+          ※お問い合わせ後、1-2営業日以内にご連絡いたします
+        </p>
+      </div>
+    </Section>
   </main>
 </Layout>
 
@@ -839,12 +796,6 @@ import { motion } from 'framer-motion';
   .animate-float-delay {
     animation: float 8s ease-in-out infinite;
     animation-delay: 1s;
-  }
-
-  .bg-grid-pattern {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
   }
 
   .fade-in-up {
@@ -866,64 +817,3 @@ import { motion } from 'framer-motion';
     display: none;
   }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const contactButtons = document.querySelectorAll('.contact-button');
-
-    contactButtons.forEach(button => {
-      button.addEventListener('click', async () => {
-        try {
-          button.disabled = true;
-          button.textContent = '送信中...';
-
-          const response = await fetch('/api/contact', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              message: 'ゼロスタートページからお問い合わせがありました',
-            }),
-          });
-
-          if (response.ok) {
-            button.textContent = '送信完了！';
-            button.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-            button.classList.add('bg-green-600');
-
-            setTimeout(() => {
-              button.disabled = false;
-              button.innerHTML = `
-                証拠から始める開発を体験する
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              `;
-              button.classList.remove('bg-green-600');
-              button.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
-            }, 3000);
-          } else {
-            throw new Error('送信に失敗しました');
-          }
-        } catch (error) {
-          console.error('Error:', error);
-          button.textContent = 'エラーが発生しました';
-          button.classList.add('bg-red-600');
-
-          setTimeout(() => {
-            button.disabled = false;
-            button.innerHTML = `
-              証拠から始める開発を体験する
-              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            `;
-            button.classList.remove('bg-red-600');
-            button.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
-          }, 3000);
-        }
-      });
-    });
-  });
-</script>

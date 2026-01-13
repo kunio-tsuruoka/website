@@ -1,11 +1,5 @@
+import { CheckCircle, Lightbulb, PhoneCall, Rocket, TestTube } from 'lucide-react';
 import React from 'react';
-import {
-  CheckCircle,
-  Lightbulb,
-  PhoneCall,
-  Rocket,
-  TestTube,
-} from 'lucide-react';
 
 interface ProcessStep {
   icon: React.ComponentType<{ className?: string }>;
@@ -32,8 +26,7 @@ const processSteps: ProcessStep[] = [
     title: 'ゼロスタート開発',
     duration: '1-2週間',
     cost: '初期費用0円',
-    description:
-      '初期費用0円で、動くプロトタイプを開発。実際の業務で試せる形でお届けします。',
+    description: '初期費用0円で、動くプロトタイプを開発。実際の業務で試せる形でお届けします。',
     details: [
       'コア機能のMVP開発',
       '実業務で試せる形での納品',
@@ -75,14 +68,8 @@ const processSteps: ProcessStep[] = [
     title: '運用開始・継続改善',
     duration: '継続的に対応',
     cost: '保守契約',
-    description:
-      '本番環境での運用を開始。保守サポートや追加機能開発も柔軟に対応します。',
-    details: [
-      'システムの本番稼働',
-      '保守サポート対応',
-      '追加機能の開発',
-      '継続的な改善提案',
-    ],
+    description: '本番環境での運用を開始。保守サポートや追加機能開発も柔軟に対応します。',
+    details: ['システムの本番稼働', '保守サポート対応', '追加機能の開発', '継続的な改善提案'],
   },
 ];
 
@@ -92,18 +79,20 @@ export const ProcessSteps = () => {
   React.useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        for (const entry of entries) {
           if (entry.isIntersecting) {
-            const idx = parseInt(entry.target.getAttribute('data-step-index') || '0');
+            const idx = Number.parseInt(entry.target.getAttribute('data-step-index') || '0');
             setVisibleSteps((prev) => new Set(prev).add(idx));
           }
-        });
+        }
       },
       { threshold: 0.2, rootMargin: '0px 0px -100px 0px' }
     );
 
     const elements = document.querySelectorAll('[data-step-index]');
-    elements.forEach((el) => observer.observe(el));
+    for (const el of elements) {
+      observer.observe(el);
+    }
 
     return () => observer.disconnect();
   }, []);
@@ -119,15 +108,13 @@ export const ProcessSteps = () => {
               data-step-index={idx}
               style={{
                 opacity: visibleSteps.has(idx) ? 1 : 0,
-                transform: visibleSteps.has(idx)
-                  ? 'translateY(0)'
-                  : 'translateY(30px)',
+                transform: visibleSteps.has(idx) ? 'translateY(0)' : 'translateY(30px)',
                 transition: `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${idx * 0.15}s`,
               }}
             >
               {idx !== processSteps.length - 1 && (
                 <div
-                  className="absolute left-8 top-8 h-full w-0.5 bg-gradient-to-b from-indigo-300 to-transparent"
+                  className="absolute left-8 top-8 h-full w-0.5 bg-gradient-to-b from-primary-300 to-transparent"
                   style={{
                     opacity: visibleSteps.has(idx) ? 1 : 0,
                     transition: `opacity 0.8s ease ${idx * 0.15 + 0.3}s`,
@@ -139,8 +126,8 @@ export const ProcessSteps = () => {
                 <span
                   className={`flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full transition-all duration-500 ${
                     step.highlight
-                      ? 'bg-gradient-to-br from-indigo-600 to-purple-600 shadow-lg'
-                      : 'bg-indigo-600'
+                      ? 'bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg'
+                      : 'bg-primary-500'
                   } ${visibleSteps.has(idx) ? 'scale-100 rotate-0' : 'scale-75 rotate-180'}`}
                   style={{
                     transitionDelay: `${idx * 0.15 + 0.1}s`,
@@ -151,20 +138,20 @@ export const ProcessSteps = () => {
                 <div
                   className={`ml-6 flex-1 rounded-2xl p-6 shadow-lg transition-all hover:shadow-xl hover:-translate-y-1 ${
                     step.highlight
-                      ? 'bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200'
+                      ? 'bg-gradient-to-br from-primary-50 to-primary-100 border-2 border-primary-200'
                       : 'bg-white'
                   }`}
                 >
                   <div className="flex flex-wrap items-center gap-3 mb-2">
                     <h2 className="text-xl font-bold text-gray-900">{step.title}</h2>
                     {step.highlight && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 text-white animate-pulse">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-primary-500 to-primary-600 text-white animate-pulse">
                         おすすめ
                       </span>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-3 mb-3">
-                    <span className="inline-flex items-center text-sm text-indigo-600 font-medium bg-indigo-50 px-3 py-1 rounded-full transition-all hover:bg-indigo-100 hover:scale-105">
+                    <span className="inline-flex items-center text-sm text-primary-500 font-medium bg-primary-50 px-3 py-1 rounded-full transition-all hover:bg-primary-100 hover:scale-105">
                       <svg
                         className="w-4 h-4 mr-1"
                         fill="none"
@@ -183,7 +170,7 @@ export const ProcessSteps = () => {
                     <span
                       className={`inline-flex items-center text-sm font-medium px-3 py-1 rounded-full transition-all hover:scale-105 ${
                         step.cost === '初期費用0円' || step.cost === '無料'
-                          ? 'text-purple-600 bg-purple-50 hover:bg-purple-100'
+                          ? 'text-secondary-500 bg-secondary-50 hover:bg-secondary-100'
                           : 'text-gray-600 bg-gray-100 hover:bg-gray-200'
                       }`}
                     >
@@ -211,15 +198,11 @@ export const ProcessSteps = () => {
                         className="flex items-start text-gray-600"
                         style={{
                           opacity: visibleSteps.has(idx) ? 1 : 0,
-                          transform: visibleSteps.has(idx)
-                            ? 'translateX(0)'
-                            : 'translateX(-20px)',
-                          transition: `all 0.4s ease ${
-                            idx * 0.15 + 0.3 + detailIdx * 0.1
-                          }s`,
+                          transform: visibleSteps.has(idx) ? 'translateX(0)' : 'translateX(-20px)',
+                          transition: `all 0.4s ease ${idx * 0.15 + 0.3 + detailIdx * 0.1}s`,
                         }}
                       >
-                        <span className="mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-indigo-600" />
+                        <span className="mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary-500" />
                         <span>{detail}</span>
                       </li>
                     ))}

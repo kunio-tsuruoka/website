@@ -3,6 +3,7 @@
 
 import Layout from '@/layouts/layout.astro';
 import { Header } from '../components/header';
+import { PageHero } from '../components/ui/page-hero';
 
 const companyInfo = {
   name: '株式会社Beekle',
@@ -35,18 +36,11 @@ const companyInfo = {
   <Header client:load />
   <main class="pt-20">
     <!-- Hero Section -->
-    <section class="relative py-32 bg-gradient-to-br from-indigo-600 to-purple-600">
-      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      <div class="container mx-auto px-8">
-        <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-8">
-          COMPANY
-        </h1>
-        <p class="text-xl text-white/90 text-center max-w-3xl mx-auto leading-relaxed">
-          BeekleはWebアプリ、モバイルアプリやシステム開発の受託をしている制作チームです。
-          20名程度の小規模ながら、デザイナーからマーケター、プログラマーと様々な人が所属しており、幅広い案件を担当することが可能です。
-        </p>
-      </div>
-    </section>
+    <PageHero
+      englishTitle="COMPANY"
+      title="会社概要"
+      subtitle="BeekleはWebアプリ、モバイルアプリやシステム開発の受託をしている制作チームです。20名程度の小規模ながら、デザイナーからマーケター、プログラマーと様々な人が所属しており、幅広い案件を担当することが可能です。"
+    />
 
     <!-- About Section -->
     <section class="py-32">
