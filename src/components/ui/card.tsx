@@ -23,6 +23,9 @@ const cardVariants = cva('relative overflow-hidden transition-all duration-300',
       // ライトパープル背景
       lightPurple: 'bg-gradient-to-br from-primary-50 via-white to-primary-50/30 rounded-[32px]',
 
+      // ライトシアン背景
+      lightCyan: 'bg-gradient-to-br from-secondary-50 via-white to-secondary-50/30 rounded-[32px]',
+
       // プライマリ背景: Beekle Purple
       primary: 'bg-primary-500 text-white rounded-[32px]',
 
@@ -47,6 +50,9 @@ const cardVariants = cva('relative overflow-hidden transition-all duration-300',
 
       // アウトライン（プライマリ）
       outlinedPrimary: 'bg-white rounded-[32px] border-2 border-primary-500',
+
+      // アウトライン（セカンダリ）
+      outlinedSecondary: 'bg-white rounded-[32px] border-2 border-secondary-500',
 
       // ガラス効果
       glass: 'bg-white/80 backdrop-blur-sm border border-white/20 rounded-[32px]',

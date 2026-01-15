@@ -2,14 +2,19 @@
 import { CTASection } from '@/components/process-cta-section';
 import { ProcessFAQ } from '@/components/process-faq-section';
 // src/pages/process.astro
-import { ProcessHero } from '@/components/process-hero';
 import { ProcessSteps } from '@/components/process-steps';
+import { Header } from '../components/header';
+import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
 ---
 
 <Layout title="導入の流れ | CDP構築サービス">
-  <main>
-    <ProcessHero client:load />
+  <Header client:load />
+  <main class="pt-20">
+    <PageHero
+      title="導入の流れ"
+      subtitle="お問い合わせから運用開始まで、段階的に進めていきます"
+    />
     <ProcessSteps client:load />
     <ProcessFAQ client:load />
     <CTASection client:load />

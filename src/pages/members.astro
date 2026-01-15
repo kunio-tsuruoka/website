@@ -2,6 +2,7 @@
 import Layout from '@/layouts/layout.astro';
 import { Header } from '../components/header';
 import MemberCard from '../components/member-card';
+import { PageHero } from '../components/ui/page-hero';
 
 interface Member {
   id: number;
@@ -59,18 +60,10 @@ const members: Member[] = [
 <Layout title="メンバー紹介 | Beekle">
   <Header client:load />
   <main class="pt-20">
-    <!-- ヒーローセクション -->
-    <section class="relative py-32 bg-primary-500">
-      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      <div class="container mx-auto px-8">
-        <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-8">
-          MEMBERS
-        </h1>
-        <p class="text-xl text-white/90 text-center max-w-3xl mx-auto leading-relaxed">
-          Beekleの開発チームをご紹介します。多様な専門知識と経験を持つ私たちが、お客様のビジネス成長を全力でサポートします。
-        </p>
-      </div>
-    </section>
+    <PageHero
+      title="メンバー紹介"
+      subtitle="Beekleの開発チームをご紹介します。多様な専門知識と経験を持つ私たちが、お客様のビジネス成長を全力でサポートします。"
+    />
 
     <!-- メンバー紹介セクション -->
     <section class="py-32 bg-gray-50">
