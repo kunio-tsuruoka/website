@@ -1,44 +1,24 @@
 import type { ReactNode } from 'react';
 
 interface PageHeroProps {
-  /** 大きな英字テキスト（例: "STRENGTHS", "WORKS"） */
-  englishTitle: string;
   /** 日本語タイトル（h1） */
   title: string | ReactNode;
   /** サブタイトル/説明文（オプション） */
   subtitle?: string;
-  /** デコレーションの種類 */
-  decoration?: 'fullDark' | 'barsDark' | 'none';
   /** バッジテキスト（オプション） */
   badge?: string;
   /** 追加コンテンツ（CTAボタンなど） */
   children?: ReactNode;
 }
 
-export function PageHero({
-  englishTitle,
-  title,
-  subtitle,
-  decoration = 'fullDark',
-  badge,
-  children,
-}: PageHeroProps) {
-  const decorationClasses = {
-    fullDark: 'before:absolute before:inset-0 before:bg-grid-pattern before:opacity-10',
-    barsDark: 'before:absolute before:inset-0 before:bg-grid-pattern before:opacity-10',
-    none: '',
-  };
-
+export function PageHero({ title, subtitle, badge, children }: PageHeroProps) {
   return (
-    <section
-      className={`relative py-24 md:py-32 bg-primary-500 overflow-hidden ${decorationClasses[decoration]}`}
-    >
-      {/* Floating decorations */}
-      <div className="absolute top-10 right-10 w-24 h-24 bg-white/10 rounded-full blur-2xl" />
-      <div className="absolute bottom-10 left-20 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+    <section className="relative bg-primary-500 py-20 overflow-hidden">
+      {/* Grid pattern decoration */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-10" />
 
-      <div className="container mx-auto px-6 md:px-8 relative">
-        <div className="text-center max-w-4xl mx-auto">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative">
+        <div className="text-center">
           {/* バッジ */}
           {badge && (
             <div className="inline-block mb-6">
@@ -48,23 +28,16 @@ export function PageHero({
             </div>
           )}
 
-          {/* 英字タイトル */}
-          <span className="font-Poppins text-7xl md:text-8xl lg:text-9xl font-bold text-white/20 block mb-4 select-none">
-            {englishTitle}
-          </span>
-
-          {/* 日本語タイトル - デザイントークン typography.heading.h1 準拠 */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">{title}</h1>
+          {/* タイトル */}
+          <h1 className="text-4xl font-bold text-white sm:text-5xl mb-6">{title}</h1>
 
           {/* サブタイトル */}
           {subtitle && (
-            <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8">
-              {subtitle}
-            </p>
+            <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">{subtitle}</p>
           )}
 
           {/* 追加コンテンツ（CTAボタンなど） */}
-          {children}
+          {children && <div className="mt-8">{children}</div>}
         </div>
       </div>
     </section>
