@@ -1,4 +1,4 @@
-import { createClient, type MicroCMSClient } from 'microcms-js-sdk';
+import { type MicroCMSClient, createClient } from 'microcms-js-sdk';
 
 // MicroCMS APIクライアント（遅延初期化）
 let _client: MicroCMSClient | null = null;

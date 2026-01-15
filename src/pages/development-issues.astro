@@ -1,23 +1,17 @@
 ---
 import { DevelopmentIssuesList } from '../components/development-issues-list';
 import { Header } from '../components/header';
+import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
 ---
 
 <Layout title="システム開発問題ケーススタディ | Beekle">
   <Header client:load />
   <main class="pt-20">
-    <section class="bg-primary-500 py-20">
-      <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl text-center">
-        <h1 class="text-4xl font-bold text-white sm:text-5xl mb-6">
-          システム開発問題ケーススタディ
-        </h1>
-        <p class="text-xl text-white/90 max-w-3xl mx-auto">
-          システム開発で直面する様々な課題と、その解決アプローチをご紹介します。<br />
-          プロジェクトの失敗から学び、成功への道筋を見つけ出した実例をご覧ください。
-        </p>
-      </div>
-    </section>
+    <PageHero
+      title="システム開発問題ケーススタディ"
+      subtitle="システム開発で直面する様々な課題と、その解決アプローチをご紹介します。プロジェクトの失敗から学び、成功への道筋を見つけ出した実例をご覧ください。"
+    />
 
     <section class="bg-gray-50 py-16">
       <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">

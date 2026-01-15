@@ -1,5 +1,6 @@
 ---
 import { Header } from '../components/header';
+import { PageHero } from '../components/ui/page-hero';
 import { articleCategories } from '../data/article-categories';
 import Layout from '../layouts/layout.astro';
 ---
@@ -7,18 +8,10 @@ import Layout from '../layouts/layout.astro';
 <Layout title="ナレッジベース | Beekle">
  <Header client:load />
  <main class="pt-20">
-   <!-- Hero Section -->
-   <section class="relative py-32 bg-primary-500">
-     <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-     <div class="container mx-auto px-8">
-       <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-8">
-         技術ナレッジベース
-       </h1>
-       <p class="text-xl text-white/90 text-center max-w-3xl mx-auto">
-         システム開発に関する知見を体系的にまとめています
-       </p>
-     </div>
-   </section>
+   <PageHero
+     title="技術ナレッジベース"
+     subtitle="システム開発に関する知見を体系的にまとめています"
+   />
 
    <!-- Articles Section -->
    <section class="py-24">
