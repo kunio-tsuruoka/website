@@ -1,6 +1,6 @@
 // TestimonialsSection.tsx
 import type React from 'react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 // 型定義
 interface Testimonial {
@@ -90,11 +90,40 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
 
 // メインのお客様の声セクション
 const TestimonialSection: React.FC = () => {
+  // PC用のページネーション
   const [currentPage, setCurrentPage] = useState<number>(0);
   const testimonialsPerPage: number = 3;
   const pageCount: number = Math.ceil(testimonialData.length / testimonialsPerPage);
 
-  // ページネーション処理
+  // モバイル用のスワイプカルーセル
+  const [mobileIndex, setMobileIndex] = useState<number>(0);
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+  const minSwipeDistance = 50;
+
+  // モバイル用スワイプハンドラー
+  const handleTouchStart = (e: React.TouchEvent): void => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent): void => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (): void => {
+    const distance = touchStartX.current - touchEndX.current;
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) {
+        // 左スワイプ → 次へ
+        setMobileIndex((prev) => (prev + 1) % testimonialData.length);
+      } else {
+        // 右スワイプ → 前へ
+        setMobileIndex((prev) => (prev - 1 + testimonialData.length) % testimonialData.length);
+      }
+    }
+  };
+
+  // PC用ページネーション処理
   const handleNextPage = (): void => {
     setCurrentPage((prev) => (prev + 1) % pageCount);
   };
@@ -119,15 +148,35 @@ const TestimonialSection: React.FC = () => {
           ))}
         </div>
 
-        {/* モバイル表示用スライダー */}
+        {/* モバイル表示用スワイプカルーセル */}
         <div className="md:hidden">
-          <div className="mb-5">
-            <TestimonialCard testimonial={currentTestimonials[0]} />
+          <div
+            className="mb-5 touch-pan-y"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            <TestimonialCard testimonial={testimonialData[mobileIndex]} />
           </div>
+
+          {/* モバイル用ペジネーションドット */}
+          <div className="flex justify-center items-center gap-2 mb-4">
+            {testimonialData.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setMobileIndex(i)}
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                  mobileIndex === i ? 'bg-primary-500 w-6' : 'bg-neutral-300 hover:bg-neutral-400'
+                }`}
+                aria-label={`${i + 1}件目に移動`}
+              />
+            ))}
+          </div>
+          <p className="text-center text-neutral-500 text-sm">左右にスワイプ</p>
         </div>
 
-        {/* ページネーションコントロール */}
-        <div className="flex justify-center items-center gap-3 mt-6">
+        {/* PC用ページネーションコントロール */}
+        <div className="hidden md:flex justify-center items-center gap-3 mt-6">
           <button
             onClick={handlePrevPage}
             className="p-1.5 rounded-full bg-white border border-neutral-200 hover:bg-accent-50 hover:border-accent-300 transition-colors"
