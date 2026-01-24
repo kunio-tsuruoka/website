@@ -89,8 +89,8 @@ const relatedArticles = [
     </section>
 
     {/* Article Content */}
-    <article class="py-16 md:py-20 bg-white">
-      <div class="container mx-auto px-6 md:px-8 max-w-4xl">
+    <article class="py-16 md:py-24 bg-white">
+      <div class="container mx-auto px-6 md:px-12 max-w-3xl">
         <div class="markdown-content">
           <Fragment set:html={htmlContent} />
         </div>
@@ -146,40 +146,40 @@ const relatedArticles = [
 <style>
   /* マークダウンコンテンツのデザインシステム - Tailwind設定を使用 */
   .markdown-content {
-    @apply text-gray-800 text-base leading-relaxed;
+    @apply text-gray-800 text-lg leading-loose;
   }
 
   /* 見出しスタイル - 明確な階層を作る */
   .markdown-content :global(h1) {
-    @apply font-bold text-gray-900 text-3xl md:text-4xl mt-8 mb-4;
+    @apply font-bold text-gray-900 text-3xl md:text-4xl mt-16 mb-6;
   }
 
   .markdown-content :global(h2) {
-    @apply font-bold text-gray-900 text-2xl md:text-3xl mt-10 mb-4 pb-2 border-b-[3px] border-primary-200;
+    @apply font-bold text-gray-900 text-2xl md:text-3xl mt-16 mb-6 pb-3 border-b-4 border-primary-400;
   }
 
   .markdown-content :global(h3) {
-    @apply font-bold text-gray-900 text-xl md:text-2xl mt-7 mb-3 relative pl-2;
+    @apply font-bold text-gray-900 text-xl md:text-2xl mt-12 mb-4 relative pl-5;
   }
 
   .markdown-content :global(h3)::before {
     content: '';
-    @apply absolute left-0 w-1 bg-gradient-to-b from-primary-500 to-primary-600 rounded;
-    top: 0.35em;
-    height: 1.2em;
+    @apply absolute left-0 w-1.5 bg-gradient-to-b from-primary-500 to-primary-600 rounded;
+    top: 0.2em;
+    height: 1.3em;
   }
 
   .markdown-content :global(h4) {
-    @apply font-bold text-gray-800 text-lg md:text-xl mt-5 mb-2;
+    @apply font-bold text-gray-800 text-lg md:text-xl mt-10 mb-4;
   }
 
   .markdown-content :global(h5) {
-    @apply font-bold text-gray-800 text-base md:text-lg mt-4 mb-2;
+    @apply font-bold text-gray-800 text-base md:text-lg mt-8 mb-3;
   }
 
   /* 段落スタイル - 読みやすい行間と余白 */
   .markdown-content :global(p) {
-    @apply text-gray-700 text-base leading-relaxed mb-3;
+    @apply text-gray-700 text-lg leading-loose mb-6;
   }
 
   /* リンクスタイル - 目立つがエレガント */
@@ -221,11 +221,11 @@ const relatedArticles = [
 
   /* リストスタイル - 視覚的に明確 */
   .markdown-content :global(ul) {
-    @apply my-4 pl-0 list-none;
+    @apply my-6 pl-0 list-none;
   }
 
   .markdown-content :global(ul li) {
-    @apply relative text-gray-700 text-base leading-relaxed pl-4 mb-2;
+    @apply relative text-gray-700 text-lg leading-loose pl-6 mb-3;
   }
 
   .markdown-content :global(ul li):last-child {
@@ -235,11 +235,11 @@ const relatedArticles = [
   .markdown-content :global(ul li)::before {
     content: '';
     @apply absolute left-1 rounded-full;
-    top: 0.65em;
-    width: 6px;
-    height: 6px;
+    top: 0.7em;
+    width: 8px;
+    height: 8px;
     background: linear-gradient(135deg, #3D4DB7, #3544a4);
-    box-shadow: 0 0 0 3px rgba(61, 77, 183, 0.1);
+    box-shadow: 0 0 0 3px rgba(61, 77, 183, 0.15);
   }
 
   /* チェックリスト用のスタイル - ✅と❌のサポート */
@@ -271,12 +271,12 @@ const relatedArticles = [
 
   /* 番号付きリスト */
   .markdown-content :global(ol) {
-    @apply my-4 pl-0 list-none;
+    @apply my-6 pl-0 list-none;
     counter-reset: item;
   }
 
   .markdown-content :global(ol li) {
-    @apply relative text-gray-700 text-base leading-relaxed pl-10 mb-2;
+    @apply relative text-gray-700 text-lg leading-loose pl-12 mb-4;
     counter-increment: item;
   }
 
@@ -286,7 +286,7 @@ const relatedArticles = [
 
   .markdown-content :global(ol li)::before {
     content: counter(item);
-    @apply absolute left-0 w-6 h-6 text-white rounded-full flex items-center justify-center font-bold text-xs;
+    @apply absolute left-0 w-8 h-8 text-white rounded-full flex items-center justify-center font-bold text-sm;
     background: linear-gradient(135deg, #3D4DB7, #3544a4);
     top: 0.15em;
   }
