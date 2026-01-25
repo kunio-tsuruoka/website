@@ -1,0 +1,35 @@
+# Beekle Website - robots.txt
+# https://beekle.co.jp
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://beekle.co.jp/sitemap.xml
+
+# Disallow admin and API routes
+Disallow: /api/
+Disallow: /_astro/
+
+# Allow all crawlers for content
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# AI crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
