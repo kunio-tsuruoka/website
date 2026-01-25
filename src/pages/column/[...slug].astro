@@ -40,10 +40,19 @@ renderer.listitem = ({ text, task, checked }) => {
   // GFMタスクリスト（- [ ] / - [x]）
   if (task) {
     const className = checked ? 'checkbox checked' : 'checkbox unchecked';
-    // markedが自動追加する<input>を削除してカスタムスタイル適用
     const cleanText = text.replace(/<input[^>]*>/, '').trim();
     return `<li class="${className}">${cleanText}</li>\n`;
   }
+
+  // MicroCMS形式: テキストが [ ] や [x] で始まる場合も変換
+  const checkboxMatch = text.match(/^\s*\[([xX\s]?)\]\s*/);
+  if (checkboxMatch) {
+    const isChecked = checkboxMatch[1].toLowerCase() === 'x';
+    const className = isChecked ? 'checkbox checked' : 'checkbox unchecked';
+    const cleanText = text.replace(/^\s*\[[xX\s]?\]\s*/, '').trim();
+    return `<li class="${className}">${cleanText}</li>\n`;
+  }
+
   return `<li>${text}</li>\n`;
 };
 
