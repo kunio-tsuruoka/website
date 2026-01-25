@@ -35,6 +35,18 @@ renderer.heading = ({ text, depth }) => {
   return `<h${depth}>${text}</h${depth}>`;
 };
 
+// チェックボックス記法を自動変換
+renderer.listitem = ({ text, task, checked }) => {
+  // GFMタスクリスト（- [ ] / - [x]）
+  if (task) {
+    const className = checked ? 'checkbox checked' : 'checkbox unchecked';
+    // markedが自動追加する<input>を削除してカスタムスタイル適用
+    const cleanText = text.replace(/<input[^>]*>/, '').trim();
+    return `<li class="${className}">${cleanText}</li>\n`;
+  }
+  return `<li>${text}</li>\n`;
+};
+
 // Markedの設定
 marked.setOptions({
   breaks: true,
@@ -284,24 +296,24 @@ const relatedArticles = [
     box-shadow: 0 0 0 3px rgba(61, 77, 183, 0.15);
   }
 
-  /* チェックリスト用のスタイル - class="good" / class="bad" */
-  .markdown-content :global(ul.checklist) {
-    @apply my-6 pl-0 list-none;
-  }
-
-  .markdown-content :global(ul.checklist li) {
+  /* チェックボックス（- [ ] / - [x] マークダウン記法） */
+  .markdown-content :global(li.checkbox) {
     @apply relative text-gray-700 text-lg leading-loose pl-10 mb-3;
   }
 
-  .markdown-content :global(ul.checklist li.good)::before {
+  .markdown-content :global(li.checkbox)::before {
+    content: none;
+  }
+
+  .markdown-content :global(li.checkbox.checked)::before {
     content: '';
-    @apply absolute left-0 w-6 h-6 rounded-full flex items-center justify-center;
+    @apply absolute left-0 w-6 h-6 rounded-full;
     top: 0.35em;
     background: linear-gradient(135deg, #10B981, #059669);
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
   }
 
-  .markdown-content :global(ul.checklist li.good)::after {
+  .markdown-content :global(li.checkbox.checked)::after {
     content: '';
     @apply absolute;
     left: 8px;
@@ -313,21 +325,10 @@ const relatedArticles = [
     transform: rotate(45deg);
   }
 
-  .markdown-content :global(ul.checklist li.bad)::before {
+  .markdown-content :global(li.checkbox.unchecked)::before {
     content: '';
-    @apply absolute left-0 w-6 h-6 rounded-full;
+    @apply absolute left-0 w-6 h-6 rounded border-2 border-gray-300 bg-white;
     top: 0.35em;
-    background: linear-gradient(135deg, #EF4444, #DC2626);
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
-  }
-
-  .markdown-content :global(ul.checklist li.bad)::after {
-    content: '×';
-    @apply absolute text-white font-bold;
-    left: 6px;
-    top: 0.2em;
-    font-size: 1rem;
-    line-height: 1.5;
   }
 
   /* 番号付きリスト */
