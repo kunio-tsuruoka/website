@@ -44,12 +44,12 @@ renderer.listitem = ({ text, task, checked }) => {
     return `<li class="${className}">${cleanText}</li>\n`;
   }
 
-  // MicroCMS形式: テキストが [ ] や [x] で始まる場合も変換
-  const checkboxMatch = text.match(/^\s*\[([xX\s]?)\]\s*/);
+  // MicroCMS形式: テキストが [ ] や [x] で始まる場合も変換（•ビュレット付きも対応）
+  const checkboxMatch = text.match(/^[•・]?\s*\[([xX\s]?)\]\s*/);
   if (checkboxMatch) {
     const isChecked = checkboxMatch[1].toLowerCase() === 'x';
     const className = isChecked ? 'checkbox checked' : 'checkbox unchecked';
-    const cleanText = text.replace(/^\s*\[[xX\s]?\]\s*/, '').trim();
+    const cleanText = text.replace(/^[•・]?\s*\[[xX\s]?\]\s*/, '').trim();
     return `<li class="${className}">${cleanText}</li>\n`;
   }
 
