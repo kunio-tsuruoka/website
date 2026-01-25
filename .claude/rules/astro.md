@@ -33,3 +33,10 @@ const data = await fetchData();
 - `output: 'server'` - Cloudflare Pages対応
 - 動的ルート: `[id].astro`, `[...slug].astro`
 - `getStaticPaths()` は使用しない（SSRモードのため）
+
+# SSR for Dynamic Routes
+
+- 動的ルート (`[id].astro`, `[...slug].astro`) でSSRするには `export const prerender = false;` が必須
+- `prerender = true` + `getStaticPaths()` → 静的生成
+- `prerender = false` (getStaticPathsなし) → SSR
+- 静的ページ (動的パラメータなし) はデフォルトでSSR（`output: 'server'` 設定時）
