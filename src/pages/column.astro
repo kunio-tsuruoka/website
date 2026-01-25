@@ -2,7 +2,11 @@
 import { Header } from '../components/header';
 import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
-import { getCategories, getColumns } from '../lib/microcms';
+import { type MicroCMSEnv, getCategories, getColumns } from '../lib/microcms';
+
+// Cloudflare Pages SSR: ランタイム環境変数を取得
+const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
+const env = runtime?.env;
 
 // SSR: リクエスト時にMicroCMSから取得
 let categories: Awaited<ReturnType<typeof getCategories>> = [];
@@ -10,8 +14,8 @@ let allColumns: Awaited<ReturnType<typeof getColumns>> = [];
 let apiError: string | null = null;
 
 try {
-  categories = await getCategories();
-  allColumns = await getColumns();
+  categories = await getCategories(env);
+  allColumns = await getColumns(undefined, env);
 
   // 環境変数が設定されているのにデータが空の場合
   if (categories.length === 0 && allColumns.length === 0) {

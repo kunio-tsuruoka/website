@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { articleCategories } from '../data/article-categories';
 import { services } from '../data/service';
-import { getColumns } from '../lib/microcms';
+import { type MicroCMSEnv, getColumns } from '../lib/microcms';
 
 const SITE_URL = 'https://beekle.co.jp';
 
@@ -24,8 +24,12 @@ const staticPages = [
   { url: '/privacy', priority: '0.3', changefreq: 'yearly' },
 ];
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ locals }) => {
   const now = new Date().toISOString().split('T')[0];
+
+  // Cloudflare Pages SSR: ランタイム環境変数を取得
+  const runtime = (locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
+  const env = runtime?.env;
 
   // サービスページ
   const servicePages = services.map((service) => ({
@@ -49,7 +53,7 @@ export const GET: APIRoute = async () => {
   // MicroCMSコラム記事
   let columnPages: { url: string; priority: string; changefreq: string; lastmod?: string }[] = [];
   try {
-    const columns = await getColumns();
+    const columns = await getColumns(undefined, env);
     columnPages = columns.map((column) => ({
       url: `/column/${column.id}`,
       priority: '0.7',

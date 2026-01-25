@@ -2,7 +2,7 @@
 import { Renderer, marked } from 'marked';
 import { Header } from '../../components/header';
 import Layout from '../../layouts/layout.astro';
-import { getColumn } from '../../lib/microcms';
+import { type MicroCMSEnv, getColumn } from '../../lib/microcms';
 import { type TocItem, slugify } from '../../lib/toc';
 
 // SSR: リクエスト時にMicroCMSから取得
@@ -10,8 +10,12 @@ export const prerender = false;
 const { slug } = Astro.params;
 const columnId = slug as string;
 
+// Cloudflare Pages SSR: ランタイム環境変数を取得
+const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
+const env = runtime?.env;
+
 // MicroCMSから記事を取得
-const column = await getColumn(columnId);
+const column = await getColumn(columnId, env);
 
 if (!column) {
   return Astro.redirect('/404');

@@ -1,13 +1,23 @@
 import { type MicroCMSClient, createClient } from 'microcms-js-sdk';
 
-// MicroCMS APIクライアント（遅延初期化）
-let _client: MicroCMSClient | null = null;
+// 環境変数の型
+export interface MicroCMSEnv {
+  MICROCMS_SERVICE_DOMAIN: string;
+  MICROCMS_API_KEY: string;
+}
 
-function getClient(): MicroCMSClient {
-  if (_client) return _client;
+// MicroCMS APIクライアント（キャッシュ用）
+let _cachedClient: MicroCMSClient | null = null;
+let _cachedDomain: string | null = null;
 
-  const serviceDomain = import.meta.env.MICROCMS_SERVICE_DOMAIN;
-  const apiKey = import.meta.env.MICROCMS_API_KEY;
+/**
+ * MicroCMSクライアントを取得
+ * Cloudflare Pages SSRでは env パラメータを渡す必要あり
+ */
+export function getClient(env?: MicroCMSEnv): MicroCMSClient {
+  // 環境変数を取得（優先順位: 引数 > import.meta.env）
+  const serviceDomain = env?.MICROCMS_SERVICE_DOMAIN || import.meta.env.MICROCMS_SERVICE_DOMAIN;
+  const apiKey = env?.MICROCMS_API_KEY || import.meta.env.MICROCMS_API_KEY;
 
   if (!serviceDomain || !apiKey) {
     throw new Error(
@@ -15,11 +25,17 @@ function getClient(): MicroCMSClient {
     );
   }
 
-  _client = createClient({ serviceDomain, apiKey });
-  return _client;
+  // キャッシュされたクライアントを再利用（同じドメインの場合）
+  if (_cachedClient && _cachedDomain === serviceDomain) {
+    return _cachedClient;
+  }
+
+  _cachedClient = createClient({ serviceDomain, apiKey });
+  _cachedDomain = serviceDomain;
+  return _cachedClient;
 }
 
-// 後方互換性のためexport
+// 後方互換性のためexport（ビルド時・ローカル開発用）
 export const client = {
   get: (params: Parameters<MicroCMSClient['get']>[0]) => getClient().get(params),
 };
@@ -45,9 +61,9 @@ export type Column = {
 };
 
 // カテゴリー一覧を取得
-export async function getCategories() {
+export async function getCategories(env?: MicroCMSEnv) {
   try {
-    const data = await client.get({
+    const data = await getClient(env).get({
       endpoint: 'categories',
       queries: {
         orders: 'order',
@@ -61,7 +77,7 @@ export async function getCategories() {
 }
 
 // コラム一覧を取得（カテゴリーでフィルタリング可能）
-export async function getColumns(categoryId?: string) {
+export async function getColumns(categoryId?: string, env?: MicroCMSEnv) {
   try {
     const queries: { orders: string; filters?: string } = {
       orders: '-publishedAt',
@@ -71,7 +87,7 @@ export async function getColumns(categoryId?: string) {
       queries.filters = `category[equals]${categoryId}`;
     }
 
-    const data = await client.get({
+    const data = await getClient(env).get({
       endpoint: 'columns',
       queries,
     });
@@ -83,9 +99,9 @@ export async function getColumns(categoryId?: string) {
 }
 
 // 特定のコラム記事を取得
-export async function getColumn(id: string) {
+export async function getColumn(id: string, env?: MicroCMSEnv) {
   try {
-    const data = await client.get({
+    const data = await getClient(env).get({
       endpoint: 'columns',
       contentId: id,
     });
