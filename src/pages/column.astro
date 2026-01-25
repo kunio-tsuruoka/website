@@ -4,9 +4,7 @@ import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
 import { getCategories, getColumns } from '../lib/microcms';
 
-export const prerender = true;
-
-// MicroCMSからカテゴリーとコラムを取得
+// SSR: リクエスト時にMicroCMSから取得
 const categories = await getCategories();
 const allColumns = await getColumns();
 

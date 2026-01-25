@@ -1,20 +1,11 @@
 ---
-import { marked } from 'marked';
+import { Renderer, marked } from 'marked';
 import { Header } from '../../components/header';
 import Layout from '../../layouts/layout.astro';
-import { getAllColumnIds, getColumn } from '../../lib/microcms';
+import { getColumn } from '../../lib/microcms';
+import { type TocItem, slugify } from '../../lib/toc';
 
-export const prerender = true;
-
-// 静的生成のためのパス生成
-export async function getStaticPaths() {
-  const columnIds = await getAllColumnIds();
-
-  return columnIds.map((id: string) => ({
-    params: { slug: id },
-  }));
-}
-
+// SSR: リクエスト時にMicroCMSから取得
 const { slug } = Astro.params;
 const columnId = slug as string;
 
@@ -25,13 +16,28 @@ if (!column) {
   return Astro.redirect('/404');
 }
 
+// 目次データを収集しながらHTMLを生成するカスタムレンダラー
+const toc: TocItem[] = [];
+const renderer = new Renderer();
+
+renderer.heading = ({ text, depth }) => {
+  // h2, h3のみ目次に追加
+  if (depth === 2 || depth === 3) {
+    const id = slugify(text);
+    toc.push({ id, text, level: depth });
+    return `<h${depth} id="${id}">${text}</h${depth}>`;
+  }
+  return `<h${depth}>${text}</h${depth}>`;
+};
+
 // Markedの設定
 marked.setOptions({
   breaks: true,
   gfm: true,
 });
+marked.use({ renderer });
 
-const htmlContent = marked(column.content || '');
+const htmlContent = marked(column.content || '') as string;
 const frontmatter = {
   title: column.title,
   publishedAt: new Date(column.publishedAt).toLocaleDateString('ja-JP'),
@@ -87,6 +93,35 @@ const relatedArticles = [
         </h1>
       </div>
     </section>
+
+    {/* Table of Contents */}
+    {toc.length > 0 && (
+      <section class="py-8 bg-white border-b border-gray-100">
+        <div class="container mx-auto px-6 md:px-12 max-w-3xl">
+          <nav class="toc-container bg-gray-50 rounded-2xl p-6">
+            <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
+              目次
+            </h2>
+            <ul class="space-y-2">
+              {toc.map((item) => (
+                <li class={item.level === 3 ? 'ml-4' : ''}>
+                  <a
+                    href={`#${item.id}`}
+                    class="text-gray-600 hover:text-primary-500 transition-colors text-sm block py-1"
+                  >
+                    {item.level === 3 && <span class="text-gray-400 mr-1">─</span>}
+                    {item.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </section>
+    )}
 
     {/* Article Content */}
     <article class="py-16 md:py-24 bg-white">
@@ -156,10 +191,12 @@ const relatedArticles = [
 
   .markdown-content :global(h2) {
     @apply font-bold text-gray-900 text-2xl md:text-3xl mt-16 mb-6 pb-3 border-b-4 border-primary-400;
+    scroll-margin-top: 6rem;
   }
 
   .markdown-content :global(h3) {
     @apply font-bold text-gray-900 text-xl md:text-2xl mt-12 mb-4 relative pl-5;
+    scroll-margin-top: 6rem;
   }
 
   .markdown-content :global(h3)::before {
@@ -242,31 +279,50 @@ const relatedArticles = [
     box-shadow: 0 0 0 3px rgba(61, 77, 183, 0.15);
   }
 
-  /* チェックリスト用のスタイル - ✅と❌のサポート */
-  .markdown-content :global(ul li:has(> :first-child:is([style*="color: green"], [style*="✅"]))) {
-    @apply pl-5;
+  /* チェックリスト用のスタイル - class="good" / class="bad" */
+  .markdown-content :global(ul.checklist) {
+    @apply my-6 pl-0 list-none;
   }
 
-  .markdown-content :global(ul li:has(> :first-child:is([style*="color: green"], [style*="✅"])))::before {
-    content: '✅';
-    @apply left-1;
-    font-size: 1.25rem;
-    background: none;
-    box-shadow: none;
-    width: auto;
-    height: auto;
-    top: 0;
+  .markdown-content :global(ul.checklist li) {
+    @apply relative text-gray-700 text-lg leading-loose pl-10 mb-3;
   }
 
-  .markdown-content :global(ul li:has(> :first-child:is([style*="color: red"], [style*="❌"])))::before {
-    content: '❌';
-    @apply left-1;
-    font-size: 1.25rem;
-    background: none;
-    box-shadow: none;
-    width: auto;
-    height: auto;
-    top: 0;
+  .markdown-content :global(ul.checklist li.good)::before {
+    content: '';
+    @apply absolute left-0 w-6 h-6 rounded-full flex items-center justify-center;
+    top: 0.35em;
+    background: linear-gradient(135deg, #10B981, #059669);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  }
+
+  .markdown-content :global(ul.checklist li.good)::after {
+    content: '';
+    @apply absolute;
+    left: 8px;
+    top: 0.55em;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .markdown-content :global(ul.checklist li.bad)::before {
+    content: '';
+    @apply absolute left-0 w-6 h-6 rounded-full;
+    top: 0.35em;
+    background: linear-gradient(135deg, #EF4444, #DC2626);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+  }
+
+  .markdown-content :global(ul.checklist li.bad)::after {
+    content: '×';
+    @apply absolute text-white font-bold;
+    left: 6px;
+    top: 0.2em;
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
   /* 番号付きリスト */
