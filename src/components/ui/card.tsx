@@ -57,6 +57,9 @@ const cardVariants = cva('relative overflow-hidden transition-all duration-300',
       // ガラス効果
       glass: 'bg-white/80 backdrop-blur-sm border border-white/20 rounded-[32px]',
 
+      // ガラス効果（ダーク背景用）
+      glassDark: 'bg-white/10 backdrop-blur-md border border-white/30 rounded-[32px]',
+
       // 旧スタイル（後方互換）
       legacy: 'rounded-xl border bg-card text-card-foreground shadow',
     },
@@ -145,7 +148,8 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       variant === 'primary' ||
       variant === 'cyan' ||
       variant === 'gradientPurple' ||
-      variant === 'gradientMix';
+      variant === 'gradientMix' ||
+      variant === 'glassDark';
 
     const content = (
       <>

@@ -6,7 +6,10 @@ import { Section, SectionHeader } from '../components/ui/section';
 import Layout from '../layouts/layout.astro';
 ---
 
-<Layout title="ゼロスタート - まず、動くものを見よう | Beekle × TechBeans">
+<Layout
+  title="ゼロスタート - まず、動くものを見よう | Beekle × TechBeans"
+  description="ゼロスタートは初期費用0円で動くプロトタイプを体験できる新しい開発モデル。見積もりだけで判断を迫られる不安を解消し、実際に動くシステムを見てからの意思決定を可能にします。"
+>
   <Header client:load />
   <main class="">
     {/* Hero Section */}
@@ -757,7 +760,7 @@ import Layout from '../layouts/layout.astro';
           不安を感じるのは当然。でも、動く証拠を見ることで、次の一歩が見えてきます。
         </p>
 
-        <Card variant="glass" padding="lg" hover="none" className="mb-10 border-2 border-white/20">
+        <Card variant="glassDark" padding="lg" hover="none" className="mb-10">
           <p class="text-2xl font-bold text-white mb-4">
             ゼロスタートは、<span class="text-highlight-500">"無料"</span>ではなく、<br />
             <span class="text-secondary-400">"未来を試す"体験</span>です。
