@@ -3,8 +3,47 @@ import { Header } from '../components/header';
 import { PageHero } from '../components/ui/page-hero';
 // src/pages/case-studies.astro
 import Layout from '../layouts/layout.astro';
+import JsonLd from '../components/seo/json-ld.astro';
 
-const cases = [
+// ページネーション設定
+const ITEMS_PER_PAGE = 4;
+const url = new URL(Astro.request.url);
+const currentPage = Math.max(1, Number(url.searchParams.get('page')) || 1);
+
+const allCases = [
+  {
+    title: 'iroAI介護 - 介護情報マッチングプラットフォーム',
+    industry: '介護・ヘルスケア',
+    scale: '株式会社iroAI',
+    period: '本開発: 2ヶ月',
+    url: 'https://iro-ai.com/',
+    image: 'https://iro-ai.com/wp-content/uploads/2026/01/TOP.jpg',
+    challenge: {
+      title: '課題',
+      description:
+        '介護サービスを必要とする方やそのご家族が、最適な介護情報を見つけることが困難でした。情報が散在し、比較検討に時間がかかる状況を解決したいというニーズがありました。',
+      points: [
+        '介護サービス情報が散在し、比較検討が困難',
+        '高齢者やインターネット初心者にとって使いにくいUI',
+        '地域密着型の介護情報へのアクセスが限られている',
+      ],
+    },
+    solution: {
+      title: '解決策',
+      description:
+        'LINEベースの介護情報マッチングプラットフォームを開発。文字入力不要で選択肢をタップするだけで最適な介護サービスを紹介。',
+      points: [
+        '幅広い年齢層が使い慣れたLINE上でサービスを提供',
+        '文字入力不要、選択肢タップのみで完結するシンプルUI',
+        'いくつかの質問に答えるだけで推奨介護サービスを紹介',
+      ],
+    },
+    results: [
+      { label: 'UI操作性', value: '文字入力不要' },
+      { label: 'アクセシビリティ', value: '大幅向上' },
+      { label: '情報マッチング', value: 'AI活用' },
+    ],
+  },
   {
     title: 'HRパーソナリティ診断システムの開発',
     industry: 'HR Tech・人材サービス',
@@ -217,9 +256,19 @@ const cases = [
     ],
   },
 ];
+
+// ページネーション計算
+const totalPages = Math.ceil(allCases.length / ITEMS_PER_PAGE);
+const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+const cases = allCases.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+const hasNextPage = currentPage < totalPages;
+const hasPrevPage = currentPage > 1;
 ---
 
-<Layout title="導入事例 | Beekle">
+<Layout
+  title="導入事例 | Beekle"
+  description="Beekleの導入事例。HR Tech、製造業、教育など様々な業界でのシステム開発成功事例をご紹介。ゼロスタート（PoC）から本開発まで、お客様の課題解決をサポートした実績をご覧ください。"
+>
   <Header client:load />
   <main class="pt-20">
     <PageHero
@@ -236,17 +285,41 @@ const cases = [
               <div class="lg:grid lg:grid-cols-12 lg:gap-8">
                 {/* ヘッダー情報 */}
                 <div class="lg:col-span-12 mb-8">
-                  <h2 class="text-3xl font-bold text-gray-900">{case_study.title}</h2>
-                  <div class="mt-4 flex flex-wrap gap-4">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
-                      {case_study.industry}
-                    </span>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
-                      {case_study.scale}
-                    </span>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
-                      開発期間：{case_study.period}
-                    </span>
+                  <div class="flex flex-col lg:flex-row lg:items-start lg:gap-8">
+                    {case_study.image && (
+                      <div class="w-full lg:w-80 flex-shrink-0 mb-6 lg:mb-0">
+                        <img
+                          src={case_study.image}
+                          alt={case_study.title}
+                          class="w-full h-48 object-cover rounded-xl shadow-md"
+                        />
+                      </div>
+                    )}
+                    <div class="flex-1">
+                      <h2 class="text-3xl font-bold text-gray-900">
+                        {case_study.url ? (
+                          <a href={case_study.url} target="_blank" rel="noopener noreferrer" class="hover:text-primary-500 transition-colors">
+                            {case_study.title}
+                            <svg class="inline-block w-5 h-5 ml-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        ) : (
+                          case_study.title
+                        )}
+                      </h2>
+                      <div class="mt-4 flex flex-wrap gap-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
+                          {case_study.industry}
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
+                          {case_study.scale}
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
+                          開発期間：{case_study.period}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -307,6 +380,68 @@ const cases = [
             </div>
           </div>
         ))}
+      </div>
+
+      {/* ページネーション */}
+      {totalPages > 1 && (
+        <div class="mt-16 flex justify-center items-center gap-4">
+          {hasPrevPage ? (
+            <a
+              href={`/case-studies?page=${currentPage - 1}`}
+              class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+              前へ
+            </a>
+          ) : (
+            <span class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+              前へ
+            </span>
+          )}
+
+          <div class="flex items-center gap-2">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <a
+                href={`/case-studies?page=${page}`}
+                class={`inline-flex items-center justify-center w-10 h-10 text-sm font-medium rounded-lg ${
+                  page === currentPage
+                    ? 'text-white bg-primary-500'
+                    : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                {page}
+              </a>
+            ))}
+          </div>
+
+          {hasNextPage ? (
+            <a
+              href={`/case-studies?page=${currentPage + 1}`}
+              class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
+              次へ
+              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          ) : (
+            <span class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed">
+              次へ
+              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </span>
+          )}
+        </div>
+      )}
+
+      <div class="mt-8 text-center text-sm text-gray-500">
+        全{allCases.length}件中 {startIndex + 1}〜{Math.min(startIndex + ITEMS_PER_PAGE, allCases.length)}件を表示
       </div>
 
       {/* CTA セクション */}

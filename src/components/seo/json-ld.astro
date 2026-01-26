@@ -1,0 +1,133 @@
+---
+// src/components/seo/json-ld.astro
+// JSON-LD 構造化データコンポーネント
+
+export interface Props {
+  type: 'organization' | 'article' | 'breadcrumb' | 'service' | 'faq';
+  data?: Record<string, unknown>;
+}
+
+const { type, data = {} } = Astro.props;
+
+const siteUrl = 'https://beekle.jp';
+
+// 会社情報（Organization）
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Beekle株式会社',
+  alternateName: 'Beekle',
+  url: siteUrl,
+  logo: `${siteUrl}/logo.png`,
+  description: 'AI・Webアプリ・モバイルアプリ開発を手がけるシステム開発会社。初期費用0円のゼロスタートで、動くプロトタイプを体験してから判断できます。',
+  foundingDate: '2023-02-01',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '久が原3丁目14番27号',
+    addressLocality: '大田区',
+    addressRegion: '東京都',
+    postalCode: '146-0085',
+    addressCountry: 'JP',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: 'support@beekle.jp',
+    contactType: 'customer service',
+    availableLanguage: 'Japanese',
+  },
+  sameAs: [],
+};
+
+// 記事（Article）
+const articleSchema = data.title ? {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: data.title,
+  description: data.description || '',
+  image: data.image || `${siteUrl}/og-image.png`,
+  datePublished: data.publishedTime || '',
+  dateModified: data.modifiedTime || data.publishedTime || '',
+  author: {
+    '@type': 'Organization',
+    name: 'Beekle株式会社',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Beekle株式会社',
+    logo: {
+      '@type': 'ImageObject',
+      url: `${siteUrl}/logo.png`,
+    },
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': data.url || siteUrl,
+  },
+} : null;
+
+// パンくずリスト（BreadcrumbList）
+const breadcrumbSchema = data.items ? {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: (data.items as Array<{name: string; url: string}>).map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.name,
+    item: item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`,
+  })),
+} : null;
+
+// サービス（Service）
+const serviceSchema = data.serviceName ? {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: data.serviceName,
+  description: data.serviceDescription || '',
+  provider: {
+    '@type': 'Organization',
+    name: 'Beekle株式会社',
+  },
+  areaServed: {
+    '@type': 'Country',
+    name: 'Japan',
+  },
+} : null;
+
+// FAQ
+const faqSchema = data.faqs ? {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: (data.faqs as Array<{question: string; answer: string}>).map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+} : null;
+
+// 選択されたスキーマを取得
+const getSchema = () => {
+  switch (type) {
+    case 'organization':
+      return organizationSchema;
+    case 'article':
+      return articleSchema;
+    case 'breadcrumb':
+      return breadcrumbSchema;
+    case 'service':
+      return serviceSchema;
+    case 'faq':
+      return faqSchema;
+    default:
+      return null;
+  }
+};
+
+const schema = getSchema();
+---
+
+{schema && (
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+)}

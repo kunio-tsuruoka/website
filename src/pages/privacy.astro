@@ -7,7 +7,11 @@ import Layout from '../layouts/layout.astro';
 const lastUpdated = '2024年1月1日';
 ---
 
-<Layout title="プライバシーポリシー | Beekle">
+<Layout
+  title="プライバシーポリシー | Beekle"
+  description="株式会社Beekleのプライバシーポリシー。個人情報の取り扱い、利用目的、安全管理措置について定めています。"
+  noindex={true}
+>
   <Header client:load />
   <main class="pt-20">
     <!-- Hero Section -->

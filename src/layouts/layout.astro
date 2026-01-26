@@ -1,12 +1,32 @@
 ---
 // src/layouts/layout.astro
 import GA4 from '../components/analytics/ga4.astro';
+import SeoHead from '../components/seo/seo-head.astro';
+import JsonLd from '../components/seo/json-ld.astro';
 
 interface Props {
   title: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  noindex?: boolean;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description,
+  canonical,
+  ogImage,
+  ogType,
+  publishedTime,
+  modifiedTime,
+  noindex,
+} = Astro.props;
+
+const fullTitle = title.includes('Beekle') ? title : `${title} | Beekle`;
 ---
 
 <!DOCTYPE html>
@@ -14,7 +34,18 @@ const { title } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
+    <SeoHead
+      title={title}
+      description={description}
+      canonical={canonical}
+      ogImage={ogImage}
+      ogType={ogType}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      noindex={noindex}
+    />
+    <JsonLd type="organization" />
     <GA4 />
     <slot name="head" />
   </head>
