@@ -79,8 +79,9 @@ export async function getCategories(env?: MicroCMSEnv) {
 // コラム一覧を取得（カテゴリーでフィルタリング可能）
 export async function getColumns(categoryId?: string, env?: MicroCMSEnv) {
   try {
-    const queries: { orders: string; filters?: string } = {
+    const queries: { orders: string; filters?: string; limit: number } = {
       orders: '-publishedAt',
+      limit: 100,
     };
 
     if (categoryId) {
