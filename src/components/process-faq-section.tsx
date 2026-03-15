@@ -35,17 +35,35 @@ export const ProcessFAQ = () => {
           {faqs.map((faq, index) => (
             <div
               key={faq.question}
-              className="bg-white rounded-[24px] shadow-soft p-8 hover:shadow-medium transition-shadow"
+              className="bg-white rounded-2xl overflow-hidden hover:shadow-medium transition-shadow"
+              style={{
+                border: '1px solid rgba(61, 77, 183, 0.1)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+              }}
             >
-              <div className="flex items-start gap-4">
-                <span className="flex-shrink-0 w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center text-white font-bold">
-                  Q
+              <div
+                className="flex items-center gap-4 px-7 py-5"
+                style={{
+                  background: 'linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%)',
+                  borderBottom: '1px solid rgba(61, 77, 183, 0.1)',
+                }}
+              >
+                <span
+                  className="flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-white font-bold text-base"
+                  style={{
+                    background: 'linear-gradient(135deg, #3D4DB7, #3544a4)',
+                    boxShadow: '0 4px 12px rgba(61, 77, 183, 0.3)',
+                  }}
+                >
+                  Q{index + 1}
                 </span>
-                <div className="flex-1">
-                  <dt className="text-lg font-bold text-navy-950 mb-3">{faq.question}</dt>
-                  <dd className="text-neutral-600 leading-relaxed">{faq.answer}</dd>
-                </div>
+                <dt className="text-xl font-bold text-gray-900 flex-1 leading-snug">
+                  {faq.question}
+                </dt>
               </div>
+              <dd className="px-7 py-5 text-gray-700 text-lg leading-relaxed">
+                {faq.answer}
+              </dd>
             </div>
           ))}
         </div>
