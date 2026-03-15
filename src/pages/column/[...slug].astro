@@ -75,12 +75,15 @@ const relatedColumns = column.category
   ? await getRelatedColumns(columnId, column.category.id, 6, env)
   : [];
 
-// SEO: meta descriptionを本文から自動生成（最初の120文字）
-const plainText = (column.content || '')
-  .replace(/<[^>]*>/g, '')
-  .replace(/\s+/g, ' ')
-  .trim();
-const metaDescription = plainText.length > 120 ? `${plainText.substring(0, 120)}...` : plainText;
+// SEO: meta description（AI生成があればそちらを優先、なければ本文から自動生成）
+const fallbackDescription = (() => {
+  const text = (column.content || '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return text.length > 120 ? `${text.substring(0, 120)}...` : text;
+})();
+const metaDescription = column.description || fallbackDescription;
 
 // SEO: FAQ構造化データを記事内から自動抽出
 // パターンA: <p>Q. question A. answer</p>
