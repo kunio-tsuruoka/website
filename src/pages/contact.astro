@@ -21,6 +21,32 @@ import Layout from '../layouts/layout.astro';
     <section class="py-32">
       <div class="container mx-auto px-8">
         <div class="max-w-3xl mx-auto">
+          <!-- 売り込みに関する注意事項 -->
+          <div class="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-6 md:p-8">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">お問い合わせ前にご確認ください</h3>
+            <div class="space-y-4 text-sm text-gray-700">
+              <div>
+                <p class="font-semibold text-primary-500 mb-2">当社が募集しているご提案</p>
+                <ul class="list-disc list-inside space-y-1 ml-2">
+                  <li>開発パートナーとしての協業のご提案</li>
+                  <li>当社サービスに関連する技術・ツールのご紹介</li>
+                  <li>共同プロジェクトや事業提携のご相談</li>
+                </ul>
+              </div>
+              <div>
+                <p class="font-semibold text-red-600 mb-2">以下の売り込みはお断りしております</p>
+                <ul class="list-disc list-inside space-y-1 ml-2">
+                  <li>一方的な営業・セールスメール</li>
+                  <li>当社の事業内容と無関係なサービスの売り込み</li>
+                  <li>テンプレートを使用した大量送信型の営業メッセージ</li>
+                </ul>
+                <p class="mt-2 text-gray-500">
+                  上記に該当するお問い合わせには返信いたしかねますので、あらかじめご了承ください。
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div class="bg-white rounded-xl shadow-lg p-8 md:p-12">
             <form class="space-y-8">
               <!-- お問い合わせ種別 -->
