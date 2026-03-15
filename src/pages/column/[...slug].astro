@@ -2,7 +2,7 @@
 import { Renderer, marked } from 'marked';
 import { Header } from '../../components/header';
 import Layout from '../../layouts/layout.astro';
-import { type MicroCMSEnv, getColumn } from '../../lib/microcms';
+import { type MicroCMSEnv, getColumn, getRelatedColumns } from '../../lib/microcms';
 import { type TocItem, slugify } from '../../lib/toc';
 
 // SSR: リクエスト時にMicroCMSから取得
@@ -69,24 +69,10 @@ const frontmatter = {
   publishedAt: new Date(column.publishedAt).toLocaleDateString('ja-JP'),
 };
 
-// 関連記事（仮データ）
-const relatedArticles = [
-  {
-    title: '「見積もりが当てにならない」を防ぐ正しい見積もりの見方',
-    slug: 'how-to-read-estimates',
-    category: 'avoid-failure',
-  },
-  {
-    title: '要件定義で失敗しないための実践チェックリスト',
-    slug: 'requirement-checklist',
-    category: 'avoid-failure',
-  },
-  {
-    title: '無料PoCで効果検証する方法',
-    slug: 'fast-development/01-free-poc-guide',
-    category: 'fast-development',
-  },
-];
+// 同カテゴリの関連記事を取得（トピッククラスタ内部リンク）
+const relatedColumns = column.category
+  ? await getRelatedColumns(columnId, column.category.id, 6, env)
+  : [];
 ---
 
 <Layout title={`${frontmatter.title} | Beekle`}>
@@ -157,6 +143,66 @@ const relatedArticles = [
         </div>
       </div>
     </article>
+
+    {/* Related Articles - トピッククラスタ内部リンク */}
+    {relatedColumns.length > 0 && (
+      <section class="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-white">
+        <div class="container mx-auto px-6 md:px-8 max-w-4xl">
+          <div class="mb-10">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-1.5 h-8 bg-gradient-to-b from-primary-500 to-primary-600 rounded"></div>
+              <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
+                関連記事
+              </h2>
+            </div>
+            {column.category && (
+              <p class="text-gray-600 ml-5">
+                「{column.category.title}」カテゴリの他の記事
+              </p>
+            )}
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            {relatedColumns.map((related) => (
+              <a
+                href={`/column/${related.id}`}
+                class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all p-6 border border-gray-100 hover:border-primary-200"
+              >
+                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-500 transition-colors mb-3 leading-tight">
+                  {related.title}
+                </h3>
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-500">
+                    {new Date(related.publishedAt).toLocaleDateString('ja-JP')}
+                  </span>
+                  <div class="flex items-center text-primary-500 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+                    <span>読む</span>
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          {/* カテゴリ一覧へのリンク */}
+          {column.category && (
+            <div class="mt-8 text-center">
+              <a
+                href={`/column#${column.category.id}`}
+                class="inline-flex items-center text-primary-500 hover:text-primary-600 font-semibold transition-colors group"
+              >
+                <span>「{column.category.title}」の記事をすべて見る</span>
+                <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </a>
+            </div>
+          )}
+        </div>
+      </section>
+    )}
 
     {/* Back to Column List */}
     <section class="py-16 bg-white">
