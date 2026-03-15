@@ -85,6 +85,21 @@ import { Button } from '@/components/ui/button';
 - API上限: 100件/リクエスト
 - クライアント: `src/lib/microcms.ts`
 - 環境変数: `MICROCMS_SERVICE_DOMAIN`, `MICROCMS_API_KEY`
+- エンドポイント: `columns`（コラム記事）、`categories`（カテゴリー）
+
+### 記事追加時の作業
+
+新しいコラム記事をMicroCMSに追加した後、以下を実行してmeta descriptionを自動生成する：
+
+```bash
+node scripts/generate-descriptions.mjs       # descriptionが空の記事のみ生成
+node scripts/generate-descriptions.mjs --all  # 全記事を再生成
+node scripts/generate-descriptions.mjs --dry  # プレビュー（保存しない）
+```
+
+- OpenRouter API（Claude Haiku）で記事本文からSEO用のdescriptionを生成
+- 生成結果はMicroCMSの `description` フィールドに保存される
+- 環境変数 `OPENROUTER_API_KEY` が必要（`.env` に設定済み）
 
 ## Important Notes
 
