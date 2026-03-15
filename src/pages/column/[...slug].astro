@@ -1,6 +1,7 @@
 ---
 import { Renderer, marked } from 'marked';
 import { Header } from '../../components/header';
+import JsonLd from '../../components/seo/json-ld.astro';
 import Layout from '../../layouts/layout.astro';
 import { type MicroCMSEnv, getColumn, getRelatedColumns } from '../../lib/microcms';
 import { type TocItem, slugify } from '../../lib/toc';
@@ -73,9 +74,80 @@ const frontmatter = {
 const relatedColumns = column.category
   ? await getRelatedColumns(columnId, column.category.id, 6, env)
   : [];
+
+// SEO: meta descriptionを本文から自動生成（最初の120文字）
+const plainText = (column.content || '')
+  .replace(/<[^>]*>/g, '')
+  .replace(/\s+/g, ' ')
+  .trim();
+const metaDescription = plainText.length > 120 ? `${plainText.substring(0, 120)}...` : plainText;
+
+// SEO: FAQ構造化データを記事内から自動抽出
+// パターンA: <p>Q. question A. answer</p>
+// パターンB: <p><strong>Q. question</strong> A. answer</p>
+// パターンC: <p>Q. question</p><p>A. answer</p>
+const faqPatterns = [
+  /<p><strong>Q\.\s*(.*?)<\/strong>\s*A\.\s*([\s\S]*?)<\/p>/g,
+  /<p>Q\.\s*(.*?)\s*A\.\s*([\s\S]*?)<\/p>/g,
+  /<p>Q\.\s*(.*?)<\/p>\s*<p>A\.\s*([\s\S]*?)<\/p>/g,
+];
+const faqSet = new Set<string>();
+const faqs: Array<{ question: string; answer: string }> = [];
+for (const pattern of faqPatterns) {
+  for (const match of (column.content || '').matchAll(pattern)) {
+    const question = match[1].replace(/<[^>]*>/g, '').trim();
+    if (faqSet.has(question)) continue;
+    faqSet.add(question);
+    faqs.push({
+      question,
+      answer: match[2].replace(/<[^>]*>/g, '').trim(),
+    });
+  }
+}
+
+// SEO: URL
+const siteUrl = 'https://beekle.jp';
+const articleUrl = `${siteUrl}/column/${columnId}`;
 ---
 
-<Layout title={`${frontmatter.title} | Beekle`}>
+<Layout
+  title={`${frontmatter.title} | Beekle`}
+  description={metaDescription}
+  ogType="article"
+  publishedTime={column.publishedAt}
+  modifiedTime={column.updatedAt}
+  canonical={articleUrl}
+>
+  <JsonLd
+    slot="head"
+    type="article"
+    data={{
+      title: column.title,
+      description: metaDescription,
+      publishedTime: column.publishedAt,
+      modifiedTime: column.updatedAt,
+      url: articleUrl,
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: 'コラム', url: '/column' },
+        ...(column.category ? [{ name: column.category.title, url: `/column#${column.category.id}` }] : []),
+        { name: column.title, url: `/column/${columnId}` },
+      ],
+    }}
+  />
+  {faqs.length > 0 && (
+    <JsonLd
+      slot="head"
+      type="faq"
+      data={{ faqs }}
+    />
+  )}
   <Header client:load />
   <main class="pt-20">
     {/* Breadcrumb */}
