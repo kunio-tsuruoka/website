@@ -31,6 +31,13 @@ renderer.heading = ({ text, depth }) => {
   if (depth === 2 || depth === 3) {
     const id = slugify(text);
     toc.push({ id, text, level: depth });
+    // FAQ見出し（Q1. Q2. など）を検出して専用クラスを付与
+    const faqMatch = text.match(/^Q(\d+)\.\s*(.*)/);
+    if (faqMatch && depth === 2) {
+      const qNum = faqMatch[1];
+      const qText = faqMatch[2];
+      return `<div class="faq-item"><h${depth} id="${id}" class="faq-question"><span class="faq-badge">Q${qNum}</span><span class="faq-text">${qText}</span></h${depth}>`;
+    }
     return `<h${depth} id="${id}">${text}</h${depth}>`;
   }
   return `<h${depth}>${text}</h${depth}>`;
@@ -64,7 +71,16 @@ marked.setOptions({
 });
 marked.use({ renderer });
 
-const htmlContent = marked(column.content || '') as string;
+let htmlContent = marked(column.content || '') as string;
+
+// FAQ項目の閉じタグを挿入（次のfaq-itemまたはhr/h2の前で閉じる）
+htmlContent = htmlContent.replace(
+  /(<div class="faq-item">)([\s\S]*?)(?=<div class="faq-item">|<hr|$)/g,
+  (_match, open, content) => {
+    // 既に閉じタグがなければ追加
+    return `${open}${content}</div>`;
+  },
+);
 const frontmatter = {
   title: column.title,
   publishedAt: new Date(column.publishedAt).toLocaleDateString('ja-JP'),
@@ -573,6 +589,66 @@ const articleUrl = `${siteUrl}/column/${columnId}`;
     margin-bottom: 64px; /* 8 × 8 */
     height: 1px;
     background: linear-gradient(90deg, transparent, #e0e7ff, transparent);
+  }
+
+  /* FAQ専用スタイル */
+  .markdown-content :global(.faq-item) {
+    @apply bg-white rounded-2xl shadow-soft mb-8 overflow-hidden;
+    border: 1px solid rgba(61, 77, 183, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .markdown-content :global(.faq-item):hover {
+    @apply shadow-medium;
+  }
+
+  .markdown-content :global(.faq-question) {
+    @apply flex items-center gap-4 text-xl md:text-2xl font-bold text-gray-900 border-b-0 mt-0 mb-0 pl-0;
+    padding: 24px 28px;
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+    border-bottom: 1px solid rgba(61, 77, 183, 0.1);
+    scroll-margin-top: 6rem;
+  }
+
+  .markdown-content :global(.faq-question)::before {
+    content: none;
+  }
+
+  .markdown-content :global(.faq-badge) {
+    @apply flex-shrink-0 flex items-center justify-center text-white font-bold text-base rounded-full;
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #3D4DB7, #3544a4);
+    box-shadow: 0 4px 12px rgba(61, 77, 183, 0.3);
+  }
+
+  .markdown-content :global(.faq-text) {
+    @apply flex-1;
+    line-height: 1.4;
+  }
+
+  /* FAQ回答エリア */
+  .markdown-content :global(.faq-item > p),
+  .markdown-content :global(.faq-item > ul),
+  .markdown-content :global(.faq-item > ol) {
+    margin-left: 28px;
+    margin-right: 28px;
+  }
+
+  .markdown-content :global(.faq-item > p:first-of-type) {
+    padding-top: 20px;
+  }
+
+  .markdown-content :global(.faq-item > p:last-of-type),
+  .markdown-content :global(.faq-item > ul:last-child),
+  .markdown-content :global(.faq-item > ol:last-child) {
+    padding-bottom: 24px;
+  }
+
+  /* FAQ回答の最初の太字テキスト（A. 回答）をハイライト */
+  .markdown-content :global(.faq-item > p:first-of-type strong) {
+    @apply text-primary-600 text-lg;
+    background: linear-gradient(180deg, transparent 60%, rgba(199, 210, 254, 0.5) 60%);
   }
 
   /* カスタムボックススタイル（もし使われていれば） */
