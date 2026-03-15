@@ -54,6 +54,7 @@ export type Column = {
   id: string;
   title: string;
   content: string;
+  description?: string;
   category: Category;
   publishedAt: string;
   updatedAt: string;
