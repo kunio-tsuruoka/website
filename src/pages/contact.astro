@@ -229,7 +229,7 @@ import Layout from '../layouts/layout.astro';
 
 <script>
     const form = document.querySelector('form');
-    const submitButton = form?.querySelector('button[type="submit"]');
+    const submitButton = form?.querySelector('button[type="submit"]') as HTMLButtonElement | null;
 
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
