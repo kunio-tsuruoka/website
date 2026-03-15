@@ -1,9 +1,9 @@
 /**
- * コラム記事のmeta descriptionをClaude APIで自動生成し、MicroCMSに保存するスクリプト
+ * コラム記事のmeta descriptionをOpenRouter経由でAI生成し、MicroCMSに保存するスクリプト
  *
  * 前提条件:
  *   - MicroCMSの「columns」スキーマに「description」テキストフィールドを追加済み
- *   - 環境変数: MICROCMS_SERVICE_DOMAIN, MICROCMS_API_KEY, ANTHROPIC_API_KEY
+ *   - 環境変数: MICROCMS_SERVICE_DOMAIN, MICROCMS_API_KEY, OPENROUTER_API_KEY
  *
  * 使い方:
  *   node scripts/generate-descriptions.mjs          # descriptionが空の記事のみ生成
@@ -16,14 +16,14 @@ import { createClient } from 'microcms-js-sdk';
 
 const MICROCMS_SERVICE_DOMAIN = process.env.MICROCMS_SERVICE_DOMAIN;
 const MICROCMS_API_KEY = process.env.MICROCMS_API_KEY;
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY?.trim();
 
 if (!MICROCMS_SERVICE_DOMAIN || !MICROCMS_API_KEY) {
   console.error('Missing MICROCMS_SERVICE_DOMAIN or MICROCMS_API_KEY');
   process.exit(1);
 }
-if (!ANTHROPIC_API_KEY) {
-  console.error('Missing ANTHROPIC_API_KEY');
+if (!OPENROUTER_API_KEY) {
+  console.error('Missing OPENROUTER_API_KEY');
   process.exit(1);
 }
 
@@ -37,7 +37,7 @@ const forceAll = flags.includes('--all');
 const dryRun = flags.includes('--dry');
 
 /**
- * Claude APIでmeta descriptionを生成
+ * OpenRouter経由でmeta descriptionを生成
  */
 async function generateDescription(title, content) {
   const plainText = content
@@ -46,15 +46,14 @@ async function generateDescription(title, content) {
     .trim();
   const truncated = plainText.substring(0, 2000);
 
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
+      Authorization: `Bearer ${OPENROUTER_API_KEY}`,
     },
     body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
+      model: 'anthropic/claude-3.5-haiku',
       max_tokens: 256,
       messages: [
         {
@@ -82,11 +81,11 @@ meta descriptionのみを出力してください。`,
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Claude API error: ${res.status} ${err}`);
+    throw new Error(`OpenRouter API error: ${res.status} ${err}`);
   }
 
   const data = await res.json();
-  return data.content[0].text.trim().replace(/^["「]|["」]$/g, '');
+  return data.choices[0].message.content.trim().replace(/^["「]|["」]$/g, '');
 }
 
 async function main() {
@@ -103,7 +102,6 @@ async function main() {
   let skipped = 0;
 
   for (const article of articles) {
-    // descriptionが既にある場合はスキップ（--allフラグがない限り）
     if (article.description && !forceAll) {
       console.log(`⏭️  ${article.id}: already has description, skipping`);
       skipped++;
