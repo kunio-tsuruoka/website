@@ -113,6 +113,29 @@ export async function getColumn(id: string, env?: MicroCMSEnv) {
   }
 }
 
+// 同カテゴリの関連記事を取得（内部リンク用）
+export async function getRelatedColumns(
+  currentId: string,
+  categoryId: string,
+  limit = 6,
+  env?: MicroCMSEnv
+) {
+  try {
+    const data = await getClient(env).get({
+      endpoint: 'columns',
+      queries: {
+        filters: `category[equals]${categoryId}[and]id[not_equals]${currentId}`,
+        orders: '-publishedAt',
+        limit,
+      },
+    });
+    return data.contents as Column[];
+  } catch (error) {
+    console.error('Failed to fetch related columns:', error);
+    return [];
+  }
+}
+
 // すべてのコラム記事のIDを取得（静的生成用）
 export async function getAllColumnIds() {
   try {
