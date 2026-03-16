@@ -37,7 +37,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ name, position, description, in
       />
 
       {/* カード本体 */}
-      <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
+      <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 break-words">
         {/* 上部のアクセントライン */}
         <div className={`h-1 bg-gradient-to-r ${gradient}`} />
 
@@ -60,7 +60,46 @@ const MemberCard: React.FC<MemberCardProps> = ({ name, position, description, in
                 if (paragraph.startsWith('【') && paragraph.includes('】')) {
                   const titleEndIndex = paragraph.indexOf('】') + 1;
                   const title = paragraph.substring(0, titleEndIndex);
-                  const content = paragraph.substring(titleEndIndex);
+                  const content = paragraph.substring(titleEndIndex).trim();
+
+                  // スキル・技術系のセクション: ・区切りをタグ表示
+                  const isSkillSection =
+                    title.includes('スキル') ||
+                    title.includes('フロントエンド') ||
+                    title.includes('バックエンド') ||
+                    title.includes('インフラ') ||
+                    title.includes('開発ツール');
+                  const skills = isSkillSection
+                    ? content
+                        .split(/[・,、]/)
+                        .map((s) => s.trim())
+                        .filter(Boolean)
+                    : [];
+
+                  if (isSkillSection && skills.length > 0) {
+                    return (
+                      <div
+                        key={idx}
+                        className="border-l-2 border-gray-200 pl-4 group-hover:border-primary-400 transition-colors"
+                      >
+                        <p
+                          className={`font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent mb-2`}
+                        >
+                          {title}
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {skills.map((skill, si) => (
+                            <span
+                              key={si}
+                              className="inline-block px-2 py-0.5 text-xs font-medium text-gray-600 bg-gray-100 rounded-full"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  }
 
                   return (
                     <div
@@ -73,7 +112,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ name, position, description, in
                         >
                           {title}
                         </span>
-                        {content}
+                        {content && ` ${content}`}
                       </p>
                     </div>
                   );
