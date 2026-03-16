@@ -2,7 +2,7 @@
 import { Header } from '../components/header';
 import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
-import { type MicroCMSEnv, getCategories, getColumns } from '../lib/microcms';
+import { type MicroCMSEnv, getCategories, getColumns, getPillarSlug } from '../lib/microcms';
 
 // Cloudflare Pages SSR: ランタイム環境変数を取得
 const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
@@ -37,13 +37,18 @@ const columnCategories = categories
       slug: column.id,
     }));
 
+    const pillarSlug = getPillarSlug(category.id);
+    // ピラー記事は個別記事一覧から除外
+    const filteredArticles = pillarSlug ? articles.filter((a) => a.slug !== pillarSlug) : articles;
+
     return {
       id: category.id,
       title: category.title,
       description: category.description,
       icon: category.icon,
       order: category.order,
-      articles,
+      pillarSlug,
+      articles: filteredArticles,
     };
   })
   .sort((a, b) => a.order - b.order);
@@ -139,6 +144,31 @@ const columnCategories = categories
               </div>
               <div class="border-t-2 border-primary-200"></div>
             </div>
+
+            {/* Pillar Article Link */}
+            {category.pillarSlug && (
+              <a
+                href={`/column/${category.pillarSlug}`}
+                class="group flex items-center gap-4 mb-8 p-5 bg-gradient-to-r from-primary-50 to-primary-100 hover:from-primary-100 hover:to-primary-200 rounded-2xl border border-primary-200 transition-all"
+              >
+                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <span class="inline-flex items-center px-2 py-0.5 bg-primary-500 text-white text-xs font-bold rounded-full mb-1">
+                    完全ガイド
+                  </span>
+                  <p class="text-lg font-bold text-gray-900 group-hover:text-primary-500 transition-colors leading-tight">
+                    まずはこの1本で全体像をつかむ
+                  </p>
+                </div>
+                <svg class="w-5 h-5 text-primary-500 group-hover:translate-x-1 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            )}
 
             {/* Articles Grid */}
             {category.articles.length > 0 ? (
