@@ -3,7 +3,13 @@ import { Renderer, marked } from 'marked';
 import { Header } from '../../components/header';
 import JsonLd from '../../components/seo/json-ld.astro';
 import Layout from '../../layouts/layout.astro';
-import { type MicroCMSEnv, getColumn, getRelatedColumns } from '../../lib/microcms';
+import {
+  type MicroCMSEnv,
+  getColumn,
+  getPillarSlug,
+  getRelatedColumns,
+  isPillarArticle,
+} from '../../lib/microcms';
 import { type TocItem, slugify } from '../../lib/toc';
 
 // SSR: リクエスト時にMicroCMSから取得
@@ -73,23 +79,40 @@ marked.use({ renderer });
 
 let htmlContent = marked(column.content || '') as string;
 
+// HTML直書きの<h2>/<h3>にもidを付与し目次データを収集（リッチエディタHTML対応）
+htmlContent = htmlContent.replace(/<h([23])>([^<]+)<\/h[23]>/g, (_match, level, text) => {
+  const depth = Number(level);
+  const id = slugify(text);
+  // 既にカスタムレンダラーで追加済みのもの（id属性あり）はスキップ
+  if (toc.some((item) => item.id === id)) return _match;
+  toc.push({ id, text, level: depth });
+  return `<h${depth} id="${id}">${text}</h${depth}>`;
+});
+
 // FAQ項目の閉じタグを挿入（次のfaq-itemまたはhr/h2の前で閉じる）
 htmlContent = htmlContent.replace(
   /(<div class="faq-item">)([\s\S]*?)(?=<div class="faq-item">|<hr|$)/g,
   (_match, open, content) => {
     // 既に閉じタグがなければ追加
     return `${open}${content}</div>`;
-  },
+  }
 );
 const frontmatter = {
   title: column.title,
   publishedAt: new Date(column.publishedAt).toLocaleDateString('ja-JP'),
 };
 
+// ピラー記事判定
+const isPillar = isPillarArticle(columnId);
+
 // 同カテゴリの関連記事を取得（トピッククラスタ内部リンク）
 const relatedColumns = column.category
-  ? await getRelatedColumns(columnId, column.category.id, 6, env)
+  ? await getRelatedColumns(columnId, column.category.id, 20, env)
   : [];
+
+// クラスター記事の場合: ピラー記事へのリンク情報を取得
+const pillarSlug = column.category ? getPillarSlug(column.category.id) : undefined;
+const pillarColumn = pillarSlug && !isPillar ? await getColumn(pillarSlug, env) : null;
 
 // SEO: meta description（AI生成があればそちらを優先、なければ本文から自動生成）
 const fallbackDescription = (() => {
@@ -187,6 +210,11 @@ const articleUrl = `${siteUrl}/column/${columnId}`;
       <div class="container mx-auto px-6 md:px-8 max-w-4xl">
         {/* Meta Info */}
         <div class="flex flex-wrap items-center gap-3 mb-6">
+          {isPillar && (
+            <span class="inline-flex items-center px-3 py-1 bg-primary-500 text-white text-xs font-bold rounded-full">
+              完全ガイド
+            </span>
+          )}
           <span class="text-sm text-gray-600">{frontmatter.publishedAt}</span>
         </div>
 
@@ -235,6 +263,33 @@ const articleUrl = `${siteUrl}/column/${columnId}`;
       </div>
     </article>
 
+    {/* クラスター記事 → ピラー記事への戻りリンク */}
+    {pillarColumn && (
+      <section class="py-8 bg-primary-50 border-y border-primary-100">
+        <div class="container mx-auto px-6 md:px-8 max-w-4xl">
+          <a
+            href={`/column/${pillarSlug}`}
+            class="flex items-center gap-4 group"
+          >
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-bold text-primary-600 mb-0.5">このテーマの全体像を知る</p>
+              <p class="text-lg font-bold text-gray-900 group-hover:text-primary-500 transition-colors leading-tight">
+                {pillarColumn.title}
+              </p>
+            </div>
+            <svg class="w-5 h-5 text-primary-500 group-hover:translate-x-1 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </section>
+    )}
+
     {/* Related Articles - トピッククラスタ内部リンク */}
     {relatedColumns.length > 0 && (
       <section class="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-white">
@@ -243,22 +298,30 @@ const articleUrl = `${siteUrl}/column/${columnId}`;
             <div class="flex items-center gap-3 mb-2">
               <div class="w-1.5 h-8 bg-gradient-to-b from-primary-500 to-primary-600 rounded"></div>
               <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
-                関連記事
+                {isPillar ? 'このガイドの関連記事' : '関連記事'}
               </h2>
             </div>
             {column.category && (
               <p class="text-gray-600 ml-5">
-                「{column.category.title}」カテゴリの他の記事
+                {isPillar
+                  ? `「${column.category.title}」の個別テーマを深掘りする記事`
+                  : `「${column.category.title}」カテゴリの他の記事`
+                }
               </p>
             )}
           </div>
 
           <div class="grid md:grid-cols-2 gap-6">
-            {relatedColumns.map((related) => (
+            {relatedColumns.map((related, index) => (
               <a
                 href={`/column/${related.id}`}
                 class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all p-6 border border-gray-100 hover:border-primary-200"
               >
+                {isPillar && (
+                  <span class="inline-block text-xs font-bold text-primary-500 bg-primary-50 px-2 py-1 rounded-full mb-3">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                )}
                 <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-500 transition-colors mb-3 leading-tight">
                   {related.title}
                 </h3>
@@ -278,7 +341,7 @@ const articleUrl = `${siteUrl}/column/${columnId}`;
           </div>
 
           {/* カテゴリ一覧へのリンク */}
-          {column.category && (
+          {column.category && !isPillar && (
             <div class="mt-8 text-center">
               <a
                 href={`/column#${column.category.id}`}

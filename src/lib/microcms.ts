@@ -137,6 +137,23 @@ export async function getRelatedColumns(
   }
 }
 
+// ピラー記事のslug一覧（カテゴリIDとの対応）
+export const PILLAR_SLUGS: Record<string, string> = {
+  'estimate-concerns': 'estimate-complete-guide',
+  'project-management': 'project-management-complete-guide',
+  communication: 'communication-complete-guide',
+};
+
+// slugがピラー記事かどうか判定
+export function isPillarArticle(slug: string): boolean {
+  return Object.values(PILLAR_SLUGS).includes(slug);
+}
+
+// カテゴリIDからピラー記事のslugを取得
+export function getPillarSlug(categoryId: string): string | undefined {
+  return PILLAR_SLUGS[categoryId];
+}
+
 // すべてのコラム記事のIDを取得（静的生成用）
 export async function getAllColumnIds() {
   try {
