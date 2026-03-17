@@ -41,7 +41,7 @@ function Dropdown({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium inline-flex items-baseline gap-1"
+        className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium inline-flex items-baseline gap-1"
       >
         {label}
         <svg
@@ -115,7 +115,7 @@ export function Header() {
           <li>
             <a
               href="/"
-              className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium"
+              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
             >
               HOME
             </a>
@@ -124,7 +124,7 @@ export function Header() {
           <li>
             <a
               href="/prooffirst"
-              className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium"
+              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
             >
               ゼロスタート
             </a>
@@ -132,7 +132,7 @@ export function Header() {
           <li>
             <a
               href="/column"
-              className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium"
+              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
             >
               コラム
             </a>
@@ -140,7 +140,7 @@ export function Header() {
           <li>
             <a
               href="/case-studies"
-              className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium"
+              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
             >
               導入事例
             </a>
@@ -148,7 +148,7 @@ export function Header() {
           <li>
             <a
               href="/testimonial"
-              className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium"
+              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
             >
               お客様の声
             </a>
