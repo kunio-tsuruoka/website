@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 const serviceItems = [
   { label: 'WEBアプリ・モバイルアプリ開発', href: '/services/web-mobile-development' },
   { label: '生成AI受託サービス', href: '/services/ai-development' },
-  { label: 'プロトタイプ・PoC開発', href: '/services/prototype-poc' },
   { label: 'AI搭載BtoBサイト制作', href: '/services/ai-b2b-website' },
   { label: 'CDP開発', href: '/services/cdp-development' },
   { label: 'グローバルサービス', href: '/services/global-service' },
