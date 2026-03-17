@@ -38,6 +38,8 @@ const columnCategories = categories
     }));
 
     const pillarSlug = getPillarSlug(category.id);
+    // ピラー記事のタイトルを取得
+    const pillarArticle = pillarSlug ? categoryColumns.find((c) => c.id === pillarSlug) : undefined;
     // ピラー記事は個別記事一覧から除外
     const filteredArticles = pillarSlug ? articles.filter((a) => a.slug !== pillarSlug) : articles;
 
@@ -48,6 +50,7 @@ const columnCategories = categories
       icon: category.icon,
       order: category.order,
       pillarSlug,
+      pillarTitle: pillarArticle?.title,
       articles: filteredArticles,
     };
   })
@@ -161,7 +164,7 @@ const columnCategories = categories
                     完全ガイド
                   </span>
                   <p class="text-lg font-bold text-gray-900 group-hover:text-primary-500 transition-colors leading-tight">
-                    まずはこの1本で全体像をつかむ
+                    {category.pillarTitle || 'まずはこの1本で全体像をつかむ'}
                   </p>
                 </div>
                 <svg class="w-5 h-5 text-primary-500 group-hover:translate-x-1 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
