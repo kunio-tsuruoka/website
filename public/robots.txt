@@ -1,11 +1,11 @@
 # Beekle Website - robots.txt
-# https://beekle.co.jp
+# https://beekle.jp
 
 User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://beekle.co.jp/sitemap.xml
+Sitemap: https://beekle.jp/sitemap.xml
 
 # Disallow admin and API routes
 Disallow: /api/

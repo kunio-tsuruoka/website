@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro';
 import { articleCategories } from '../data/article-categories';
 import { services } from '../data/service';
-import { type MicroCMSEnv, getColumns } from '../lib/microcms';
+import { type MicroCMSEnv, getColumns, isPillarArticle } from '../lib/microcms';
 
-const SITE_URL = 'https://beekle.co.jp';
+const SITE_URL = 'https://beekle.jp';
 
 // 静的ページ一覧
 const staticPages = [
@@ -56,7 +56,7 @@ export const GET: APIRoute = async ({ locals }) => {
     const columns = await getColumns(undefined, env);
     columnPages = columns.map((column) => ({
       url: `/column/${column.id}`,
-      priority: '0.7',
+      priority: isPillarArticle(column.id) ? '0.9' : '0.7',
       changefreq: 'weekly',
       lastmod: column.updatedAt ? new Date(column.updatedAt).toISOString().split('T')[0] : now,
     }));
