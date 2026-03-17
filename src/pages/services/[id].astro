@@ -1,5 +1,7 @@
 ---
 import { Header } from '@/components/header';
+import { Section, SectionHeader } from '@/components/ui';
+import { PageHero } from '@/components/ui/page-hero';
 import { services } from '@/data/service';
 import type { ServiceDetail } from '@/types/service';
 import Layout from '../../layouts/layout.astro';
@@ -20,151 +22,143 @@ interface Props {
 const { service } = Astro.props as Props;
 ---
 
-<Layout title={`${service.title} | Beekle`}>
+<Layout title={`${service.title} | Beekle`} description={service.description}>
   <Header client:load />
   <main class="pt-20">
-    <!-- Hero Section -->
-    <section class="relative py-24 bg-primary-500 overflow-hidden">
-      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto text-center">
-          <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-            {service.title}
-          </h1>
-          <p class="text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-            {service.description}
-          </p>
-          <div class="mt-12">
-            <a href="/contact" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-full text-primary bg-white hover:bg-primary/5 hover:text-primary/90 transition-all shadow-lg">
-              無料相談を予約する
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
-            </a>
-          </div>
+    <!-- Hero -->
+    <PageHero
+      title={service.title}
+      subtitle={service.description}
+    >
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/contact"
+          class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+        >
+          無料相談を予約する
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+        <a
+          href="/prooffirst"
+          class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
+        >
+          ゼロスタートを見る
+        </a>
+      </div>
+    </PageHero>
+
+    <!-- Overview -->
+    <Section variant="white" padding="lg" decoration="blursPurple">
+      <div class="max-w-3xl mx-auto text-center relative z-10">
+        <p class="text-lg md:text-xl text-gray-600 leading-relaxed font-NotoSansJP">
+          {service.longDescription}
+        </p>
+      </div>
+    </Section>
+
+    <!-- Pain Points -->
+    <Section variant="navy" padding="lg" decoration="none">
+      <div class="max-w-5xl mx-auto relative z-10">
+        <SectionHeader
+          client:load
+          title="よくある課題"
+          subtitle="お客様が直面している主な課題"
+          number="01"
+          label="PAIN POINTS"
+          dark
+        />
+        <div class="grid md:grid-cols-2 gap-6">
+          {service.painPoints.map((point, index) => (
+            <div class="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/15 transition-all">
+              <div class="flex items-start gap-5">
+                <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-secondary-400 to-secondary-500 text-white flex items-center justify-center text-lg font-bold font-Poppins shadow-md">
+                  {index + 1}
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-white mb-2 group-hover:text-secondary-300 transition-colors">
+                    {point.title}
+                  </h3>
+                  <p class="text-white/70 leading-relaxed">
+                    {point.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    </section>
+    </Section>
 
-    <!-- Overview Section -->
-    <section class="py-20">
-      <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto">
-          <div class="prose prose-lg mx-auto">
-            <p class="text-muted-foreground leading-relaxed text-center text-lg">
-              {service.longDescription}
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Pain Points Section -->
-    <section class="py-20 bg-muted/30">
-      <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto">
-          <h2 class="text-5xl font-bold text-foreground text-center mb-4">
-            よくある課題
-          </h2>
-          <p class="text-muted-foreground text-center mb-12 text-lg">
-            お客様が直面している主な課題をご紹介します
-          </p>
-          <div class="grid md:grid-cols-2 gap-8">
-            {service.painPoints.map((point, index) => (
-              <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                <div class="flex items-start">
-                  <span class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center text-lg font-bold mb-4">
-                    {index + 1}
-                  </span>
-                  <div class="ml-4">
-                    <h3 class="text-2xl font-bold text-foreground mb-3">
-                      {point.title}
-                    </h3>
-                    <p class="text-muted-foreground text-lg">
-                      {point.description}
-                    </p>
+    <!-- Solutions -->
+    <Section variant="lightPurple" padding="lg" decoration="blursCyan">
+      <div class="max-w-5xl mx-auto relative z-10">
+        <SectionHeader
+          client:load
+          title="解決方法"
+          subtitle="私たちが提供する具体的な解決策"
+          number="02"
+          label="SOLUTIONS"
+        />
+        <div class="space-y-8">
+          {service.solutions.map((solution) => (
+            <div class="bg-white rounded-2xl p-8 md:p-10 shadow-soft border border-gray-100">
+              <h3 class="text-2xl font-bold text-navy-950 mb-4 font-Montserrat">
+                {solution.title}
+              </h3>
+              <p class="text-gray-600 mb-8 leading-relaxed text-lg">
+                {solution.description}
+              </p>
+              <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                {solution.results.map((result) => (
+                  <div class="flex items-center gap-2.5 bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl px-4 py-3">
+                    <svg class="w-5 h-5 text-secondary-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span class="text-sm font-medium text-gray-700">{result}</span>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
-    </section>
+    </Section>
 
-    <!-- Solutions Section -->
-    <section class="py-20">
-      <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto">
-          <h2 class="text-5xl font-bold text-foreground text-center mb-4">
-            解決方法
-          </h2>
-          <p class="text-muted-foreground text-center mb-12 text-lg">
-            私たちが提供する具体的な解決策をご紹介します
-          </p>
-          <div class="space-y-8">
-            {service.solutions.map(solution => (
-              <div class="bg-white p-8 rounded-xl shadow-lg">
-                <h3 class="text-3xl font-bold text-primary mb-4">
-                  {solution.title}
-                </h3>
-                <p class="text-foreground/80 mb-8 text-lg">
-                  {solution.description}
-                </p>
-                <div class="grid md:grid-cols-3 gap-4">
-                  {solution.results.map(result => (
-                    <div class="bg-primary/5 p-4 rounded-lg flex items-center">
-                      <svg class="w-5 h-5 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span class="text-primary">{result}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Case Studies Section -->
-    <section class="py-20 bg-muted/30">
-      <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto">
-          <h2 class="text-5xl font-bold text-foreground text-center mb-4">
-            導入事例
-          </h2>
-          <p class="text-muted-foreground text-center mb-12 text-lg">
-            実際のお客様の成功事例をご紹介します
-          </p>
-          <div class="grid md:grid-cols-2 gap-8">
-            {service.caseStudies.map(caseStudy => (
-              <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                <h3 class="text-2xl font-bold text-primary mb-6">
+    <!-- Case Studies -->
+    <Section variant="white" padding="lg" decoration="blursPurple">
+      <div class="max-w-5xl mx-auto relative z-10">
+        <SectionHeader
+          client:load
+          title="導入事例"
+          subtitle="実際のお客様の成功事例"
+          number="03"
+          label="CASE STUDIES"
+        />
+        <div class="grid md:grid-cols-2 gap-8">
+          {service.caseStudies.map((caseStudy) => (
+            <div class="bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-medium transition-all border border-gray-100">
+              <div class="h-1 bg-gradient-to-r from-primary-500 to-primary-600"></div>
+              <div class="p-8">
+                <h3 class="text-xl font-bold text-navy-950 mb-6 font-Montserrat">
                   {caseStudy.title}
                 </h3>
-                <div class="space-y-6">
-                  <div class="flex items-start">
-                    <div class="w-20 flex-shrink-0">
-                      <span class="text-base font-bold text-muted-foreground">課題:</span>
-                    </div>
-                    <p class="text-muted-foreground flex-grow text-lg">{caseStudy.challenge}</p>
+                <div class="space-y-4">
+                  <div class="border-l-2 border-primary-300 pl-4">
+                    <p class="text-sm font-bold text-primary-500 mb-1">課題</p>
+                    <p class="text-gray-700">{caseStudy.challenge}</p>
                   </div>
-                  <div class="flex items-start">
-                    <div class="w-20 flex-shrink-0">
-                      <span class="text-base font-bold text-muted-foreground">解決策:</span>
-                    </div>
-                    <p class="text-muted-foreground flex-grow text-lg">{caseStudy.solution}</p>
+                  <div class="border-l-2 border-primary-300 pl-4">
+                    <p class="text-sm font-bold text-primary-500 mb-1">解決策</p>
+                    <p class="text-gray-700">{caseStudy.solution}</p>
                   </div>
-                  <div>
-                    <span class="text-base font-bold text-muted-foreground block mb-3">成果:</span>
-                    <ul class="space-y-2">
-                      {caseStudy.results.map(result => (
-                        <li class="flex items-center text-muted-foreground text-lg">
-                          <svg class="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                          </svg>
+                  <div class="border-l-2 border-primary-300 pl-4">
+                    <p class="text-sm font-bold text-primary-500 mb-1">成果</p>
+                    <ul class="space-y-1">
+                      {caseStudy.results.map((result) => (
+                        <li class="flex items-start gap-2 text-gray-700">
+                          <span class="text-primary-400 mt-1">-</span>
                           {result}
                         </li>
                       ))}
@@ -172,94 +166,91 @@ const { service } = Astro.props as Props;
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
-    </section>
+    </Section>
 
-    <!-- Features Section -->
-    <section class="py-20">
-      <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto">
-          <h2 class="text-5xl font-bold text-foreground text-center mb-4">
-            サービス内容
-          </h2>
-          <p class="text-muted-foreground text-center mb-12 text-lg">
-            提供サービスの詳細をご紹介します
-          </p>
-          <div class="grid md:grid-cols-2 gap-8">
-            {service.features.map(feature => (
-              <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
-                <h3 class="text-2xl font-bold text-primary mb-4">
-                  {feature.title}
-                </h3>
-                <p class="text-muted-foreground text-lg">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
+    <!-- Features -->
+    <Section variant="lightCyan" padding="lg" decoration="none">
+      <div class="max-w-5xl mx-auto relative z-10">
+        <SectionHeader
+          client:load
+          title="サービス内容"
+          subtitle="提供サービスの詳細"
+          number="04"
+          label="FEATURES"
+        />
+        <div class="grid md:grid-cols-2 gap-6">
+          {service.features.map((feature) => (
+            <div class="group bg-white rounded-2xl p-8 shadow-soft hover:shadow-medium transition-all border border-gray-100 hover:border-secondary-200">
+              <h3 class="text-xl font-bold text-navy-950 mb-3 group-hover:text-primary-500 transition-colors font-Montserrat">
+                {feature.title}
+              </h3>
+              <p class="text-gray-600 leading-relaxed">
+                {feature.description}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
-    </section>
+    </Section>
 
-    <!-- FAQ Section -->
-    <section class="py-20 bg-muted/30">
-      <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto">
-          <h2 class="text-5xl font-bold text-foreground text-center mb-4">
-            よくある質問
-          </h2>
-          <p class="text-muted-foreground text-center mb-12 text-lg">
-            お客様からよくいただく質問にお答えします
-          </p>
-          <div class="space-y-6">
-            {service.faq.map(item => (
-              <div class="bg-white p-8 rounded-xl shadow-lg">
-                <h3 class="text-2xl font-bold text-foreground mb-4">
-                  {item.question}
+    <!-- FAQ -->
+    <Section variant="white" padding="lg" decoration="blursPurple">
+      <div class="max-w-3xl mx-auto relative z-10">
+        <SectionHeader
+          client:load
+          title="よくある質問"
+          subtitle="お客様からよくいただく質問にお答えします"
+          number="05"
+          label="FAQ"
+        />
+        <div class="space-y-4">
+          {service.faq.map((item) => (
+            <div class="bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden">
+              <div class="p-6 md:p-8">
+                <h3 class="text-lg font-bold text-navy-950 mb-3 flex items-start gap-3">
+                  <span class="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center text-sm font-bold font-Poppins">Q</span>
+                  <span class="pt-1">{item.question}</span>
                 </h3>
-                <p class="text-muted-foreground text-lg">
+                <p class="text-gray-600 leading-relaxed ml-11">
                   {item.answer}
                 </p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
-    </section>
+    </Section>
 
-    <!-- CTA Section -->
-    <section class="py-20">
-      <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto text-center">
-          <div class="bg-primary-500 rounded-2xl p-12 relative overflow-hidden">
-            <div class="inset-0 bg-grid-pattern opacity-10"></div>
-            <h2 class="text-5xl font-bold text-white mb-6">
-              お気軽にご相談ください
-            </h2>
-            <p class="text-white/90 mb-8 text-lg max-w-2xl mx-auto">
-              プロジェクトの規模や予算に応じて、最適なソリューションをご提案いたします。
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <a 
-                href="/contact"
-                class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-full text-primary bg-white hover:bg-primary/5 transition-all shadow-lg"
-              >
-                無料相談を予約する
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </a>
-              <a
-                href="/company"
-                class="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-base font-medium rounded-full text-white hover:bg-white/10 transition-all"
-              >
-                会社概要を見る
-              </a>
-            </div>
-          </div>
+    <!-- CTA -->
+    <section class="relative py-20 md:py-32 overflow-hidden bg-gradient-to-br from-primary-500 to-primary-600">
+      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+      <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center relative z-10">
+        <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 font-Montserrat">
+          お気軽にご相談ください
+        </h2>
+        <p class="text-xl text-white/90 mb-10 leading-relaxed">
+          プロジェクトの規模や予算に応じて、最適なソリューションをご提案いたします。
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
+          >
+            無料相談を予約する
+            <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+          <a
+            href="/company"
+            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
+          >
+            会社概要を見る
+          </a>
         </div>
       </div>
     </section>
