@@ -1,5 +1,4 @@
 import type { APIRoute } from 'astro';
-import { articleCategories } from '../data/article-categories';
 import { services } from '../data/service';
 import { type MicroCMSEnv, getColumns, isPillarArticle } from '../lib/microcms';
 
@@ -18,7 +17,6 @@ const staticPages = [
   { url: '/works', priority: '0.7', changefreq: 'monthly' },
   { url: '/case-studies', priority: '0.7', changefreq: 'monthly' },
   { url: '/development-issues', priority: '0.7', changefreq: 'monthly' },
-  { url: '/knowledge', priority: '0.8', changefreq: 'weekly' },
   { url: '/materials', priority: '0.6', changefreq: 'monthly' },
   { url: '/column', priority: '0.8', changefreq: 'daily' },
   { url: '/privacy', priority: '0.3', changefreq: 'yearly' },
@@ -38,18 +36,6 @@ export const GET: APIRoute = async ({ locals }) => {
     changefreq: 'monthly',
   }));
 
-  // ナレッジ記事
-  const knowledgePages: { url: string; priority: string; changefreq: string }[] = [];
-  for (const category of articleCategories) {
-    for (const article of category.articles) {
-      knowledgePages.push({
-        url: `/knowledge/${article.slug}`,
-        priority: '0.6',
-        changefreq: 'monthly',
-      });
-    }
-  }
-
   // MicroCMSコラム記事
   let columnPages: { url: string; priority: string; changefreq: string; lastmod?: string }[] = [];
   try {
@@ -65,7 +51,7 @@ export const GET: APIRoute = async ({ locals }) => {
   }
 
   // 全ページを結合
-  const allPages = [...staticPages, ...servicePages, ...knowledgePages, ...columnPages];
+  const allPages = [...staticPages, ...servicePages, ...columnPages];
 
   // XML生成
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
