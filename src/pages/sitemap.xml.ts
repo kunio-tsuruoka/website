@@ -57,15 +57,15 @@ export const GET: APIRoute = async ({ locals }) => {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${allPages
-  .map(
-    (page) => `  <url>
+      .map(
+        (page) => `  <url>
     <loc>${SITE_URL}${page.url}</loc>
     <lastmod>${'lastmod' in page && page.lastmod ? page.lastmod : now}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`
-  )
-  .join('\n')}
+      )
+      .join('\n')}
 </urlset>`;
 
   return new Response(xml, {
