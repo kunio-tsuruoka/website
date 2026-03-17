@@ -10,7 +10,7 @@ export function Header() {
     { label: 'HOME', href: '/' },
     { label: 'ゼロスタート', href: '/prooffirst' },
     { label: 'コラム', href: '/column' },
-    // { label: '関連資料', href: '/materials' },
+    { label: '関連資料', href: '/materials' },
     { label: '会社概要', href: '/company' },
     { label: 'Beekleの強み', href: '/strengths' },
     { label: '導入事例', href: '/case-studies' },
