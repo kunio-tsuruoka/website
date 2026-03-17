@@ -41,7 +41,7 @@ function Dropdown({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium flex items-center gap-1"
+        className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium flex items-center gap-1 py-0 leading-normal"
       >
         {label}
         <svg
