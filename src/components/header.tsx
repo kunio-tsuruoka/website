@@ -46,7 +46,7 @@ export function Header() {
     <header
       className={`fixed w-full bg-white/90 backdrop-blur-sm shadow-sm z-50 ${isOpen ? 'min-h-screen' : 'h-auto'}`}
     >
-      <nav className="container mx-auto px-4 py-4 flex items-center justify-between flex-wrap">
+      <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* ロゴ部分 */}
         <a href="/" className="flex items-center space-x-2">
           <img src="/logo.png" alt="logo" className="h-9 w-auto" />
@@ -79,13 +79,13 @@ export function Header() {
 
         {/* ナビゲーションメニュー */}
         <ul
-          className={`lg:flex flex-col lg:flex-row items-center space-x-6 lg:mt-0 mt-4 transition-all duration-300 whitespace-nowrap ${isOpen ? 'block' : 'hidden'}`}
+          className={`lg:flex flex-col lg:flex-row items-center gap-5 lg:mt-0 mt-4 transition-all duration-300 whitespace-nowrap ${isOpen ? 'block' : 'hidden'}`}
         >
           {/* HOME */}
           <li>
             <a
               href="/"
-              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
+              className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium"
             >
               HOME
             </a>
@@ -96,7 +96,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => setServiceOpen(!serviceOpen)}
-              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium flex items-center gap-1"
+              className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium flex items-center gap-1"
             >
               サービス
               <svg
@@ -133,7 +133,7 @@ export function Header() {
             <li key={item.href}>
               <a
                 href={item.href}
-                className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
+                className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium"
               >
                 {item.label}
               </a>
