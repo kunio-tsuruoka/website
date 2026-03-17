@@ -41,11 +41,11 @@ function Dropdown({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium flex items-center gap-1 py-0 leading-normal"
+        className="text-neutral-600 hover:text-accent-600 transition-colors text-xs font-medium inline-flex items-baseline gap-1"
       >
         {label}
         <svg
-          className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`}
+          className={`w-2.5 h-2.5 transition-transform ${open ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
