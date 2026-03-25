@@ -206,6 +206,15 @@ export function Header() {
                   導入事例
                 </a>
               </li>
+              <li>
+                <a
+                  href="/testimonial"
+                  className="hover:text-accent-300 transition-colors text-lg"
+                  onClick={() => setIsOpen(false)}
+                >
+                  お客様の声
+                </a>
+              </li>
               <li className="border-t border-white/20 pt-4 w-full text-center">
                 <p className="text-white/60 text-sm mb-2">サービス</p>
                 <ul className="space-y-2">
