@@ -31,17 +31,18 @@ const columnCategories = categories
   .map((category) => {
     const categoryColumns = allColumns.filter((column) => column.category?.id === category.id);
 
-    const articles = categoryColumns.map((column, index) => ({
+    const pillarSlug = getPillarSlug(category.id);
+    // ピラー記事のタイトルを取得
+    const pillarArticle = pillarSlug ? categoryColumns.find((c) => c.id === pillarSlug) : undefined;
+    // ピラー記事は個別記事一覧から除外し、除外後に番号を振る
+    const filteredColumns = pillarSlug
+      ? categoryColumns.filter((c) => c.id !== pillarSlug)
+      : categoryColumns;
+    const filteredArticles = filteredColumns.map((column, index) => ({
       number: String(index + 1).padStart(2, '0'),
       title: column.title,
       slug: column.id,
     }));
-
-    const pillarSlug = getPillarSlug(category.id);
-    // ピラー記事のタイトルを取得
-    const pillarArticle = pillarSlug ? categoryColumns.find((c) => c.id === pillarSlug) : undefined;
-    // ピラー記事は個別記事一覧から除外
-    const filteredArticles = pillarSlug ? articles.filter((a) => a.slug !== pillarSlug) : articles;
 
     return {
       id: category.id,
