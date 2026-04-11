@@ -3,6 +3,7 @@ import { Renderer, marked } from 'marked';
 import { Header } from '../../components/header';
 import JsonLd from '../../components/seo/json-ld.astro';
 import Layout from '../../layouts/layout.astro';
+import { renderColumnVisuals } from '../../lib/column-visuals';
 import {
   type MicroCMSEnv,
   getColumn,
@@ -78,6 +79,9 @@ marked.setOptions({
 marked.use({ renderer });
 
 let htmlContent = marked(column.content || '') as string;
+
+// 記事内の {{MARKER}} ビジュアルプレースホルダーを差し込みHTMLに置換
+htmlContent = renderColumnVisuals(htmlContent);
 
 // HTML直書きの<h2>/<h3>にもidを付与し目次データを収集（リッチエディタHTML対応）
 htmlContent = htmlContent.replace(/<h([23])>([^<]+)<\/h[23]>/g, (_match, level, text) => {
@@ -741,5 +745,337 @@ const articleUrl = `${siteUrl}/column/${columnId}`;
   .markdown-content :global(a[href^="/contact"]:hover) {
     @apply shadow-xl;
     transform: translateY(-2px);
+  }
+
+  /* ====================================================================== */
+  /* コラムビジュアル (cv-*)                                                  */
+  /* ====================================================================== */
+
+  /* 共通: 既存の markdown-content スタイルの影響を受けないようリセット */
+  .markdown-content :global(.cv-card),
+  .markdown-content :global(.cv-whyhow),
+  .markdown-content :global(.cv-compare),
+  .markdown-content :global(.cv-fm) {
+    @apply my-10 mx-0;
+  }
+
+  .markdown-content :global(.cv-card *),
+  .markdown-content :global(.cv-whyhow *),
+  .markdown-content :global(.cv-compare *),
+  .markdown-content :global(.cv-fm *) {
+    box-sizing: border-box;
+  }
+
+  /* ユーザーストーリー カード */
+  .markdown-content :global(.cv-card) {
+    @apply rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-soft;
+  }
+
+  .markdown-content :global(.cv-card-header) {
+    @apply text-white px-5 py-3 font-bold text-base;
+    margin: 0;
+  }
+
+  .markdown-content :global(.cv-header-primary) {
+    background: linear-gradient(135deg, #3D4DB7, #3544a4);
+  }
+
+  .markdown-content :global(.cv-header-success) {
+    background: linear-gradient(135deg, #059669, #047857);
+  }
+
+  .markdown-content :global(.cv-card-success) {
+    border-color: #a7f3d0;
+  }
+
+  .markdown-content :global(.cv-card-body) {
+    @apply p-5;
+  }
+
+  .markdown-content :global(.cv-story-row) {
+    @apply flex items-start gap-3 flex-wrap;
+    margin-bottom: 14px;
+  }
+
+  .markdown-content :global(.cv-story-row:last-child) {
+    margin-bottom: 0;
+  }
+
+  .markdown-content :global(.cv-story-label) {
+    @apply inline-flex items-center justify-center px-3 py-1.5 rounded-md font-bold text-sm;
+    min-width: 4.5rem;
+    flex-shrink: 0;
+  }
+
+  .markdown-content :global(.cv-label-who) {
+    background: #E8EAFF;
+    color: #3D4DB7;
+  }
+
+  .markdown-content :global(.cv-label-what) {
+    background: #DCFCE7;
+    color: #047857;
+  }
+
+  .markdown-content :global(.cv-label-why) {
+    background: #FEF3C7;
+    color: #B45309;
+  }
+
+  .markdown-content :global(.cv-story-value) {
+    @apply flex-1 text-gray-700;
+    min-width: 14rem;
+    padding-top: 6px;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Why → Hows ダイアグラム */
+  .markdown-content :global(.cv-whyhow) {
+    @apply rounded-2xl border border-gray-200 bg-gray-50 p-5 shadow-soft;
+  }
+
+  .markdown-content :global(.cv-whyhow-title) {
+    @apply font-bold text-gray-800 text-base;
+    margin-bottom: 16px;
+  }
+
+  .markdown-content :global(.cv-whyhow-box) {
+    @apply rounded-lg px-4 py-3;
+    border-left-width: 4px;
+    border-left-style: solid;
+    margin-bottom: 10px;
+  }
+
+  .markdown-content :global(.cv-whyhow-why) {
+    background: #FEF3C7;
+    border-left-color: #B45309;
+  }
+
+  .markdown-content :global(.cv-whyhow-how) {
+    background: #E8EAFF;
+    border-left-color: #3D4DB7;
+  }
+
+  .markdown-content :global(.cv-whyhow-label) {
+    @apply inline-block text-xs font-bold;
+    color: #B45309;
+    margin-bottom: 4px;
+  }
+
+  .markdown-content :global(.cv-whyhow-num) {
+    @apply inline-block text-xs font-bold mr-2;
+    color: #3D4DB7;
+  }
+
+  .markdown-content :global(.cv-whyhow-text) {
+    @apply text-gray-700;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .markdown-content :global(.cv-whyhow-arrow) {
+    @apply text-center text-gray-500 text-sm;
+    padding: 8px 0;
+  }
+
+  /* 機能リスト vs シナリオ 比較 */
+  .markdown-content :global(.cv-compare) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .markdown-content :global(.cv-compare-col) {
+    @apply rounded-2xl overflow-hidden bg-white border;
+  }
+
+  .markdown-content :global(.cv-compare-bad) {
+    border-color: #fca5a5;
+  }
+
+  .markdown-content :global(.cv-compare-good) {
+    border-color: #86efac;
+  }
+
+  .markdown-content :global(.cv-compare-header) {
+    @apply font-bold px-4 py-3;
+    font-size: 0.95rem;
+  }
+
+  .markdown-content :global(.cv-header-bad) {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-bottom: 1px solid #fca5a5;
+  }
+
+  .markdown-content :global(.cv-header-good) {
+    background: #dcfce7;
+    color: #166534;
+    border-bottom: 1px solid #86efac;
+  }
+
+  .markdown-content :global(.cv-compare-body) {
+    @apply p-4;
+  }
+
+  .markdown-content :global(.cv-bullet-list) {
+    @apply list-disc pl-5;
+    margin: 0;
+  }
+
+  .markdown-content :global(.cv-bullet-list li) {
+    @apply text-gray-700;
+    margin-bottom: 4px;
+    padding-left: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .markdown-content :global(.cv-bullet-list li::before) {
+    content: none;
+  }
+
+  .markdown-content :global(.cv-scenario-text) {
+    @apply text-gray-700;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .markdown-content :global(.cv-scenario-text strong) {
+    background: none;
+    padding: 0;
+    color: #166534;
+  }
+
+  .markdown-content :global(.cv-compare-note) {
+    @apply text-xs;
+    padding-top: 12px;
+    margin-top: 12px;
+    margin-bottom: 0;
+    border-top: 1px dashed;
+    line-height: 1.5;
+  }
+
+  .markdown-content :global(.cv-note-bad) {
+    color: #991b1b;
+    border-top-color: #fca5a5;
+  }
+
+  .markdown-content :global(.cv-note-good) {
+    color: #166534;
+    border-top-color: #86efac;
+  }
+
+  /* FM (Functionality Matrix) */
+  .markdown-content :global(.cv-fm-title) {
+    @apply font-bold text-gray-900 text-lg;
+    margin-bottom: 8px;
+  }
+
+  .markdown-content :global(.cv-fm-desc) {
+    @apply text-gray-600 text-sm;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .markdown-content :global(.cv-fm-scroll) {
+    overflow-x: auto;
+    margin: 0 0 16px 0;
+  }
+
+  .markdown-content :global(.cv-fm-table) {
+    @apply bg-white;
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    border: 1px solid #d1d5db;
+    font-size: 0.9rem;
+    box-shadow: none;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .markdown-content :global(.cv-fm-table thead) {
+    background: #f3f4f6;
+  }
+
+  .markdown-content :global(.cv-fm-table th) {
+    @apply font-bold;
+    color: #374151;
+    background: #f3f4f6;
+    padding: 10px 12px;
+    text-align: left;
+    border: 1px solid #d1d5db;
+    font-size: 0.85rem;
+  }
+
+  .markdown-content :global(.cv-fm-table td) {
+    color: #374151;
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .markdown-content :global(.cv-fm-table tbody tr:hover) {
+    background: inherit;
+  }
+
+  .markdown-content :global(.cv-center) {
+    text-align: center;
+  }
+
+  .markdown-content :global(.cv-verdict) {
+    @apply font-bold;
+    text-align: center;
+  }
+
+  .markdown-content :global(.cv-verdict-yes) {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .markdown-content :global(.cv-verdict-later) {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .markdown-content :global(.cv-verdict-no) {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .markdown-content :global(.cv-fm-effect) {
+    @apply text-gray-700 text-sm;
+    background: #f9fafb;
+    border-left: 4px solid #3D4DB7;
+    padding: 10px 14px;
+    margin: 0 0 8px 0;
+    line-height: 1.7;
+  }
+
+  .markdown-content :global(.cv-fm-effect strong) {
+    background: none;
+    padding: 0;
+  }
+
+  .markdown-content :global(.cv-fm-citation) {
+    @apply text-gray-400;
+    font-size: 0.75rem;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .markdown-content :global(.cv-fm-citation a) {
+    color: #9ca3af;
+    border-bottom: none;
+  }
+
+  .markdown-content :global(.cv-fm-citation a::after) {
+    content: none;
   }
 </style>
