@@ -45,6 +45,24 @@ const USER_STORY_EXAMPLE_NURSING = `<figure class="cv-card cv-card-success">
   </div>
 </figure>`;
 
+const USER_STORY_EXAMPLE_WAREHOUSE = `<figure class="cv-card cv-card-success">
+  <figcaption class="cv-card-header cv-header-success">良い例：倉庫の在庫管理システム</figcaption>
+  <div class="cv-card-body">
+    <div class="cv-story-row">
+      <span class="cv-story-label cv-label-who">誰が</span>
+      <span class="cv-story-value">手袋をした倉庫作業員として</span>
+    </div>
+    <div class="cv-story-row">
+      <span class="cv-story-label cv-label-what">何を</span>
+      <span class="cv-story-value">スマートフォンで簡単に在庫数を減らしたい</span>
+    </div>
+    <div class="cv-story-row">
+      <span class="cv-story-label cv-label-why">なぜ</span>
+      <span class="cv-story-value">作業を止めずにその場で記録しないと後から記憶違いが起きるからだ</span>
+    </div>
+  </div>
+</figure>`;
+
 const WHY_TO_HOW = `<figure class="cv-whyhow">
   <figcaption class="cv-whyhow-title">Why が伝わると、How の選択肢が広がる</figcaption>
   <div class="cv-whyhow-box cv-whyhow-why">
@@ -148,6 +166,7 @@ const FM_MATRIX = `<figure class="cv-fm">
 const VISUALS: Record<string, string> = {
   USER_STORY_TEMPLATE,
   USER_STORY_EXAMPLE_NURSING,
+  USER_STORY_EXAMPLE_WAREHOUSE,
   WHY_TO_HOW,
   SCENARIO_COMPARISON,
   FM_MATRIX,
