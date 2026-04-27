@@ -6,45 +6,190 @@ import Layout from '../../layouts/layout.astro';
 ---
 
 <Layout
-  title="スコープ管理ツール｜要件をFM形式で優先度判定 | Beekle"
-  description="EARS記法で書かれたユーザーストーリーMarkdownを取り込み、ビジネス価値・現場で使えるか・技術コストの3軸で『作る／後回し／作らない』を判定できるブラウザツール。"
+  title="スコープ管理ツール｜要件を「作る／後回し／作らない」に振り分け | Beekle"
+  description="要件定義書(Markdown)を取り込み、機能ごとに『ビジネス価値・現場で使えるか・技術コスト』を評価して『作る／後回し／作らない』を可視化。開発の予算オーバーを防ぎ、合意形成を加速します。"
 >
   <Header client:load />
   <main class="pt-20">
     <PageHero
       title="スコープ管理ツール"
-      subtitle="ユーザーストーリー仕様書を取り込み、要求文ごとに優先度を判定。FM（ファンクショナリティ・マトリクス）形式で「作る／後回し／作らない」を可視化します。"
+      subtitle="要件をすべて作ると予算がパンクします。一覧にして「作る／後回し／作らない」を見える化し、開発会社や社内との合意を加速するためのツールです。"
       badge="Tools"
     />
 
     <section class="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
       <div class="container mx-auto px-6 md:px-8 max-w-7xl">
+        {/* このツールでできること */}
+        <div class="mb-10 grid md:grid-cols-3 gap-4">
+          <div class="p-5 bg-white rounded-2xl border border-gray-200 shadow-soft">
+            <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-3">1</div>
+            <h3 class="font-bold text-gray-900 mb-1">要件を一覧で見渡せる</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              要件定義書(Markdown)を貼り付けるだけで、機能ひとつひとつを表に展開。
+              全体ボリュームが一目で分かります。
+            </p>
+          </div>
+          <div class="p-5 bg-white rounded-2xl border border-gray-200 shadow-soft">
+            <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-3">2</div>
+            <h3 class="font-bold text-gray-900 mb-1">3つの軸で優先度を判断</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              <strong>ビジネス価値</strong>・<strong>現場で使えるか</strong>・<strong>技術コスト</strong>を
+              ★1〜3で評価。直感的に「捨てる勇気」を持てます。
+            </p>
+          </div>
+          <div class="p-5 bg-white rounded-2xl border border-gray-200 shadow-soft">
+            <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-3">3</div>
+            <h3 class="font-bold text-gray-900 mb-1">合意した結果を共有できる</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              「作る／後回し／作らない」の判定結果はCSVやMarkdownで出力。
+              社内承認や開発会社への提示にそのまま使えます。
+            </p>
+          </div>
+        </div>
+
+        {/* 成果物のイメージ */}
+        <div class="mb-10 p-6 md:p-8 bg-white rounded-2xl border border-gray-200 shadow-soft">
+          <div class="flex items-baseline justify-between flex-wrap gap-2 mb-4">
+            <h2 class="text-lg font-bold text-gray-900">こんな成果物が手に入ります</h2>
+            <span class="text-xs text-gray-500">CSV / Markdownでダウンロード可能</span>
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed mb-5">
+            『システムを作らせる技術』（白川克 著）で紹介されているFM（ファンクショナリティ・マトリクス）と同じ考え方で、要件の優先度を表にまとめます。
+          </p>
+
+          {/* テーブル ミニチュア */}
+          <div class="overflow-x-auto rounded-xl border border-gray-200">
+            <table class="min-w-full text-xs">
+              <thead class="bg-gray-50 text-gray-600">
+                <tr>
+                  <th class="px-3 py-2 text-left">ID</th>
+                  <th class="px-3 py-2 text-left">要求文</th>
+                  <th class="px-3 py-2 text-center">ビジネス価値</th>
+                  <th class="px-3 py-2 text-center">現場で使えるか</th>
+                  <th class="px-3 py-2 text-center">技術コスト</th>
+                  <th class="px-3 py-2 text-center">判定</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white">
+                <tr class="border-t border-gray-100">
+                  <td class="px-3 py-2 font-mono text-gray-600">REQ-SA-1-001</td>
+                  <td class="px-3 py-2 text-gray-700">注文の新規登録（顧客→商品→数量→確定）</td>
+                  <td class="px-3 py-2 text-center text-amber-500">★★★</td>
+                  <td class="px-3 py-2 text-center text-amber-500">★★★</td>
+                  <td class="px-3 py-2 text-center"><span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-semibold">低</span></td>
+                  <td class="px-3 py-2 text-center"><span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-semibold">作る</span></td>
+                </tr>
+                <tr class="border-t border-gray-100">
+                  <td class="px-3 py-2 font-mono text-gray-600">REQ-WH-1-004</td>
+                  <td class="px-3 py-2 text-gray-700">在庫一覧での安全在庫アラート表示</td>
+                  <td class="px-3 py-2 text-center text-amber-500">★★</td>
+                  <td class="px-3 py-2 text-center text-amber-500">★★★</td>
+                  <td class="px-3 py-2 text-center"><span class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded text-[10px] font-semibold">中</span></td>
+                  <td class="px-3 py-2 text-center"><span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-semibold">作る</span></td>
+                </tr>
+                <tr class="border-t border-gray-100">
+                  <td class="px-3 py-2 font-mono text-gray-600">REQ-SY-1-002</td>
+                  <td class="px-3 py-2 text-gray-700">仕入先への発注書PDF自動送信</td>
+                  <td class="px-3 py-2 text-center text-amber-500">★★★</td>
+                  <td class="px-3 py-2 text-center text-amber-500">★★</td>
+                  <td class="px-3 py-2 text-center"><span class="px-2 py-0.5 bg-red-100 text-red-700 rounded text-[10px] font-semibold">高</span></td>
+                  <td class="px-3 py-2 text-center"><span class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded text-[10px] font-semibold">後回し</span></td>
+                </tr>
+                <tr class="border-t border-gray-100">
+                  <td class="px-3 py-2 font-mono text-gray-600">REQ-SA-2-001</td>
+                  <td class="px-3 py-2 text-gray-700">バーコード未登録商品の写真認識</td>
+                  <td class="px-3 py-2 text-center text-amber-500">★</td>
+                  <td class="px-3 py-2 text-center text-amber-500">★</td>
+                  <td class="px-3 py-2 text-center"><span class="px-2 py-0.5 bg-red-100 text-red-700 rounded text-[10px] font-semibold">高</span></td>
+                  <td class="px-3 py-2 text-center"><span class="px-2 py-0.5 bg-gray-200 text-gray-500 rounded text-[10px] font-semibold line-through">作らない</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="mt-4 text-xs text-gray-500">
+            ※ 上記はイメージです。実際の項目は読み込んだ要件定義書に応じて変わります。
+          </p>
+
+          <div class="mt-5 p-4 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 leading-relaxed">
+            <strong>「作らない」も明示するのがコツ</strong>：
+            「やらないこと」を一覧に残しておくと、後から「やっぱり欲しい」と言われた時に「なぜ最初に外したか」が一目で分かり、要件の膨張（スコープクリープ）を防げます。
+          </div>
+        </div>
+
         {/* 使い方 */}
         <div class="mb-8 p-6 bg-white rounded-2xl border border-gray-200 shadow-soft">
-          <h2 class="text-lg font-bold text-gray-900 mb-3">使い方</h2>
-          <ol class="list-decimal list-inside space-y-1.5 text-sm text-gray-700 leading-relaxed">
-            <li>「サンプルを試す」を押すか、お手元のMarkdown仕様書を貼り付けてください</li>
-            <li>「要求文を抽出」を押すと、<code class="px-1 py-0.5 bg-gray-100 rounded text-xs">REQ-XXX-NNN</code> 形式の要求文を自動で表に展開します</li>
-            <li>各要求について <strong>ビジネス価値</strong>・<strong>現場で使えるか</strong>・<strong>技術コスト</strong> を1〜3で評価し、<strong>作る／後回し／作らない</strong> を判定してください</li>
-            <li>3項目すべて評価したら「判定を自動推定」ボタンで提案させることもできます（最終判断はご自身で）</li>
-            <li>結果はCSV / Markdown で出力できます。社内共有や開発会社との合意形成にお使いください</li>
+          <h2 class="text-lg font-bold text-gray-900 mb-3">使い方（4ステップ）</h2>
+          <ol class="space-y-3 text-sm text-gray-700 leading-relaxed">
+            <li class="flex gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">1</span>
+              <div>
+                <strong>要件定義書(Markdown)を読み込む</strong>。「サンプルを試す」を押すか、
+                <a href="/tools/story-builder" class="text-primary-500 hover:underline">ユーザーストーリー作成ツール</a>
+                で作ったMarkdownを貼り付けてください。
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">2</span>
+              <div>
+                <strong>「要求文を抽出」を押す</strong>。<code class="px-1 py-0.5 bg-gray-100 rounded text-xs">REQ-XXX-NNN</code> 形式の要求文を自動で表に展開します。
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">3</span>
+              <div>
+                <strong>3つの軸で評価する</strong>。各機能について以下を判断してください。
+                <ul class="mt-2 space-y-1 text-xs text-gray-600">
+                  <li>・<strong>ビジネス価値</strong>（★1〜3）：会社や顧客にどれくらい価値があるか</li>
+                  <li>・<strong>現場で使えるか</strong>（★1〜3）：実際に使う人の業務環境に合うか</li>
+                  <li>・<strong>技術コスト</strong>（低／中／高）：開発の難しさ・期間</li>
+                </ul>
+                <p class="mt-2 text-xs text-gray-600">3項目すべて埋まると「判定を自動推定」ボタンが提案します（最終判断はご自身で）。</p>
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">4</span>
+              <div>
+                <strong>結果を共有</strong>。CSV／Markdownで出力して、社内承認や開発会社との合意形成にお使いください。データはお使いのブラウザにのみ保存されます（サーバーには送信されません）。
+              </div>
+            </li>
           </ol>
-          <p class="mt-3 text-xs text-gray-500">
-            参考：<a href="https://blogs.itmedia.co.jp/magic/2021/08/fm.html" target="_blank" rel="noopener noreferrer" class="text-primary-500 hover:underline">FM（ファンクショナリティ・マトリクス）について</a> ／
-            <a href="/docs/user-stories-sample.md" download class="text-primary-500 hover:underline">サンプル仕様書をダウンロード</a>
-          </p>
+          <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 leading-relaxed">
+            <strong>FMという手法</strong>：書籍『<a href="https://www.amazon.co.jp/dp/B099WCDCG6" target="_blank" rel="noopener noreferrer" class="underline">システムを作らせる技術</a>』（白川克 著）で紹介されている、機能ごとに白黒つけて合意形成する手法です。詳しくは
+            <a href="https://blogs.itmedia.co.jp/magic/2021/08/fm.html" target="_blank" rel="noopener noreferrer" class="underline">こちらの解説記事</a>
+            もご参照ください。
+          </div>
         </div>
 
         <ScopeManager client:load />
+
+        {/* 関連リンク */}
+        <div class="mt-10 p-6 bg-white rounded-2xl border border-gray-200 shadow-soft">
+          <h2 class="text-lg font-bold text-gray-900 mb-3">あわせて使うと便利なもの</h2>
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li>
+              <a href="/tools/story-builder" class="text-primary-500 hover:underline">ユーザーストーリー作成ツール</a>
+              ：このツールに取り込む要件定義書をAIで作れます（自由記述からでOK）
+            </li>
+            <li>
+              <a href="/docs/user-stories-sample.md" download class="text-primary-500 hover:underline">ユーザーストーリー仕様書サンプル(.md)</a>
+              ：このツールで読み込めるMarkdownのお手本
+            </li>
+            <li>
+              <a href="/column/project-management-complete-guide" class="text-primary-500 hover:underline">プロジェクト管理 完全ガイド</a>
+              ：要件の絞り込みやスコープ管理の考え方をコラムで解説
+            </li>
+          </ul>
+        </div>
       </div>
     </section>
 
-    {/* CTA */}
     <section class="py-16 bg-accent-950 text-white">
       <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center">
-        <h2 class="text-2xl md:text-3xl font-bold mb-4">要件整理から開発まで、伴走します</h2>
+        <h2 class="text-2xl md:text-3xl font-bold mb-4">要件の絞り込み、お任せください</h2>
         <p class="text-white/80 leading-relaxed mb-8">
-          ユーザーストーリーの書き方やスコープの絞り込みでお困りでしたら、お気軽にご相談ください。
+          「全部欲しい」を「本当に必要なもの」に絞り込む対話、Beekleがファシリテートします。
+          開発会社との合意形成や見積もり妥当性の判断もご相談ください。
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a
