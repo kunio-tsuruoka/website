@@ -16,9 +16,8 @@ const companyItems = [
 ];
 
 const toolsItems = [
-  { label: 'ユーザーストーリー作成ツール（EARS+異常系AI）', href: '/tools/story-builder' },
-  { label: 'スコープ管理ツール（FM形式）', href: '/tools/scope-manager' },
-  { label: 'ユーザーストーリー仕様書サンプル(.md)', href: '/docs/user-stories-sample.md' },
+  { label: 'ユーザーストーリー作成ツール', href: '/tools/story-builder' },
+  { label: 'スコープ管理ツール', href: '/tools/scope-manager' },
 ];
 
 function Dropdown({
