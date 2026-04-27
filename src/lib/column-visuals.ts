@@ -163,6 +163,54 @@ const FM_MATRIX = `<figure class="cv-fm">
   <p class="cv-fm-citation">出典：白川克『<a href="https://www.amazon.co.jp/dp/B099WCDCG6" target="_blank" rel="noopener noreferrer">システムを作らせる技術 エンジニアではないあなたへ</a>』（日経BP, 2021）</p>
 </figure>`;
 
+const EARS_PATTERNS = `<figure class="cv-card">
+  <figcaption class="cv-card-header cv-header-primary">EARS記法の5つの構文パターン</figcaption>
+  <div class="cv-card-body">
+    <div class="cv-story-row">
+      <span class="cv-story-label cv-label-why" style="min-width: 7rem;">常時</span>
+      <span class="cv-story-value">システムは〜<strong>しなければならない</strong>（常に成り立つ要件）</span>
+    </div>
+    <div class="cv-story-row">
+      <span class="cv-story-label cv-label-who" style="min-width: 7rem;">イベント駆動</span>
+      <span class="cv-story-value"><strong>〜したとき</strong>、システムは〜しなければならない（特定のイベントをきっかけに動く要件）</span>
+    </div>
+    <div class="cv-story-row">
+      <span class="cv-story-label cv-label-who" style="min-width: 7rem;">状態駆動</span>
+      <span class="cv-story-value"><strong>〜の間</strong>、システムは〜しなければならない（ある状態が続く間だけ成り立つ要件）</span>
+    </div>
+    <div class="cv-story-row">
+      <span class="cv-story-label cv-label-what" style="min-width: 7rem;">オプション機能</span>
+      <span class="cv-story-value"><strong>〜である場合</strong>、システムは〜しなければならない（特定機能が有効な場合だけの要件）</span>
+    </div>
+    <div class="cv-story-row">
+      <span class="cv-story-label cv-label-why" style="min-width: 7rem;">異常系</span>
+      <span class="cv-story-value"><strong>もし〜ならば</strong>、システムは〜しなければならない（エラーや例外時の要件）</span>
+    </div>
+  </div>
+</figure>`;
+
+const EARS_EXAMPLES = `<figure class="cv-card cv-card-success">
+  <figcaption class="cv-card-header cv-header-success">良い例：在庫管理システムをEARS記法で書く</figcaption>
+  <div class="cv-card-body">
+    <div class="cv-story-row">
+      <span class="cv-story-label cv-label-who" style="min-width: 7rem;">イベント駆動</span>
+      <span class="cv-story-value">ユーザーが<strong>バーコードをスキャンしたとき</strong>、システムは商品コードを読み取り、在庫数を1つ減らさなければならない</span>
+    </div>
+    <div class="cv-story-row">
+      <span class="cv-story-label cv-label-who" style="min-width: 7rem;">状態駆動</span>
+      <span class="cv-story-value"><strong>在庫数が安全在庫を下回っている間</strong>、システムは商品一覧画面で警告アイコンを表示しなければならない</span>
+    </div>
+    <div class="cv-story-row">
+      <span class="cv-story-label cv-label-what" style="min-width: 7rem;">オプション機能</span>
+      <span class="cv-story-value"><strong>自動発注機能が有効である場合</strong>、システムは安全在庫を下回ったときに発注メールを担当者へ送信しなければならない</span>
+    </div>
+    <div class="cv-story-row">
+      <span class="cv-story-label cv-label-why" style="min-width: 7rem;">異常系</span>
+      <span class="cv-story-value"><strong>もしバーコードが商品マスタに登録されていないならば</strong>、システムはエラー音を鳴らし、在庫数を変更してはならない</span>
+    </div>
+  </div>
+</figure>`;
+
 const VISUALS: Record<string, string> = {
   USER_STORY_TEMPLATE,
   USER_STORY_EXAMPLE_NURSING,
@@ -170,6 +218,8 @@ const VISUALS: Record<string, string> = {
   WHY_TO_HOW,
   SCENARIO_COMPARISON,
   FM_MATRIX,
+  EARS_PATTERNS,
+  EARS_EXAMPLES,
 };
 
 /**
