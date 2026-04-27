@@ -88,10 +88,12 @@ function parseMarkdown(md: string): Requirement[] {
 
 function suggestVerdict(r: Requirement): Verdict {
   if (r.businessValue === 0 || r.usability === 0 || r.techCost === 0) return r.verdict;
-  if (r.businessValue >= 3 && r.usability >= 2 && r.techCost <= 2) return '作る';
-  if (r.businessValue >= 2 && r.usability >= 2 && r.techCost === 3) return '後回し';
-  if (r.businessValue === 1 || r.usability === 1) return '作らない';
-  return r.verdict;
+  const techEase = (4 - r.techCost) as Score;
+  const scores: Score[] = [r.businessValue, r.usability, techEase];
+  if (scores.some((s) => s === 1)) return '作らない';
+  const hCount = scores.filter((s) => s === 3).length;
+  if (hCount >= 2) return '作る';
+  return '後回し';
 }
 
 function StarPicker({
@@ -247,7 +249,6 @@ export function ScopeManager() {
   const [loadedFromStorage, setLoadedFromStorage] = useState(false);
   const [parseHint, setParseHint] = useState<string | null>(null);
 
-  // hydrate from localStorage
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
