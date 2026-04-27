@@ -258,23 +258,34 @@ const columnCategories = categories
             <div class="absolute inset-0 rounded-2xl border border-white/0 group-hover:border-white/40 transition-colors"></div>
           </a>
 
-          <div
-            class="group relative block rounded-2xl bg-white/10 hover:bg-white/15 transition-all p-8 shadow-xl hover:shadow-2xl border border-white/10 cursor-not-allowed"
-            aria-disabled="true"
+          <a
+            href="/tools/scope-manager"
+            class="group relative block rounded-2xl bg-white/15 hover:bg-white/25 transition-all p-8 shadow-xl hover:shadow-2xl border border-white/20"
           >
             <div class="flex items-start justify-between mb-6">
-              <span class="px-3 py-1 text-xs font-semibold rounded-full bg-white/20 text-white/90 border border-white/20">
-                準備中
+              <span class="px-3 py-1 text-xs font-semibold rounded-full bg-highlight-500 text-accent-950 border border-highlight-500">
+                公開中
               </span>
+              <svg class="w-6 h-6 text-white/80 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
             </div>
 
-            <h3 class="text-2xl font-semibold mb-3 group-hover:text-white">開発プロセス・チェックリスト</h3>
+            <h3 class="text-2xl font-semibold mb-3 group-hover:text-white">スコープ管理ツール（FM形式）</h3>
             <p class="text-sm text-white/80 leading-relaxed mb-6">
-              プロジェクトの立ち上げからリリース後の運用まで、フェーズごとの確認ポイントを網羅予定です。
+              ユーザーストーリー仕様書(MD)を取り込み、各要求文をビジネス価値／現場で使えるか／技術コストで評価して
+              「作る／後回し／作らない」をブラウザ上で判定できます。
             </p>
 
+            <span class="inline-flex items-center text-sm font-semibold text-white group-hover:translate-x-1 transition-transform">
+              ツールを開く
+              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </span>
+
             <div class="absolute inset-0 rounded-2xl border border-white/0 group-hover:border-white/40 transition-colors"></div>
-          </div>
+          </a>
 
           <div
             class="group relative block rounded-2xl bg-white/10 hover:bg-white/15 transition-all p-8 shadow-xl hover:shadow-2xl border border-white/10 cursor-not-allowed"
