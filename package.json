@@ -23,6 +23,7 @@
     "@astrojs/react": "^4.1.2",
     "@astrojs/tailwind": "^5.1.4",
     "@emailjs/browser": "^4.4.1",
+    "@playwright/test": "^1.58.2",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "astro": "^5.1.1",
@@ -33,6 +34,7 @@
     "framer-motion": "^11.15.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.469.0",
+    "mammoth": "^1.12.0",
     "marked": "^15.0.4",
     "microcms-js-sdk": "^3.2.0",
     "react": "^18.3.1",
@@ -44,7 +46,10 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@google/generative-ai": "^0.24.1",
     "@types/node": "^22.10.2",
+    "dotenv": "^17.3.1",
+    "google-auth-library": "^10.6.1",
     "typescript": "^5.7.2"
   }
 }
