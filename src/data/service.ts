@@ -411,51 +411,90 @@ export const services: ServiceDetail[] = [
   },
   {
     id: 'ai-development',
-    title: '生成AI受託サービス',
-    description: '生成AIを活用したプロダクト開発や、既存サービスへのAI機能の導入を支援します。',
+    title: '生成AI受託開発',
+    description:
+      'ChatGPT・Claude・Gemini等のLLM、AIエージェント、RAG構築まで。生成AIを業務に組み込む受託開発サービス。',
     longDescription:
-      'ChatGPTやStable Diffusionなどの生成AIを活用したサービス開発を支援します。ビジネスの課題に合わせて、最適なAIモデルの選定から、カスタマイズ、システム統合まで、包括的なサポートを提供します。',
+      'OpenAI（ChatGPT/GPT-4o）、Anthropic Claude、Google Gemini等のLLM API活用から、社内文書を活用するRAG（検索拡張生成）、業務を自律実行するAIエージェント、Stable Diffusionによる画像生成まで、生成AIを業務システムに組み込む受託開発を提供します。技術選定・PoC・本番化・運用まで一気通貫でサポート。Claude Code等のAI開発環境を活用し、要件定義から最短2週間でプロトタイプを提供できます。',
+    seoTitle: '生成AI受託開発｜ChatGPT・Claude API活用、AIエージェント・RAG構築',
+    seoDescription:
+      'ChatGPT・Claude・Gemini等LLM活用、RAG構築、AIエージェント開発の受託サービス。技術選定からPoC・本番化・運用まで一気通貫対応。生成AIで業務を自動化したい企業様向け。',
     painPoints: [
       {
         title: '技術選定の難しさ',
-        description: '急速に進化する生成AI技術の中から、最適なモデルやアーキテクチャの選定が困難',
+        description:
+          'ChatGPT / Claude / Gemini / Llama 等、急速に進化する生成AIの中から、用途に最適なモデル・アーキテクチャの選定が困難',
       },
       {
-        title: 'コスト管理',
-        description: 'APIコストの予測が難しく、ビジネスモデルの構築に苦慮している',
+        title: 'PoC止まりで本番化できない',
+        description:
+          'デモは動くが、業務利用に耐える精度・速度・運用性まで持ち上げる工程が見えず、PoCで止まってしまう',
+      },
+      {
+        title: '社内データの活用（RAG）',
+        description:
+          '社内文書・FAQ・マニュアル等を活用したいが、検索拡張生成（RAG）の構築・チューニングのノウハウが社内にない',
+      },
+      {
+        title: 'AIエージェントの実装',
+        description:
+          '複数ツールを自律的に使い分けて業務を遂行するAIエージェントを作りたいが、設計パターン・評価方法が分からない',
+      },
+      {
+        title: 'コスト・セキュリティの不安',
+        description:
+          'APIコストの予測が難しい。社外秘データを安全に扱う構成（Azure OpenAI、AWS Bedrock等）の選定にも悩む',
       },
       {
         title: '精度・品質の担保',
-        description: '生成結果の品質にばらつきがあり、ビジネス利用に耐える安定性の確保が課題',
-      },
-      {
-        title: 'プロンプトエンジニアリング',
-        description: '効果的なプロンプト設計とチューニングのノウハウが不足',
+        description:
+          '生成結果の品質にばらつきがあり、ビジネス利用に耐える安定性とハルシネーション対策の確保が課題',
       },
     ],
     solutions: [
       {
-        title: '最適モデル選定・検証',
-        description: '用途に応じた生成AIモデルの選定と検証を実施',
-        results: ['コスト効率の最適化', '処理速度の向上', '出力品質の改善'],
+        title: '技術選定・PoC実施',
+        description:
+          'ユースケースに応じてLLM（ChatGPT/Claude/Gemini）、RAGアーキテクチャ、AIエージェント等から最適解を選定。短期間でPoCを構築し、業務実用性を検証',
+        results: ['コスト効率の最適化', '処理速度の向上', '本番化判断の早期化'],
       },
       {
-        title: 'プロンプト最適化',
-        description: '業務特性を考慮した効果的なプロンプト設計とチューニング',
-        results: ['生成精度の向上', '一貫性の確保', '運用効率の改善'],
+        title: 'RAG（検索拡張生成）構築',
+        description:
+          '社内ドキュメント・FAQ・マニュアルを取り込み、回答の正確性・最新性を担保するRAGパイプラインを構築。Embeddingモデル選定からベクトルDB（Pinecone / pgvector等）まで対応',
+        results: ['ハルシネーション削減', '社内ナレッジの即時活用', '回答精度の向上'],
       },
       {
-        title: 'システム統合支援',
-        description: '既存システムへのAI機能の統合と運用体制の構築',
-        results: ['スムーズな導入', '安定した運用', '継続的な改善'],
+        title: 'AIエージェント開発',
+        description:
+          '複数ツールを自律的に呼び分けて業務を遂行するAIエージェントを設計・実装。Claude Code、Function Calling、MCPサーバー連携など最新パターンに対応',
+        results: ['業務オペレーションの自動化', '人手作業の削減', '24時間稼働'],
+      },
+      {
+        title: 'プロンプト最適化・評価設計',
+        description:
+          '業務特性を考慮したプロンプト設計、Few-shot、Chain-of-Thought等のテクニック適用。LLM出力の品質を継続評価する仕組みを構築',
+        results: ['生成精度の向上', '一貫性の確保', '運用品質の継続改善'],
+      },
+      {
+        title: 'システム統合・本番化支援',
+        description:
+          '既存業務システムへのAI機能組み込み、Azure OpenAI / AWS Bedrock等エンタープライズ環境への展開、運用監視体制まで構築',
+        results: ['セキュアな本番運用', '既存業務との接続', '段階的な拡大'],
       },
     ],
     caseStudies: [
       {
         title: 'AI文書作成支援システムの開発',
         challenge: '法務文書作成の効率化と品質向上',
-        solution: 'GPTを活用した文書生成・チェックシステムの構築',
+        solution: 'GPT-4を活用した文書生成・チェックシステムの構築、RAGで自社文例参照',
         results: ['作成時間70%削減', 'チェック漏れ90%削減', 'ユーザー満足度95%'],
+      },
+      {
+        title: '社内FAQ向けRAG構築',
+        challenge: '問い合わせ対応の属人化と一次対応の長時間化',
+        solution: 'Claude API + ベクトルDBでマニュアル検索AIを構築、Slack統合',
+        results: ['一次対応時間60%削減', '24時間自動回答', '回答品質の標準化'],
       },
       {
         title: '画像生成AIの業務活用',
@@ -467,42 +506,86 @@ export const services: ServiceDetail[] = [
     features: [
       {
         title: 'AI導入コンサルティング',
-        description: '業務分析に基づく最適なAI活用方法の提案と導入支援。',
+        description:
+          '業務分析に基づき、AIで解決すべき課題と適さない課題を切り分け。投資対効果の見える導入計画を提案します。',
       },
       {
-        title: 'カスタムAI開発',
-        description: '業務特性に合わせたAIモデルのカスタマイズと統合開発。',
+        title: 'LLM API統合開発',
+        description:
+          'ChatGPT、Claude、Gemini等のLLM APIを業務システムに組み込みます。Function Calling、Tool Use、Streaming対応。',
+      },
+      {
+        title: 'RAG構築',
+        description:
+          '社内文書を活用した検索拡張生成パイプラインを設計・実装。Embedding選定、ベクトルDB、Reranking、評価まで対応。',
+      },
+      {
+        title: 'AIエージェント開発',
+        description:
+          '自律的にツールを使い分けるAIエージェントの設計・実装。MCPサーバー、Claude Code環境の構築実績あり。',
       },
       {
         title: 'プロンプトエンジニアリング',
-        description: '効果的なプロンプト設計とチューニングの実施。',
+        description: '効果的なプロンプト設計、評価データセット構築、A/Bテスト基盤まで提供。',
       },
       {
         title: '運用保守サポート',
-        description: '継続的な精度改善と安定運用のサポート。',
+        description:
+          'モデルアップデートへの追随、コスト監視、品質モニタリング、継続的な精度改善を提供します。',
       },
     ],
     benefits: [
-      '最新AI技術の効果的な活用',
-      'コスト効率の最適化',
-      '高品質な生成結果の確保',
-      'スムーズな業務統合',
+      '最新AI技術（LLM・RAG・エージェント）の効果的な活用',
+      'PoC止まりにせず、本番運用まで到達',
+      'コスト効率と品質の両立',
+      'エンタープライズ向けセキュアな構成',
+      '社内データを活用した独自AI体験',
     ],
     faq: [
       {
-        question: 'どのような生成AIに対応していますか？',
+        question: '対応している生成AI（LLM）は何ですか？',
         answer:
-          'OpenAI GPT、Anthropic Claude、Stable Diffusion、Midjourney等、主要な生成AIモデルに対応しています。用途に応じて最適なモデルを選定・提案させていただきます。',
+          'OpenAI GPT-4o / GPT-4 / o1、Anthropic Claude（Opus / Sonnet / Haiku）、Google Gemini、Meta Llama、Stable Diffusion、Midjourney等、主要な生成AIに対応しています。Azure OpenAI、AWS Bedrock経由のエンタープライズ利用にも対応します。',
+      },
+      {
+        question: 'ChatGPTとClaudeはどちらを選ぶべきですか？',
+        answer:
+          '用途次第です。長文読解・コーディング支援はClaude（Anthropic）、画像入力・音声・幅広いツールエコシステムはOpenAIが強みです。要件をヒアリングした上で、PoCで両方を比較検証する形をおすすめしています。',
+      },
+      {
+        question: 'RAGとは何ですか？社内文書を活用できますか？',
+        answer:
+          'RAG（Retrieval-Augmented Generation、検索拡張生成）は、社内文書やFAQを検索した結果をLLMに与えて回答させる手法です。社外秘データを学習させずに、最新の自社情報を活用した回答を生成できます。Embeddingモデル選定、ベクトルDB（Pinecone / pgvector等）構築、Reranking、評価設計まで一気通貫で対応します。',
+      },
+      {
+        question: 'AIエージェントの開発も可能ですか？',
+        answer:
+          '可能です。複数のツール（API・データベース・社内システム）を自律的に呼び分けて業務を遂行するAIエージェントを設計・実装できます。Claude Code環境構築、MCP（Model Context Protocol）サーバー連携、Function Calling実装等の実績があります。',
+      },
+      {
+        question: 'AI開発の費用感を教えてください',
+        answer:
+          'PoC（小規模検証）で200〜500万円、本格的なRAGシステム構築で800〜2,000万円、AIエージェント本番化で1,500万円〜が目安です。要件次第で大きく変動するため、初回ヒアリング後に内訳付きの見積もりをお出しします。',
+      },
+      {
+        question: 'PoCから本番化までの期間はどれくらいですか？',
+        answer:
+          '最短ケースでは、PoC開始から2〜4週間で動くプロトタイプ、本番化まで2〜4ヶ月が目安です。ゼロスタート（初期費用0円のPoC）から始めて、効果を見極めてから本番投資の判断ができます。',
       },
       {
         question: 'APIコストはどのように最適化されますか？',
         answer:
-          'キャッシュ戦略の導入や効率的なプロンプト設計により、APIコストを最小限に抑えます。また、使用量の予測とモニタリングにより、コストの透明性を確保します。',
+          'モデル使い分け（簡単な処理はHaiku/Mini系、複雑な処理はOpus/GPT-4等）、プロンプトキャッシュ、Embeddingキャッシュ、バッチ処理活用等の手法でコストを最小化します。月次のコストモニタリングと予算アラートも構築します。',
       },
       {
-        question: '生成結果の品質はどのように担保されますか？',
+        question: 'セキュリティ・社外秘データの扱いは？',
         answer:
-          '入念なプロンプト設計とバリデーション処理の実装により、高品質な生成結果を確保します。また、人間によるレビューと組み合わせたハイブリッドな運用体制も構築可能です。',
+          'Azure OpenAI Service、AWS Bedrockなど、データがモデル学習に使われないエンタープライズ環境を選定。VPCピアリング、IP制限、PII（個人情報）マスキング等のセキュリティ対策にも対応します。',
+      },
+      {
+        question: '生成結果の品質・ハルシネーションはどう防ぎますか？',
+        answer:
+          'プロンプト設計、RAGによる根拠提示、出力バリデーション、人間レビューとのハイブリッド運用、評価データセットでの継続的なA/Bテストの組み合わせで、ビジネス利用に耐える品質を確保します。',
       },
     ],
   },
