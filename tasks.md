@@ -71,9 +71,11 @@
   - 必要作業: MicroCMS本文更新（FAQ追加、内部リンク強化、目次階層化）
   - 手段: `scripts/apply-improvements.mjs` のパターンを流用するか、MicroCMS管理画面で直接編集
 - [ ] クラスターC 3本ドラフトのMicroCMS投入（レビュー後）
-- [x] ツール解説コラム（クラスターD）×2本ドラフト作成完了
+- [x] ツール解説コラム（クラスターD）×3本ドラフト作成完了
   - `cluster-d-01-user-story-template.md`（story-builder連動）
   - `cluster-d-02-scope-management-fm-method.md`（scope-manager連動）
+  - `cluster-d-03-ears-requirements-syntax.md`（EARS構文専用、ユーザーストーリーの補完）
+- [x] ドラフト全本のbold乱用を自然な日本語に修正（AIっぽさ除去）
 - [ ] クラスターA/B/D/E 残記事の執筆
 - [ ] `/services/ai-development/` のテコ入れ（順位37位→1ページ目）
 - [ ] OGP画像の動的生成（戦略文書 §4 P4）
