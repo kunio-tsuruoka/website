@@ -1,0 +1,33 @@
+{
+  "apiFields": [
+    {
+      "idValue": "title",
+      "fieldId": "title",
+      "name": "カテゴリー名",
+      "kind": "text",
+      "required": true
+    },
+    {
+      "idValue": "description",
+      "fieldId": "description",
+      "name": "説明",
+      "kind": "textArea",
+      "required": false
+    },
+    {
+      "idValue": "icon",
+      "fieldId": "icon",
+      "name": "アイコン (絵文字や名前)",
+      "kind": "text",
+      "required": false
+    },
+    {
+      "idValue": "order",
+      "fieldId": "order",
+      "name": "並び順",
+      "kind": "number",
+      "required": true
+    }
+  ],
+  "customFields": []
+}

@@ -1,0 +1,41 @@
+{
+  "apiFields": [
+    {
+      "idValue": "question",
+      "fieldId": "question",
+      "name": "質問",
+      "kind": "text",
+      "required": true
+    },
+    {
+      "idValue": "answer",
+      "fieldId": "answer",
+      "name": "回答",
+      "kind": "richEditorV2",
+      "required": true
+    },
+    {
+      "idValue": "category",
+      "fieldId": "category",
+      "name": "カテゴリー",
+      "kind": "relation",
+      "referenceDisplayItem": null,
+      "required": true
+    },
+    {
+      "idValue": "order",
+      "fieldId": "order",
+      "name": "並び順",
+      "kind": "number",
+      "required": false
+    },
+    {
+      "idValue": "tags",
+      "fieldId": "tags",
+      "name": "タグ (カンマ区切り)",
+      "kind": "text",
+      "required": false
+    }
+  ],
+  "customFields": []
+}
