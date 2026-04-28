@@ -46,3 +46,9 @@ type Column = {
   updatedAt: string;
 };
 ```
+
+# MicroCMS columns API gotchas
+
+- `category` フィールドは**単数値（文字列）**で送る。配列で送ると `'category' has unexpected data type.` (HTTP 400) になる。
+- `<pre><code>` ブロックは `src/pages/column/[...slug].astro` のグローバル CSS で `bg-gray-900` (暗ネイビー) になるため、業務的な構造化された例には不向き。`{{MARKER}}` で `cv-card` 系の明るいビジュアルに置換する。
+- 新記事追加後は `node scripts/generate-descriptions.mjs` で description を自動生成（OpenRouter Claude Haiku、`OPENROUTER_API_KEY` 必須）。description を手で書いた場合はスキップで OK。

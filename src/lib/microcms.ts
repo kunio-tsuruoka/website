@@ -154,6 +154,77 @@ export function getPillarSlug(categoryId: string): string | undefined {
   return PILLAR_SLUGS[categoryId];
 }
 
+// 一問一答カテゴリーの型定義
+export type QACategory = {
+  id: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  order: number;
+};
+
+// 一問一答の型定義
+export type QA = {
+  id: string;
+  question: string;
+  answer: string;
+  category: QACategory;
+  order?: number;
+  tags?: string;
+  publishedAt: string;
+  updatedAt: string;
+  revisedAt?: string;
+};
+
+// 一問一答カテゴリー一覧
+export async function getQACategories(env?: MicroCMSEnv) {
+  try {
+    const data = await getClient(env).get({
+      endpoint: 'qa-categories',
+      queries: { orders: 'order', limit: 100 },
+    });
+    return data.contents as QACategory[];
+  } catch (error) {
+    console.error('Failed to fetch qa-categories:', error);
+    return [];
+  }
+}
+
+// 一問一答一覧（カテゴリーでフィルタリング可）
+export async function getQAs(categoryId?: string, env?: MicroCMSEnv) {
+  try {
+    const queries: { orders: string; filters?: string; limit: number } = {
+      orders: 'order,publishedAt',
+      limit: 100,
+    };
+    if (categoryId) {
+      queries.filters = `category[equals]${categoryId}`;
+    }
+    const data = await getClient(env).get({
+      endpoint: 'qa',
+      queries,
+    });
+    return data.contents as QA[];
+  } catch (error) {
+    console.error('Failed to fetch qa:', error);
+    return [];
+  }
+}
+
+// 単一の一問一答
+export async function getQA(id: string, env?: MicroCMSEnv) {
+  try {
+    const data = await getClient(env).get({
+      endpoint: 'qa',
+      contentId: id,
+    });
+    return data as QA;
+  } catch (error) {
+    console.error(`Failed to fetch qa ${id}:`, error);
+    return null;
+  }
+}
+
 // すべてのコラム記事のIDを取得（静的生成用）
 export async function getAllColumnIds() {
   try {
