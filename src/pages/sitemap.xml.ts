@@ -17,6 +17,10 @@ const staticPages = [
   { url: '/case-studies', priority: '0.7', changefreq: 'monthly' },
   { url: '/materials', priority: '0.6', changefreq: 'monthly' },
   { url: '/column', priority: '0.8', changefreq: 'daily' },
+  { url: '/qa', priority: '0.7', changefreq: 'weekly' },
+  { url: '/tools/story-builder', priority: '0.8', changefreq: 'monthly' },
+  { url: '/tools/scope-manager', priority: '0.8', changefreq: 'monthly' },
+  { url: '/checklists/dev-process', priority: '0.6', changefreq: 'monthly' },
   { url: '/privacy', priority: '0.3', changefreq: 'yearly' },
 ];
 
@@ -55,15 +59,15 @@ export const GET: APIRoute = async ({ locals }) => {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${allPages
-      .map(
-        (page) => `  <url>
+  .map(
+    (page) => `  <url>
     <loc>${SITE_URL}${page.url}</loc>
     <lastmod>${'lastmod' in page && page.lastmod ? page.lastmod : now}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`
-      )
-      .join('\n')}
+  )
+  .join('\n')}
 </urlset>`;
 
   return new Response(xml, {

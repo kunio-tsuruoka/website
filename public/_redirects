@@ -1,0 +1,26 @@
+# 旧スラッグの正規化
+/column/7hhc1tib7dft  /column/ai-development-speed  301
+/column/nqu29zwuq6  /column/ai-era-development-flow  301
+
+# Trailing slash 正規化（GA4で重複計測されていた既知URL）
+/company/  /company  301
+/contact/  /contact  301
+/column/   /column   301
+/members/  /members  301
+/process/  /process  301
+/strengths/  /strengths  301
+/testimonial/  /testimonial  301
+/case-studies/  /case-studies  301
+/materials/  /materials  301
+/prooffirst/  /prooffirst  301
+/privacy/  /privacy  301
+/qa/  /qa  301
+
+# Trailing slash 正規化（コラム配下）
+/column/:slug/  /column/:slug  301
+
+# Trailing slash 正規化（サービス配下）
+/services/:slug/  /services/:slug  301
+
+# Trailing slash 正規化（ツール配下）
+/tools/:slug/  /tools/:slug  301
