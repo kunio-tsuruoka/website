@@ -17,7 +17,6 @@ const staticPages = [
   { url: '/case-studies', priority: '0.7', changefreq: 'monthly' },
   { url: '/materials', priority: '0.6', changefreq: 'monthly' },
   { url: '/column', priority: '0.8', changefreq: 'daily' },
-  { url: '/qa', priority: '0.7', changefreq: 'weekly' },
   { url: '/tools/story-builder', priority: '0.8', changefreq: 'monthly' },
   { url: '/tools/scope-manager', priority: '0.8', changefreq: 'monthly' },
   { url: '/checklists/dev-process', priority: '0.6', changefreq: 'monthly' },
