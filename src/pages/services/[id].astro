@@ -159,8 +159,48 @@ const seoDescription = service.seoDescription ?? service.description;
       </div>
     </Section>
 
+    {service.additionalSections && service.additionalSections.length > 0 && (
+      <Section variant="white" padding="lg" decoration="blursPurple">
+        <div class="max-w-4xl mx-auto relative z-10 space-y-16">
+          {service.additionalSections.map((section) => (
+            <article>
+              <h2 class="text-3xl md:text-4xl font-bold text-navy-950 mb-3 font-Montserrat leading-tight">
+                {section.title}
+              </h2>
+              {section.subtitle && (
+                <p class="text-base md:text-lg text-primary-500 font-medium mb-6">
+                  {section.subtitle}
+                </p>
+              )}
+              <div class="space-y-5">
+                {section.paragraphs.map((paragraph) => (
+                  <p class="text-gray-700 leading-relaxed text-base md:text-lg">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+              {section.cards && section.cards.length > 0 && (
+                <div class="grid md:grid-cols-2 gap-5 mt-8">
+                  {section.cards.map((card) => (
+                    <div class="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-2xl p-6 border border-primary-100">
+                      <h3 class="text-lg font-bold text-navy-950 mb-2 font-Montserrat">
+                        {card.title}
+                      </h3>
+                      <p class="text-gray-700 leading-relaxed text-sm">
+                        {card.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
+      </Section>
+    )}
+
     <!-- Case Studies -->
-    <Section variant="white" padding="lg" decoration="blursPurple">
+    <Section variant="lightPurple" padding="lg" decoration="blursPurple">
       <div class="max-w-5xl mx-auto relative z-10">
         <SectionHeader
           client:load

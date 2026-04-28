@@ -28,6 +28,13 @@ interface FAQ {
   answer: string;
 }
 
+interface AdditionalSection {
+  title: string;
+  subtitle?: string;
+  paragraphs: string[];
+  cards?: { title: string; description: string }[];
+}
+
 export interface ServiceDetail {
   id: string;
   title: string;
@@ -41,4 +48,5 @@ export interface ServiceDetail {
   features: Feature[];
   benefits: string[];
   faq: FAQ[];
+  additionalSections?: AdditionalSection[];
 }
