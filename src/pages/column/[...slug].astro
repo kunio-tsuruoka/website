@@ -1078,4 +1078,357 @@ const articleUrl = `${siteUrl}/column/${columnId}`;
   .markdown-content :global(.cv-fm-citation a::after) {
     content: none;
   }
+
+  /* EARS 完成例カード */
+  .markdown-content :global(.cv-card-full) {
+    border-color: #c7d2fe;
+  }
+
+  .markdown-content :global(.cv-full-body) {
+    @apply p-0;
+  }
+
+  .markdown-content :global(.cv-full-section) {
+    padding: 18px 20px;
+    border-bottom: 1px solid #eef2ff;
+  }
+
+  .markdown-content :global(.cv-full-section:last-child) {
+    border-bottom: none;
+  }
+
+  .markdown-content :global(.cv-full-title) {
+    @apply font-bold;
+    color: #3D4DB7;
+    font-size: 0.95rem;
+    margin: 0 0 10px 0;
+    padding: 0;
+  }
+
+  .markdown-content :global(.cv-full-title)::before {
+    content: none;
+  }
+
+  .markdown-content :global(.cv-full-text) {
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .markdown-content :global(.cv-ears-list) {
+    @apply list-none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .markdown-content :global(.cv-ears-list li) {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+    color: #374151;
+    font-size: 0.93rem;
+    line-height: 1.65;
+    padding: 0;
+    margin: 0 0 8px 0;
+  }
+
+  .markdown-content :global(.cv-ears-list li:last-child) {
+    margin-bottom: 0;
+  }
+
+  .markdown-content :global(.cv-ears-list li)::before {
+    content: none;
+  }
+
+  .markdown-content :global(.cv-ears-tag) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-width: 6.5rem;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+
+  .markdown-content :global(.cv-tag-ubiquitous) {
+    background: #E8EAFF;
+    color: #3D4DB7;
+  }
+
+  .markdown-content :global(.cv-tag-event) {
+    background: #DCFCE7;
+    color: #047857;
+  }
+
+  .markdown-content :global(.cv-tag-state) {
+    background: #FEF3C7;
+    color: #B45309;
+  }
+
+  .markdown-content :global(.cv-tag-option) {
+    background: #FCE7F3;
+    color: #BE185D;
+  }
+
+  .markdown-content :global(.cv-tag-unwanted) {
+    background: #FEE2E2;
+    color: #B91C1C;
+  }
+
+  .markdown-content :global(.cv-ears-text) {
+    flex: 1;
+    min-width: 14rem;
+  }
+
+  .markdown-content :global(.cv-ears-text strong) {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-weight: 700;
+  }
+
+  /* 良い例 / 悪い例 比較 */
+  .markdown-content :global(.cv-goodbad) {
+    @apply rounded-2xl border border-gray-200 bg-white shadow-soft;
+    padding: 16px 18px;
+    margin: 24px 0;
+  }
+
+  .markdown-content :global(.cv-goodbad-row) {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .markdown-content :global(.cv-goodbad-good) {
+    background: #f0fdf4;
+    border-left: 4px solid #16a34a;
+  }
+
+  .markdown-content :global(.cv-goodbad-bad) {
+    background: #fef2f2;
+    border-left: 4px solid #dc2626;
+  }
+
+  .markdown-content :global(.cv-goodbad-label) {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3.5rem;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.6;
+    margin-top: 2px;
+  }
+
+  .markdown-content :global(.cv-goodbad-label-good) {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .markdown-content :global(.cv-goodbad-label-bad) {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .markdown-content :global(.cv-goodbad-text) {
+    flex: 1;
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .markdown-content :global(.cv-goodbad-text strong) {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-weight: 700;
+  }
+
+  .markdown-content :global(.cv-goodbad-hint) {
+    color: #6b7280;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    margin: 8px 0 0 0;
+    padding: 0 4px;
+  }
+
+  .markdown-content :global(.cv-goodbad-hint strong) {
+    background: none;
+    padding: 0;
+    color: #374151;
+    font-weight: 700;
+  }
+
+  /* チェックリスト（受入条件用） */
+  .markdown-content :global(.cv-check-list) {
+    @apply list-none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .markdown-content :global(.cv-check-list li) {
+    position: relative;
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    padding: 0 0 0 28px;
+    margin: 0 0 8px 0;
+  }
+
+  .markdown-content :global(.cv-check-list li:last-child) {
+    margin-bottom: 0;
+  }
+
+  .markdown-content :global(.cv-check-list li)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.35em;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 2px solid #c7d2fe;
+    background: #fff;
+  }
+
+  /* 良い例/悪い例 リスト型（複数項目用） */
+  .markdown-content :global(.cv-goodbad-list) {
+    padding: 18px 20px;
+  }
+
+  .markdown-content :global(.cv-goodbad-title) {
+    @apply font-bold;
+    color: #1f2937;
+    font-size: 0.95rem;
+    margin: 0 0 12px 0;
+    padding: 0;
+  }
+
+  .markdown-content :global(.cv-goodbad-ul) {
+    @apply list-none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .markdown-content :global(.cv-goodbad-item) {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 0 0 6px 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  .markdown-content :global(.cv-goodbad-item:last-child) {
+    margin-bottom: 0;
+  }
+
+  .markdown-content :global(.cv-goodbad-item)::before {
+    content: none;
+  }
+
+  .markdown-content :global(.cv-goodbad-item.cv-goodbad-good) {
+    background: #f0fdf4;
+    border-left: 4px solid #16a34a;
+  }
+
+  .markdown-content :global(.cv-goodbad-item.cv-goodbad-bad) {
+    background: #fef2f2;
+    border-left: 4px solid #dc2626;
+  }
+
+  .markdown-content :global(.cv-goodbad-note) {
+    color: #6b7280;
+    font-size: 0.85em;
+    margin-left: 4px;
+  }
+
+  /* ブロッククォート型 良い例/悪い例 比較 */
+  .markdown-content :global(.cv-blockcompare) {
+    @apply rounded-2xl border border-gray-200 bg-white shadow-soft;
+    padding: 16px 18px;
+    margin: 28px 0;
+  }
+
+  .markdown-content :global(.cv-blockcompare-row) {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .markdown-content :global(.cv-blockcompare-row:last-child) {
+    margin-bottom: 0;
+  }
+
+  .markdown-content :global(.cv-blockcompare-bad) {
+    background: #fef2f2;
+    border-left: 4px solid #dc2626;
+  }
+
+  .markdown-content :global(.cv-blockcompare-good) {
+    background: #f0fdf4;
+    border-left: 4px solid #16a34a;
+  }
+
+  .markdown-content :global(.cv-blockcompare-label) {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3.5rem;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.6;
+    margin-top: 2px;
+  }
+
+  .markdown-content :global(.cv-blockcompare-label-good) {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .markdown-content :global(.cv-blockcompare-label-bad) {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .markdown-content :global(.cv-blockcompare-text) {
+    flex: 1;
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0;
+    font-style: normal;
+  }
+
+  .markdown-content :global(.cv-blockcompare-text p) {
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0 0 6px 0;
+  }
+
+  .markdown-content :global(.cv-blockcompare-text p:last-child) {
+    margin-bottom: 0;
+  }
 </style>
