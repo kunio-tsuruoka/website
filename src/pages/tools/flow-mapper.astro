@@ -1,0 +1,201 @@
+---
+import { FlowMapper } from '../../components/flow-mapper';
+import { Header } from '../../components/header';
+import { PageHero } from '../../components/ui/page-hero';
+import Layout from '../../layouts/layout.astro';
+---
+
+<Layout
+  title="業務フロー可視化ツール（As-Is／To-Be）｜現状と改善後を並べて見える化 | Beekle"
+  description="現状の業務フロー（As-Is）と改善後（To-Be）をスイムレーンで並べて可視化。担当・所要時間・課題・改善ポイントを記録し、Markdown／JSON／PDFで出力できます。要件定義や業務改善の合意形成にどうぞ。"
+>
+  <Header client:load />
+  <main class="pt-20">
+    <PageHero
+      title="業務フロー可視化ツール"
+      subtitle="現状の業務フロー（As-Is）と、改善後の姿（To-Be）を並べて見える化。「誰が・何をしている／するのか」「どこに無駄があるのか」を表に整理して、社内合意や開発会社への説明に使えます。"
+      badge="Tools"
+    />
+
+    <section class="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
+      <div class="container mx-auto px-6 md:px-8 max-w-7xl">
+        {/* このツールでできること */}
+        <div class="mb-10 grid md:grid-cols-3 gap-4">
+          <div class="p-5 bg-white rounded-2xl border border-gray-200 shadow-soft">
+            <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-3">1</div>
+            <h3 class="font-bold text-gray-900 mb-1">スイムレーンで現状を整理</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              担当ごとに縦のレーンを並べ、ステップを置いていくだけ。<br />
+              所要時間・使うツール・課題（痛み）も一緒に記録できます。
+            </p>
+          </div>
+          <div class="p-5 bg-white rounded-2xl border border-gray-200 shadow-soft">
+            <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-3">2</div>
+            <h3 class="font-bold text-gray-900 mb-1">As-Is から To-Be へワンクリック</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              「As-Isをコピー」で現状を下敷きにして、To-Be（改善後の姿）を描けます。
+              改善ポイントを1ステップずつ書き残せるので、提案資料に直結します。
+            </p>
+          </div>
+          <div class="p-5 bg-white rounded-2xl border border-gray-200 shadow-soft">
+            <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-3">3</div>
+            <h3 class="font-bold text-gray-900 mb-1">Markdown／JSON／PDFで出力</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              リードタイム・ステップ数・担当者数の自動比較つき。
+              JSONで保存すれば、後日同じ内容を読み戻して続きを編集できます。
+            </p>
+          </div>
+        </div>
+
+        {/* 比較イメージ */}
+        <div class="mb-10 p-6 md:p-8 bg-white rounded-2xl border border-gray-200 shadow-soft">
+          <div class="flex items-baseline justify-between flex-wrap gap-2 mb-4">
+            <h2 class="text-lg font-bold text-gray-900">こんな比較ができます</h2>
+            <span class="text-xs text-gray-500">サンプル：受注〜出荷業務（紙運用 → DX後）</span>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-3 mb-5">
+            <div class="p-4 bg-white border border-gray-200 rounded-xl">
+              <p class="text-xs text-gray-500 mb-1">想定リードタイム</p>
+              <div class="flex items-baseline gap-2">
+                <span class="text-xs text-gray-400">As-Is</span>
+                <span class="text-sm font-semibold text-gray-700">2時間15分</span>
+                <span class="text-xs text-gray-400 mx-1">→</span>
+                <span class="text-xs text-gray-400">To-Be</span>
+                <span class="text-base font-bold text-primary-600">47分</span>
+              </div>
+              <p class="mt-2 text-xs font-bold text-emerald-600">↓改善 −1時間28分</p>
+            </div>
+            <div class="p-4 bg-white border border-gray-200 rounded-xl">
+              <p class="text-xs text-gray-500 mb-1">ステップ数</p>
+              <div class="flex items-baseline gap-2">
+                <span class="text-xs text-gray-400">As-Is</span>
+                <span class="text-sm font-semibold text-gray-700">8</span>
+                <span class="text-xs text-gray-400 mx-1">→</span>
+                <span class="text-xs text-gray-400">To-Be</span>
+                <span class="text-base font-bold text-primary-600">8</span>
+              </div>
+              <p class="mt-2 text-xs font-bold text-gray-500">±0（質的に置換）</p>
+            </div>
+            <div class="p-4 bg-white border border-gray-200 rounded-xl">
+              <p class="text-xs text-gray-500 mb-1">関与する担当</p>
+              <div class="flex items-baseline gap-2">
+                <span class="text-xs text-gray-400">As-Is</span>
+                <span class="text-sm font-semibold text-gray-700">4部門</span>
+                <span class="text-xs text-gray-400 mx-1">→</span>
+                <span class="text-xs text-gray-400">To-Be</span>
+                <span class="text-base font-bold text-primary-600">5部門</span>
+              </div>
+              <p class="mt-2 text-xs font-bold text-gray-500">+1（システムを担当として明記）</p>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="p-4 bg-red-50/40 border border-red-200 rounded-xl">
+              <h3 class="text-sm font-bold text-red-900 mb-2">As-Is の課題</h3>
+              <ul class="space-y-1 text-xs text-red-900">
+                <li>⚠ メールFAX注文を Excel に手で転記（月3〜5件のミス）</li>
+                <li>⚠ 在庫を電話で確認（折返し待ちで半日ロス）</li>
+                <li>⚠ 紙の指示書を倉庫に持ち回り（紛失あり）</li>
+                <li>⚠ 送り状を手書き（宛名ミス）</li>
+              </ul>
+            </div>
+            <div class="p-4 bg-emerald-50/40 border border-emerald-200 rounded-xl">
+              <h3 class="text-sm font-bold text-emerald-900 mb-2">To-Be の改善ポイント</h3>
+              <ul class="space-y-1 text-xs text-emerald-900">
+                <li>✓ Webフォーム＋入力規則で誤注文を未然防止</li>
+                <li>✓ 在庫API連携で電話確認を撤廃</li>
+                <li>✓ ハンディ＋WMSで紙の指示書を廃止</li>
+                <li>✓ 送り状を配送APIで自動発行</li>
+              </ul>
+            </div>
+          </div>
+
+          <p class="mt-4 text-xs text-gray-500">
+            ※ 上記はサンプルです。「サンプルを読込」を押すと、ツール上で同じデータを編集できます。
+          </p>
+        </div>
+
+        {/* 使い方 */}
+        <div class="mb-8 p-6 bg-white rounded-2xl border border-gray-200 shadow-soft">
+          <h2 class="text-lg font-bold text-gray-900 mb-3">使い方（4ステップ）</h2>
+          <ol class="space-y-3 text-sm text-gray-700 leading-relaxed">
+            <li class="flex gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">1</span>
+              <div>
+                <strong>担当（レーン）を作る</strong>。「＋担当を追加」で、業務に関わる人や部署を縦に並べます（顧客・営業・事務・倉庫・システムなど）。
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">2</span>
+              <div>
+                <strong>ステップを置く</strong>。各レーンの下にある「＋ステップを追加」を押して、起こることを上から順に並べます。種別は「開始／作業／判断／システム／待ち／完了」から選べます。
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">3</span>
+              <div>
+                <strong>To-Be を描く</strong>。タブを「To-Be」に切替→「As-Isをコピー」で下敷きを作り、不要なステップを消したり、改善ポイントを書き加えたりします。
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">4</span>
+              <div>
+                <strong>「比較」タブで差分を確認 → 出力</strong>。リードタイム・ステップ数・担当者数の差分が自動で出ます。Markdown／JSON／PDFで保存できます。データはお使いのブラウザにのみ保存されます（サーバーには送信されません）。
+              </div>
+            </li>
+          </ol>
+          <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 leading-relaxed">
+            <strong>合意形成のコツ</strong>：いきなりTo-Beから描かないこと。
+            まずAs-Isで「誰が」「何で困っているか」を関係者と一致させてから、To-Beを描くと、後から「そんなはずじゃなかった」が起きにくくなります。
+          </div>
+        </div>
+
+        <FlowMapper client:load />
+
+        {/* 関連リンク */}
+        <div class="mt-10 p-6 bg-white rounded-2xl border border-gray-200 shadow-soft">
+          <h2 class="text-lg font-bold text-gray-900 mb-3">あわせて使うと便利なもの</h2>
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li>
+              <a href="/tools/story-builder" class="text-primary-500 hover:underline">ユーザーストーリー作成ツール</a>
+              ：To-Be で描いた業務を、要件定義書のたたき台に変換できます
+            </li>
+            <li>
+              <a href="/tools/scope-manager" class="text-primary-500 hover:underline">スコープ管理ツール</a>
+              ：To-Be の中で「作る／後回し／作らない」の合意を作れます
+            </li>
+            <li>
+              <a href="/column" class="text-primary-500 hover:underline">コラム一覧</a>
+              ：要件定義・業務改善・DXの進め方を解説
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-accent-950 text-white">
+      <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center">
+        <h2 class="text-2xl md:text-3xl font-bold mb-4">業務フローの整理、お任せください</h2>
+        <p class="text-white/80 leading-relaxed mb-8">
+          As-Isのヒアリング、関係者ワークショップ、To-Beの設計、そして要件定義書まで。<br />
+          現場と経営の橋渡しを Beekle がファシリテートします。
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg"
+          >
+            無料相談を予約する
+          </a>
+          <a
+            href="/column"
+            class="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-accent-950 transition-all"
+          >
+            コラムで学ぶ
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
