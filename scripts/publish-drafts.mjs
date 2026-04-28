@@ -108,7 +108,7 @@ for (const file of drafts) {
   const html = marked(body);
   const category = resolveCategory(meta.category);
 
-  console.log(`📄 ${file}`);
+  console.log(`[FILE] ${file}`);
   console.log(`   slug      : ${meta.slug}`);
   console.log(`   title     : ${title}`);
   console.log(`   category  : ${category} ${meta.category && !VALID_CATEGORIES.includes(meta.category.split(' ')[0]) ? `(raw: ${meta.category})` : ''}`);
@@ -116,7 +116,7 @@ for (const file of drafts) {
   console.log(`   html len  : ${html.length}`);
 
   if (!meta.slug) {
-    console.log('   ⚠️  SKIP: 想定スラッグが取れなかった');
+    console.log('   SKIP: 想定スラッグが取れなかった');
     skipped++;
     continue;
   }
@@ -130,13 +130,13 @@ for (const file of drafts) {
     exists = false;
   }
   if (exists) {
-    console.log('   ⚠️  SKIP: 同じIDの記事が既に存在');
+    console.log('   SKIP: 同じIDの記事が既に存在');
     skipped++;
     continue;
   }
 
   if (dryRun) {
-    console.log('   ✅ would create (dry-run)');
+    console.log('   OK: would create (dry-run)');
     succeeded++;
     continue;
   }
@@ -154,20 +154,20 @@ for (const file of drafts) {
       // 下書き状態で投稿（管理画面で確認後に公開）
       status: 'draft',
     });
-    console.log('   ✅ created as DRAFT');
+    console.log('   OK: created as DRAFT');
     succeeded++;
   } catch (e) {
     const msg = `${meta.slug}: ${e.message}`;
-    console.error(`   ❌ ${msg}`);
+    console.error(`   NG: ${msg}`);
     errors.push(msg);
   }
 }
 
 console.log('\n========================================');
-console.log(`✅ ${dryRun ? 'plan' : 'created'}: ${succeeded}/${drafts.length}`);
-if (skipped > 0) console.log(`⚠️  skipped: ${skipped}`);
+console.log(`OK: ${dryRun ? 'plan' : 'created'}: ${succeeded}/${drafts.length}`);
+if (skipped > 0) console.log(`skipped: ${skipped}`);
 if (errors.length > 0) {
-  console.log(`❌ errors: ${errors.length}`);
+  console.log(`errors: ${errors.length}`);
   for (const e of errors) console.log(`   - ${e}`);
 }
 if (dryRun) {

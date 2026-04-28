@@ -151,7 +151,7 @@ let skipped = 0;
 const errors = [];
 
 for (const item of enhancements) {
-  console.log(`📄 ${item.id}`);
+  console.log(`[ITEM] ${item.id}`);
   let current;
   try {
     current = await client.get({
@@ -160,13 +160,13 @@ for (const item of enhancements) {
       queries: { fields: 'id,title,content' },
     });
   } catch (e) {
-    console.error(`   ❌ 取得失敗: ${e.message}`);
+    console.error(`   NG: 取得失敗: ${e.message}`);
     errors.push(`${item.id}: ${e.message}`);
     continue;
   }
 
   if (current.content?.includes(item.sentinel)) {
-    console.log('   ⚠️  SKIP: 既に追加済み (sentinel found)');
+    console.log('   SKIP: 既に追加済み (sentinel found)');
     skipped++;
     continue;
   }
@@ -179,10 +179,10 @@ for (const item of enhancements) {
   console.log(`   append len: ${append.length}`);
   console.log(`   FAQs: ${item.faqs.length} / Related: ${item.related.length}`);
   console.log('   ── 追加プレビュー（先頭400字）──');
-  console.log(append.slice(0, 400).replace(/\n/g, ' ⏎ '));
+  console.log(append.slice(0, 400).replace(/\n/g, ' \\n '));
 
   if (dryRun) {
-    console.log('   ✅ would update (dry-run)');
+    console.log('   OK: would update (dry-run)');
     succeeded++;
     continue;
   }
@@ -193,19 +193,19 @@ for (const item of enhancements) {
       contentId: item.id,
       content: { content: newContent },
     });
-    console.log('   ✅ updated');
+    console.log('   OK: updated');
     succeeded++;
   } catch (e) {
-    console.error(`   ❌ 更新失敗: ${e.message}`);
+    console.error(`   NG: 更新失敗: ${e.message}`);
     errors.push(`${item.id}: ${e.message}`);
   }
 }
 
 console.log('\n========================================');
-console.log(`✅ ${dryRun ? 'plan' : 'updated'}: ${succeeded}/${enhancements.length}`);
-if (skipped > 0) console.log(`⚠️  skipped: ${skipped}`);
+console.log(`OK: ${dryRun ? 'plan' : 'updated'}: ${succeeded}/${enhancements.length}`);
+if (skipped > 0) console.log(`skipped: ${skipped}`);
 if (errors.length > 0) {
-  console.log(`❌ errors: ${errors.length}`);
+  console.log(`errors: ${errors.length}`);
   for (const e of errors) console.log(`   - ${e}`);
 }
 if (dryRun) {
