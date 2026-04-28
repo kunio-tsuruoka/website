@@ -33,6 +33,8 @@ export interface ServiceDetail {
   title: string;
   description: string;
   longDescription: string;
+  seoTitle?: string;
+  seoDescription?: string;
   painPoints: PainPoint[];
   solutions: Solution[];
   caseStudies: CaseStudy[];

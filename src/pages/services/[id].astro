@@ -1,5 +1,6 @@
 ---
 import { Header } from '@/components/header';
+import JsonLd from '@/components/seo/json-ld.astro';
 import { Section, SectionHeader } from '@/components/ui';
 import { PageHero } from '@/components/ui/page-hero';
 import { services } from '@/data/service';
@@ -20,9 +21,41 @@ interface Props {
 }
 
 const { service } = Astro.props as Props;
+const siteUrl = 'https://beekle.jp';
+const serviceUrl = `${siteUrl}/services/${service.id}`;
+const seoTitle = service.seoTitle ?? service.title;
+const seoDescription = service.seoDescription ?? service.description;
 ---
 
-<Layout title={`${service.title} | Beekle`} description={service.description}>
+<Layout title={`${seoTitle} | Beekle`} description={seoDescription} canonical={serviceUrl}>
+  <JsonLd
+    slot="head"
+    type="service"
+    data={{
+      serviceName: service.title,
+      serviceDescription: service.description,
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: 'サービス', url: '/' },
+        { name: service.title, url: `/services/${service.id}` },
+      ],
+    }}
+  />
+  {service.faq.length > 0 && (
+    <JsonLd
+      slot="head"
+      type="faq"
+      data={{
+        faqs: service.faq.map((f) => ({ question: f.question, answer: f.answer })),
+      }}
+    />
+  )}
   <Header client:load />
   <main class="pt-20">
     <!-- Hero -->
