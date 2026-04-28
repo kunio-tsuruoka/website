@@ -149,7 +149,7 @@ for (const file of drafts) {
         title,
         content: html,
         description: meta.description || '',
-        category: [category],
+        category,
       },
       // 下書き状態で投稿（管理画面で確認後に公開）
       status: 'draft',
