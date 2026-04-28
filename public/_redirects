@@ -1,3 +1,9 @@
 # 旧スラッグの正規化
 /column/7hhc1tib7dft  /column/ai-development-speed  301
 /column/nqu29zwuq6  /column/ai-era-development-flow  301
+
+# 旧 /service/* → 現 /services/*（SC 404 ドリルダウン由来、明確な対応のみ）
+/service/cdp                      /services/cdp-development         301
+/cdp                              /services/cdp-development         301
+/service/overseas-website         /services/global-service          301
+/service/application-development  /services/web-mobile-development  301
