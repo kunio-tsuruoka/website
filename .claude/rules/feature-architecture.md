@@ -85,6 +85,8 @@ export const useFlowStore = create<State & Actions>()(
 export function stepCost(step: FlowStep, lanes: FlowLane[]): number { /* ... */ }
 ```
 
+`utils/` の関数は **必ず Vitest でユニットテストを書く**（同階層に `<name>.test.ts`）。詳細は `testing.md`。
+
 ## 公開境界
 
 - `src/pages/tools/<name>.astro` から import するのは `src/features/<name>/index.tsx` のみ
@@ -107,6 +109,7 @@ export function stepCost(step: FlowStep, lanes: FlowLane[]): number { /* ... */ 
 
 ## TODO（優先度順）
 
-- [ ] **flow-mapper**: 2700行超、最優先で feature 分割
+- [ ] **Vitest 導入**（`testing.md` 参照、未導入）
+- [ ] **flow-mapper**: 2700行超、最優先で feature 分割 + utils のユニットテスト
 - [ ] **scope-manager**: 規模次第、必要なら分割
 - [ ] **story-builder**: 規模次第、必要なら分割
