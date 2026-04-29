@@ -37,7 +37,24 @@ export type FlowDiagram = {
 
 export type View = 'asIs' | 'toBe' | 'compare';
 export type DiagramTarget = 'asIs' | 'toBe';
-export type State = { asIs: FlowDiagram; toBe: FlowDiagram };
+// executionsPerMonth: この業務フローを月に何回実行するか（=年間インパクト換算用）。
+// 未指定 (旧データ) は 100 とみなす。
+export type State = { asIs: FlowDiagram; toBe: FlowDiagram; executionsPerMonth?: number };
+
+// 改善シナリオ MECE: 「何を」「どうする」を直交軸で網羅。
+// reduceTime: 所要時間を % 削減（自動化・効率化）
+// reduceQty:  個数を % 削減（ペーパーレス・統合・紙→電子化）
+// reduceUnitCost: 単価を % 削減（ベンダー切替・一括契約）
+// increaseQty: 処理量を % 増加（並列化・能力増強でスループット↑）
+// changeLane: 担当を別レーンへ（高時給→低時給／外部委託）
+// eliminate: ステップ自体を廃止（durationMin=0, quantity=0）
+export type ScenarioKind =
+  | 'reduceTime'
+  | 'reduceQty'
+  | 'reduceUnitCost'
+  | 'increaseQty'
+  | 'changeLane'
+  | 'eliminate';
 
 export type SuggestionKind = 'automation' | 'ai' | 'parallel' | 'priority' | 'tool';
 export type Suggestion = {

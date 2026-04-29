@@ -10,7 +10,7 @@ import {
   PHASE_PAD_X,
 } from '../constants';
 import { useOverflowDetect } from '../hooks/useOverflowDetect';
-import type { FlowDiagram } from '../types';
+import type { FlowDiagram, StepType } from '../types';
 import { buildArrowPath, computeLayout } from '../utils/layout';
 import { StepCard } from './StepCard';
 
@@ -22,12 +22,15 @@ export function SwimlaneCanvas({
   fullscreen,
   onSelect,
   onAddStep,
+  onAddLane,
+  onAddPhase,
   onRenameLane,
   onUpdateLaneRate,
   onDeleteLane,
   onRenamePhase,
   onDeletePhase,
   onMoveStep,
+  onSwapSteps,
   onRenameStep,
   onDeleteStep,
   onStartConnect,
@@ -39,13 +42,16 @@ export function SwimlaneCanvas({
   connectFromId: string | null;
   fullscreen?: boolean;
   onSelect: (id: string) => void;
-  onAddStep: (laneId: string, phaseId: string) => void;
+  onAddStep: (laneId: string, phaseId: string, type?: StepType) => void;
+  onAddLane: () => void;
+  onAddPhase: () => void;
   onRenameLane: (id: string, name: string) => void;
   onUpdateLaneRate: (id: string, rate: number) => void;
   onDeleteLane: (id: string) => void;
   onRenamePhase: (id: string, name: string) => void;
   onDeletePhase: (id: string) => void;
   onMoveStep: (id: string, laneId: string, phaseId: string, beforeStepId?: string | null) => void;
+  onSwapSteps: (idA: string, idB: string) => void;
   onRenameStep: (id: string, label: string) => void;
   onDeleteStep: (id: string) => void;
   onStartConnect: (id: string) => void;
@@ -73,7 +79,14 @@ export function SwimlaneCanvas({
   }, [diagram, layout, editingId, connectMode, connectFromId]);
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const overflows = useOverflowDetect(scrollRef, [layout.width, layout.height, fullscreen]);
+
+  // キャンバス右端に「＋ フェーズ」、下端に「＋ 担当」ボタンを置けるよう余白を確保。
+  const ADD_PHASE_BTN_W = 110;
+  const ADD_LANE_BTN_H = 40;
+  const canvasW = layout.width + ADD_PHASE_BTN_W;
+  const canvasH = layout.height + ADD_LANE_BTN_H;
+
+  const overflows = useOverflowDetect(scrollRef, [canvasW, canvasH, fullscreen]);
 
   useEffect(() => {
     onOverflowChange?.(overflows);
@@ -90,14 +103,34 @@ export function SwimlaneCanvas({
       <div
         className="relative"
         style={{
-          width: layout.width,
-          height: layout.height,
+          width: canvasW,
+          height: canvasH,
           minWidth: '100%',
           backgroundImage: 'radial-gradient(circle, rgba(15, 23, 42, 0.06) 1px, transparent 1px)',
           backgroundSize: '20px 20px',
           backgroundPosition: `${LANE_LABEL_W}px ${HEADER_H}px`,
         }}
       >
+        {/* 右端: フェーズ追加ボタン (ヘッダー行に配置) */}
+        <button
+          type="button"
+          onClick={onAddPhase}
+          className="absolute top-0 flex items-center justify-center gap-1 text-xs font-bold text-primary-700 bg-primary-50 border-b border-r border-l-2 border-l-dashed border-primary-300 hover:bg-primary-100 hover:border-l-primary-500 transition-colors no-print"
+          style={{ left: layout.width, width: ADD_PHASE_BTN_W, height: HEADER_H }}
+          title="新しいフェーズ列を右に追加"
+        >
+          ＋ フェーズ
+        </button>
+        {/* 下端: 担当（レーン）追加ボタン */}
+        <button
+          type="button"
+          onClick={onAddLane}
+          className="absolute left-0 flex items-center justify-center gap-1 text-xs font-bold text-primary-700 bg-primary-50 border-t-2 border-t-dashed border-r border-primary-300 hover:bg-primary-100 hover:border-t-primary-500 transition-colors no-print"
+          style={{ top: layout.height, width: layout.width, height: ADD_LANE_BTN_H }}
+          title="新しい担当（レーン）行を下に追加"
+        >
+          ＋ 担当（レーン）を追加
+        </button>
         <div
           className="absolute top-0 left-0 bg-gray-50 border-b border-gray-300 flex items-center justify-center text-[11px] font-bold text-gray-500"
           style={{ width: LANE_LABEL_W, height: HEADER_H }}
@@ -245,7 +278,8 @@ export function SwimlaneCanvas({
                 style={{ left: px.x, top: ly.y, width: px.w, height: ly.h }}
                 onDragOver={(e) => {
                   e.preventDefault();
-                  e.dataTransfer.dropEffect = 'move';
+                  const isNew = e.dataTransfer.types.includes('text/x-flow-step-type');
+                  e.dataTransfer.dropEffect = isNew ? 'copy' : 'move';
                   e.currentTarget.classList.add('bg-secondary-50/60');
                 }}
                 onDragLeave={(e) => {
@@ -254,6 +288,11 @@ export function SwimlaneCanvas({
                 onDrop={(e) => {
                   e.preventDefault();
                   e.currentTarget.classList.remove('bg-secondary-50/60');
+                  const newType = e.dataTransfer.getData('text/x-flow-step-type') as StepType | '';
+                  if (newType) {
+                    onAddStep(lane.id, phase.id, newType);
+                    return;
+                  }
                   const id = e.dataTransfer.getData('text/x-flow-step-id');
                   if (!id) return;
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -363,6 +402,7 @@ export function SwimlaneCanvas({
               onRename={(label) => onRenameStep(step.id, label)}
               onStartConnect={() => onStartConnect(step.id)}
               onDelete={() => onDeleteStep(step.id)}
+              onSwap={(otherId) => onSwapSteps(step.id, otherId)}
             />
           );
         })}

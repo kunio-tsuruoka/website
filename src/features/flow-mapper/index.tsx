@@ -47,6 +47,7 @@ export function FlowMapper() {
   const updateStep = useFlowStore((s) => s.updateStep);
   const deleteStep = useFlowStore((s) => s.deleteStep);
   const moveStep = useFlowStore((s) => s.moveStep);
+  const swapSteps = useFlowStore((s) => s.swapSteps);
   const renameStep = useFlowStore((s) => s.renameStep);
   const handleStepClick = useFlowStore((s) => s.handleStepClick);
   const startConnectFrom = useFlowStore((s) => s.startConnectFrom);
@@ -339,6 +340,7 @@ export function FlowMapper() {
                 onMoveStep={(id, laneId, phaseId, beforeStepId) =>
                   moveStep(target, id, laneId, phaseId, beforeStepId)
                 }
+                onSwapSteps={(idA, idB) => swapSteps(target, idA, idB)}
                 onRenameStep={(id, label) => renameStep(target, id, label)}
                 onDeleteStep={(id) => deleteStep(target, id)}
                 onStartConnect={startConnectFrom}
