@@ -18,7 +18,7 @@ const companyItems = [
 const toolsItems = [
   { label: 'ユーザーストーリー作成ツール', href: '/tools/story-builder' },
   { label: 'スコープ管理ツール', href: '/tools/scope-manager' },
-  { label: '業務フロー可視化ツール（As-Is／To-Be）', href: '/tools/flow-mapper' },
+  { label: '業務フロー可視化ツール', href: '/tools/flow-mapper' },
 ];
 
 function Dropdown({

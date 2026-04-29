@@ -1,16 +1,25 @@
-import type { Aggregates, FlowDiagram, FlowLane, FlowStep, StepType } from '../types';
+import { STEP_TYPE_LABEL } from '../constants';
+import type { Aggregates, FlowDiagram, FlowLane, FlowStep, StepCostMode, StepType } from '../types';
+
+// 既存データ互換のため未指定時は 'both'。
+export function stepCostMode(step: FlowStep): StepCostMode {
+  return step.costMode ?? 'both';
+}
 
 export function stepLaborCost(step: FlowStep, lanes: FlowLane[]): number {
+  if (stepCostMode(step) === 'variable') return 0;
   const lane = lanes.find((l) => l.id === step.laneId);
   const rate = lane?.rateYenPerHour ?? 0;
   return (step.durationMin / 60) * rate;
 }
 
 export function stepVariableCost(step: FlowStep): number {
+  if (stepCostMode(step) === 'labor') return 0;
   return (step.quantity ?? 0) * (step.unitCostYen ?? 0);
 }
 
 // 1ステップのコスト = 人件費（時給×時間）＋ 個数×単価（材料費・手数料・配送費など）
+// costMode により片方のみ集計に含めることもできる。
 export function stepCost(step: FlowStep, lanes: FlowLane[]): number {
   return stepLaborCost(step, lanes) + stepVariableCost(step);
 }
@@ -18,15 +27,6 @@ export function stepCost(step: FlowStep, lanes: FlowLane[]): number {
 export function totalMinutes(d: FlowDiagram): number {
   return d.steps.reduce((acc, s) => acc + (Number.isFinite(s.durationMin) ? s.durationMin : 0), 0);
 }
-
-const STEP_TYPE_LABEL: Record<StepType, string> = {
-  start: '開始',
-  task: '作業',
-  decision: '判断',
-  system: 'システム',
-  wait: '待ち',
-  end: '完了',
-};
 
 type AggBucketMut = {
   name: string;

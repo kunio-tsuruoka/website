@@ -1,5 +1,9 @@
 export type StepType = 'start' | 'task' | 'decision' | 'system' | 'wait' | 'end';
 
+// コスト計算方式。'labor' は時間×レーン時給のみ、'variable' は個数×単価のみ、
+// 'both' は両方を加算する（既存データの互換のため未指定時は 'both' と解釈）。
+export type StepCostMode = 'labor' | 'variable' | 'both';
+
 export type FlowStep = {
   id: string;
   type: StepType;
@@ -16,6 +20,7 @@ export type FlowStep = {
   quantity?: number;
   unitCostYen?: number;
   unitLabel?: string;
+  costMode?: StepCostMode;
 };
 
 // rateYenPerHour: 担当ごとの人件費単価（円/時）。空または0 ならコスト計算から除外。
@@ -31,6 +36,7 @@ export type FlowDiagram = {
 };
 
 export type View = 'asIs' | 'toBe' | 'compare';
+export type DiagramTarget = 'asIs' | 'toBe';
 export type State = { asIs: FlowDiagram; toBe: FlowDiagram };
 
 export type SuggestionKind = 'automation' | 'ai' | 'parallel' | 'priority' | 'tool';
@@ -65,4 +71,13 @@ export type Aggregates = {
     minutes: number;
     yen: number;
   }[];
+};
+
+export type LayoutBox = { x: number; y: number; w: number; h: number };
+export type Layout = {
+  width: number;
+  height: number;
+  phaseX: Map<string, { x: number; w: number }>;
+  laneY: Map<string, { y: number; h: number }>;
+  step: Map<string, LayoutBox>;
 };

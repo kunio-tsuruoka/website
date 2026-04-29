@@ -1,6 +1,13 @@
 import { describe, expect, test } from 'vitest';
 import type { FlowDiagram, FlowLane, FlowStep } from '../types';
-import { computeAggregates, stepCost, stepLaborCost, stepVariableCost, totalMinutes } from './cost';
+import {
+  computeAggregates,
+  stepCost,
+  stepCostMode,
+  stepLaborCost,
+  stepVariableCost,
+  totalMinutes,
+} from './cost';
 
 const lanes: FlowLane[] = [
   { id: 'l1', name: '営業', rateYenPerHour: 4500 },
@@ -56,6 +63,57 @@ describe('stepVariableCost', () => {
 describe('stepCost', () => {
   test('人件費 + 個数×単価', () => {
     const s = makeStep({ laneId: 'l1', durationMin: 60, quantity: 100, unitCostYen: 5 });
+    expect(stepCost(s, lanes)).toBe(4500 + 500);
+  });
+});
+
+describe('stepCostMode', () => {
+  test('未指定時は both', () => {
+    expect(stepCostMode(makeStep({}))).toBe('both');
+  });
+
+  test('明示指定はそのまま', () => {
+    expect(stepCostMode(makeStep({ costMode: 'labor' }))).toBe('labor');
+    expect(stepCostMode(makeStep({ costMode: 'variable' }))).toBe('variable');
+    expect(stepCostMode(makeStep({ costMode: 'both' }))).toBe('both');
+  });
+});
+
+describe('costMode 反映', () => {
+  test("costMode='labor' は人件費のみ（個数×単価は0）", () => {
+    const s = makeStep({
+      laneId: 'l1',
+      durationMin: 60,
+      quantity: 100,
+      unitCostYen: 5,
+      costMode: 'labor',
+    });
+    expect(stepLaborCost(s, lanes)).toBe(4500);
+    expect(stepVariableCost(s)).toBe(0);
+    expect(stepCost(s, lanes)).toBe(4500);
+  });
+
+  test("costMode='variable' は個数×単価のみ（人件費は0）", () => {
+    const s = makeStep({
+      laneId: 'l1',
+      durationMin: 60,
+      quantity: 100,
+      unitCostYen: 5,
+      costMode: 'variable',
+    });
+    expect(stepLaborCost(s, lanes)).toBe(0);
+    expect(stepVariableCost(s)).toBe(500);
+    expect(stepCost(s, lanes)).toBe(500);
+  });
+
+  test("costMode='both' は両方加算（既定動作）", () => {
+    const s = makeStep({
+      laneId: 'l1',
+      durationMin: 60,
+      quantity: 100,
+      unitCostYen: 5,
+      costMode: 'both',
+    });
     expect(stepCost(s, lanes)).toBe(4500 + 500);
   });
 });
