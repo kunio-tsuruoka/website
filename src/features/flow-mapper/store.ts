@@ -46,6 +46,7 @@ type Actions = {
     toPhaseId: string,
     beforeStepId?: string | null
   ) => void;
+  swapSteps: (t: DiagramTarget, idA: string, idB: string) => void;
   renameStep: (t: DiagramTarget, id: string, label: string) => void;
   handleStepClick: (t: DiagramTarget, id: string) => void;
 
@@ -55,11 +56,14 @@ type Actions = {
   resetAll: () => void;
   copyToBeFromAsIs: () => void;
   importStateFromJson: (parsed: State) => void;
+  setExecutionsPerMonth: (n: number) => void;
 };
 
 type StoreState = {
   asIs: FlowDiagram;
   toBe: FlowDiagram;
+  // 業務フローの月間実行回数（経営インパクト計算用、年間 = ×12）。
+  executionsPerMonth: number;
   view: View;
   editingId: string | null;
   connectMode: boolean;
@@ -67,6 +71,8 @@ type StoreState = {
   fullscreen: boolean;
   onboardingOpen: boolean;
 };
+
+const DEFAULT_EXECUTIONS_PER_MONTH = 100;
 
 // 旧バージョン (zustand persist 導入前) は { asIs, toBe } をそのまま JSON 保存していた。
 // 新バージョンは zustand persist が { state: { asIs, toBe }, version: 0 } で包む。
@@ -125,6 +131,7 @@ export const useFlowStore = create<StoreState & Actions>()(
     (set, get) => ({
       asIs: EMPTY.asIs,
       toBe: EMPTY.toBe,
+      executionsPerMonth: DEFAULT_EXECUTIONS_PER_MONTH,
       view: 'asIs',
       editingId: null,
       connectMode: false,
@@ -325,6 +332,26 @@ export const useFlowStore = create<StoreState & Actions>()(
           })
         ),
 
+      // 別レーン／別フェーズのステップにドロップした際、互いの (laneId, phaseId)
+      // を入れ替える。next（接続）は各ステップが保持しているのでそのまま温存される。
+      swapSteps: (t: DiagramTarget, idA: string, idB: string) =>
+        set((s) =>
+          updateDiagram(s, t, (d) => {
+            if (idA === idB) return d;
+            const a = d.steps.find((step) => step.id === idA);
+            const b = d.steps.find((step) => step.id === idB);
+            if (!a || !b) return d;
+            return {
+              ...d,
+              steps: d.steps.map((step) => {
+                if (step.id === idA) return { ...step, laneId: b.laneId, phaseId: b.phaseId };
+                if (step.id === idB) return { ...step, laneId: a.laneId, phaseId: a.phaseId };
+                return step;
+              }),
+            };
+          })
+        ),
+
       renameStep: (t: DiagramTarget, id: string, label: string) =>
         set((s) =>
           updateDiagram(s, t, (d) => ({
@@ -424,13 +451,25 @@ export const useFlowStore = create<StoreState & Actions>()(
           return { toBe: cloned, view: 'toBe' };
         }),
 
-      importStateFromJson: (parsed: State) => set({ asIs: parsed.asIs, toBe: parsed.toBe }),
+      importStateFromJson: (parsed: State) =>
+        set({
+          asIs: parsed.asIs,
+          toBe: parsed.toBe,
+          executionsPerMonth: parsed.executionsPerMonth ?? DEFAULT_EXECUTIONS_PER_MONTH,
+        }),
+
+      setExecutionsPerMonth: (n: number) =>
+        set({ executionsPerMonth: Math.max(0, Number.isFinite(n) ? n : 0) }),
     }),
     {
       name: STORAGE_KEY,
       version: 0,
       // ドメイン状態のみ永続化。UI状態 (view/editingId/...) はセッションごとにリセット。
-      partialize: (s) => ({ asIs: s.asIs, toBe: s.toBe }),
+      partialize: (s) => ({
+        asIs: s.asIs,
+        toBe: s.toBe,
+        executionsPerMonth: s.executionsPerMonth,
+      }),
       // 旧形状 (zustand persist 導入前の bare `{ asIs, toBe }`) を検知して
       // 新形状 (`{ state: { asIs, toBe }, version: 0 }`) に詰め替えてから読み込む。
       // これによりデプロイ後の既存ユーザーのデータ消失を防ぐ。

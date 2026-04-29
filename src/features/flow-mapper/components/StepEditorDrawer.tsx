@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { FlowDiagram, FlowStep, View } from '../types';
+import type { FlowDiagram, FlowLane, FlowStep, View } from '../types';
 import { EmptyEditor } from './EmptyEditor';
 import { StepEditor } from './StepEditor';
 
@@ -9,6 +9,8 @@ export function StepEditorDrawer({
   step,
   diagram,
   view,
+  asIsStep,
+  asIsLanes,
   fullscreen,
   onChange,
   onDelete,
@@ -18,6 +20,8 @@ export function StepEditorDrawer({
   step: FlowStep | null;
   diagram: FlowDiagram;
   view: View;
+  asIsStep: FlowStep | null;
+  asIsLanes: FlowLane[] | null;
   fullscreen: boolean;
   onChange: (patch: Partial<FlowStep>) => void;
   onDelete: () => void;
@@ -39,6 +43,8 @@ export function StepEditorDrawer({
             step={step}
             diagram={diagram}
             view={view}
+            asIsStep={asIsStep}
+            asIsLanes={asIsLanes}
             onChange={onChange}
             onDelete={onDelete}
             onClose={onClose}
@@ -63,6 +69,8 @@ export function StepEditorDrawer({
               step={step}
               diagram={diagram}
               view={view}
+              asIsStep={asIsStep}
+              asIsLanes={asIsLanes}
               onChange={onChange}
               onDelete={onDelete}
               onClose={onClose}

@@ -27,6 +27,7 @@ export function StepCard({
   onRename,
   onStartConnect,
   onDelete,
+  onSwap,
 }: {
   step: FlowStep;
   box: LayoutBox;
@@ -37,7 +38,28 @@ export function StepCard({
   onRename: (label: string) => void;
   onStartConnect: () => void;
   onDelete: () => void;
+  onSwap: (otherStepId: string) => void;
 }) {
+  // 別カードの上にドラッグ中のステップが乗ったときに発火する drop ハンドラ。
+  // セル側にも drop があるので、ここで stopPropagation して二重発火を防ぐ。
+  const handleCardDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    const otherId = e.dataTransfer.getData('text/x-flow-step-id');
+    if (!otherId || otherId === step.id) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.classList.remove('ring-4', 'ring-secondary-400', 'ring-offset-2');
+    onSwap(otherId);
+  };
+  const handleCardDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    if (!e.dataTransfer.types.includes('text/x-flow-step-id')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('ring-4', 'ring-secondary-400', 'ring-offset-2');
+  };
+  const handleCardDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.currentTarget.classList.remove('ring-4', 'ring-secondary-400', 'ring-offset-2');
+  };
   const [editing, setEditing] = useState(false);
   const [draftLabel, setDraftLabel] = useState(step.label);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -55,8 +77,11 @@ export function StepCard({
     const CIRCLE_SIZE = 56;
     return (
       <div
-        className={cn('absolute group', HOVER_BRIDGE_CLASS)}
+        className={cn('absolute group rounded-lg', HOVER_BRIDGE_CLASS)}
         style={{ left: box.x, top: box.y, width: box.w, height: box.h }}
+        onDragOver={handleCardDragOver}
+        onDragLeave={handleCardDragLeave}
+        onDrop={handleCardDrop}
       >
         <button
           type="button"

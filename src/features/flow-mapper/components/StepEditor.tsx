@@ -1,14 +1,26 @@
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 import { STEP_TYPE_LABEL, STEP_TYPE_STYLE } from '../constants';
-import type { FlowDiagram, FlowStep, StepCostMode, StepType, View } from '../types';
-import { stepCostMode } from '../utils/cost';
-import { fmtYen } from '../utils/format';
+import type {
+  FlowDiagram,
+  FlowLane,
+  FlowStep,
+  ScenarioKind,
+  StepCostMode,
+  StepType,
+  View,
+} from '../types';
+import { stepCost, stepCostMode } from '../utils/cost';
+import { fmtMin, fmtYen } from '../utils/format';
+import { SCENARIOS, applyScenarioToStep, describeScenario, getScenario } from '../utils/scenarios';
 import { Field } from './Field';
 
 export function StepEditor({
   step,
   diagram,
   view,
+  asIsStep,
+  asIsLanes,
   onChange,
   onDelete,
   onClose,
@@ -16,6 +28,8 @@ export function StepEditor({
   step: FlowStep;
   diagram: FlowDiagram;
   view: View;
+  asIsStep: FlowStep | null;
+  asIsLanes: FlowLane[] | null;
   onChange: (patch: Partial<FlowStep>) => void;
   onDelete: () => void;
   onClose: () => void;
@@ -248,15 +262,24 @@ export function StepEditor({
             />
           </Field>
         ) : (
-          <Field label="改善ポイント">
-            <textarea
-              value={step.improvement}
-              onChange={(e) => onChange({ improvement: e.target.value })}
-              rows={2}
-              placeholder="例: 自動化で転記ゼロ"
-              className="w-full text-sm border border-gray-300 rounded-md px-2 py-1.5 resize-none"
+          <>
+            <ScenarioPicker
+              step={step}
+              diagram={diagram}
+              asIsStep={asIsStep}
+              asIsLanes={asIsLanes}
+              onChange={onChange}
             />
-          </Field>
+            <Field label="改善ポイント（自動入力されます）">
+              <textarea
+                value={step.improvement}
+                onChange={(e) => onChange({ improvement: e.target.value })}
+                rows={2}
+                placeholder="例: 自動化で転記ゼロ（シナリオ適用で自動記録）"
+                className="w-full text-sm border border-gray-300 rounded-md px-2 py-1.5 resize-none"
+              />
+            </Field>
+          </>
         )}
 
         <div>
@@ -315,4 +338,198 @@ export function StepEditor({
       </div>
     </div>
   );
+}
+
+function ScenarioPicker({
+  step,
+  diagram,
+  asIsStep,
+  asIsLanes,
+  onChange,
+}: {
+  step: FlowStep;
+  diagram: FlowDiagram;
+  asIsStep: FlowStep | null;
+  asIsLanes: FlowLane[] | null;
+  onChange: (patch: Partial<FlowStep>) => void;
+}) {
+  const [active, setActive] = useState<ScenarioKind | null>(null);
+  const [value, setValue] = useState<number>(60);
+  const [targetLaneId, setTargetLaneId] = useState<string>('');
+
+  function onPickKind(kind: ScenarioKind) {
+    if (active === kind) {
+      setActive(null);
+      return;
+    }
+    const def = getScenario(kind);
+    setActive(kind);
+    setValue(def.defaultValue);
+    if (kind === 'changeLane' && !targetLaneId) {
+      const otherLane = diagram.lanes.find((l) => l.id !== step.laneId);
+      setTargetLaneId(otherLane?.id ?? step.laneId);
+    }
+  }
+
+  function onApply() {
+    if (!active) return;
+    const params =
+      active === 'changeLane'
+        ? {
+            laneId: targetLaneId,
+            laneName: diagram.lanes.find((l) => l.id === targetLaneId)?.name,
+          }
+        : undefined;
+    const patch = applyScenarioToStep(step, active, value, params);
+    const desc = describeScenario(active, value, { laneName: params?.laneName });
+    const existing = step.improvement.trim();
+    const improvement = existing && !existing.includes(desc) ? `${existing}／${desc}` : desc;
+    onChange({ ...patch, improvement });
+    setActive(null);
+  }
+
+  // 適用前後の比較用に、現状ステップ・As-Is ステップそれぞれのコストを算出。
+  const currentCost = stepCost(step, diagram.lanes);
+  const asIsCost = asIsStep && asIsLanes ? stepCost(asIsStep, asIsLanes) : null;
+
+  // プレビュー: アクティブシナリオを仮適用したらどうなるか
+  const preview = (() => {
+    if (!active) return null;
+    const params = active === 'changeLane' ? { laneId: targetLaneId } : undefined;
+    const patch = applyScenarioToStep(step, active, value, params);
+    const previewStep: FlowStep = { ...step, ...patch };
+    return {
+      step: previewStep,
+      cost: stepCost(previewStep, diagram.lanes),
+    };
+  })();
+
+  return (
+    <div className="rounded-lg border border-primary-200 bg-primary-50/40 p-3 space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-bold text-primary-900">改善シナリオ（MECE）</span>
+        <span className="text-[10px] text-primary-700">どれかを選んで数値を入れて適用</span>
+      </div>
+
+      <div className="grid grid-cols-2 gap-1.5">
+        {SCENARIOS.map((sc) => {
+          const isActive = active === sc.kind;
+          return (
+            <button
+              key={sc.kind}
+              type="button"
+              onClick={() => onPickKind(sc.kind)}
+              className={cn(
+                'text-left px-2 py-1.5 rounded border text-[11px] leading-tight transition-colors',
+                isActive
+                  ? 'border-primary-500 bg-white text-primary-900 ring-2 ring-primary-300'
+                  : 'border-primary-200 bg-white text-gray-700 hover:border-primary-400'
+              )}
+              title={sc.hint}
+            >
+              <span className="block font-bold">{sc.label}</span>
+              <span className="block text-[9px] text-gray-500 font-normal">{sc.hint}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {active ? (
+        <div className="rounded-md bg-white border border-primary-200 p-2 space-y-2">
+          {getScenario(active).numeric ? (
+            <label className="flex items-center gap-2 text-xs">
+              <span className="font-semibold text-gray-700 whitespace-nowrap">
+                {getScenario(active).inputLabel}
+              </span>
+              <input
+                type="number"
+                min={0}
+                max={active === 'increaseQty' ? undefined : 100}
+                step={5}
+                value={value}
+                onChange={(e) => setValue(Math.max(0, Number(e.target.value) || 0))}
+                className="w-20 border border-gray-300 rounded px-1.5 py-1 text-center"
+              />
+              <span className="text-gray-500">{getScenario(active).inputUnit}</span>
+            </label>
+          ) : null}
+
+          {active === 'changeLane' ? (
+            <label className="flex items-center gap-2 text-xs">
+              <span className="font-semibold text-gray-700 whitespace-nowrap">変更先</span>
+              <select
+                value={targetLaneId}
+                onChange={(e) => setTargetLaneId(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-1.5 py-1 bg-white"
+              >
+                {diagram.lanes.map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.name}
+                    {typeof l.rateYenPerHour === 'number' && l.rateYenPerHour > 0
+                      ? `（¥${l.rateYenPerHour}/時）`
+                      : ''}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
+
+          {preview ? (
+            <div className="grid grid-cols-3 gap-2 text-[10px] text-gray-700 bg-gray-50 rounded p-2">
+              <div>
+                <div className="text-gray-500">現在の To-Be</div>
+                <div className="font-bold">{fmtMin(step.durationMin)}</div>
+                <div className="text-gray-600">{fmtYen(currentCost)}</div>
+              </div>
+              <div>
+                <div className="text-primary-700">適用後</div>
+                <div className="font-bold text-primary-700">{fmtMin(preview.step.durationMin)}</div>
+                <div className="text-primary-700">{fmtYen(preview.cost)}</div>
+              </div>
+              <div>
+                <div className="text-emerald-700">差分（適用後 - 現在）</div>
+                <div className="font-bold text-emerald-700">
+                  {formatDeltaMin(preview.step.durationMin - step.durationMin)}
+                </div>
+                <div className="font-bold text-emerald-700">
+                  {formatDeltaYen(preview.cost - currentCost)}
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          <button
+            type="button"
+            onClick={onApply}
+            className="w-full px-3 py-1.5 text-xs font-bold text-white bg-primary-600 rounded hover:bg-primary-700"
+          >
+            このシナリオを適用する
+          </button>
+        </div>
+      ) : null}
+
+      {asIsStep && asIsCost !== null ? (
+        <div className="text-[10px] text-gray-600 leading-snug border-t border-primary-200 pt-2">
+          <span className="font-semibold">As-Is比:</span> 時間{' '}
+          {formatDeltaMin(step.durationMin - asIsStep.durationMin)} ／ コスト{' '}
+          {formatDeltaYen(currentCost - asIsCost)}
+          <span className="text-gray-400">
+            （As-Is: {fmtMin(asIsStep.durationMin)} / {fmtYen(asIsCost)}）
+          </span>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function formatDeltaMin(diff: number): string {
+  if (diff === 0) return '±0';
+  const abs = Math.abs(diff);
+  return diff > 0 ? `+${fmtMin(abs)}` : `-${fmtMin(abs)}`;
+}
+
+function formatDeltaYen(diff: number): string {
+  if (diff === 0) return '±¥0';
+  const abs = Math.abs(diff);
+  return diff > 0 ? `+${fmtYen(abs)}` : `-${fmtYen(abs)}`;
 }
