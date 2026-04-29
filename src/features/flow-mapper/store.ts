@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { EMPTY, SAMPLE, STORAGE_KEY } from './constants';
+import { EMPTY, type FlowTemplate, SAMPLE, STORAGE_KEY } from './constants';
 import type {
   DiagramTarget,
   FlowDiagram,
@@ -10,6 +10,7 @@ import type {
   StepType,
   View,
 } from './types';
+import { defaultCostMode } from './utils/cost';
 import { uid } from './utils/format';
 
 type Actions = {
@@ -38,12 +39,19 @@ type Actions = {
   addStep: (t: DiagramTarget, laneId?: string, phaseId?: string, type?: StepType) => void;
   updateStep: (t: DiagramTarget, id: string, patch: Partial<FlowStep>) => void;
   deleteStep: (t: DiagramTarget, id: string) => void;
-  moveStep: (t: DiagramTarget, id: string, toLaneId: string, toPhaseId: string) => void;
+  moveStep: (
+    t: DiagramTarget,
+    id: string,
+    toLaneId: string,
+    toPhaseId: string,
+    beforeStepId?: string | null
+  ) => void;
   renameStep: (t: DiagramTarget, id: string, label: string) => void;
   handleStepClick: (t: DiagramTarget, id: string) => void;
 
   applySolutionToToBe: (asIsStepId: string, sol: SolutionTemplate) => void;
   loadSample: () => void;
+  loadTemplate: (template: FlowTemplate) => void;
   resetAll: () => void;
   copyToBeFromAsIs: () => void;
   importStateFromJson: (parsed: State) => void;
@@ -241,17 +249,20 @@ export const useFlowStore = create<StoreState & Actions>()(
           pain: '',
           improvement: '',
           next: [],
+          costMode: defaultCostMode(type),
         };
-        // 直前の終端ステップ (next 空 & end 以外) があれば自動接続。
-        // 既に分岐があるなら触らない（明示的構造を尊重）。
+        // ツールバー (図形パレット) からの追加だけ自動接続。
+        // 空セルの「ここに追加」のように lane+phase を明示した呼び出しは
+        // 「その場所に置きたい」意図なので接続を生やさない。
+        const isToolbarAdd = laneId === undefined && phaseId === undefined;
         set((s) => ({
           ...updateDiagram(s, t, (dd) => {
-            const prev = [...dd.steps]
-              .reverse()
-              .find((step) => step.next.length === 0 && step.type !== 'end');
-            const stepsWithLink = prev
+            const last = dd.steps.length > 0 ? dd.steps[dd.steps.length - 1] : null;
+            const shouldLink =
+              isToolbarAdd && last !== null && last.type !== 'end' && last.next.length === 0;
+            const stepsWithLink = shouldLink
               ? dd.steps.map((step) =>
-                  step.id === prev.id ? { ...step, next: [newStep.id] } : step
+                  step.id === last.id ? { ...step, next: [newStep.id] } : step
                 )
               : dd.steps;
             return { ...dd, steps: [...stepsWithLink, newStep] };
@@ -283,14 +294,35 @@ export const useFlowStore = create<StoreState & Actions>()(
           };
         }),
 
-      moveStep: (t: DiagramTarget, id: string, toLaneId: string, toPhaseId: string) =>
+      moveStep: (
+        t: DiagramTarget,
+        id: string,
+        toLaneId: string,
+        toPhaseId: string,
+        beforeStepId?: string | null
+      ) =>
         set((s) =>
-          updateDiagram(s, t, (d) => ({
-            ...d,
-            steps: d.steps.map((step) =>
-              step.id === id ? { ...step, laneId: toLaneId, phaseId: toPhaseId } : step
-            ),
-          }))
+          updateDiagram(s, t, (d) => {
+            const target = d.steps.find((step) => step.id === id);
+            if (!target) return d;
+            const updated: FlowStep = { ...target, laneId: toLaneId, phaseId: toPhaseId };
+            const without = d.steps.filter((step) => step.id !== id);
+            // beforeStepId が指定されていればそのステップの直前に挿入。
+            // 未指定 / 見つからない場合は末尾に追加（同セル内での「最後尾へ」相当）。
+            const insertIdx =
+              beforeStepId == null
+                ? without.length
+                : (() => {
+                    const idx = without.findIndex((step) => step.id === beforeStepId);
+                    return idx === -1 ? without.length : idx;
+                  })();
+            const reordered = [
+              ...without.slice(0, insertIdx),
+              updated,
+              ...without.slice(insertIdx),
+            ];
+            return { ...d, steps: reordered };
+          })
         ),
 
       renameStep: (t: DiagramTarget, id: string, label: string) =>
@@ -368,6 +400,19 @@ export const useFlowStore = create<StoreState & Actions>()(
 
       loadSample: () =>
         set({ asIs: SAMPLE.asIs, toBe: SAMPLE.toBe, view: 'asIs', editingId: null }),
+
+      // テンプレートを As-Is に流し込む。To-Be は EMPTY のままにする
+      // （ユーザーが As-Is を見ながら改善後を作る前提）。
+      // 静的 ID 衝突を避けるため deep clone して store に置く。
+      loadTemplate: (template) => {
+        const cloned: FlowDiagram = JSON.parse(JSON.stringify(template.diagram));
+        set({
+          asIs: cloned,
+          toBe: JSON.parse(JSON.stringify(EMPTY.toBe)),
+          view: 'asIs',
+          editingId: null,
+        });
+      },
 
       resetAll: () => set({ asIs: EMPTY.asIs, toBe: EMPTY.toBe, editingId: null }),
 

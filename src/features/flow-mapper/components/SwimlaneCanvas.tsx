@@ -1,6 +1,14 @@
 import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useRef } from 'react';
-import { CARD_H, CARD_W, HEADER_H, LANE_LABEL_W, LANE_PAD_Y, PHASE_PAD_X } from '../constants';
+import {
+  CARD_GAP,
+  CARD_H,
+  CARD_W,
+  HEADER_H,
+  LANE_LABEL_W,
+  LANE_PAD_Y,
+  PHASE_PAD_X,
+} from '../constants';
 import { useOverflowDetect } from '../hooks/useOverflowDetect';
 import type { FlowDiagram } from '../types';
 import { buildArrowPath, computeLayout } from '../utils/layout';
@@ -37,7 +45,7 @@ export function SwimlaneCanvas({
   onDeleteLane: (id: string) => void;
   onRenamePhase: (id: string, name: string) => void;
   onDeletePhase: (id: string) => void;
-  onMoveStep: (id: string, laneId: string, phaseId: string) => void;
+  onMoveStep: (id: string, laneId: string, phaseId: string, beforeStepId?: string | null) => void;
   onRenameStep: (id: string, label: string) => void;
   onDeleteStep: (id: string) => void;
   onStartConnect: (id: string) => void;
@@ -207,19 +215,33 @@ export function SwimlaneCanvas({
           );
         })}
 
-        {/* セルごとのドロップターゲット + 空セルの「＋追加」ボタン */}
+        {/* セルごとのドロップターゲット + 空セルの「＋追加」ボタン + 末尾の「＋」ボタン */}
         {diagram.phases.map((phase) =>
           diagram.lanes.map((lane) => {
             const px = layout.phaseX.get(phase.id);
             const ly = layout.laneY.get(lane.id);
             if (!px || !ly) return null;
-            const hasStep = diagram.steps.some(
+            const cellStepsOrdered = diagram.steps.filter(
               (s) => s.phaseId === phase.id && s.laneId === lane.id
             );
+            const hasStep = cellStepsOrdered.length > 0;
+            const trailingSlotX = PHASE_PAD_X + cellStepsOrdered.length * (CARD_W + CARD_GAP);
+            // セル内 drop x 座標から「どのカードの直前に入れるか」を決定する。
+            // ドラッグ中のステップは挿入位置計算から除外する。
+            const computeBeforeId = (relX: number, draggedId: string): string | null => {
+              const others = cellStepsOrdered.filter((s) => s.id !== draggedId);
+              for (const cs of others) {
+                const box = layout.step.get(cs.id);
+                if (!box) continue;
+                const centerInCell = box.x - px.x + box.w / 2;
+                if (relX < centerInCell) return cs.id;
+              }
+              return null;
+            };
             return (
               <div
                 key={`cell-${phase.id}-${lane.id}`}
-                className="absolute"
+                className="absolute group/cell"
                 style={{ left: px.x, top: ly.y, width: px.w, height: ly.h }}
                 onDragOver={(e) => {
                   e.preventDefault();
@@ -233,7 +255,11 @@ export function SwimlaneCanvas({
                   e.preventDefault();
                   e.currentTarget.classList.remove('bg-secondary-50/60');
                   const id = e.dataTransfer.getData('text/x-flow-step-id');
-                  if (id) onMoveStep(id, lane.id, phase.id);
+                  if (!id) return;
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const relX = e.clientX - rect.left;
+                  const beforeId = computeBeforeId(relX, id);
+                  onMoveStep(id, lane.id, phase.id, beforeId);
                 }}
               >
                 {!hasStep ? (
@@ -257,7 +283,23 @@ export function SwimlaneCanvas({
                   >
                     ＋ ここに追加
                   </button>
-                ) : null}
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => onAddStep(lane.id, phase.id)}
+                    aria-label="このセルにステップを追加"
+                    title="このセルにステップを追加"
+                    className="absolute text-base font-bold text-primary-600 bg-white border border-dashed border-primary-300 rounded-md hover:bg-primary-50 hover:border-primary-500 transition-opacity opacity-0 group-hover/cell:opacity-80 hover:!opacity-100 focus:opacity-100 no-print"
+                    style={{
+                      left: trailingSlotX,
+                      top: LANE_PAD_Y,
+                      width: CARD_W / 2,
+                      height: CARD_H,
+                    }}
+                  >
+                    ＋
+                  </button>
+                )}
               </div>
             );
           })

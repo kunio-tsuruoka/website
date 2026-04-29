@@ -8,8 +8,11 @@ import { ShapePalette } from './components/ShapePalette';
 import { StepEditorDrawer } from './components/StepEditorDrawer';
 import { SuggestionsPanel } from './components/SuggestionsPanel';
 import { SwimlaneCanvas } from './components/SwimlaneCanvas';
+import { TemplatePicker } from './components/TemplatePicker';
 import { useFlowStore } from './store';
 import type { DiagramTarget } from './types';
+
+const TEMPLATE_PICKER_FLAG = 'beekle-flow-mapper-template-picker-shown';
 
 export function FlowMapper() {
   const asIs = useFlowStore((s) => s.asIs);
@@ -46,6 +49,7 @@ export function FlowMapper() {
   const startConnectFrom = useFlowStore((s) => s.startConnectFrom);
   const applySolutionToToBe = useFlowStore((s) => s.applySolutionToToBe);
   const loadSample = useFlowStore((s) => s.loadSample);
+  const loadTemplate = useFlowStore((s) => s.loadTemplate);
   const resetAll = useFlowStore((s) => s.resetAll);
   const copyToBeFromAsIs = useFlowStore((s) => s.copyToBeFromAsIs);
 
@@ -56,6 +60,32 @@ export function FlowMapper() {
   useEffect(() => {
     hydrateOnboardingFromStorage();
   }, [hydrateOnboardingFromStorage]);
+
+  // テンプレ選択モーダル: 両方のフローが EMPTY (0 ステップ) で
+  // かつ「一度も表示してない」場合にのみ表示。
+  // 初回マウント時のみ判定する（ステップ追加→削除で空に戻ったときに再表示はしない）
+  const [templatePickerOpen, setTemplatePickerOpen] = useState(false);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: 初回マウント時のみ判定。後続の asIs/toBe 変化で再評価しない
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const isEmpty = asIs.steps.length === 0 && toBe.steps.length === 0;
+    if (!isEmpty) return;
+    try {
+      const shown = localStorage.getItem(TEMPLATE_PICKER_FLAG);
+      if (shown !== '1') setTemplatePickerOpen(true);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  function markTemplatePickerShown() {
+    try {
+      localStorage.setItem(TEMPLATE_PICKER_FLAG, '1');
+    } catch {
+      /* ignore */
+    }
+    setTemplatePickerOpen(false);
+  }
 
   // ESC で全画面解除 + 全画面中は body のスクロールを止める
   useEffect(() => {
@@ -301,7 +331,9 @@ export function FlowMapper() {
                 onDeleteLane={(id) => deleteLane(target, id)}
                 onRenamePhase={(id, name) => renamePhase(target, id, name)}
                 onDeletePhase={(id) => deletePhase(target, id)}
-                onMoveStep={(id, laneId, phaseId) => moveStep(target, id, laneId, phaseId)}
+                onMoveStep={(id, laneId, phaseId, beforeStepId) =>
+                  moveStep(target, id, laneId, phaseId, beforeStepId)
+                }
                 onRenameStep={(id, label) => renameStep(target, id, label)}
                 onDeleteStep={(id) => deleteStep(target, id)}
                 onStartConnect={startConnectFrom}
@@ -328,6 +360,21 @@ export function FlowMapper() {
             onAddStep={() => addStep(target)}
           />
         </div>
+      ) : null}
+
+      {templatePickerOpen ? (
+        <TemplatePicker
+          onPickTemplate={(tpl) => {
+            loadTemplate(tpl);
+            markTemplatePickerShown();
+          }}
+          onLoadSample={() => {
+            loadSample();
+            markTemplatePickerShown();
+          }}
+          onStartBlank={markTemplatePickerShown}
+          onClose={markTemplatePickerShown}
+        />
       ) : null}
     </div>
   );

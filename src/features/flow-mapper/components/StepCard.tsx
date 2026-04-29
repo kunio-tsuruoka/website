@@ -11,6 +11,12 @@ function shapeOf(type: StepType): 'rect' | 'diamond' | 'circle' {
   return 'rect';
 }
 
+// hover ブリッジ。group div の ::before 疑似要素でカードの周囲 16px を
+// 透明な hover 領域で覆う (`before:-inset-4`)。これによりカード→外側の
+// `+`/`×` ボタンへカーソルを移すあいだに `group-hover` が途切れない。
+// 本体カードの位置は変えないので矢印描画 (computeLayout の box) と完全に整合する。
+const HOVER_BRIDGE_CLASS = "before:absolute before:content-[''] before:-inset-4";
+
 export function StepCard({
   step,
   box,
@@ -49,7 +55,7 @@ export function StepCard({
     const CIRCLE_SIZE = 56;
     return (
       <div
-        className="absolute group"
+        className={cn('absolute group', HOVER_BRIDGE_CLASS)}
         style={{ left: box.x, top: box.y, width: box.w, height: box.h }}
       >
         <button
@@ -160,7 +166,7 @@ export function StepCard({
 
   return (
     <div
-      className="absolute group"
+      className={cn('absolute group', HOVER_BRIDGE_CLASS)}
       style={{ left: box.x, top: box.y, width: box.w, height: box.h }}
     >
       {/* diamond は背景レイヤで菱形を描き、クリックは上のボタンが受ける */}
