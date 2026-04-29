@@ -570,11 +570,48 @@ export function FlowMapper() {
   // fromId 未設定 → 1回目で source を確定 → 2回目の対象で next をトグル
   const [connectFromId, setConnectFromId] = useState<string | null>(null);
   const [connectMode, setConnectMode] = useState(false);
+  // 全画面作業モード: トグル中は viewport を埋め、キャンバスを縦横スクロールさせる
+  const [fullscreen, setFullscreen] = useState(false);
+  // オンボーディングガイド: 初回表示で開いておき、ユーザーが閉じたら localStorage で記憶
+  const [onboardingOpen, setOnboardingOpen] = useState(true);
+  // キャンバスがスクロール可能か（オーバーフローしている）。全画面ボタンを目立たせるトリガに使う。
+  const [canvasOverflows, setCanvasOverflows] = useState(false);
 
   useEffect(() => {
     setState(loadInitial());
     setHydrated(true);
+    // オンボーディング表示状態を localStorage から復元
+    try {
+      const dismissed = localStorage.getItem('beekle-flow-mapper-onboarding-dismissed');
+      if (dismissed === '1') setOnboardingOpen(false);
+    } catch {
+      /* ignore */
+    }
   }, []);
+
+  function dismissOnboarding() {
+    setOnboardingOpen(false);
+    try {
+      localStorage.setItem('beekle-flow-mapper-onboarding-dismissed', '1');
+    } catch {
+      /* ignore */
+    }
+  }
+
+  // ESC で全画面解除 + 全画面中は body のスクロールを止める
+  useEffect(() => {
+    if (!fullscreen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setFullscreen(false);
+    }
+    window.addEventListener('keydown', onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [fullscreen]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -781,7 +818,14 @@ export function FlowMapper() {
   }, [editingId, activeDiagram]);
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-soft overflow-hidden flow-mapper-root">
+    <div
+      className={cn(
+        'bg-white border border-gray-200 shadow-soft flow-mapper-root',
+        fullscreen
+          ? 'fixed inset-0 z-50 rounded-none flex flex-col overflow-hidden'
+          : 'rounded-2xl overflow-hidden'
+      )}
+    >
       <PrintStyles />
       {/* Toolbar */}
       <div className="border-b border-gray-200 bg-gray-50 px-4 py-3 flex items-center justify-between flex-wrap gap-2 no-print">
@@ -841,6 +885,30 @@ export function FlowMapper() {
           >
             {connectMode ? '✓ 接続モード（クリックで解除）' : '🔗 接続モード'}
           </button>
+          <button
+            type="button"
+            onClick={() => setFullscreen((v) => !v)}
+            className={cn(
+              'relative px-3 py-1.5 text-xs font-medium border rounded-lg transition-colors',
+              fullscreen
+                ? 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'
+                : canvasOverflows
+                  ? 'text-amber-900 bg-highlight-100 border-highlight-400 hover:bg-highlight-200 ring-2 ring-highlight-300/60'
+                  : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'
+            )}
+            title={
+              fullscreen
+                ? '全画面を解除（Esc）'
+                : canvasOverflows
+                  ? 'キャンバスがはみ出ています。全画面で広く作業できます'
+                  : '全画面で作業'
+            }
+          >
+            {fullscreen ? '⛶ 全画面解除' : canvasOverflows ? '⛶ 全画面で見る ←' : '⛶ 全画面'}
+            {canvasOverflows && !fullscreen ? (
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+            ) : null}
+          </button>
           <ExportMenu state={state} view={view} />
           <button
             type="button"
@@ -859,12 +927,75 @@ export function FlowMapper() {
         </div>
       ) : null}
 
+      {onboardingOpen ? (
+        <div className="bg-primary-50 border-b border-primary-200 px-4 py-3 no-print">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-bold text-primary-900">
+                  💡 はじめての方へ：5分で覚える操作ガイド
+                </span>
+              </div>
+              <ol className="text-xs text-primary-900/90 space-y-1.5 list-decimal list-inside leading-relaxed">
+                <li>
+                  <strong>図形パレット</strong>
+                  （左の○◇▭ボタン群）を押すと、その種類のステップが追加され、
+                  <strong>直前のステップから自動で矢印が引かれます</strong>
+                </li>
+                <li>
+                  ステップを<strong>クリック</strong>すると右側パネルが開き、
+                  <strong className="text-primary-700 underline">
+                    所要時間（分）・担当・使用ツール・課題
+                  </strong>
+                  などを編集できます
+                </li>
+                <li>
+                  ステップを<strong>ダブルクリック</strong>
+                  するとその場で名前を変更（Enterで確定、Escで取消）
+                </li>
+                <li>
+                  ステップに<strong>マウスオーバーすると右端に「+」ボタン</strong>
+                  が出現。クリックでそのステップから矢印を引く接続モードに入ります
+                </li>
+                <li>
+                  ステップを<strong>ドラッグ</strong>して別の担当（レーン）やフェーズへ移動できます
+                </li>
+                <li>
+                  上部の<strong>「⛶ 全画面」</strong>ボタンで作業領域を最大化（Escで解除）
+                </li>
+                <li>
+                  <strong>As-Is</strong>
+                  （現状）を作ったら「To-Be」タブで改善後を、「比較」タブで差分を確認
+                </li>
+              </ol>
+              <p className="text-[11px] text-primary-700 mt-2">
+                ※
+                まず手を動かして試したい場合は、上部「サンプルを読込」を押すと受注〜出荷業務のフルサンプルが入ります。
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={dismissOnboarding}
+              className="flex-shrink-0 text-xs text-primary-700 hover:text-primary-900 px-2 py-1 hover:bg-primary-100 rounded"
+              title="このガイドを閉じる（次回から表示しません）"
+            >
+              閉じる ×
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       {/* Body */}
       {view === 'compare' ? (
         <CompareView state={state} />
       ) : activeDiagram ? (
-        <div className="grid lg:grid-cols-[1fr_340px] gap-0">
-          <div className="p-4 md:p-6">
+        <div
+          className={cn(
+            'grid lg:grid-cols-[1fr_340px] gap-0',
+            fullscreen && 'flex-1 min-h-0 overflow-hidden'
+          )}
+        >
+          <div className={cn('p-4 md:p-6', fullscreen && 'flex flex-col min-h-0 overflow-hidden')}>
             <input
               type="text"
               value={activeDiagram.title}
@@ -890,23 +1021,32 @@ export function FlowMapper() {
                 ＋ 担当（レーン）
               </button>
             </div>
-            <SwimlaneCanvas
-              diagram={activeDiagram}
-              editingId={editingId}
-              connectMode={connectMode}
-              connectFromId={connectFromId}
-              onSelect={(id) => handleStepClick(target, id)}
-              onAddStep={(laneId, phaseId) => addStep(target, laneId, phaseId)}
-              onRenameLane={(id, name) => renameLane(target, id, name)}
-              onDeleteLane={(id) => deleteLane(target, id)}
-              onRenamePhase={(id, name) => renamePhase(target, id, name)}
-              onDeletePhase={(id) => deletePhase(target, id)}
-              onMoveStep={(id, laneId, phaseId) => moveStep(target, id, laneId, phaseId)}
-              onRenameStep={(id, label) => renameStep(target, id, label)}
-              onStartConnect={startConnectFrom}
-            />
+            <div className={cn(fullscreen && 'flex-1 min-h-0 flex flex-col')}>
+              <SwimlaneCanvas
+                diagram={activeDiagram}
+                editingId={editingId}
+                connectMode={connectMode}
+                connectFromId={connectFromId}
+                fullscreen={fullscreen}
+                onSelect={(id) => handleStepClick(target, id)}
+                onAddStep={(laneId, phaseId) => addStep(target, laneId, phaseId)}
+                onRenameLane={(id, name) => renameLane(target, id, name)}
+                onDeleteLane={(id) => deleteLane(target, id)}
+                onRenamePhase={(id, name) => renamePhase(target, id, name)}
+                onDeletePhase={(id) => deletePhase(target, id)}
+                onMoveStep={(id, laneId, phaseId) => moveStep(target, id, laneId, phaseId)}
+                onRenameStep={(id, label) => renameStep(target, id, label)}
+                onStartConnect={startConnectFrom}
+                onOverflowChange={setCanvasOverflows}
+              />
+            </div>
           </div>
-          <div className="border-t lg:border-t-0 lg:border-l border-gray-200 bg-gray-50 no-print">
+          <div
+            className={cn(
+              'border-t lg:border-t-0 lg:border-l border-gray-200 bg-gray-50 no-print',
+              fullscreen && 'overflow-y-auto'
+            )}
+          >
             {editingStep ? (
               <StepEditor
                 key={editingStep.id}
@@ -946,6 +1086,7 @@ function SwimlaneCanvas({
   editingId,
   connectMode,
   connectFromId,
+  fullscreen,
   onSelect,
   onAddStep,
   onRenameLane,
@@ -955,11 +1096,13 @@ function SwimlaneCanvas({
   onMoveStep,
   onRenameStep,
   onStartConnect,
+  onOverflowChange,
 }: {
   diagram: FlowDiagram;
   editingId: string | null;
   connectMode: boolean;
   connectFromId: string | null;
+  fullscreen?: boolean;
   onSelect: (id: string) => void;
   onAddStep: (laneId: string, phaseId: string) => void;
   onRenameLane: (id: string, name: string) => void;
@@ -969,6 +1112,7 @@ function SwimlaneCanvas({
   onMoveStep: (id: string, laneId: string, phaseId: string) => void;
   onRenameStep: (id: string, label: string) => void;
   onStartConnect: (id: string) => void;
+  onOverflowChange?: (overflows: boolean) => void;
 }) {
   const layout = useMemo(() => computeLayout(diagram), [diagram]);
 
@@ -991,8 +1135,42 @@ function SwimlaneCanvas({
     return list;
   }, [diagram, layout, editingId, connectMode, connectFromId]);
 
+  // キャンバスがビューポートを超えるかを親に伝える（全画面ボタンを目立たせる判定）
+  // 通常モードでは wrapper の overflow-x-auto により wrapper の clientWidth は内容と一致するため、
+  // 「scrollWidth > clientWidth」では検出できない。代わりにキャンバスのバウンディング矩形と
+  // ビューポートサイズを比較し、画面に収まっていない or 縦が画面の3/4を超えるなら overflow と判定。
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: layout/fullscreen 変化で再計測する意図
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || !onOverflowChange) return;
+    function check() {
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const widthOver = rect.right > window.innerWidth + 1 || rect.left < -1;
+      const heightOver = rect.height > window.innerHeight * 0.75;
+      onOverflowChange?.(widthOver || heightOver);
+    }
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    window.addEventListener('resize', check);
+    window.addEventListener('scroll', check, { passive: true });
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', check);
+      window.removeEventListener('scroll', check);
+    };
+  }, [onOverflowChange, layout.width, layout.height, fullscreen]);
+
   return (
-    <div className="overflow-x-auto border border-gray-200 rounded-xl bg-white flow-mapper-canvas">
+    <div
+      ref={scrollRef}
+      className={cn(
+        'border border-gray-200 rounded-xl bg-white flow-mapper-canvas',
+        fullscreen ? 'flex-1 min-h-0 overflow-auto' : 'overflow-x-auto'
+      )}
+    >
       <div
         className="relative"
         style={{
@@ -1512,9 +1690,15 @@ function StepCard({
               <StepIcon type={step.type} className="w-3 h-3" />
               {STEP_TYPE_LABEL[step.type]}
             </span>
-            {step.durationMin > 0 ? (
-              <span className="text-[9px] text-gray-500">{fmtMin(step.durationMin)}</span>
-            ) : null}
+            {/* duration は親 button 内なので span にしてクリックは親に委譲、ダブルクリックはラベル編集を発火させないよう抑止 */}
+            <span
+              role="presentation"
+              onDoubleClick={(e) => e.stopPropagation()}
+              title="クリックで詳細編集パネルが開きます（所要時間・担当・課題など）"
+              className="text-[9px] text-gray-500 hover:text-primary-700 rounded px-1 transition-colors"
+            >
+              ⏱ {step.durationMin > 0 ? fmtMin(step.durationMin) : '時間を設定'}
+            </span>
           </div>
           {editing ? (
             <input
@@ -1633,14 +1817,36 @@ function StepEditor({
               ))}
             </select>
           </Field>
-          <Field label="所要時間（分）">
-            <input
-              type="number"
-              min={0}
-              value={step.durationMin}
-              onChange={(e) => onChange({ durationMin: Math.max(0, Number(e.target.value) || 0) })}
-              className="w-full text-sm border border-gray-300 rounded-md px-2 py-1.5"
-            />
+          <Field label="⏱ 所要時間（分）">
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => onChange({ durationMin: Math.max(0, step.durationMin - 5) })}
+                className="px-2 py-1.5 text-xs font-bold text-gray-600 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50"
+                aria-label="所要時間を5分減らす"
+              >
+                −
+              </button>
+              <input
+                type="number"
+                min={0}
+                step={5}
+                value={step.durationMin}
+                onChange={(e) =>
+                  onChange({ durationMin: Math.max(0, Number(e.target.value) || 0) })
+                }
+                className="w-full text-sm font-bold text-center border-y border-gray-300 px-1 py-1.5 focus:outline-none focus:bg-primary-50"
+              />
+              <button
+                type="button"
+                onClick={() => onChange({ durationMin: step.durationMin + 5 })}
+                className="px-2 py-1.5 text-xs font-bold text-gray-600 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50"
+                aria-label="所要時間を5分増やす"
+              >
+                ＋
+              </button>
+            </div>
+            <p className="text-[10px] text-gray-500 mt-0.5">分単位。±ボタンで5分刻み調整</p>
           </Field>
         </div>
 
@@ -1774,24 +1980,42 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function EmptyEditor({ onAddStep }: { onAddStep: () => void }) {
   return (
-    <div className="p-6">
-      <h3 className="text-sm font-bold text-gray-900 mb-3">使い方</h3>
-      <ol className="text-xs text-gray-600 space-y-2 mb-4 list-decimal list-inside leading-relaxed">
-        <li>下の「＋ ここに追加」を押すか「＋ ステップ追加」でステップを作成</li>
-        <li>ステップは追加した順に自動で矢印で繋がります</li>
-        <li>ステップをクリックして種別・所要時間・ツール・課題などを編集</li>
-        <li>分岐させたい場合は「判断」種別にして、編集パネルで複数の「次のステップ」をチェック</li>
-        <li>To-Be に切り替えて改善後フローを作成、「比較」で差分を確認</li>
+    <div className="p-5">
+      <div className="border-2 border-dashed border-primary-300 rounded-lg p-4 mb-4 bg-primary-50/40">
+        <p className="text-xs font-bold text-primary-900 mb-1">📝 ここが詳細編集パネルです</p>
+        <p className="text-xs text-primary-800/80 leading-relaxed">
+          ステップ（左の図形）を<strong>クリック</strong>
+          すると、ここに以下の編集項目が表示されます：
+        </p>
+        <ul className="text-[11px] text-primary-800/80 mt-2 space-y-0.5 ml-4 list-disc">
+          <li>名前 / 種別（開始・作業・判断…）</li>
+          <li>
+            <strong className="text-primary-700">⏱ 所要時間（分）</strong> ← ±ボタンで5分刻み変更
+          </li>
+          <li>担当（レーン）/ フェーズ</li>
+          <li>使用ツール（Excel・Slack 等）</li>
+          <li>課題・痛み（As-Is）/ 改善ポイント（To-Be）</li>
+          <li>次のステップ（矢印接続先、複数で分岐）</li>
+        </ul>
+      </div>
+
+      <h3 className="text-sm font-bold text-gray-900 mb-2">最初の一歩</h3>
+      <ol className="text-xs text-gray-700 space-y-1.5 mb-4 list-decimal list-inside leading-relaxed">
+        <li>左上の図形パレット（○◇▭など）からステップを追加</li>
+        <li>連続クリックでフローが自動で繋がります</li>
+        <li>各ステップをクリックして詳細編集</li>
       </ol>
+
       <button
         type="button"
         onClick={onAddStep}
-        className="w-full px-4 py-2 text-xs font-semibold text-white bg-primary-500 rounded-lg hover:bg-primary-600"
+        className="w-full px-4 py-2.5 text-xs font-semibold text-white bg-primary-500 rounded-lg hover:bg-primary-600 shadow-sm"
       >
         ＋ 最初のステップを追加
       </button>
-      <p className="mt-3 text-[11px] text-gray-400 leading-relaxed">
-        まず試したい方は、ツールバーの「サンプルを読込」で受注〜出荷業務のサンプルデータを開けます。
+      <p className="mt-3 text-[11px] text-gray-500 leading-relaxed">
+        💡 まず試したい方は、ツールバーの<strong>「サンプルを読込」</strong>
+        で受注〜出荷業務のサンプルが入ります。
       </p>
     </div>
   );
