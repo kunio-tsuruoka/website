@@ -395,6 +395,88 @@ function stepCost(step: FlowStep, lanes: FlowLane[]): number {
   return (step.durationMin / 60) * rate;
 }
 
+// === To-Be 改善ヒント（As-Is 分析）===
+// 「業務可視化 → DXすべきステップ判断」という本ツールのコンセプトを実装する中核機能。
+// ルールベースで自動化・AI・並行化・重点改善・ツール未設定を検出し、To-Be 設計の起点を示す。
+type SuggestionKind = 'automation' | 'ai' | 'parallel' | 'priority' | 'tool';
+type Suggestion = {
+  stepId: string;
+  kind: SuggestionKind;
+  title: string;
+  message: string;
+};
+
+const SUGGESTION_BADGE: Record<SuggestionKind, { label: string; color: string }> = {
+  automation: {
+    label: '自動化',
+    color: 'bg-secondary-100 text-secondary-900 border-secondary-300',
+  },
+  ai: { label: 'AI適用', color: 'bg-primary-100 text-primary-900 border-primary-300' },
+  parallel: { label: '並行化', color: 'bg-emerald-100 text-emerald-900 border-emerald-300' },
+  priority: { label: '重点改善', color: 'bg-rose-100 text-rose-900 border-rose-300' },
+  tool: { label: 'ツール選定', color: 'bg-amber-100 text-amber-900 border-amber-300' },
+};
+
+function suggestImprovements(d: FlowDiagram): Suggestion[] {
+  const out: Suggestion[] = [];
+  const manualToolPattern = /excel|エクセル|電話|fax|ファクス|紙|手作業|手動|手書き|転記|印刷/i;
+  const aiDecisionPattern = /確認|判断|チェック|審査|可否|判定|分類|分別|仕分け|レビュー/;
+
+  for (const s of d.steps) {
+    // 1) 手作業 × 高所要時間 → 自動化候補
+    if (
+      s.durationMin >= 10 &&
+      (manualToolPattern.test(s.tool) || manualToolPattern.test(s.label))
+    ) {
+      out.push({
+        stepId: s.id,
+        kind: 'automation',
+        title: `「${s.label}」(${fmtMin(s.durationMin)}) は自動化候補`,
+        message: `${s.tool ? `${s.tool}による` : ''}手作業を、API連携／RPA／OCR で削減できる可能性。To-Be ではシステム化を検討。`,
+      });
+    }
+    // 2) 判断ステップ + AI 適用キーワード
+    if (s.type === 'decision' && aiDecisionPattern.test(s.label)) {
+      out.push({
+        stepId: s.id,
+        kind: 'ai',
+        title: `「${s.label}」は AI 自動判定候補`,
+        message:
+          'ルールが言語化できればLLM／分類モデルで自動化できる。判断基準が安定している場合に向く。',
+      });
+    }
+    // 3) 待ち時間
+    if (s.type === 'wait' && s.durationMin > 0) {
+      out.push({
+        stepId: s.id,
+        kind: 'parallel',
+        title: `「${s.label}」は待ち時間（${fmtMin(s.durationMin)}）`,
+        message: '並行処理化、事前承認ルール、通知の自動化などで削減候補。',
+      });
+    }
+    // 4) pain 記入あり
+    if (s.pain && s.pain.trim().length > 0) {
+      out.push({
+        stepId: s.id,
+        kind: 'priority',
+        title: `「${s.label}」は課題が明示されている`,
+        message: `課題: ${s.pain.slice(0, 60)}${s.pain.length > 60 ? '…' : ''}。To-Be で最優先で潰す対象。`,
+      });
+    }
+    // 5) ツール未設定 + タスク → ツール導入検討
+    if (s.type === 'task' && !s.tool.trim() && s.durationMin >= 5) {
+      out.push({
+        stepId: s.id,
+        kind: 'tool',
+        title: `「${s.label}」はツール未設定`,
+        message:
+          '何を使って実施しているか明示。明確化することで重複作業や属人化が見える化され、改善対象が決まる。',
+      });
+    }
+  }
+  return out;
+}
+
 type AggBucket = { name: string; minutes: number; yen: number; stepCount: number };
 type Aggregates = {
   totalMinutes: number;
@@ -984,7 +1066,7 @@ export function FlowMapper() {
             )}
             title="2つのステップをクリックして矢印を引きます（再クリックで解除）"
           >
-            {connectMode ? '✓ 接続モード（クリックで解除）' : '🔗 接続モード'}
+            {connectMode ? '接続モード ON（クリックで解除）' : '接続モード'}
           </button>
           <button
             type="button"
@@ -1005,7 +1087,7 @@ export function FlowMapper() {
                   : '全画面で作業'
             }
           >
-            {fullscreen ? '⛶ 全画面解除' : canvasOverflows ? '⛶ 全画面で見る ←' : '⛶ 全画面'}
+            {fullscreen ? '全画面を解除' : canvasOverflows ? '全画面で見る' : '全画面'}
             {canvasOverflows && !fullscreen ? (
               <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
             ) : null}
@@ -1034,7 +1116,7 @@ export function FlowMapper() {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-bold text-primary-900">
-                  💡 はじめての方へ：5分で覚える操作ガイド
+                  はじめての方へ：5分で覚える操作ガイド
                 </span>
               </div>
               <ol className="text-xs text-primary-900/90 space-y-1.5 list-decimal list-inside leading-relaxed">
@@ -1062,7 +1144,7 @@ export function FlowMapper() {
                   ステップを<strong>ドラッグ</strong>して別の担当（レーン）やフェーズへ移動できます
                 </li>
                 <li>
-                  上部の<strong>「⛶ 全画面」</strong>ボタンで作業領域を最大化（Escで解除）
+                  上部の<strong>「全画面」</strong>ボタンで作業領域を最大化（Escで解除）
                 </li>
                 <li>
                   <strong>As-Is</strong>
@@ -1143,7 +1225,10 @@ export function FlowMapper() {
               />
             </div>
             {!fullscreen ? (
-              <CostsPanel diagram={activeDiagram} label={view === 'toBe' ? 'To-Be' : 'As-Is'} />
+              <>
+                <CostsPanel diagram={activeDiagram} label={view === 'toBe' ? 'To-Be' : 'As-Is'} />
+                {view === 'toBe' ? <SuggestionsPanel asIs={state.asIs} /> : null}
+              </>
             ) : null}
           </div>
           <div
@@ -1819,7 +1904,7 @@ function StepCard({
               title="クリックで詳細編集パネルが開きます（所要時間・担当・課題など）"
               className="text-[9px] text-gray-500 hover:text-primary-700 rounded px-1 transition-colors"
             >
-              ⏱ {step.durationMin > 0 ? fmtMin(step.durationMin) : '時間を設定'}
+              {step.durationMin > 0 ? fmtMin(step.durationMin) : '時間を設定'}
             </span>
           </div>
           {editing ? (
@@ -1849,10 +1934,10 @@ function StepCard({
           )}
           {shape !== 'diamond' ? (
             <div className="mt-auto text-[9px] text-gray-500 truncate">
-              {step.tool ? `🔧 ${step.tool}` : ''}
-              {step.pain ? <span className="text-red-700"> ⚠ {step.pain}</span> : null}
+              {step.tool ? `ツール: ${step.tool}` : ''}
+              {step.pain ? <span className="text-red-700"> 課題: {step.pain}</span> : null}
               {step.improvement ? (
-                <span className="text-emerald-700"> ✓ {step.improvement}</span>
+                <span className="text-emerald-700"> 改善: {step.improvement}</span>
               ) : null}
             </div>
           ) : null}
@@ -1939,7 +2024,7 @@ function StepEditor({
               ))}
             </select>
           </Field>
-          <Field label="⏱ 所要時間（分）">
+          <Field label="所要時間（分）">
             <div className="flex items-center gap-1">
               <button
                 type="button"
@@ -2100,6 +2185,89 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
+// As-Is から「DXすべきステップ」を提案するパネル。To-Be ビューと Compare ビューで使用。
+function SuggestionsPanel({ asIs, label }: { asIs: FlowDiagram; label?: string }) {
+  const [open, setOpen] = useState(true);
+  const suggestions = useMemo(() => suggestImprovements(asIs), [asIs]);
+
+  // ステップごとにヒントをまとめる
+  const grouped = useMemo(() => {
+    const m = new Map<string, Suggestion[]>();
+    for (const s of suggestions) {
+      const arr = m.get(s.stepId) ?? [];
+      arr.push(s);
+      m.set(s.stepId, arr);
+    }
+    return m;
+  }, [suggestions]);
+
+  return (
+    <section className="mt-4 border border-primary-200 rounded-xl bg-primary-50/30 overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-4 py-3 bg-primary-100/60 hover:bg-primary-100 border-b border-primary-200"
+      >
+        <span className="text-sm font-bold text-primary-900 flex items-center gap-2">
+          To-Be 改善のヒント
+          {label ? <span className="text-xs font-normal text-primary-700">（{label}）</span> : null}
+          <span className="text-xs font-normal text-primary-700">
+            {suggestions.length === 0
+              ? '対象なし'
+              : `${grouped.size}ステップ・${suggestions.length}件の候補`}
+          </span>
+        </span>
+        <span className="text-xs text-primary-700">{open ? '▼' : '▶'}</span>
+      </button>
+      {open ? (
+        <div className="p-4">
+          <p className="text-[11px] text-primary-900/80 leading-relaxed mb-3">
+            <strong>このツールのコンセプト:</strong> AI／DX を導入する前に、まず
+            As-Is（現状）で業務を見える化します。 その上で「どこを DX
+            すべきか」を判断し、To-Be（改善後）を描きましょう。 以下は As-Is
+            を自動分析した改善候補です。<strong>To-Be 設計の議論の起点</strong>
+            として活用してください。
+          </p>
+          {suggestions.length === 0 ? (
+            <p className="text-xs text-gray-600">
+              改善候補なし。As-Is にステップ・所要時間・使用ツール・課題を記入すると候補が出ます。
+            </p>
+          ) : (
+            <ul className="space-y-2">
+              {[...grouped.entries()].map(([stepId, items]) => (
+                <li
+                  key={stepId}
+                  className="bg-white border border-primary-100 rounded-lg p-3 space-y-1"
+                >
+                  <p className="text-xs font-bold text-gray-900">{items[0].title}</p>
+                  <div className="flex flex-wrap gap-1">
+                    {items.map((it) => (
+                      <span
+                        key={it.kind}
+                        className={cn(
+                          'inline-block text-[10px] font-bold px-2 py-0.5 rounded border',
+                          SUGGESTION_BADGE[it.kind].color
+                        )}
+                      >
+                        {SUGGESTION_BADGE[it.kind].label}
+                      </span>
+                    ))}
+                  </div>
+                  <ul className="text-[11px] text-gray-700 leading-relaxed list-disc list-inside ml-1 space-y-0.5">
+                    {items.map((it) => (
+                      <li key={`${it.stepId}-${it.kind}-msg`}>{it.message}</li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
 // 集計パネル: フェーズ・担当・種別ごとの時間とコストを可視化し、ボトルネック5位を表示
 function CostsPanel({ diagram, label }: { diagram: FlowDiagram; label: string }) {
   const [open, setOpen] = useState(true);
@@ -2128,7 +2296,7 @@ function CostsPanel({ diagram, label }: { diagram: FlowDiagram; label: string })
         className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border-b border-gray-200"
       >
         <span className="text-sm font-bold text-gray-900 flex items-center gap-2">
-          📊 工程・担当別の時間とコスト集計（{label}）
+          工程・担当別の時間とコスト集計（{label}）
           <span className="text-xs font-normal text-gray-600">
             合計 {fmtMin(agg.totalMinutes)}
             {hasCost ? ` / ${fmtYen(agg.totalYen)}` : ''}
@@ -2146,7 +2314,7 @@ function CostsPanel({ diagram, label }: { diagram: FlowDiagram; label: string })
             <>
               {!hasCost ? (
                 <p className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded px-2 py-1.5">
-                  💡 担当ラベル下の「¥◯◯/時」を入力すると、コスト計算が有効になります（例:
+                  担当ラベル下の「¥◯◯/時」を入力すると、コスト計算が有効になります（例:
                   営業4500、事務3000）
                 </p>
               ) : null}
@@ -2220,7 +2388,7 @@ function CostsPanel({ diagram, label }: { diagram: FlowDiagram; label: string })
               {/* ボトルネック上位5 */}
               <div>
                 <h4 className="text-xs font-bold text-gray-800 mb-2">
-                  ⚠️ {hasCost ? 'コスト' : '時間'}ボトルネック 上位5
+                  {hasCost ? 'コスト' : '時間'}ボトルネック 上位5
                 </h4>
                 <ol className="space-y-1 text-xs">
                   {agg.topSteps
@@ -2257,7 +2425,7 @@ function EmptyEditor({ onAddStep }: { onAddStep: () => void }) {
   return (
     <div className="p-5">
       <div className="border-2 border-dashed border-primary-300 rounded-lg p-4 mb-4 bg-primary-50/40">
-        <p className="text-xs font-bold text-primary-900 mb-1">📝 ここが詳細編集パネルです</p>
+        <p className="text-xs font-bold text-primary-900 mb-1">ここが詳細編集パネルです</p>
         <p className="text-xs text-primary-800/80 leading-relaxed">
           ステップ（左の図形）を<strong>クリック</strong>
           すると、ここに以下の編集項目が表示されます：
@@ -2265,7 +2433,7 @@ function EmptyEditor({ onAddStep }: { onAddStep: () => void }) {
         <ul className="text-[11px] text-primary-800/80 mt-2 space-y-0.5 ml-4 list-disc">
           <li>名前 / 種別（開始・作業・判断…）</li>
           <li>
-            <strong className="text-primary-700">⏱ 所要時間（分）</strong> ← ±ボタンで5分刻み変更
+            <strong className="text-primary-700">所要時間（分）</strong>（±ボタンで5分刻み変更）
           </li>
           <li>担当（レーン）/ フェーズ</li>
           <li>使用ツール（Excel・Slack 等）</li>
@@ -2289,7 +2457,7 @@ function EmptyEditor({ onAddStep }: { onAddStep: () => void }) {
         ＋ 最初のステップを追加
       </button>
       <p className="mt-3 text-[11px] text-gray-500 leading-relaxed">
-        💡 まず試したい方は、ツールバーの<strong>「サンプルを読込」</strong>
+        まず試したい方は、ツールバーの<strong>「サンプルを読込」</strong>
         で受注〜出荷業務のサンプルが入ります。
       </p>
     </div>
@@ -2346,6 +2514,9 @@ function CompareView({ state }: { state: State }) {
         />
       </div>
 
+      {/* As-Is 分析から導出される To-Be の改善ヒント */}
+      <SuggestionsPanel asIs={state.asIs} label="As-Isから自動分析" />
+
       {/* As-Is / To-Be それぞれの集計詳細 */}
       <div className="grid lg:grid-cols-2 gap-4">
         <CostsPanel diagram={state.asIs} label="As-Is（現状）" />
@@ -2363,7 +2534,7 @@ function CompareView({ state }: { state: State }) {
             <ul className="space-y-2 text-xs text-red-900">
               {pains.map((s) => (
                 <li key={s.id} className="flex gap-2">
-                  <span className="font-semibold whitespace-nowrap">⚠</span>
+                  <span className="font-semibold whitespace-nowrap text-red-600">課題</span>
                   <span>
                     <span className="font-semibold">{s.label}：</span>
                     {s.pain}
@@ -2385,7 +2556,7 @@ function CompareView({ state }: { state: State }) {
             <ul className="space-y-2 text-xs text-emerald-900">
               {improvements.map((s) => (
                 <li key={s.id} className="flex gap-2">
-                  <span className="font-semibold whitespace-nowrap">✓</span>
+                  <span className="font-semibold whitespace-nowrap text-emerald-700">改善</span>
                   <span>
                     <span className="font-semibold">{s.label}：</span>
                     {s.improvement}
@@ -2526,7 +2697,7 @@ function diagramToSvg(d: FlowDiagram, label: string): string {
       );
     if (s.tool) {
       parts.push(
-        `<text x="${box.x + 8}" y="${box.y + offsetY + 62}" font-size="9" fill="#6b7280">🔧 ${escapeXml(s.tool.slice(0, 20))}</text>`
+        `<text x="${box.x + 8}" y="${box.y + offsetY + 62}" font-size="9" fill="#6b7280">${escapeXml(s.tool.slice(0, 20))}</text>`
       );
     }
   }

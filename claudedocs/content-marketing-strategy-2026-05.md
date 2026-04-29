@@ -176,13 +176,15 @@
 #### 新規コラム
 | 種別 | 記事スラッグ案 | 主要クエリ（SV） | 競合 | CPC | 優先 |
 |---|---|---|---|---:|---|
-| ピラー | `ai-development-services` | AI受託開発(260) / AIシステム開発(480) / 生成AI開発(390) / AI開発会社(260) | MED | **$7.64-11.46** | 🔴 |
+| **ピラー（プロセス軸）** | `ai-dx-introduction-process` | AI 導入 進め方 / DX 進め方 / DX 業務可視化 / As-Is To-Be / 業務改善 AI | LOW-MED | $4-9 | 🔴 |
+| ピラー（サービス軸） | `ai-development-services` | AI受託開発(260) / AIシステム開発(480) / 生成AI開発(390) / AI開発会社(260) | MED | **$7.64-11.46** | 🔴 |
 | 関連 | `ai-development-process-guide` | AI 開発 流れ(40) / 生成AI 導入(320) | LOW-MED | $5.11-10.90 | 🔴 |
 | 関連 | `ai-poc-guide` | AI PoC(140) | LOW(28) | $4.56 | 🟡 |
 | 関連 | `generative-ai-development-cases` | 生成AI 受託開発(30/CPC$17.86) ＋ 事例カタログ | MED | **$17.86** | 🟡 |
 | 関連（既存活用） | 既存 `ai-era-development-flow` をリライト | AI 開発 流れ補強 | — | — | 🟢 |
-| ~~削除~~ | ~~`ai-development-cost-and-period`~~ | 個別記事不要、ピラーのFAQに統合 | — | — | — |
-| ~~削除~~ | ~~`ai-development-case-studies-summary`~~ | `/case-studies` 強化で代替 | — | — | — |
+
+> **v2.1 追加: プロセス軸ピラー `ai-dx-introduction-process`**
+> ツール `/tools/flow-mapper` のコンセプト「業務可視化 → DXすべきステップ判断 → To-Be合意形成」を記事化。flow-mapper が記事のCV経路となり、「読む → ツールで試す → 相談」のリードファネルを作る。`requirements-definition-process` `dx-failure-patterns` と相互リンク、AI/DX の上位語と「業務可視化」「DX 進め方」両方を獲りに行く。
 
 > **注**: 「ChatGPT 受託開発」「LLM 受託開発」「AIエージェント 受託」は DataForSEO のDBにSVなし（新興語のため未収集）。**先行者利益が狙える領域**。ピラーの導入セクションで全部触れる方針。
 
