@@ -648,15 +648,23 @@ export function FlowMapper() {
     });
   }
 
-  function addStep(t: 'asIs' | 'toBe', laneId?: string, phaseId?: string) {
+  function addStep(t: 'asIs' | 'toBe', laneId?: string, phaseId?: string, type: StepType = 'task') {
     const d = state[t];
+    const defaultLabel: Record<StepType, string> = {
+      start: '開始',
+      task: '新しい作業',
+      decision: '判断',
+      system: 'システム処理',
+      wait: '待ち',
+      end: '完了',
+    };
     const newStep: FlowStep = {
       id: uid(),
-      type: 'task',
+      type,
       laneId: laneId ?? d.lanes[0]?.id ?? '',
       phaseId: phaseId ?? d.phases[0]?.id ?? '',
-      label: '新しいステップ',
-      durationMin: 10,
+      label: defaultLabel[type],
+      durationMin: type === 'start' || type === 'end' || type === 'system' ? 0 : 10,
       tool: '',
       pain: '',
       improvement: '',
@@ -865,26 +873,21 @@ export function FlowMapper() {
               placeholder="フロー名を入力"
             />
             <div className="flex flex-wrap items-center gap-2 mb-3 text-xs no-print">
+              <ShapePalette onAdd={(type) => addStep(target, undefined, undefined, type)} />
+              <span className="mx-1 text-gray-300">|</span>
               <button
                 type="button"
                 onClick={() => addPhase(target)}
                 className="px-2.5 py-1 font-medium text-primary-700 border border-dashed border-primary-300 rounded hover:bg-primary-50"
               >
-                ＋ フェーズ追加
+                ＋ フェーズ
               </button>
               <button
                 type="button"
                 onClick={() => addLane(target)}
                 className="px-2.5 py-1 font-medium text-primary-700 border border-dashed border-primary-300 rounded hover:bg-primary-50"
               >
-                ＋ 担当（レーン）追加
-              </button>
-              <button
-                type="button"
-                onClick={() => addStep(target)}
-                className="px-2.5 py-1 font-medium text-white bg-primary-500 rounded hover:bg-primary-600"
-              >
-                ＋ ステップ追加
+                ＋ 担当（レーン）
               </button>
             </div>
             <SwimlaneCanvas
@@ -989,10 +992,17 @@ function SwimlaneCanvas({
   }, [diagram, layout, editingId, connectMode, connectFromId]);
 
   return (
-    <div className="overflow-x-auto border border-gray-200 rounded-xl bg-white">
+    <div className="overflow-x-auto border border-gray-200 rounded-xl bg-white flow-mapper-canvas">
       <div
         className="relative"
-        style={{ width: layout.width, height: layout.height, minWidth: '100%' }}
+        style={{
+          width: layout.width,
+          height: layout.height,
+          minWidth: '100%',
+          backgroundImage: 'radial-gradient(circle, rgba(15, 23, 42, 0.06) 1px, transparent 1px)',
+          backgroundSize: '20px 20px',
+          backgroundPosition: `${LANE_LABEL_W}px ${HEADER_H}px`,
+        }}
       >
         {/* Phase header row */}
         <div
@@ -1224,10 +1234,104 @@ function SwimlaneCanvas({
   );
 }
 
-function shapeOf(type: StepType): 'rect' | 'diamond' | 'pill' {
+function shapeOf(type: StepType): 'rect' | 'diamond' | 'circle' {
   if (type === 'decision') return 'diamond';
-  if (type === 'start' || type === 'end') return 'pill';
+  if (type === 'start' || type === 'end') return 'circle';
   return 'rect';
+}
+
+// 各 StepType の小さなアイコン（パレットとノードバッジ用）
+function StepIcon({ type, className }: { type: StepType; className?: string }) {
+  const cls = cn('inline-block flex-shrink-0', className);
+  switch (type) {
+    case 'start':
+      return (
+        <svg viewBox="0 0 16 16" className={cls} aria-hidden>
+          <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="2" />
+        </svg>
+      );
+    case 'end':
+      return (
+        <svg viewBox="0 0 16 16" className={cls} aria-hidden>
+          <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="3" />
+        </svg>
+      );
+    case 'decision':
+      return (
+        <svg viewBox="0 0 16 16" className={cls} aria-hidden>
+          <polygon points="8,2 14,8 8,14 2,8" fill="none" stroke="currentColor" strokeWidth="1.8" />
+        </svg>
+      );
+    case 'system':
+      return (
+        <svg viewBox="0 0 16 16" className={cls} aria-hidden>
+          <rect
+            x="2"
+            y="3"
+            width="12"
+            height="10"
+            rx="1"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+          />
+          <line x1="5" y1="6.5" x2="11" y2="6.5" stroke="currentColor" strokeWidth="1.4" />
+          <line x1="5" y1="9.5" x2="11" y2="9.5" stroke="currentColor" strokeWidth="1.4" />
+        </svg>
+      );
+    case 'wait':
+      return (
+        <svg viewBox="0 0 16 16" className={cls} aria-hidden>
+          <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          <line x1="8" y1="8" x2="8" y2="4.5" stroke="currentColor" strokeWidth="1.6" />
+          <line x1="8" y1="8" x2="11" y2="9" stroke="currentColor" strokeWidth="1.6" />
+        </svg>
+      );
+    default:
+      return (
+        <svg viewBox="0 0 16 16" className={cls} aria-hidden>
+          <rect
+            x="2"
+            y="4"
+            width="12"
+            height="8"
+            rx="1.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+          />
+        </svg>
+      );
+  }
+}
+
+// Questetra ライクの形状パレット。クリックすると該当 type のステップを追加する。
+function ShapePalette({ onAdd }: { onAdd: (type: StepType) => void }) {
+  const order: StepType[] = ['start', 'task', 'decision', 'system', 'wait', 'end'];
+  return (
+    <div
+      className="inline-flex items-center bg-white border border-gray-300 rounded-lg overflow-hidden shadow-soft"
+      role="toolbar"
+      aria-label="図形パレット"
+    >
+      {order.map((t, i) => (
+        <button
+          key={t}
+          type="button"
+          onClick={() => onAdd(t)}
+          title={`${STEP_TYPE_LABEL[t]}を追加`}
+          aria-label={`${STEP_TYPE_LABEL[t]}を追加`}
+          className={cn(
+            'flex flex-col items-center justify-center px-2.5 py-1.5 hover:bg-primary-50 transition-colors text-gray-700 hover:text-primary-700',
+            i > 0 && 'border-l border-gray-200'
+          )}
+        >
+          <StepIcon type={t} className="w-4 h-4" />
+          <span className="text-[9px] mt-0.5 font-medium">{STEP_TYPE_LABEL[t]}</span>
+        </button>
+      ))}
+    </div>
+  );
 }
 
 function StepCard({
@@ -1262,13 +1366,99 @@ function StepCard({
     }
   }, [editing]);
 
-  // shape ごとのスタイル決定
+  // 真円 (start/end) は中央に小さな円を描き、ラベルは円の右側に表示
+  if (shape === 'circle') {
+    const CIRCLE_SIZE = 56;
+    return (
+      <div
+        className="absolute group"
+        style={{ left: box.x, top: box.y, width: box.w, height: box.h }}
+      >
+        <button
+          type="button"
+          draggable={!connectMode && !editing}
+          onDragStart={(e) => {
+            e.dataTransfer.setData('text/x-flow-step-id', step.id);
+            e.dataTransfer.effectAllowed = 'move';
+          }}
+          onClick={onSelect}
+          onDoubleClick={(e) => {
+            if (connectMode) return;
+            e.stopPropagation();
+            setDraftLabel(step.label);
+            setEditing(true);
+          }}
+          className={cn(
+            'absolute inset-0 flex items-center justify-start gap-2 px-2 focus:outline-none',
+            !connectMode && 'cursor-pointer',
+            connectMode &&
+              (isConnectFrom
+                ? 'ring-4 ring-secondary-400 rounded-lg'
+                : 'hover:ring-2 hover:ring-secondary-400 rounded-lg'),
+            selected && !connectMode && 'ring-2 ring-primary-500 ring-offset-1 rounded-lg z-10'
+          )}
+        >
+          <span
+            className={cn(
+              'flex items-center justify-center transition-shadow rounded-full shadow-sm hover:shadow-md',
+              STEP_TYPE_STYLE[step.type],
+              step.type === 'end' ? 'border-[3px]' : 'border-2'
+            )}
+            style={{ width: CIRCLE_SIZE, height: CIRCLE_SIZE, flex: '0 0 auto' }}
+          >
+            <StepIcon type={step.type} className="w-5 h-5" />
+          </span>
+          <span className="flex-1 min-w-0 text-left">
+            {editing ? (
+              <input
+                ref={inputRef}
+                type="text"
+                value={draftLabel}
+                onChange={(e) => setDraftLabel(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+                onBlur={() => {
+                  onRename(draftLabel.trim() || step.label);
+                  setEditing(false);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    onRename(draftLabel.trim() || step.label);
+                    setEditing(false);
+                  }
+                  if (e.key === 'Escape') setEditing(false);
+                }}
+                className="w-full text-xs font-semibold bg-white/90 border border-primary-400 rounded px-1 py-0.5 focus:outline-none"
+              />
+            ) : (
+              <p className="text-xs font-semibold text-gray-800 leading-tight line-clamp-2">
+                {step.label}
+              </p>
+            )}
+          </span>
+        </button>
+        {!connectMode && !editing ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onStartConnect();
+            }}
+            aria-label="このステップから矢印を引く"
+            title="このステップから矢印を引く"
+            className="no-print absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-secondary-500 text-white text-xs font-bold shadow-md opacity-0 group-hover:opacity-100 hover:bg-secondary-600 z-20 transition-opacity flex items-center justify-center"
+          >
+            +
+          </button>
+        ) : null}
+      </div>
+    );
+  }
+
+  // shape ごとのスタイル決定（rect / diamond）
   const shapeClass =
-    shape === 'pill'
-      ? 'rounded-full border-2'
-      : shape === 'diamond'
-        ? 'border-0' // diamond は背景レイヤで描画、ボタン本体は透明
-        : 'rounded-lg border-2 shadow-sm';
+    shape === 'diamond'
+      ? 'border-0' // diamond は背景レイヤで描画、ボタン本体は透明
+      : 'rounded-lg border-2 shadow-sm';
 
   const containerClass = cn(
     'absolute text-left transition-all focus:outline-none',
@@ -1318,7 +1508,8 @@ function StepCard({
           )}
         >
           <div className="flex items-center gap-1.5">
-            <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-white/80 border border-current/30">
+            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[9px] font-bold rounded bg-white/80 border border-current/30">
+              <StepIcon type={step.type} className="w-3 h-3" />
               {STEP_TYPE_LABEL[step.type]}
             </span>
             {step.durationMin > 0 ? (
