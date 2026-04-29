@@ -6,6 +6,15 @@ export function stepCostMode(step: FlowStep): StepCostMode {
   return step.costMode ?? 'both';
 }
 
+// 新規ステップを作るときの costMode の初期値。
+// system: 自動処理は人件費なし → variable（API 利用料・サブスク等のみ）
+// wait:  待ち時間に人件費はかからない → variable（保管料・滞留コスト等）
+// それ以外 (start/end/task/decision) は labor を初期値にする。
+export function defaultCostMode(type: StepType): StepCostMode {
+  if (type === 'system' || type === 'wait') return 'variable';
+  return 'labor';
+}
+
 export function stepLaborCost(step: FlowStep, lanes: FlowLane[]): number {
   if (stepCostMode(step) === 'variable') return 0;
   const lane = lanes.find((l) => l.id === step.laneId);

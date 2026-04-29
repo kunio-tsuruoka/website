@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest';
 import type { FlowDiagram, FlowLane, FlowStep } from '../types';
 import {
   computeAggregates,
+  defaultCostMode,
   stepCost,
   stepCostMode,
   stepLaborCost,
@@ -76,6 +77,20 @@ describe('stepCostMode', () => {
     expect(stepCostMode(makeStep({ costMode: 'labor' }))).toBe('labor');
     expect(stepCostMode(makeStep({ costMode: 'variable' }))).toBe('variable');
     expect(stepCostMode(makeStep({ costMode: 'both' }))).toBe('both');
+  });
+});
+
+describe('defaultCostMode', () => {
+  test('system / wait は variable (人件費なし、API料金・滞留コスト等のみ)', () => {
+    expect(defaultCostMode('system')).toBe('variable');
+    expect(defaultCostMode('wait')).toBe('variable');
+  });
+
+  test('task / decision / start / end は labor (人件費ベース)', () => {
+    expect(defaultCostMode('task')).toBe('labor');
+    expect(defaultCostMode('decision')).toBe('labor');
+    expect(defaultCostMode('start')).toBe('labor');
+    expect(defaultCostMode('end')).toBe('labor');
   });
 });
 
