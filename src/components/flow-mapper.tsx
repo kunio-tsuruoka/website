@@ -16,7 +16,8 @@ type FlowStep = {
   next: string[];
 };
 
-type FlowLane = { id: string; name: string };
+// rateYenPerHour: 担当ごとの人件費単価（円/時）。空または0 ならコスト計算から除外。
+type FlowLane = { id: string; name: string; rateYenPerHour?: number };
 type FlowPhase = { id: string; name: string };
 
 type FlowDiagram = {
@@ -76,10 +77,10 @@ const SAMPLE: State = {
       { id: 'p3', name: '③出荷' },
     ],
     lanes: [
-      { id: 'l1', name: '顧客' },
-      { id: 'l2', name: '営業担当' },
-      { id: 'l3', name: '事務' },
-      { id: 'l4', name: '倉庫' },
+      { id: 'l1', name: '顧客', rateYenPerHour: 0 },
+      { id: 'l2', name: '営業担当', rateYenPerHour: 4500 },
+      { id: 'l3', name: '事務', rateYenPerHour: 3000 },
+      { id: 'l4', name: '倉庫', rateYenPerHour: 2800 },
     ],
     steps: [
       {
@@ -212,11 +213,11 @@ const SAMPLE: State = {
       { id: 'p3', name: '③出荷' },
     ],
     lanes: [
-      { id: 'l1', name: '顧客' },
-      { id: 'l2', name: '営業担当' },
-      { id: 'l3', name: '事務' },
-      { id: 'l4', name: '倉庫' },
-      { id: 'l5', name: 'システム' },
+      { id: 'l1', name: '顧客', rateYenPerHour: 0 },
+      { id: 'l2', name: '営業担当', rateYenPerHour: 4500 },
+      { id: 'l3', name: '事務', rateYenPerHour: 3000 },
+      { id: 'l4', name: '倉庫', rateYenPerHour: 2800 },
+      { id: 'l5', name: 'システム', rateYenPerHour: 0 },
     ],
     steps: [
       {
@@ -380,6 +381,100 @@ function fmtMin(m: number) {
   const h = Math.floor(m / 60);
   const r = m % 60;
   return r === 0 ? `${h}時間` : `${h}時間${r}分`;
+}
+
+const yenFmt = new Intl.NumberFormat('ja-JP');
+function fmtYen(yen: number) {
+  return `¥${yenFmt.format(Math.round(yen))}`;
+}
+
+// 1ステップのコスト（人件費）。レーンの時給×所要時間（分→時）。
+function stepCost(step: FlowStep, lanes: FlowLane[]): number {
+  const lane = lanes.find((l) => l.id === step.laneId);
+  const rate = lane?.rateYenPerHour ?? 0;
+  return (step.durationMin / 60) * rate;
+}
+
+type AggBucket = { name: string; minutes: number; yen: number; stepCount: number };
+type Aggregates = {
+  totalMinutes: number;
+  totalYen: number;
+  byPhase: AggBucket[];
+  byLane: AggBucket[];
+  byType: AggBucket[];
+  topSteps: {
+    id: string;
+    label: string;
+    phaseName: string;
+    laneName: string;
+    minutes: number;
+    yen: number;
+  }[];
+};
+
+function computeAggregates(d: FlowDiagram): Aggregates {
+  let totalMinutes = 0;
+  let totalYen = 0;
+  const phaseAcc = new Map<string, AggBucket>();
+  const laneAcc = new Map<string, AggBucket>();
+  const typeAcc = new Map<StepType, AggBucket>();
+  const stepRows: Aggregates['topSteps'] = [];
+
+  for (const phase of d.phases) {
+    phaseAcc.set(phase.id, { name: phase.name, minutes: 0, yen: 0, stepCount: 0 });
+  }
+  for (const lane of d.lanes) {
+    laneAcc.set(lane.id, { name: lane.name, minutes: 0, yen: 0, stepCount: 0 });
+  }
+
+  for (const s of d.steps) {
+    const m = Number.isFinite(s.durationMin) ? s.durationMin : 0;
+    const y = stepCost(s, d.lanes);
+    totalMinutes += m;
+    totalYen += y;
+    const ph = phaseAcc.get(s.phaseId);
+    if (ph) {
+      ph.minutes += m;
+      ph.yen += y;
+      ph.stepCount += 1;
+    }
+    const ln = laneAcc.get(s.laneId);
+    if (ln) {
+      ln.minutes += m;
+      ln.yen += y;
+      ln.stepCount += 1;
+    }
+    const tp = typeAcc.get(s.type) ?? {
+      name: STEP_TYPE_LABEL[s.type],
+      minutes: 0,
+      yen: 0,
+      stepCount: 0,
+    };
+    tp.minutes += m;
+    tp.yen += y;
+    tp.stepCount += 1;
+    typeAcc.set(s.type, tp);
+    stepRows.push({
+      id: s.id,
+      label: s.label,
+      phaseName: d.phases.find((p) => p.id === s.phaseId)?.name ?? '-',
+      laneName: d.lanes.find((l) => l.id === s.laneId)?.name ?? '-',
+      minutes: m,
+      yen: y,
+    });
+  }
+
+  // ボトルネック: コストが0でも時間でランキング、コストありはコスト基準
+  const byCostThenTime = [...stepRows].sort((a, b) => b.yen - a.yen || b.minutes - a.minutes);
+
+  return {
+    totalMinutes,
+    totalYen,
+    byPhase: Array.from(phaseAcc.values()),
+    byLane: Array.from(laneAcc.values()),
+    byType: Array.from(typeAcc.values()),
+    topSteps: byCostThenTime.slice(0, 5),
+  };
 }
 
 function diagramToMarkdown(label: string, d: FlowDiagram): string {
@@ -639,6 +734,12 @@ export function FlowMapper() {
     updateDiagram(t, (d) => ({
       ...d,
       lanes: d.lanes.map((l) => (l.id === id ? { ...l, name } : l)),
+    }));
+  }
+  function updateLaneRate(t: 'asIs' | 'toBe', id: string, rateYenPerHour: number) {
+    updateDiagram(t, (d) => ({
+      ...d,
+      lanes: d.lanes.map((l) => (l.id === id ? { ...l, rateYenPerHour } : l)),
     }));
   }
   function deleteLane(t: 'asIs' | 'toBe', id: string) {
@@ -1031,6 +1132,7 @@ export function FlowMapper() {
                 onSelect={(id) => handleStepClick(target, id)}
                 onAddStep={(laneId, phaseId) => addStep(target, laneId, phaseId)}
                 onRenameLane={(id, name) => renameLane(target, id, name)}
+                onUpdateLaneRate={(id, rate) => updateLaneRate(target, id, rate)}
                 onDeleteLane={(id) => deleteLane(target, id)}
                 onRenamePhase={(id, name) => renamePhase(target, id, name)}
                 onDeletePhase={(id) => deletePhase(target, id)}
@@ -1040,6 +1142,9 @@ export function FlowMapper() {
                 onOverflowChange={setCanvasOverflows}
               />
             </div>
+            {!fullscreen ? (
+              <CostsPanel diagram={activeDiagram} label={view === 'toBe' ? 'To-Be' : 'As-Is'} />
+            ) : null}
           </div>
           <div
             className={cn(
@@ -1090,6 +1195,7 @@ function SwimlaneCanvas({
   onSelect,
   onAddStep,
   onRenameLane,
+  onUpdateLaneRate,
   onDeleteLane,
   onRenamePhase,
   onDeletePhase,
@@ -1106,6 +1212,7 @@ function SwimlaneCanvas({
   onSelect: (id: string) => void;
   onAddStep: (laneId: string, phaseId: string) => void;
   onRenameLane: (id: string, name: string) => void;
+  onUpdateLaneRate: (id: string, rate: number) => void;
   onDeleteLane: (id: string) => void;
   onRenamePhase: (id: string, name: string) => void;
   onDeletePhase: (id: string) => void;
@@ -1241,22 +1348,22 @@ function SwimlaneCanvas({
                   height: ly.h,
                 }}
               />
-              {/* Lane label cell with vertical accent bar */}
+              {/* Lane label cell with vertical accent bar + rate */}
               <div
                 className={cn(
-                  'absolute left-0 border-r-2 border-primary-300 px-2 flex items-center group',
+                  'absolute left-0 border-r-2 border-primary-300 px-2 flex flex-col justify-center group',
                   labelBg
                 )}
                 style={{ top: ly.y, width: LANE_LABEL_W, height: ly.h }}
               >
                 {/* 縦アクセントバー */}
                 <span aria-hidden className="absolute left-0 top-0 bottom-0 w-1 bg-primary-500" />
-                <div className="ml-2 flex-1 flex items-center">
+                <div className="ml-2 flex items-center gap-1">
                   <input
                     type="text"
                     value={lane.name}
                     onChange={(e) => onRenameLane(lane.id, e.target.value)}
-                    className="bg-transparent text-sm font-bold text-primary-900 focus:outline-none w-full no-print-border"
+                    className="bg-transparent text-sm font-bold text-primary-900 focus:outline-none flex-1 min-w-0 no-print-border"
                   />
                   {diagram.lanes.length > 1 ? (
                     <button
@@ -1265,12 +1372,27 @@ function SwimlaneCanvas({
                         if (confirm(`担当「${lane.name}」とそのステップを削除しますか？`))
                           onDeleteLane(lane.id);
                       }}
-                      className="text-xs text-gray-400 hover:text-red-500 px-1 opacity-0 group-hover:opacity-100 no-print"
+                      className="text-xs text-gray-400 hover:text-red-500 px-1 opacity-0 group-hover:opacity-100 no-print flex-shrink-0"
                       aria-label="担当を削除"
                     >
                       ×
                     </button>
                   ) : null}
+                </div>
+                <div className="ml-2 mt-1 flex items-center gap-1 text-[10px] text-gray-500 no-print">
+                  <span>¥</span>
+                  <input
+                    type="number"
+                    min={0}
+                    step={500}
+                    value={lane.rateYenPerHour ?? 0}
+                    onChange={(e) =>
+                      onUpdateLaneRate(lane.id, Math.max(0, Number(e.target.value) || 0))
+                    }
+                    className="w-14 bg-white border border-gray-200 rounded px-1 py-0.5 text-[10px] focus:outline-none focus:border-primary-400"
+                    title="この担当の時給（円/時）。コスト計算に使用"
+                  />
+                  <span>/時</span>
                 </div>
               </div>
             </div>
@@ -1978,6 +2100,159 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
+// 集計パネル: フェーズ・担当・種別ごとの時間とコストを可視化し、ボトルネック5位を表示
+function CostsPanel({ diagram, label }: { diagram: FlowDiagram; label: string }) {
+  const [open, setOpen] = useState(true);
+  const agg = useMemo(() => computeAggregates(diagram), [diagram]);
+  const hasCost = agg.totalYen > 0;
+
+  function pct(part: number, whole: number) {
+    if (whole <= 0) return 0;
+    return Math.round((part / whole) * 100);
+  }
+
+  function bar(part: number, whole: number, color: string) {
+    const p = pct(part, whole);
+    return (
+      <div className="w-full h-1.5 bg-gray-100 rounded overflow-hidden">
+        <div className={cn('h-full', color)} style={{ width: `${p}%` }} />
+      </div>
+    );
+  }
+
+  return (
+    <section className="mt-4 border border-gray-200 rounded-xl bg-white overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border-b border-gray-200"
+      >
+        <span className="text-sm font-bold text-gray-900 flex items-center gap-2">
+          📊 工程・担当別の時間とコスト集計（{label}）
+          <span className="text-xs font-normal text-gray-600">
+            合計 {fmtMin(agg.totalMinutes)}
+            {hasCost ? ` / ${fmtYen(agg.totalYen)}` : ''}
+          </span>
+        </span>
+        <span className="text-xs text-gray-500">{open ? '▼' : '▶'}</span>
+      </button>
+      {open ? (
+        <div className="p-4 space-y-5">
+          {agg.totalMinutes === 0 ? (
+            <p className="text-xs text-gray-500">
+              ステップがまだありません。図形パレットからステップを追加すると、ここに集計が表示されます。
+            </p>
+          ) : (
+            <>
+              {!hasCost ? (
+                <p className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded px-2 py-1.5">
+                  💡 担当ラベル下の「¥◯◯/時」を入力すると、コスト計算が有効になります（例:
+                  営業4500、事務3000）
+                </p>
+              ) : null}
+
+              {/* フェーズ別 */}
+              <div>
+                <h4 className="text-xs font-bold text-gray-800 mb-2">
+                  フェーズ別（時間 / コスト）
+                </h4>
+                <div className="space-y-1.5">
+                  {agg.byPhase.map((p) => (
+                    <div key={p.name} className="text-xs">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <span className="font-semibold text-gray-700 truncate">{p.name}</span>
+                        <span className="text-gray-600 whitespace-nowrap">
+                          {fmtMin(p.minutes)}
+                          {hasCost ? ` / ${fmtYen(p.yen)}` : ''}
+                          <span className="text-gray-400 ml-1">
+                            (
+                            {pct(
+                              hasCost ? p.yen : p.minutes,
+                              hasCost ? agg.totalYen : agg.totalMinutes
+                            )}
+                            %)
+                          </span>
+                        </span>
+                      </div>
+                      {bar(
+                        hasCost ? p.yen : p.minutes,
+                        hasCost ? agg.totalYen : agg.totalMinutes,
+                        'bg-primary-500'
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 担当別 */}
+              <div>
+                <h4 className="text-xs font-bold text-gray-800 mb-2">担当別（時間 / コスト）</h4>
+                <div className="space-y-1.5">
+                  {agg.byLane
+                    .filter((l) => l.minutes > 0)
+                    .map((l) => (
+                      <div key={l.name} className="text-xs">
+                        <div className="flex items-baseline justify-between gap-2">
+                          <span className="font-semibold text-gray-700 truncate">{l.name}</span>
+                          <span className="text-gray-600 whitespace-nowrap">
+                            {fmtMin(l.minutes)}
+                            {hasCost ? ` / ${fmtYen(l.yen)}` : ''}
+                            <span className="text-gray-400 ml-1">
+                              (
+                              {pct(
+                                hasCost ? l.yen : l.minutes,
+                                hasCost ? agg.totalYen : agg.totalMinutes
+                              )}
+                              %)
+                            </span>
+                          </span>
+                        </div>
+                        {bar(
+                          hasCost ? l.yen : l.minutes,
+                          hasCost ? agg.totalYen : agg.totalMinutes,
+                          'bg-secondary-500'
+                        )}
+                      </div>
+                    ))}
+                </div>
+              </div>
+
+              {/* ボトルネック上位5 */}
+              <div>
+                <h4 className="text-xs font-bold text-gray-800 mb-2">
+                  ⚠️ {hasCost ? 'コスト' : '時間'}ボトルネック 上位5
+                </h4>
+                <ol className="space-y-1 text-xs">
+                  {agg.topSteps
+                    .filter((s) => s.minutes > 0)
+                    .map((s, i) => (
+                      <li
+                        key={s.id}
+                        className="flex items-baseline gap-2 px-2 py-1 bg-gray-50 rounded"
+                      >
+                        <span className="text-gray-400 font-bold w-4">#{i + 1}</span>
+                        <span className="flex-1 truncate">
+                          <strong className="text-gray-800">{s.label}</strong>
+                          <span className="text-gray-500 ml-1">
+                            ({s.phaseName} / {s.laneName})
+                          </span>
+                        </span>
+                        <span className="text-gray-700 whitespace-nowrap">
+                          {fmtMin(s.minutes)}
+                          {hasCost ? ` / ${fmtYen(s.yen)}` : ''}
+                        </span>
+                      </li>
+                    ))}
+                </ol>
+              </div>
+            </>
+          )}
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
 function EmptyEditor({ onAddStep }: { onAddStep: () => void }) {
   return (
     <div className="p-5">
@@ -2025,6 +2300,10 @@ function CompareView({ state }: { state: State }) {
   const a = totalMinutes(state.asIs);
   const b = totalMinutes(state.toBe);
   const delta = a - b;
+  const aggA = computeAggregates(state.asIs);
+  const aggB = computeAggregates(state.toBe);
+  const yenDelta = aggA.totalYen - aggB.totalYen;
+  const hasCost = aggA.totalYen > 0 || aggB.totalYen > 0;
   const stepDelta = state.toBe.steps.length - state.asIs.steps.length;
   const laneDelta = state.toBe.lanes.length - state.asIs.lanes.length;
   const pains = state.asIs.steps.filter((s) => s.pain.trim());
@@ -2032,7 +2311,7 @@ function CompareView({ state }: { state: State }) {
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-      <div className="grid md:grid-cols-3 gap-3">
+      <div className={cn('grid gap-3', hasCost ? 'md:grid-cols-4' : 'md:grid-cols-3')}>
         <Metric
           label="想定リードタイム"
           asIs={fmtMin(a)}
@@ -2040,6 +2319,17 @@ function CompareView({ state }: { state: State }) {
           good={delta > 0}
           delta={delta !== 0 ? `${delta > 0 ? '−' : '+'}${fmtMin(Math.abs(delta))}` : '±0'}
         />
+        {hasCost ? (
+          <Metric
+            label="想定コスト（人件費）"
+            asIs={fmtYen(aggA.totalYen)}
+            toBe={fmtYen(aggB.totalYen)}
+            good={yenDelta > 0}
+            delta={
+              yenDelta !== 0 ? `${yenDelta > 0 ? '−' : '+'}${fmtYen(Math.abs(yenDelta))}` : '±0'
+            }
+          />
+        ) : null}
         <Metric
           label="ステップ数"
           asIs={`${state.asIs.steps.length}`}
@@ -2054,6 +2344,12 @@ function CompareView({ state }: { state: State }) {
           good={laneDelta <= 0}
           delta={laneDelta === 0 ? '±0' : `${laneDelta > 0 ? '+' : ''}${laneDelta}`}
         />
+      </div>
+
+      {/* As-Is / To-Be それぞれの集計詳細 */}
+      <div className="grid lg:grid-cols-2 gap-4">
+        <CostsPanel diagram={state.asIs} label="As-Is（現状）" />
+        <CostsPanel diagram={state.toBe} label="To-Be（改善後）" />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-4">
