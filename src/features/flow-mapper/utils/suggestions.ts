@@ -1,4 +1,5 @@
 import type { FlowDiagram, SolutionTemplate, Suggestion, SuggestionKind } from '../types';
+import { fmtMin } from './format';
 
 // ソリューションテンプレート: 各 SuggestionKind に対する代表的解決策と削減率の目安。
 // ユーザーが「どんなシステムで・どれだけ削減できるか」を書けない問題を解決する。
@@ -100,7 +101,7 @@ export function suggestImprovements(d: FlowDiagram): Suggestion[] {
       out.push({
         stepId: s.id,
         kind: 'automation',
-        title: `「${s.label}」(${s.durationMin}分) は自動化候補`,
+        title: `「${s.label}」(${fmtMin(s.durationMin)}) は自動化候補`,
         message: `${s.tool ? `${s.tool}による` : ''}手作業を、API連携／RPA／OCR で削減できる可能性。To-Be ではシステム化を検討。`,
       });
     }
@@ -121,7 +122,7 @@ export function suggestImprovements(d: FlowDiagram): Suggestion[] {
       out.push({
         stepId: s.id,
         kind: 'parallel',
-        title: `「${s.label}」は待ち時間（${s.durationMin}分）`,
+        title: `「${s.label}」は待ち時間（${fmtMin(s.durationMin)}）`,
         message: '並行処理化、事前承認ルール、通知の自動化などで削減候補。',
       });
     }
