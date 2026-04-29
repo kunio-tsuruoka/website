@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { CompareView } from './components/CompareView';
 import { CostsPanel } from './components/CostsPanel';
 import { ExportMenu } from './components/ExportMenu';
+import { ImpactPanel } from './components/ImpactPanel';
 import { PrintStyles } from './components/PrintStyles';
 import { ShapePalette } from './components/ShapePalette';
 import { StepEditorDrawer } from './components/StepEditorDrawer';
@@ -23,6 +24,8 @@ export function FlowMapper() {
   const connectFromId = useFlowStore((s) => s.connectFromId);
   const fullscreen = useFlowStore((s) => s.fullscreen);
   const onboardingOpen = useFlowStore((s) => s.onboardingOpen);
+  const executionsPerMonth = useFlowStore((s) => s.executionsPerMonth);
+  const setExecutionsPerMonth = useFlowStore((s) => s.setExecutionsPerMonth);
 
   const setView = useFlowStore((s) => s.setView);
   const setEditingId = useFlowStore((s) => s.setEditingId);
@@ -106,6 +109,13 @@ export function FlowMapper() {
     if (!editingId || !activeDiagram) return null;
     return activeDiagram.steps.find((s) => s.id === editingId) ?? null;
   }, [editingId, activeDiagram]);
+
+  // To-Be 編集中、同 ID の As-Is ステップを引き当てて差分計算に使う。
+  // As-Is 編集中は null（自分自身との比較は意味がないため）。
+  const asIsStepForEditor = useMemo(() => {
+    if (view !== 'toBe' || !editingId) return null;
+    return asIs.steps.find((s) => s.id === editingId) ?? null;
+  }, [view, editingId, asIs]);
 
   // overflow 検知のための一時 state（toolbar の「全画面で見る」ハイライト用）
   // SwimlaneCanvas 側で overflow を検知して setCanvasOverflows する設計だったが、
@@ -291,7 +301,12 @@ export function FlowMapper() {
             fullscreen && 'flex-1 min-h-0 overflow-hidden'
           )}
         >
-          <div className={cn('p-4 md:p-6', fullscreen && 'flex flex-col min-h-0 overflow-hidden')}>
+          <div
+            className={cn(
+              'p-4 md:p-6 min-w-0',
+              fullscreen && 'flex flex-col min-h-0 overflow-hidden'
+            )}
+          >
             <input
               type="text"
               value={activeDiagram.title}
@@ -301,21 +316,9 @@ export function FlowMapper() {
             />
             <div className="flex flex-wrap items-center gap-2 mb-3 text-xs no-print">
               <ShapePalette onAdd={(type) => addStep(target, undefined, undefined, type)} />
-              <span className="mx-1 text-gray-300">|</span>
-              <button
-                type="button"
-                onClick={() => addPhase(target)}
-                className="px-2.5 py-1 font-medium text-primary-700 border border-dashed border-primary-300 rounded hover:bg-primary-50"
-              >
-                ＋ フェーズ
-              </button>
-              <button
-                type="button"
-                onClick={() => addLane(target)}
-                className="px-2.5 py-1 font-medium text-primary-700 border border-dashed border-primary-300 rounded hover:bg-primary-50"
-              >
-                ＋ 担当（レーン）
-              </button>
+              <span className="text-[11px] text-gray-500 ml-2">
+                図形をドラッグして配置先のセルにドロップ／フェーズ・担当の追加はキャンバス右端・下端のボタンから
+              </span>
             </div>
             <div className={cn(fullscreen && 'flex-1 min-h-0 flex flex-col')}>
               <SwimlaneCanvas
@@ -325,7 +328,9 @@ export function FlowMapper() {
                 connectFromId={connectFromId}
                 fullscreen={fullscreen}
                 onSelect={(id) => handleStepClick(target, id)}
-                onAddStep={(laneId, phaseId) => addStep(target, laneId, phaseId)}
+                onAddStep={(laneId, phaseId, type) => addStep(target, laneId, phaseId, type)}
+                onAddLane={() => addLane(target)}
+                onAddPhase={() => addPhase(target)}
                 onRenameLane={(id, name) => renameLane(target, id, name)}
                 onUpdateLaneRate={(id, rate) => updateLaneRate(target, id, rate)}
                 onDeleteLane={(id) => deleteLane(target, id)}
@@ -342,6 +347,14 @@ export function FlowMapper() {
             </div>
             {!fullscreen ? (
               <>
+                {view === 'toBe' ? (
+                  <ImpactPanel
+                    asIs={asIs}
+                    toBe={toBe}
+                    executionsPerMonth={executionsPerMonth}
+                    onChangeExecutionsPerMonth={setExecutionsPerMonth}
+                  />
+                ) : null}
                 <CostsPanel diagram={activeDiagram} label={view === 'toBe' ? 'To-Be' : 'As-Is'} />
                 {view === 'toBe' ? (
                   <SuggestionsPanel asIs={asIs} onApply={applySolutionToToBe} />
@@ -353,6 +366,8 @@ export function FlowMapper() {
             step={editingStep}
             diagram={activeDiagram}
             view={view}
+            asIsStep={asIsStepForEditor}
+            asIsLanes={view === 'toBe' ? asIs.lanes : null}
             fullscreen={fullscreen}
             onChange={(patch) => editingStep && updateStep(target, editingStep.id, patch)}
             onDelete={() => editingStep && deleteStep(target, editingStep.id)}
