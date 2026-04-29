@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 type StepType = 'start' | 'task' | 'decision' | 'system' | 'wait' | 'end';
 
@@ -566,6 +566,10 @@ export function FlowMapper() {
   const [view, setView] = useState<View>('asIs');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
+  // 接続モード: クリック2発で矢印を引く（Questetra ライク）
+  // fromId 未設定 → 1回目で source を確定 → 2回目の対象で next をトグル
+  const [connectFromId, setConnectFromId] = useState<string | null>(null);
+  const [connectMode, setConnectMode] = useState(false);
 
   useEffect(() => {
     setState(loadInitial());
@@ -686,6 +690,58 @@ export function FlowMapper() {
         .map((s) => ({ ...s, next: s.next.filter((nid) => nid !== id) })),
     }));
     if (editingId === id) setEditingId(null);
+    if (connectFromId === id) setConnectFromId(null);
+  }
+
+  // ステップを別の (lane, phase) セルへ移動（ドラッグ&ドロップ）
+  function moveStep(t: 'asIs' | 'toBe', id: string, toLaneId: string, toPhaseId: string) {
+    updateDiagram(t, (d) => ({
+      ...d,
+      steps: d.steps.map((s) => (s.id === id ? { ...s, laneId: toLaneId, phaseId: toPhaseId } : s)),
+    }));
+  }
+
+  // 接続モード時のステップクリックハンドラ。1回目で source、2回目で next をトグル。
+  // 同じ source を再クリックすると解除。
+  function handleStepClick(t: 'asIs' | 'toBe', id: string) {
+    if (!connectMode) {
+      setEditingId(id);
+      return;
+    }
+    if (connectFromId === null) {
+      setConnectFromId(id);
+      return;
+    }
+    if (connectFromId === id) {
+      setConnectFromId(null);
+      return;
+    }
+    const fromId = connectFromId;
+    updateDiagram(t, (d) => ({
+      ...d,
+      steps: d.steps.map((s) => {
+        if (s.id !== fromId) return s;
+        const nextSet = new Set(s.next);
+        if (nextSet.has(id)) nextSet.delete(id);
+        else nextSet.add(id);
+        return { ...s, next: Array.from(nextSet) };
+      }),
+    }));
+    setConnectFromId(null);
+  }
+
+  // ステップのラベルだけインライン編集（ダブルクリック）
+  function renameStep(t: 'asIs' | 'toBe', id: string, label: string) {
+    updateDiagram(t, (d) => ({
+      ...d,
+      steps: d.steps.map((s) => (s.id === id ? { ...s, label } : s)),
+    }));
+  }
+
+  // ノード右端のホバーハンドル: クリックでこのノードを source にして接続モードに入る
+  function startConnectFrom(id: string) {
+    setConnectMode(true);
+    setConnectFromId(id);
   }
 
   function loadSample() {
@@ -759,6 +815,24 @@ export function FlowMapper() {
               As-Isをコピー
             </button>
           ) : null}
+          <button
+            type="button"
+            onClick={() => {
+              setConnectMode((v) => !v);
+              setConnectFromId(null);
+              setEditingId(null);
+            }}
+            disabled={view === 'compare'}
+            className={cn(
+              'px-3 py-1.5 text-xs font-medium border rounded-lg transition-colors disabled:opacity-40',
+              connectMode
+                ? 'text-white bg-secondary-500 border-secondary-600 hover:bg-secondary-600'
+                : 'text-secondary-700 bg-secondary-50 border-secondary-200 hover:bg-secondary-100'
+            )}
+            title="2つのステップをクリックして矢印を引きます（再クリックで解除）"
+          >
+            {connectMode ? '✓ 接続モード（クリックで解除）' : '🔗 接続モード'}
+          </button>
           <ExportMenu state={state} view={view} />
           <button
             type="button"
@@ -769,6 +843,13 @@ export function FlowMapper() {
           </button>
         </div>
       </div>
+      {connectMode ? (
+        <div className="bg-secondary-50 border-b border-secondary-200 px-4 py-2 text-xs text-secondary-900 no-print">
+          {connectFromId
+            ? '接続元を選択中。次のステップをクリックすると矢印を引きます（同じステップで解除）'
+            : 'ステップを2回クリックして矢印を引きます。1回目: 元、2回目: 先。'}
+        </div>
+      ) : null}
 
       {/* Body */}
       {view === 'compare' ? (
@@ -809,12 +890,17 @@ export function FlowMapper() {
             <SwimlaneCanvas
               diagram={activeDiagram}
               editingId={editingId}
-              onSelect={setEditingId}
+              connectMode={connectMode}
+              connectFromId={connectFromId}
+              onSelect={(id) => handleStepClick(target, id)}
               onAddStep={(laneId, phaseId) => addStep(target, laneId, phaseId)}
               onRenameLane={(id, name) => renameLane(target, id, name)}
               onDeleteLane={(id) => deleteLane(target, id)}
               onRenamePhase={(id, name) => renamePhase(target, id, name)}
               onDeletePhase={(id) => deletePhase(target, id)}
+              onMoveStep={(id, laneId, phaseId) => moveStep(target, id, laneId, phaseId)}
+              onRenameStep={(id, label) => renameStep(target, id, label)}
+              onStartConnect={startConnectFrom}
             />
           </div>
           <div className="border-t lg:border-t-0 lg:border-l border-gray-200 bg-gray-50 no-print">
@@ -855,21 +941,31 @@ function PrintStyles() {
 function SwimlaneCanvas({
   diagram,
   editingId,
+  connectMode,
+  connectFromId,
   onSelect,
   onAddStep,
   onRenameLane,
   onDeleteLane,
   onRenamePhase,
   onDeletePhase,
+  onMoveStep,
+  onRenameStep,
+  onStartConnect,
 }: {
   diagram: FlowDiagram;
   editingId: string | null;
+  connectMode: boolean;
+  connectFromId: string | null;
   onSelect: (id: string) => void;
   onAddStep: (laneId: string, phaseId: string) => void;
   onRenameLane: (id: string, name: string) => void;
   onDeleteLane: (id: string) => void;
   onRenamePhase: (id: string, name: string) => void;
   onDeletePhase: (id: string) => void;
+  onMoveStep: (id: string, laneId: string, phaseId: string) => void;
+  onRenameStep: (id: string, label: string) => void;
+  onStartConnect: (id: string) => void;
 }) {
   const layout = useMemo(() => computeLayout(diagram), [diagram]);
 
@@ -881,15 +977,16 @@ function SwimlaneCanvas({
       for (const nid of s.next) {
         const to = layout.step.get(nid);
         if (!to) continue;
+        const isConnectActive = connectMode && (connectFromId === s.id || connectFromId === nid);
         list.push({
           key: `${s.id}->${nid}`,
           d: buildArrowPath(from, to),
-          emphasized: editingId === s.id || editingId === nid,
+          emphasized: editingId === s.id || editingId === nid || isConnectActive,
         });
       }
     }
     return list;
-  }, [diagram, layout, editingId]);
+  }, [diagram, layout, editingId, connectMode, connectFromId]);
 
   return (
     <div className="overflow-x-auto border border-gray-200 rounded-xl bg-white">
@@ -936,53 +1033,58 @@ function SwimlaneCanvas({
           );
         })}
 
-        {/* Lane label column + lane bands */}
+        {/* Lane label column + lane bands (BPMN-ライクの太枠＋色帯) */}
         {diagram.lanes.map((lane, laneIdx) => {
           const ly = layout.laneY.get(lane.id);
           if (!ly) return null;
+          // 偶数/奇数で色を切り替え。BPMS の swimlane らしさを出すため、
+          // 左端に縦アクセントバーを追加し、レーン境界も2pxの濃いめに。
+          const bandBg = laneIdx % 2 === 0 ? 'bg-primary-50/50' : 'bg-white';
+          const labelBg = laneIdx % 2 === 0 ? 'bg-primary-100/70' : 'bg-gray-50';
           return (
             <div key={`ln-row-${lane.id}`}>
-              {/* Lane label */}
+              {/* Lane band background (full row) */}
               <div
-                className={cn(
-                  'absolute left-0 border-r border-gray-300 px-2 flex items-center group',
-                  laneIdx % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                )}
-                style={{ top: ly.y, width: LANE_LABEL_W, height: ly.h }}
-              >
-                <input
-                  type="text"
-                  value={lane.name}
-                  onChange={(e) => onRenameLane(lane.id, e.target.value)}
-                  className="bg-transparent text-sm font-bold text-primary-900 focus:outline-none w-full no-print-border"
-                />
-                {diagram.lanes.length > 1 ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (confirm(`担当「${lane.name}」とそのステップを削除しますか？`))
-                        onDeleteLane(lane.id);
-                    }}
-                    className="text-xs text-gray-400 hover:text-red-500 px-1 opacity-0 group-hover:opacity-100 no-print"
-                    aria-label="担当を削除"
-                  >
-                    ×
-                  </button>
-                ) : null}
-              </div>
-              {/* Lane band background */}
-              <div
-                className={cn(
-                  'absolute border-b border-gray-200',
-                  laneIdx % 2 === 0 ? 'bg-gray-50/40' : 'bg-white'
-                )}
+                className={cn('absolute border-b-2 border-primary-200', bandBg)}
                 style={{
                   top: ly.y,
-                  left: LANE_LABEL_W,
-                  width: layout.width - LANE_LABEL_W,
+                  left: 0,
+                  width: layout.width,
                   height: ly.h,
                 }}
               />
+              {/* Lane label cell with vertical accent bar */}
+              <div
+                className={cn(
+                  'absolute left-0 border-r-2 border-primary-300 px-2 flex items-center group',
+                  labelBg
+                )}
+                style={{ top: ly.y, width: LANE_LABEL_W, height: ly.h }}
+              >
+                {/* 縦アクセントバー */}
+                <span aria-hidden className="absolute left-0 top-0 bottom-0 w-1 bg-primary-500" />
+                <div className="ml-2 flex-1 flex items-center">
+                  <input
+                    type="text"
+                    value={lane.name}
+                    onChange={(e) => onRenameLane(lane.id, e.target.value)}
+                    className="bg-transparent text-sm font-bold text-primary-900 focus:outline-none w-full no-print-border"
+                  />
+                  {diagram.lanes.length > 1 ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (confirm(`担当「${lane.name}」とそのステップを削除しますか？`))
+                          onDeleteLane(lane.id);
+                      }}
+                      className="text-xs text-gray-400 hover:text-red-500 px-1 opacity-0 group-hover:opacity-100 no-print"
+                      aria-label="担当を削除"
+                    >
+                      ×
+                    </button>
+                  ) : null}
+                </div>
+              </div>
             </div>
           );
         })}
@@ -1000,7 +1102,7 @@ function SwimlaneCanvas({
           );
         })}
 
-        {/* Empty cell add buttons */}
+        {/* セルごとのドロップターゲット + 空セルの「＋追加」ボタン */}
         {diagram.phases.map((phase) =>
           diagram.lanes.map((lane) => {
             const px = layout.phaseX.get(phase.id);
@@ -1009,29 +1111,49 @@ function SwimlaneCanvas({
             const hasStep = diagram.steps.some(
               (s) => s.phaseId === phase.id && s.laneId === lane.id
             );
-            if (hasStep) return null;
             return (
-              <button
-                key={`add-${phase.id}-${lane.id}`}
-                type="button"
-                onClick={() => onAddStep(lane.id, phase.id)}
-                className="absolute text-xs text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-md transition-colors no-print"
-                style={{
-                  left: px.x + PHASE_PAD_X,
-                  top: ly.y + LANE_PAD_Y,
-                  width: CARD_W,
-                  height: CARD_H,
-                  border: '1.5px dashed #cbd5e1',
+              <div
+                key={`cell-${phase.id}-${lane.id}`}
+                className="absolute"
+                style={{ left: px.x, top: ly.y, width: px.w, height: ly.h }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = 'move';
+                  e.currentTarget.classList.add('bg-secondary-50/60');
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#3D4DB7';
+                onDragLeave={(e) => {
+                  e.currentTarget.classList.remove('bg-secondary-50/60');
                 }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#cbd5e1';
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.remove('bg-secondary-50/60');
+                  const id = e.dataTransfer.getData('text/x-flow-step-id');
+                  if (id) onMoveStep(id, lane.id, phase.id);
                 }}
               >
-                ＋ ここに追加
-              </button>
+                {!hasStep ? (
+                  <button
+                    type="button"
+                    onClick={() => onAddStep(lane.id, phase.id)}
+                    className="absolute text-xs text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-md transition-colors no-print"
+                    style={{
+                      left: PHASE_PAD_X,
+                      top: LANE_PAD_Y,
+                      width: CARD_W,
+                      height: CARD_H,
+                      border: '1.5px dashed #cbd5e1',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = '#3D4DB7';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = '#cbd5e1';
+                    }}
+                  >
+                    ＋ ここに追加
+                  </button>
+                ) : null}
+              </div>
             );
           })
         )}
@@ -1089,7 +1211,11 @@ function SwimlaneCanvas({
               step={step}
               box={box}
               selected={editingId === step.id}
+              connectMode={connectMode}
+              isConnectFrom={connectFromId === step.id}
               onSelect={() => onSelect(step.id)}
+              onRename={(label) => onRenameStep(step.id, label)}
+              onStartConnect={() => onStartConnect(step.id)}
             />
           );
         })}
@@ -1098,42 +1224,160 @@ function SwimlaneCanvas({
   );
 }
 
+function shapeOf(type: StepType): 'rect' | 'diamond' | 'pill' {
+  if (type === 'decision') return 'diamond';
+  if (type === 'start' || type === 'end') return 'pill';
+  return 'rect';
+}
+
 function StepCard({
   step,
   box,
   selected,
+  connectMode,
+  isConnectFrom,
   onSelect,
-}: { step: FlowStep; box: LayoutBox; selected: boolean; onSelect: () => void }) {
+  onRename,
+  onStartConnect,
+}: {
+  step: FlowStep;
+  box: LayoutBox;
+  selected: boolean;
+  connectMode: boolean;
+  isConnectFrom: boolean;
+  onSelect: () => void;
+  onRename: (label: string) => void;
+  onStartConnect: () => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [draftLabel, setDraftLabel] = useState(step.label);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const shape = shapeOf(step.type);
+
+  // インライン編集に入ったら入力欄にフォーカス + 全選択
+  useEffect(() => {
+    if (editing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editing]);
+
+  // shape ごとのスタイル決定
+  const shapeClass =
+    shape === 'pill'
+      ? 'rounded-full border-2'
+      : shape === 'diamond'
+        ? 'border-0' // diamond は背景レイヤで描画、ボタン本体は透明
+        : 'rounded-lg border-2 shadow-sm';
+
+  const containerClass = cn(
+    'absolute text-left transition-all focus:outline-none',
+    shape !== 'diamond' && STEP_TYPE_STYLE[step.type],
+    shape !== 'diamond' && shapeClass,
+    !connectMode && 'cursor-pointer hover:shadow-md',
+    connectMode &&
+      (isConnectFrom ? 'ring-4 ring-secondary-400' : 'hover:ring-2 hover:ring-secondary-400'),
+    selected && !connectMode && 'ring-2 ring-primary-500 ring-offset-1 z-10'
+  );
+
   return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={cn(
-        'absolute text-left border-2 rounded-lg shadow-sm transition-all hover:shadow-md focus:outline-none',
-        STEP_TYPE_STYLE[step.type],
-        selected && 'ring-2 ring-primary-500 ring-offset-1 z-10'
-      )}
+    <div
+      className="absolute group"
       style={{ left: box.x, top: box.y, width: box.w, height: box.h }}
     >
-      <div className="px-2 py-1.5 h-full flex flex-col">
-        <div className="flex items-center gap-1.5">
-          <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-white/80 border border-current/30">
-            {STEP_TYPE_LABEL[step.type]}
-          </span>
-          {step.durationMin > 0 ? (
-            <span className="text-[9px] text-gray-500">{fmtMin(step.durationMin)}</span>
+      {/* diamond の場合は背景レイヤで菱形を描く（クリックは上のボタンが受ける） */}
+      {shape === 'diamond' ? (
+        <div
+          className={cn('absolute inset-0', STEP_TYPE_STYLE[step.type], 'border-2')}
+          style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}
+        />
+      ) : null}
+
+      <button
+        type="button"
+        draggable={!connectMode && !editing}
+        onDragStart={(e) => {
+          e.dataTransfer.setData('text/x-flow-step-id', step.id);
+          e.dataTransfer.effectAllowed = 'move';
+        }}
+        onClick={onSelect}
+        onDoubleClick={(e) => {
+          if (connectMode) return;
+          e.stopPropagation();
+          setDraftLabel(step.label);
+          setEditing(true);
+        }}
+        className={cn(containerClass, 'w-full h-full text-left')}
+      >
+        <div
+          className={cn(
+            'h-full flex flex-col',
+            shape === 'diamond'
+              ? 'items-center justify-center text-center px-8 py-2'
+              : 'px-2 py-1.5'
+          )}
+        >
+          <div className="flex items-center gap-1.5">
+            <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-white/80 border border-current/30">
+              {STEP_TYPE_LABEL[step.type]}
+            </span>
+            {step.durationMin > 0 ? (
+              <span className="text-[9px] text-gray-500">{fmtMin(step.durationMin)}</span>
+            ) : null}
+          </div>
+          {editing ? (
+            <input
+              ref={inputRef}
+              type="text"
+              value={draftLabel}
+              onChange={(e) => setDraftLabel(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+              onBlur={() => {
+                onRename(draftLabel.trim() || step.label);
+                setEditing(false);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onRename(draftLabel.trim() || step.label);
+                  setEditing(false);
+                }
+                if (e.key === 'Escape') {
+                  setEditing(false);
+                }
+              }}
+              className="w-full mt-1 text-xs font-semibold bg-white/90 border border-primary-400 rounded px-1 py-0.5 focus:outline-none"
+            />
+          ) : (
+            <p className="text-xs font-semibold leading-tight mt-1 line-clamp-2">{step.label}</p>
+          )}
+          {shape !== 'diamond' ? (
+            <div className="mt-auto text-[9px] text-gray-500 truncate">
+              {step.tool ? `🔧 ${step.tool}` : ''}
+              {step.pain ? <span className="text-red-700"> ⚠ {step.pain}</span> : null}
+              {step.improvement ? (
+                <span className="text-emerald-700"> ✓ {step.improvement}</span>
+              ) : null}
+            </div>
           ) : null}
         </div>
-        <p className="text-xs font-semibold leading-tight mt-1 line-clamp-2">{step.label}</p>
-        <div className="mt-auto text-[9px] text-gray-500 truncate">
-          {step.tool ? `🔧 ${step.tool}` : ''}
-          {step.pain ? <span className="text-red-700"> ⚠ {step.pain}</span> : null}
-          {step.improvement ? (
-            <span className="text-emerald-700"> ✓ {step.improvement}</span>
-          ) : null}
-        </div>
-      </div>
-    </button>
+      </button>
+
+      {/* ホバー時の右端「+」ハンドル: クリックで接続モードに入り、このノードを source に */}
+      {!connectMode && !editing ? (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onStartConnect();
+          }}
+          aria-label="このステップから矢印を引く"
+          title="このステップから矢印を引く"
+          className="no-print absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-secondary-500 text-white text-xs font-bold shadow-md opacity-0 group-hover:opacity-100 hover:bg-secondary-600 z-20 transition-opacity flex items-center justify-center"
+        >
+          +
+        </button>
+      ) : null}
+    </div>
   );
 }
 
