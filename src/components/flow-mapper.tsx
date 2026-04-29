@@ -14,6 +14,11 @@ type FlowStep = {
   pain: string;
   improvement: string;
   next: string[];
+  // 1回の実行あたり「個数 × 単価」型のコストを加算する。
+  // 例: 紙100枚×5円、配送50件×200円、材料費 等。時間ベースの人件費とは別計上。
+  quantity?: number;
+  unitCostYen?: number;
+  unitLabel?: string; // 「枚」「件」「個」など、UI表示用ラベル
 };
 
 // rateYenPerHour: 担当ごとの人件費単価（円/時）。空または0 ならコスト計算から除外。
@@ -388,11 +393,23 @@ function fmtYen(yen: number) {
   return `¥${yenFmt.format(Math.round(yen))}`;
 }
 
-// 1ステップのコスト（人件費）。レーンの時給×所要時間（分→時）。
+// 1ステップのコスト = 人件費（時給×時間）＋ 個数×単価（材料費・手数料・配送費など）
 function stepCost(step: FlowStep, lanes: FlowLane[]): number {
   const lane = lanes.find((l) => l.id === step.laneId);
   const rate = lane?.rateYenPerHour ?? 0;
+  const labor = (step.durationMin / 60) * rate;
+  const variable = (step.quantity ?? 0) * (step.unitCostYen ?? 0);
+  return labor + variable;
+}
+
+function stepLaborCost(step: FlowStep, lanes: FlowLane[]): number {
+  const lane = lanes.find((l) => l.id === step.laneId);
+  const rate = lane?.rateYenPerHour ?? 0;
   return (step.durationMin / 60) * rate;
+}
+
+function stepVariableCost(step: FlowStep): number {
+  return (step.quantity ?? 0) * (step.unitCostYen ?? 0);
 }
 
 // === To-Be 改善ヒント（As-Is 分析）===
@@ -417,6 +434,98 @@ const SUGGESTION_BADGE: Record<SuggestionKind, { label: string; color: string }>
   tool: { label: 'ツール選定', color: 'bg-amber-100 text-amber-900 border-amber-300' },
 };
 
+// ソリューションテンプレート: 各 SuggestionKind に対する代表的解決策と削減率の目安。
+// ユーザーが「どんなシステムで・どれだけ削減できるか」を書けない問題を解決する。
+// 削減率は経験則ベース（業界平均）。実プロジェクトでは要件次第で変動するが議論の起点に有効。
+type SolutionTemplate = {
+  name: string;
+  description: string;
+  examples: string;
+  reductionPct: number;
+  reductionRange: string;
+};
+
+const SOLUTIONS: Record<SuggestionKind, SolutionTemplate[]> = {
+  automation: [
+    {
+      name: 'API連携',
+      description: 'API連携で手作業の転記を撤廃。受発注・在庫・請求などの定型データを自動同期',
+      examples: 'Zapier / Make / 自社API / Webhook / iPaaS',
+      reductionPct: 90,
+      reductionRange: '80〜100%',
+    },
+    {
+      name: 'RPA',
+      description: 'RPAツールで画面操作を自動化。既存システムを変えずに定型作業を実行',
+      examples: 'UiPath / Power Automate / WinActor',
+      reductionPct: 80,
+      reductionRange: '70〜95%',
+    },
+    {
+      name: 'OCR＋構造化',
+      description: 'OCRで紙・画像を読み取り、AIで構造化データに変換',
+      examples: 'AI inside / Microsoft Form Recognizer / Google Document AI',
+      reductionPct: 75,
+      reductionRange: '60〜90%',
+    },
+    {
+      name: 'Webフォーム化',
+      description: '紙・FAX・電話による受付をWebフォーム＋入力規則に置換',
+      examples: 'HubSpot / Typeform / Google Forms / 自社フォーム',
+      reductionPct: 85,
+      reductionRange: '70〜100%',
+    },
+  ],
+  ai: [
+    {
+      name: 'LLMによる自動判定',
+      description: 'GPT/Claude等のLLMで自然言語判定を自動化。判断基準が言語化できる場合に有効',
+      examples: 'GPT-4 / Claude / Gemini / 社内RAG',
+      reductionPct: 85,
+      reductionRange: '70〜95%',
+    },
+    {
+      name: '機械学習分類モデル',
+      description: '過去データで学習した分類モデルで判定。判断パターンが安定している場合に有効',
+      examples: 'BigQuery ML / Vertex AutoML / scikit-learn',
+      reductionPct: 90,
+      reductionRange: '80〜99%',
+    },
+    {
+      name: 'ルールエンジン',
+      description: 'if-thenルールで条件分岐を自動化（AIなしでも判定が決定的なら最有力）',
+      examples: 'Drools / 自社実装 / スプレッドシート連携',
+      reductionPct: 95,
+      reductionRange: '90〜100%',
+    },
+  ],
+  parallel: [
+    {
+      name: '並行処理化',
+      description: '直列で進めていた工程を並列化。複数担当・複数システムが同時進行',
+      examples: 'ワークフローツール / 並行ジョブ / プロジェクト管理ツール',
+      reductionPct: 50,
+      reductionRange: '30〜70%',
+    },
+    {
+      name: '事前承認ルール',
+      description: '金額閾値や取引先信頼度で承認を不要化、自動承認',
+      examples: '権限委譲 / 自動承認ルール',
+      reductionPct: 80,
+      reductionRange: '60〜100%',
+    },
+    {
+      name: '通知の自動化',
+      description: '待ち時間中の進捗通知を自動化し、確認の往復を削減',
+      examples: 'Slack/Teams連携 / メール自動送信',
+      reductionPct: 60,
+      reductionRange: '40〜80%',
+    },
+  ],
+  priority: [],
+  tool: [],
+};
+
 function suggestImprovements(d: FlowDiagram): Suggestion[] {
   const out: Suggestion[] = [];
   const manualToolPattern = /excel|エクセル|電話|fax|ファクス|紙|手作業|手動|手書き|転記|印刷/i;
@@ -435,14 +544,16 @@ function suggestImprovements(d: FlowDiagram): Suggestion[] {
         message: `${s.tool ? `${s.tool}による` : ''}手作業を、API連携／RPA／OCR で削減できる可能性。To-Be ではシステム化を検討。`,
       });
     }
-    // 2) 判断ステップ + AI 適用キーワード
-    if (s.type === 'decision' && aiDecisionPattern.test(s.label)) {
+    // 2) 判断ステップは原則すべて AI／ルールエンジン候補（人手判定の省力化対象）
+    if (s.type === 'decision') {
+      const matchedKeyword = aiDecisionPattern.test(s.label);
       out.push({
         stepId: s.id,
         kind: 'ai',
         title: `「${s.label}」は AI 自動判定候補`,
-        message:
-          'ルールが言語化できればLLM／分類モデルで自動化できる。判断基準が安定している場合に向く。',
+        message: matchedKeyword
+          ? 'ルールが言語化できればLLM／分類モデルで自動化できる。判断基準が安定している場合に向く。'
+          : '判断ステップは AI／ルールエンジンで省力化候補。判断基準が言語化できれば自動化できる。',
       });
     }
     // 3) 待ち時間
@@ -972,6 +1083,43 @@ export function FlowMapper() {
     setConnectFromId(id);
   }
 
+  // To-Be 改善ヒントから「適用」ボタンを押したときの処理。
+  // - To-Be に同じID のステップがあればその improvement と durationMin を更新（削減率を反映）
+  // - To-Be に対応するステップが無ければ As-Is を丸ごとコピーした上で、該当ステップを更新
+  function applySolutionToToBe(asIsStepId: string, sol: SolutionTemplate) {
+    setState((prev) => {
+      const asIsStep = prev.asIs.steps.find((s) => s.id === asIsStepId);
+      if (!asIsStep) return prev;
+      let toBe = prev.toBe;
+      // To-Be が空ならまず As-Is をコピーして基準を作る
+      const hasMatching = toBe.steps.some((s) => s.id === asIsStepId);
+      if (!hasMatching) {
+        const cloned: FlowDiagram = JSON.parse(JSON.stringify(prev.asIs));
+        cloned.title = `${prev.asIs.title}（改善後）`;
+        cloned.steps = cloned.steps.map((s) => ({ ...s, pain: '', improvement: '' }));
+        toBe = cloned;
+      }
+      const reducedMin = Math.max(
+        0,
+        Math.round(asIsStep.durationMin * (1 - sol.reductionPct / 100))
+      );
+      toBe = {
+        ...toBe,
+        steps: toBe.steps.map((s) =>
+          s.id === asIsStepId
+            ? {
+                ...s,
+                improvement: `${sol.name}: ${sol.description}（${sol.reductionRange}削減見込み・参考実装: ${sol.examples}）`,
+                durationMin: reducedMin,
+              }
+            : s
+        ),
+      };
+      return { ...prev, toBe };
+    });
+    setView('toBe');
+  }
+
   function loadSample() {
     setState(SAMPLE);
     setView('asIs');
@@ -1170,7 +1318,7 @@ export function FlowMapper() {
 
       {/* Body */}
       {view === 'compare' ? (
-        <CompareView state={state} />
+        <CompareView state={state} onApplySolution={applySolutionToToBe} />
       ) : activeDiagram ? (
         <div
           className={cn(
@@ -1227,7 +1375,9 @@ export function FlowMapper() {
             {!fullscreen ? (
               <>
                 <CostsPanel diagram={activeDiagram} label={view === 'toBe' ? 'To-Be' : 'As-Is'} />
-                {view === 'toBe' ? <SuggestionsPanel asIs={state.asIs} /> : null}
+                {view === 'toBe' ? (
+                  <SuggestionsPanel asIs={state.asIs} onApply={applySolutionToToBe} />
+                ) : null}
               </>
             ) : null}
           </div>
@@ -2096,6 +2246,47 @@ function StepEditor({
           />
         </Field>
 
+        {/* 個数 × 単価（材料費・配送費・印刷費など、時間以外のコスト） */}
+        <Field label="個数 × 単価（任意）">
+          <div className="flex items-center gap-1 text-xs">
+            <input
+              type="number"
+              min={0}
+              value={step.quantity ?? 0}
+              onChange={(e) => onChange({ quantity: Math.max(0, Number(e.target.value) || 0) })}
+              className="w-16 border border-gray-300 rounded px-1.5 py-1 text-center"
+              placeholder="0"
+            />
+            <input
+              type="text"
+              value={step.unitLabel ?? ''}
+              onChange={(e) => onChange({ unitLabel: e.target.value })}
+              className="w-12 border border-gray-300 rounded px-1.5 py-1 text-center text-[11px]"
+              placeholder="個"
+            />
+            <span className="text-gray-500">×</span>
+            <span className="text-gray-500">¥</span>
+            <input
+              type="number"
+              min={0}
+              value={step.unitCostYen ?? 0}
+              onChange={(e) => onChange({ unitCostYen: Math.max(0, Number(e.target.value) || 0) })}
+              className="w-20 border border-gray-300 rounded px-1.5 py-1 text-center"
+              placeholder="0"
+            />
+            <span className="text-gray-500 text-[11px]">/単位</span>
+          </div>
+          <p className="text-[10px] text-gray-500 mt-0.5 leading-snug">
+            紙代・送料・材料費など、時間以外のコスト。例: 100<small>枚</small> × ¥5 → ¥500
+            を集計に加算。{' '}
+            {(step.quantity ?? 0) > 0 && (step.unitCostYen ?? 0) > 0 ? (
+              <span className="font-bold text-primary-700">
+                小計: {fmtYen((step.quantity ?? 0) * (step.unitCostYen ?? 0))}
+              </span>
+            ) : null}
+          </p>
+        </Field>
+
         {view === 'asIs' ? (
           <Field label="課題・痛み">
             <textarea
@@ -2186,7 +2377,15 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 // As-Is から「DXすべきステップ」を提案するパネル。To-Be ビューと Compare ビューで使用。
-function SuggestionsPanel({ asIs, label }: { asIs: FlowDiagram; label?: string }) {
+function SuggestionsPanel({
+  asIs,
+  label,
+  onApply,
+}: {
+  asIs: FlowDiagram;
+  label?: string;
+  onApply?: (asIsStepId: string, sol: SolutionTemplate) => void;
+}) {
   const [open, setOpen] = useState(true);
   const suggestions = useMemo(() => suggestImprovements(asIs), [asIs]);
 
@@ -2258,6 +2457,73 @@ function SuggestionsPanel({ asIs, label }: { asIs: FlowDiagram; label?: string }
                       <li key={`${it.stepId}-${it.kind}-msg`}>{it.message}</li>
                     ))}
                   </ul>
+                  {/* ソリューション候補 + 適用ボタン */}
+                  {(() => {
+                    const kindsWithSol = items
+                      .map((it) => it.kind)
+                      .filter((k) => SOLUTIONS[k] && SOLUTIONS[k].length > 0);
+                    if (kindsWithSol.length === 0) return null;
+                    const asIsStep = asIs.steps.find((s) => s.id === stepId);
+                    const lane = asIs.lanes.find((l) => l.id === asIsStep?.laneId);
+                    const rate = lane?.rateYenPerHour ?? 0;
+                    const beforeYen = asIsStep ? (asIsStep.durationMin / 60) * rate : 0;
+                    return (
+                      <div className="mt-2 pt-2 border-t border-gray-100">
+                        <p className="text-[10px] font-semibold text-gray-700 mb-1.5">
+                          ソリューション候補（クリックでTo-Beに反映）
+                        </p>
+                        <div className="grid sm:grid-cols-2 gap-1.5">
+                          {kindsWithSol.flatMap((kind) =>
+                            SOLUTIONS[kind].map((sol) => {
+                              const reducedMin = asIsStep
+                                ? Math.max(
+                                    0,
+                                    Math.round(asIsStep.durationMin * (1 - sol.reductionPct / 100))
+                                  )
+                                : 0;
+                              const afterYen = (reducedMin / 60) * rate;
+                              return (
+                                <button
+                                  key={`${kind}-${sol.name}`}
+                                  type="button"
+                                  onClick={() => onApply?.(stepId, sol)}
+                                  disabled={!onApply}
+                                  className="text-left p-2 bg-gray-50 hover:bg-primary-50 disabled:opacity-60 disabled:cursor-not-allowed border border-gray-200 rounded transition-colors"
+                                  title={`${sol.examples}（${sol.reductionRange}削減見込み）`}
+                                >
+                                  <div className="flex items-baseline justify-between gap-2">
+                                    <span className="text-[11px] font-bold text-gray-900">
+                                      {sol.name}
+                                    </span>
+                                    <span className="text-[10px] text-emerald-700 font-semibold whitespace-nowrap">
+                                      {sol.reductionRange}削減
+                                    </span>
+                                  </div>
+                                  <p className="text-[10px] text-gray-600 mt-0.5 leading-snug line-clamp-2">
+                                    {sol.examples}
+                                  </p>
+                                  {asIsStep && asIsStep.durationMin > 0 ? (
+                                    <p className="text-[10px] text-gray-700 mt-1">
+                                      {fmtMin(asIsStep.durationMin)}{' '}
+                                      <span className="text-gray-400">→</span>{' '}
+                                      <span className="font-bold text-primary-700">
+                                        {fmtMin(reducedMin)}
+                                      </span>
+                                      {beforeYen > 0 ? (
+                                        <span className="text-gray-500 ml-1">
+                                          ({fmtYen(beforeYen)} → {fmtYen(afterYen)})
+                                        </span>
+                                      ) : null}
+                                    </p>
+                                  ) : null}
+                                </button>
+                              );
+                            })
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </li>
               ))}
             </ul>
@@ -2273,6 +2539,16 @@ function CostsPanel({ diagram, label }: { diagram: FlowDiagram; label: string })
   const [open, setOpen] = useState(true);
   const agg = useMemo(() => computeAggregates(diagram), [diagram]);
   const hasCost = agg.totalYen > 0;
+  // 内訳: 人件費（時間×時給）と 個数×単価 の合計を分けて算出
+  const breakdown = useMemo(() => {
+    let labor = 0;
+    let variable = 0;
+    for (const s of diagram.steps) {
+      labor += stepLaborCost(s, diagram.lanes);
+      variable += stepVariableCost(s);
+    }
+    return { labor, variable };
+  }, [diagram]);
 
   function pct(part: number, whole: number) {
     if (whole <= 0) return 0;
@@ -2295,12 +2571,17 @@ function CostsPanel({ diagram, label }: { diagram: FlowDiagram; label: string })
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border-b border-gray-200"
       >
-        <span className="text-sm font-bold text-gray-900 flex items-center gap-2">
+        <span className="text-sm font-bold text-gray-900 flex items-center gap-2 flex-wrap">
           工程・担当別の時間とコスト集計（{label}）
           <span className="text-xs font-normal text-gray-600">
             合計 {fmtMin(agg.totalMinutes)}
             {hasCost ? ` / ${fmtYen(agg.totalYen)}` : ''}
           </span>
+          {hasCost && breakdown.variable > 0 ? (
+            <span className="text-[10px] font-normal text-gray-500">
+              内訳: 人件費 {fmtYen(breakdown.labor)} / 個数×単価 {fmtYen(breakdown.variable)}
+            </span>
+          ) : null}
         </span>
         <span className="text-xs text-gray-500">{open ? '▼' : '▶'}</span>
       </button>
@@ -2464,7 +2745,13 @@ function EmptyEditor({ onAddStep }: { onAddStep: () => void }) {
   );
 }
 
-function CompareView({ state }: { state: State }) {
+function CompareView({
+  state,
+  onApplySolution,
+}: {
+  state: State;
+  onApplySolution?: (asIsStepId: string, sol: SolutionTemplate) => void;
+}) {
   const a = totalMinutes(state.asIs);
   const b = totalMinutes(state.toBe);
   const delta = a - b;
@@ -2514,8 +2801,8 @@ function CompareView({ state }: { state: State }) {
         />
       </div>
 
-      {/* As-Is 分析から導出される To-Be の改善ヒント */}
-      <SuggestionsPanel asIs={state.asIs} label="As-Isから自動分析" />
+      {/* As-Is 分析から導出される To-Be の改善ヒント。適用ボタンで To-Be を自動生成 */}
+      <SuggestionsPanel asIs={state.asIs} label="As-Isから自動分析" onApply={onApplySolution} />
 
       {/* As-Is / To-Be それぞれの集計詳細 */}
       <div className="grid lg:grid-cols-2 gap-4">
@@ -2602,6 +2889,79 @@ function escapeXml(s: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
+}
+
+function mermaidNodeId(id: string): string {
+  return `n_${id}`;
+}
+
+function escapeMermaidLabel(s: string): string {
+  return s
+    .replace(/"/g, '#quot;')
+    .replace(/\s*\n\s*/g, ' ')
+    .trim();
+}
+
+function mermaidNode(step: FlowStep): string {
+  const id = mermaidNodeId(step.id);
+  const label = `"${escapeMermaidLabel(step.label || STEP_TYPE_LABEL[step.type])}"`;
+  switch (step.type) {
+    case 'start':
+    case 'end':
+      return `${id}([${label}])`;
+    case 'decision':
+      return `${id}{${label}}`;
+    case 'system':
+      return `${id}[[${label}]]`;
+    case 'wait':
+      return `${id}[/${label}/]`;
+    default:
+      return `${id}[${label}]`;
+  }
+}
+
+function diagramToMermaid(d: FlowDiagram, label: string): string {
+  const lines: string[] = [];
+  lines.push(`%% ${escapeMermaidLabel(label)}: ${escapeMermaidLabel(d.title || '')}`);
+  lines.push('flowchart LR');
+  lines.push('  classDef cls_start fill:#d1fae5,stroke:#10b981,color:#064e3b');
+  lines.push('  classDef cls_task fill:#ffffff,stroke:#9ca3af,color:#111827');
+  lines.push('  classDef cls_decision fill:#fef3c7,stroke:#f59e0b,color:#78350f');
+  lines.push('  classDef cls_system fill:#e0f2fe,stroke:#0ea5e9,color:#0c4a6e');
+  lines.push('  classDef cls_wait fill:#f3f4f6,stroke:#9ca3af,color:#374151');
+  lines.push('  classDef cls_end fill:#ffe4e6,stroke:#f43f5e,color:#881337');
+
+  const byLane = new Map<string, FlowStep[]>();
+  for (const lane of d.lanes) byLane.set(lane.id, []);
+  for (const s of d.steps) {
+    if (!byLane.has(s.laneId)) byLane.set(s.laneId, []);
+    byLane.get(s.laneId)?.push(s);
+  }
+
+  for (const lane of d.lanes) {
+    const steps = byLane.get(lane.id) ?? [];
+    if (!steps.length) continue;
+    const safeName = escapeMermaidLabel(lane.name || '担当');
+    lines.push(`  subgraph lane_${lane.id}["${safeName}"]`);
+    for (const s of steps) {
+      lines.push(`    ${mermaidNode(s)}`);
+    }
+    lines.push('  end');
+  }
+
+  const stepIds = new Set(d.steps.map((s) => s.id));
+  for (const s of d.steps) {
+    for (const nid of s.next) {
+      if (!stepIds.has(nid)) continue;
+      lines.push(`  ${mermaidNodeId(s.id)} --> ${mermaidNodeId(nid)}`);
+    }
+  }
+
+  for (const s of d.steps) {
+    lines.push(`  class ${mermaidNodeId(s.id)} cls_${s.type}`);
+  }
+
+  return lines.join('\n');
 }
 
 function diagramToSvg(d: FlowDiagram, label: string): string {
@@ -2760,6 +3120,12 @@ function ExportMenu({ state, view }: { state: State; view: View }) {
     setOpen(false);
   }
 
+  function exportMermaid() {
+    const mmd = diagramToMermaid(currentDiagram, currentLabel);
+    download(`flow-mapper-${currentLabel}-${ts}.mmd`, mmd, 'text/plain');
+    setOpen(false);
+  }
+
   async function exportPng() {
     try {
       const svg = diagramToSvg(currentDiagram, currentLabel);
@@ -2835,6 +3201,14 @@ function ExportMenu({ state, view }: { state: State; view: View }) {
               className="w-full text-left px-3 py-2 text-xs hover:bg-gray-50 border-t border-gray-100 disabled:text-gray-300 disabled:hover:bg-white"
             >
               SVG画像でダウンロード（{currentLabel}）
+            </button>
+            <button
+              type="button"
+              onClick={exportMermaid}
+              disabled={isCompareView}
+              className="w-full text-left px-3 py-2 text-xs hover:bg-gray-50 border-t border-gray-100 disabled:text-gray-300 disabled:hover:bg-white"
+            >
+              Mermaid（.mmd）でダウンロード（{currentLabel}）
             </button>
             <button
               type="button"
