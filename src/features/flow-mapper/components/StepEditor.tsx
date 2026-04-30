@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { STEP_TYPE_LABEL, STEP_TYPE_STYLE } from '../constants';
+import { useFlowStore } from '../store';
 import type {
   FlowDiagram,
   FlowLane,
@@ -34,7 +35,28 @@ export function StepEditor({
   onDelete: () => void;
   onClose: () => void;
 }) {
+  const setEditingId = useFlowStore((s) => s.setEditingId);
+  const moveStep = useFlowStore((s) => s.moveStep);
   const candidates = diagram.steps.filter((s) => s.id !== step.id);
+
+  // 同じセル（同 phase × 同 lane）内のステップだけを並び順に取り出して、
+  // キーボードユーザー向けの「↑ 前へ／↓ 後ろへ」ボタンを構築する。
+  // ドラッグできない環境でもセル内の順序入れ替え経路を残す。
+  const cellSiblings = diagram.steps.filter(
+    (s) => s.phaseId === step.phaseId && s.laneId === step.laneId
+  );
+  const cellIndex = cellSiblings.findIndex((s) => s.id === step.id);
+  const target: 'asIs' | 'toBe' = view === 'toBe' ? 'toBe' : 'asIs';
+  const onMoveBack = () => {
+    if (cellIndex <= 0) return;
+    const before = cellSiblings[cellIndex - 1];
+    moveStep(target, step.id, step.laneId, step.phaseId, before.id);
+  };
+  const onMoveForward = () => {
+    if (cellIndex < 0 || cellIndex >= cellSiblings.length - 1) return;
+    const afterNext = cellSiblings[cellIndex + 2]; // 1つ後ろの「さらに後ろ」を beforeId に
+    moveStep(target, step.id, step.laneId, step.phaseId, afterNext?.id ?? null);
+  };
 
   function toggleNext(nid: string) {
     const set = new Set(step.next);
@@ -57,6 +79,14 @@ export function StepEditor({
       </div>
 
       <div className="space-y-3">
+        <StepEffectHeader
+          view={view}
+          step={step}
+          diagram={diagram}
+          asIsStep={asIsStep}
+          asIsLanes={asIsLanes}
+        />
+
         <Field label="内容">
           <input
             type="text"
@@ -207,7 +237,7 @@ export function StepEditor({
                 typeField
               )}
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 <Field label="フェーズ">
                   <select
                     value={step.phaseId}
@@ -219,6 +249,22 @@ export function StepEditor({
                         {p.name}
                       </option>
                     ))}
+                  </select>
+                </Field>
+                <Field label="作業">
+                  <select
+                    value={step.id}
+                    onChange={(e) => setEditingId(e.target.value)}
+                    className="w-full text-sm border border-gray-300 rounded-md px-2 py-1.5 bg-white"
+                    title="同フェーズ内の他の作業を選んで編集対象を切り替え"
+                  >
+                    {diagram.steps
+                      .filter((s) => s.phaseId === step.phaseId)
+                      .map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.label || '（無題）'}
+                        </option>
+                      ))}
                   </select>
                 </Field>
                 <Field label="担当">
@@ -263,13 +309,7 @@ export function StepEditor({
           </Field>
         ) : (
           <>
-            <ScenarioPicker
-              step={step}
-              diagram={diagram}
-              asIsStep={asIsStep}
-              asIsLanes={asIsLanes}
-              onChange={onChange}
-            />
+            <ScenarioPicker step={step} diagram={diagram} onChange={onChange} />
             <Field label="改善ポイント（自動入力されます）">
               <textarea
                 value={step.improvement}
@@ -326,6 +366,35 @@ export function StepEditor({
           ) : null}
         </div>
 
+        {cellSiblings.length > 1 ? (
+          <div>
+            <span className="block text-xs font-semibold text-gray-600 mb-1">セル内の並び</span>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={onMoveBack}
+                disabled={cellIndex <= 0}
+                aria-label="このステップをセル内で1つ前へ"
+                className="px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                ↑ 前へ
+              </button>
+              <button
+                type="button"
+                onClick={onMoveForward}
+                disabled={cellIndex < 0 || cellIndex >= cellSiblings.length - 1}
+                aria-label="このステップをセル内で1つ後ろへ"
+                className="px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                ↓ 後ろへ
+              </button>
+            </div>
+            <p className="text-[10px] text-gray-500 mt-1 leading-snug">
+              ドラッグでも並べ替えできます。フェーズ／担当を変えると別セルに移動します。
+            </p>
+          </div>
+        ) : null}
+
         <button
           type="button"
           onClick={() => {
@@ -343,14 +412,10 @@ export function StepEditor({
 function ScenarioPicker({
   step,
   diagram,
-  asIsStep,
-  asIsLanes,
   onChange,
 }: {
   step: FlowStep;
   diagram: FlowDiagram;
-  asIsStep: FlowStep | null;
-  asIsLanes: FlowLane[] | null;
   onChange: (patch: Partial<FlowStep>) => void;
 }) {
   const [active, setActive] = useState<ScenarioKind | null>(null);
@@ -388,9 +453,9 @@ function ScenarioPicker({
     setActive(null);
   }
 
-  // 適用前後の比較用に、現状ステップ・As-Is ステップそれぞれのコストを算出。
+  // 適用前後の比較用に、現在の To-Be ステップのコストを算出。
+  // As-Is との差分は上部の StepEffectHeader が表示するので、ここではプレビュー用のみ使う。
   const currentCost = stepCost(step, diagram.lanes);
-  const asIsCost = asIsStep && asIsLanes ? stepCost(asIsStep, asIsLanes) : null;
 
   // プレビュー: アクティブシナリオを仮適用したらどうなるか
   const preview = (() => {
@@ -507,17 +572,137 @@ function ScenarioPicker({
           </button>
         </div>
       ) : null}
+    </div>
+  );
+}
 
-      {asIsStep && asIsCost !== null ? (
-        <div className="text-[10px] text-gray-600 leading-snug border-t border-primary-200 pt-2">
-          <span className="font-semibold">As-Is比:</span> 時間{' '}
-          {formatDeltaMin(step.durationMin - asIsStep.durationMin)} ／ コスト{' '}
-          {formatDeltaYen(currentCost - asIsCost)}
-          <span className="text-gray-400">
-            （As-Is: {fmtMin(asIsStep.durationMin)} / {fmtYen(asIsCost)}）
-          </span>
+// 編集中ステップの「DX効果」を直感的に見せるヘッダー。
+// - As-Is: このステップ単体の月コスト（＝DXで削れる対象）を表示
+// - To-Be (As-Is対応あり): As-Is → To-Be → 差分 を3カラムで並べ、月インパクトを強調
+// - To-Be (As-Is対応なし): 単体の月コストのみ
+function StepEffectHeader({
+  view,
+  step,
+  diagram,
+  asIsStep,
+  asIsLanes,
+}: {
+  view: View;
+  step: FlowStep;
+  diagram: FlowDiagram;
+  asIsStep: FlowStep | null;
+  asIsLanes: FlowLane[] | null;
+}) {
+  const executionsPerMonth = useFlowStore((s) => s.executionsPerMonth);
+  const safeExecutions = Number.isFinite(executionsPerMonth) ? executionsPerMonth : 0;
+  const currentCost = stepCost(step, diagram.lanes);
+  const currentMonthly = currentCost * safeExecutions;
+  const hasComparison = view === 'toBe' && asIsStep && asIsLanes;
+
+  if (!hasComparison) {
+    return (
+      <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
+        <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1.5">
+          このステップのコスト
         </div>
-      ) : null}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <div className="text-[10px] text-gray-500">1回あたり</div>
+            <div className="text-sm font-bold text-gray-900">
+              {fmtMin(Number.isFinite(step.durationMin) ? step.durationMin : 0)}
+            </div>
+            <div className="text-sm text-gray-700">{fmtYen(currentCost)}</div>
+          </div>
+          <div>
+            <div className="text-[10px] text-gray-500">
+              {safeExecutions > 0 ? `月${safeExecutions}回想定` : '月の実行回数 未設定'}
+            </div>
+            <div className="text-sm font-bold text-gray-900">
+              {safeExecutions > 0 ? fmtYen(currentMonthly) : '—'}
+            </div>
+          </div>
+        </div>
+        {view === 'asIs' ? (
+          <p className="text-[10px] text-gray-500 mt-2 leading-snug">
+            これが「DXで削減できる対象」です。To-Be
+            ビューで改善シナリオを適用すると、ここに削減効果が表示されます。
+          </p>
+        ) : null}
+      </div>
+    );
+  }
+
+  const asIsCost = stepCost(asIsStep, asIsLanes);
+  // 差分計算は両側を finite に丸めてから引く（NaN/Infinity の レガシーデータ保険）
+  const safeToBeMin = Number.isFinite(step.durationMin) ? step.durationMin : 0;
+  const safeAsIsMin = Number.isFinite(asIsStep.durationMin) ? asIsStep.durationMin : 0;
+  const deltaTime = safeToBeMin - safeAsIsMin;
+  const deltaCost = currentCost - asIsCost;
+  const deltaMonthly = deltaCost * safeExecutions;
+  const isReduction = deltaCost < 0 || (deltaCost === 0 && deltaTime < 0);
+  const isIncrease = deltaCost > 0 || (deltaCost === 0 && deltaTime > 0);
+  const sameLevel = !isReduction && !isIncrease;
+
+  const tone = sameLevel
+    ? { wrap: 'bg-gray-50 border-gray-200', text: 'text-gray-500', heading: 'text-gray-500' }
+    : isReduction
+      ? {
+          wrap: 'bg-emerald-50 border-emerald-200',
+          text: 'text-emerald-700',
+          heading: 'text-emerald-700',
+        }
+      : { wrap: 'bg-red-50 border-red-200', text: 'text-red-700', heading: 'text-red-700' };
+
+  return (
+    <div className={cn('rounded-lg border p-3', tone.wrap)}>
+      <div className={cn('text-[10px] font-bold uppercase tracking-wide mb-2', tone.heading)}>
+        DX効果（このステップ）
+      </div>
+      <div className="grid grid-cols-[1fr_auto_1fr_auto_1.1fr] items-center gap-1">
+        <div className="text-center">
+          <div className="text-[10px] text-gray-500">As-Is</div>
+          <div className="text-sm font-bold text-gray-700">{fmtMin(safeAsIsMin)}</div>
+          <div className="text-[11px] text-gray-600">{fmtYen(asIsCost)}</div>
+        </div>
+        <div className="text-gray-400 text-base">→</div>
+        <div className="text-center">
+          <div className="text-[10px] text-primary-700">To-Be</div>
+          <div className="text-sm font-bold text-primary-700">{fmtMin(safeToBeMin)}</div>
+          <div className="text-[11px] text-primary-700">{fmtYen(currentCost)}</div>
+        </div>
+        <div className="text-gray-400 text-base">⇒</div>
+        <div className="text-center">
+          <div className={cn('text-[10px] font-semibold', tone.text)}>差分</div>
+          <div className={cn('text-base font-extrabold leading-tight', tone.text)}>
+            {formatDeltaMin(deltaTime)}
+          </div>
+          <div className={cn('text-[11px] font-bold', tone.text)}>{formatDeltaYen(deltaCost)}</div>
+        </div>
+      </div>
+      <div
+        className={cn(
+          'mt-2 pt-2 border-t text-center text-[11px]',
+          sameLevel ? 'border-gray-200 text-gray-500' : 'border-current/30',
+          tone.text
+        )}
+      >
+        {safeExecutions > 0 ? (
+          <>
+            <span className="font-semibold">月{safeExecutions}回想定で </span>
+            <span className="text-base font-extrabold">{formatDeltaYen(deltaMonthly)}</span>
+            {isReduction ? '（削減）' : isIncrease ? '（増加）' : '（変化なし）'}
+          </>
+        ) : (
+          <>
+            <span className="font-semibold">1回あたり </span>
+            <span className="text-base font-extrabold">{formatDeltaMin(deltaTime)}</span>
+            <span className="ml-1.5 font-extrabold">{formatDeltaYen(deltaCost)}</span>
+            <span className="ml-1 text-gray-500">
+              （月の実行回数を上のパネルで設定すると月インパクトが出ます）
+            </span>
+          </>
+        )}
+      </div>
     </div>
   );
 }

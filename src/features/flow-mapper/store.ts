@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { EMPTY, type FlowTemplate, SAMPLE, STORAGE_KEY } from './constants';
+import { EMPTY, type FlowTemplate, ONBOARDING_KEY, SAMPLE, STORAGE_KEY } from './constants';
 import type {
   DiagramTarget,
   FlowDiagram,
@@ -152,7 +152,7 @@ export const useFlowStore = create<StoreState & Actions>()(
       hydrateOnboardingFromStorage: () => {
         if (typeof window === 'undefined') return;
         try {
-          const dismissed = localStorage.getItem('beekle-flow-mapper-onboarding-dismissed');
+          const dismissed = localStorage.getItem(ONBOARDING_KEY);
           if (dismissed === '1') set({ onboardingOpen: false });
         } catch {
           /* ignore */
@@ -161,7 +161,7 @@ export const useFlowStore = create<StoreState & Actions>()(
       dismissOnboarding: () => {
         set({ onboardingOpen: false });
         try {
-          localStorage.setItem('beekle-flow-mapper-onboarding-dismissed', '1');
+          localStorage.setItem(ONBOARDING_KEY, '1');
         } catch {
           /* ignore */
         }
@@ -181,13 +181,16 @@ export const useFlowStore = create<StoreState & Actions>()(
             lanes: d.lanes.map((l) => (l.id === id ? { ...l, name } : l)),
           }))
         ),
-      updateLaneRate: (t, id, rateYenPerHour) =>
+      updateLaneRate: (t, id, rateYenPerHour) => {
+        // NaN / Infinity は 0 に倒す（永続化前に弾く）。stepLaborCost にも保険があるが二重防御。
+        const safe = Number.isFinite(rateYenPerHour) && rateYenPerHour >= 0 ? rateYenPerHour : 0;
         set((s) =>
           updateDiagram(s, t, (d) => ({
             ...d,
-            lanes: d.lanes.map((l) => (l.id === id ? { ...l, rateYenPerHour } : l)),
+            lanes: d.lanes.map((l) => (l.id === id ? { ...l, rateYenPerHour: safe } : l)),
           }))
-        ),
+        );
+      },
       deleteLane: (t, id) =>
         set((s) =>
           updateDiagram(s, t, (d) => {

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { FlowDiagram } from '../types';
 import { computeAggregates } from '../utils/cost';
+import { computeStepEffects } from '../utils/effects';
 import { fmtMin, fmtYen } from '../utils/format';
 
 // 経営インパクト = (As-Is - To-Be) × 月間実行回数 × 12
@@ -35,6 +36,10 @@ export function ImpactPanel({
 
   const noToBe = toBeAgg.totalMinutes === 0 && toBeAgg.totalYen === 0;
   const noChange = perRun.minutesSaved === 0 && perRun.yenSaved === 0;
+  const stepEffects = useMemo(() => computeStepEffects(asIs, toBe), [asIs, toBe]);
+  const stepEffectsWithDelta = stepEffects.filter(
+    (s) => s.deltaMin !== 0 || s.deltaYen !== 0 || s.status !== 'kept'
+  );
 
   return (
     <section className="mt-4 border border-primary-300 rounded-xl bg-gradient-to-br from-primary-50 to-white overflow-hidden">
@@ -95,6 +100,71 @@ export function ImpactPanel({
         <div className="px-4 pb-3 text-[11px] text-amber-800">
           As-Is と To-Be で時間・コストの差が出ていません。To-Be
           ステップで「改善シナリオ」を適用すると差が反映されます。
+        </div>
+      ) : null}
+
+      {!noToBe && stepEffectsWithDelta.length > 0 ? (
+        <div className="px-4 pb-4">
+          <h4 className="text-xs font-bold text-primary-900 mb-2 mt-1">
+            作業（ステップ）別 削減効果（月{executionsPerMonth}回想定）
+          </h4>
+          <div className="space-y-1">
+            {stepEffectsWithDelta.map((p) => {
+              const deltaMonthlyYen = p.deltaYen * executionsPerMonth;
+              const deltaMonthlyMin = p.deltaMin * executionsPerMonth;
+              const isReduction = p.deltaYen < 0 || (p.deltaYen === 0 && p.deltaMin < 0);
+              const isIncrease = p.deltaYen > 0 || (p.deltaYen === 0 && p.deltaMin > 0);
+              const tone = isReduction
+                ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                : isIncrease
+                  ? 'text-red-700 bg-red-50 border-red-200'
+                  : 'text-gray-600 bg-white border-gray-200';
+              const fmtDelta = (v: number, fmt: (n: number) => string) =>
+                v === 0 ? '±0' : v < 0 ? `-${fmt(Math.abs(v))}` : `+${fmt(v)}`;
+              return (
+                <div
+                  key={p.stepId}
+                  className={`grid grid-cols-[1.4fr_1fr_1fr_1.3fr] items-center gap-2 px-2.5 py-1.5 rounded border text-[11px] ${tone}`}
+                >
+                  <div className="font-semibold truncate flex items-center gap-1.5">
+                    <span className="truncate">{p.label}</span>
+                    {p.status === 'added' ? (
+                      <span className="text-[9px] px-1 py-0.5 rounded bg-emerald-200 text-emerald-900 font-bold whitespace-nowrap">
+                        新規
+                      </span>
+                    ) : null}
+                    {p.status === 'removed' ? (
+                      <span className="text-[9px] px-1 py-0.5 rounded bg-red-200 text-red-900 font-bold whitespace-nowrap">
+                        廃止
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="text-right text-gray-600">
+                    <div className="text-[9px] text-gray-500">As-Is</div>
+                    <div className="font-medium leading-tight">{fmtMin(p.asIsMin)}</div>
+                    <div className="text-[10px]">{fmtYen(p.asIsYen)}</div>
+                  </div>
+                  <div className="text-right text-primary-700">
+                    <div className="text-[9px] text-primary-600">To-Be</div>
+                    <div className="font-medium leading-tight">{fmtMin(p.toBeMin)}</div>
+                    <div className="text-[10px]">{fmtYen(p.toBeYen)}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[9px] opacity-80">差分（月換算）</div>
+                    <div className="font-bold leading-tight">
+                      {fmtDelta(deltaMonthlyMin, fmtMin)}
+                    </div>
+                    <div className="text-sm font-extrabold leading-tight">
+                      {fmtDelta(deltaMonthlyYen, fmtYen)}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-[10px] text-gray-500 mt-1.5 leading-snug">
+            効果が出ている作業のみ表示（変化なしのステップは省略）。削減幅の大きい順に並べています。
+          </p>
         </div>
       ) : null}
     </section>
