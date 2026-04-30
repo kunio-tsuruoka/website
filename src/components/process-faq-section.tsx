@@ -61,9 +61,7 @@ export const ProcessFAQ = () => {
                   {faq.question}
                 </dt>
               </div>
-              <dd className="px-7 py-5 text-gray-700 text-lg leading-relaxed">
-                {faq.answer}
-              </dd>
+              <dd className="px-7 py-5 text-gray-700 text-lg leading-relaxed">{faq.answer}</dd>
             </div>
           ))}
         </div>

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 /**
  * project-management-complete-guide のユーザーストーリー説明をEARS記法に書き換える
  *
@@ -6,7 +7,6 @@
  *   node scripts/apply-ears-update.mjs          # 実行
  */
 import { createClient } from 'microcms-js-sdk';
-import { readFileSync } from 'node:fs';
 
 const envText = readFileSync('.env', 'utf8');
 for (const line of envText.split('\n')) {
@@ -95,7 +95,7 @@ for (const fix of fixes) {
   totalReplacements += localCount;
 }
 
-console.log(`\n====================================`);
+console.log('\n====================================');
 console.log(`Summary: ${totalReplacements} replacements across ${totalArticles} articles`);
 if (errors.length > 0) {
   console.log(`${errors.length} errors`);

@@ -13,10 +13,10 @@
 import 'dotenv/config';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
-import { createClient } from 'microcms-js-sdk';
+import { fileURLToPath } from 'node:url';
 import { marked } from 'marked';
+import { createClient } from 'microcms-js-sdk';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -111,8 +111,12 @@ for (const file of drafts) {
   console.log(`[FILE] ${file}`);
   console.log(`   slug      : ${meta.slug}`);
   console.log(`   title     : ${title}`);
-  console.log(`   category  : ${category} ${meta.category && !VALID_CATEGORIES.includes(meta.category.split(' ')[0]) ? `(raw: ${meta.category})` : ''}`);
-  console.log(`   desc(${(meta.description || '').length}): ${(meta.description || '').slice(0, 80)}${(meta.description || '').length > 80 ? '...' : ''}`);
+  console.log(
+    `   category  : ${category} ${meta.category && !VALID_CATEGORIES.includes(meta.category.split(' ')[0]) ? `(raw: ${meta.category})` : ''}`
+  );
+  console.log(
+    `   desc(${(meta.description || '').length}): ${(meta.description || '').slice(0, 80)}${(meta.description || '').length > 80 ? '...' : ''}`
+  );
   console.log(`   html len  : ${html.length}`);
 
   if (!meta.slug) {
