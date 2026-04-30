@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type SubmitStatus = 'idle' | 'submitting' | 'error';
 
@@ -9,9 +9,35 @@ declare global {
   }
 }
 
+type Provenance = {
+  source: string;
+  intent: string;
+  phase: string;
+};
+
+const PROVENANCE_MAX_LENGTH = 80;
+const PROVENANCE_PATTERN = /^[a-zA-Z0-9_\-./]+$/;
+
+function sanitizeParam(raw: string | null): string {
+  if (!raw) return '';
+  if (raw.length > PROVENANCE_MAX_LENGTH) return '';
+  return PROVENANCE_PATTERN.test(raw) ? raw : '';
+}
+
 const ContactForm = () => {
   const [status, setStatus] = useState<SubmitStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [provenance, setProvenance] = useState<Provenance>({ source: '', intent: '', phase: '' });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const sp = new URLSearchParams(window.location.search);
+    setProvenance({
+      source: sanitizeParam(sp.get('source')),
+      intent: sanitizeParam(sp.get('intent')),
+      phase: sanitizeParam(sp.get('phase')),
+    });
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,6 +55,9 @@ const ContactForm = () => {
       type: formData.get('type'),
       company: formData.get('company_name') || '',
       phone: formData.get('phone') || '',
+      source: provenance.source,
+      intent: provenance.intent,
+      phase: provenance.phase,
     };
 
     try {
@@ -47,11 +76,15 @@ const ContactForm = () => {
       }
 
       if (typeof window.gtag === 'function') {
-        window.gtag('event', 'generate_lead', {
+        const eventParams: Record<string, string> = {
           form_id: 'contact',
           form_type: typeof data.type === 'string' ? data.type : 'unknown',
-        });
-        window.gtag('event', 'form_submit', { form_id: 'contact' });
+        };
+        if (provenance.source) eventParams.source = provenance.source;
+        if (provenance.intent) eventParams.intent = provenance.intent;
+        if (provenance.phase) eventParams.phase = provenance.phase;
+        window.gtag('event', 'generate_lead', eventParams);
+        window.gtag('event', 'form_submit', eventParams);
       }
 
       window.location.href = '/thanks';
