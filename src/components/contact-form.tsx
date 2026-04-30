@@ -1,124 +1,93 @@
 import type React from 'react';
 import { useState } from 'react';
 
+type SubmitStatus = 'idle' | 'submitting' | 'error';
+
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 const ContactForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<SubmitStatus>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
+    if (status === 'submitting') return;
 
-    const form = e.currentTarget; // フォームの参照を保存
+    setStatus('submitting');
+    setErrorMessage('');
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const data = {
+      name: formData.get('from_name') || '',
+      email: formData.get('reply_to'),
+      message: formData.get('message'),
+      type: formData.get('type'),
+      company: formData.get('company_name') || '',
+      phone: formData.get('phone') || '',
+    };
 
     try {
-      const formData = new FormData(form);
-      const data = {
-        name: formData.get('from_name'),
-        email: formData.get('reply_to'),
-        message: formData.get('message'),
-        type: formData.get('type'),
-        company: formData.get('company_name'),
-        phone: formData.get('phone'),
-      };
-
-      console.log('Sending contact form data:', data);
-
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
-      const result = await response.json();
-      console.log('Contact API response:', response.status, result);
+      const result = await response.json().catch(() => ({}));
 
-      if (response.ok && result.success) {
-        setSubmitStatus('success');
-        alert('✅ お問い合わせを受け付けました。\n担当者より1-2営業日以内にご連絡いたします。');
-        form.reset(); // 保存した参照を使用
-
-        // 5秒後にステータスをリセット
-        setTimeout(() => {
-          setSubmitStatus('idle');
-        }, 5000);
-      } else {
-        console.error('API returned error:', result);
-        throw new Error(result.error || result.details || '送信に失敗しました');
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.error || result.details || `送信に失敗しました (${response.status})`
+        );
       }
-    } catch (error) {
-      console.error('Contact form error:', error);
-      setSubmitStatus('error');
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      alert(
-        `❌ エラーが発生しました。\n\n詳細: ${errorMessage}\n\nしばらく時間をおいて再度お試しください。`
-      );
 
-      // 3秒後にステータスをリセット
-      setTimeout(() => {
-        setSubmitStatus('idle');
-      }, 3000);
-    } finally {
-      setIsSubmitting(false);
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'generate_lead', {
+          form_id: 'contact',
+          form_type: typeof data.type === 'string' ? data.type : 'unknown',
+        });
+        window.gtag('event', 'form_submit', { form_id: 'contact' });
+      }
+
+      window.location.href = '/thanks';
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : '不明なエラーが発生しました';
+      setErrorMessage(msg);
+      setStatus('error');
     }
   };
 
+  const isSubmitting = status === 'submitting';
+
   return (
     <div className="bg-white rounded-[32px] shadow-soft p-8 md:p-12">
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* お問い合わせ種別 */}
+      <form onSubmit={handleSubmit} className="space-y-6" noValidate>
         <div>
           <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="type">
-            お問い合わせ種別 <span className="text-destructive">*</span>
+            ご相談内容の種別 <span className="text-destructive">*</span>
           </label>
           <select
             id="type"
             name="type"
             required
+            defaultValue="consultation"
             className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
           >
-            <option value="">選択してください</option>
+            <option value="consultation">まずは相談したい</option>
             <option value="web">Webアプリ開発について</option>
             <option value="mobile">モバイルアプリ開発について</option>
             <option value="prototype">プロトタイプ・POC作成について</option>
+            <option value="ai">AI/AIエージェント開発について</option>
             <option value="global">海外向けサービス開発について</option>
-            <option value="other">その他のご相談</option>
+            <option value="other">その他</option>
           </select>
         </div>
 
-        {/* 会社名 */}
-        <div>
-          <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="company">
-            会社名 <span className="text-muted-foreground">(任意)</span>
-          </label>
-          <input
-            type="text"
-            id="company"
-            name="company_name"
-            className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
-            placeholder="株式会社Beekle"
-          />
-        </div>
-
-        {/* お名前 */}
-        <div>
-          <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="name">
-            お名前 <span className="text-destructive">*</span>
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="from_name"
-            required
-            className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
-            placeholder="山田 太郎"
-          />
-        </div>
-
-        {/* メールアドレス */}
         <div>
           <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="email">
             メールアドレス <span className="text-destructive">*</span>
@@ -128,29 +97,16 @@ const ContactForm = () => {
             id="email"
             name="reply_to"
             required
+            autoComplete="email"
+            inputMode="email"
             className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="your-email@example.com"
           />
         </div>
 
-        {/* 電話番号 */}
-        <div>
-          <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="phone">
-            電話番号 <span className="text-muted-foreground">(任意)</span>
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
-            placeholder="03-1234-5678"
-          />
-        </div>
-
-        {/* お問い合わせ内容 */}
         <div>
           <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="message">
-            お問い合わせ内容 <span className="text-destructive">*</span>
+            ご相談内容 <span className="text-destructive">*</span>
           </label>
           <textarea
             id="message"
@@ -158,63 +114,104 @@ const ContactForm = () => {
             rows={6}
             required
             className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
-            placeholder="具体的な内容をご記入ください"
+            placeholder="現状の課題や、検討中のサービス・規模感などを簡単にご記入ください。詳細はやりとりの中で詰めて参ります。"
           />
+          <p className="text-sm text-muted-foreground mt-2">
+            ざっくりで構いません。返信時にこちらから具体的に質問させていただきます。
+          </p>
         </div>
 
-        {/* 受信者名（非表示） */}
+        <details className="group">
+          <summary className="cursor-pointer text-base font-medium text-foreground/70 hover:text-primary-500 select-none list-none flex items-center gap-2">
+            <span className="text-primary-500 group-open:rotate-90 transition-transform">▶</span>
+            会社名・お名前・電話番号も記入する（任意）
+          </summary>
+          <div className="space-y-6 mt-4 pl-4 border-l-2 border-primary-100">
+            <div>
+              <label
+                className="block text-base font-medium text-foreground/80 mb-2"
+                htmlFor="company"
+              >
+                会社名
+              </label>
+              <input
+                type="text"
+                id="company"
+                name="company_name"
+                autoComplete="organization"
+                className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
+                placeholder="株式会社○○"
+              />
+            </div>
+            <div>
+              <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="name">
+                お名前
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="from_name"
+                autoComplete="name"
+                className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
+                placeholder="山田 太郎"
+              />
+            </div>
+            <div>
+              <label
+                className="block text-base font-medium text-foreground/80 mb-2"
+                htmlFor="phone"
+              >
+                電話番号
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                autoComplete="tel"
+                inputMode="tel"
+                className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
+                placeholder="03-1234-5678"
+              />
+            </div>
+          </div>
+        </details>
+
         <input type="hidden" name="to_name" value="管理者" />
 
-        {/* プライバシーポリシー */}
-        <div className="flex items-start">
-          <div className="flex items-center h-5">
-            <input
-              id="privacy"
-              name="privacy"
-              type="checkbox"
-              required
-              className="w-4 h-4 rounded border-input text-primary focus:ring-primary"
-            />
-          </div>
-          <div className="ml-3">
-            <label className="text-base text-foreground/80" htmlFor="privacy">
-              <a href="/privacy" className="text-primary hover:text-primary/80 underline">
-                プライバシーポリシー
-              </a>
-              に同意します
-            </label>
-          </div>
-        </div>
+        <p className="text-sm text-muted-foreground">
+          送信することで
+          <a href="/privacy" className="text-primary-500 hover:text-primary-600 underline mx-1">
+            プライバシーポリシー
+          </a>
+          に同意したものとみなします。
+        </p>
 
-        {/* 送信ボタン */}
-        <div className="text-center">
-          {submitStatus === 'success' && (
-            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-[16px]">
-              <p className="text-green-800 font-medium">
-                お問い合わせを受け付けました！
-                <br />
-                <span className="text-base">担当者より1-2営業日以内にご連絡いたします。</span>
-              </p>
-            </div>
-          )}
-          {submitStatus === 'error' && (
-            <div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 rounded-[16px]">
-              <p className="text-destructive font-medium">
-                エラーが発生しました
-                <br />
-                <span className="text-base">しばらく時間をおいて再度お試しください。</span>
-              </p>
-            </div>
-          )}
+        {status === 'error' && (
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl"
+          >
+            <p className="text-destructive font-medium mb-1">送信できませんでした</p>
+            <p className="text-sm text-foreground/80">{errorMessage}</p>
+            <p className="text-sm text-foreground/70 mt-2">
+              繰り返し失敗する場合は、お手数ですが
+              <a href="mailto:support@beekle.jp" className="text-primary-500 underline mx-1">
+                support@beekle.jp
+              </a>
+              まで直接ご連絡ください。
+            </p>
+          </div>
+        )}
+
+        <div className="text-center pt-2">
           <button
             type="submit"
-            disabled={isSubmitting || submitStatus === 'success'}
-            className={`inline-flex justify-center items-center px-8 py-4 rounded-full font-semibold text-white transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-              isSubmitting || submitStatus === 'success'
-                ? 'bg-neutral-300 cursor-not-allowed'
-                : submitStatus === 'error'
-                  ? 'bg-destructive hover:bg-destructive/90 focus:ring-destructive'
-                  : 'bg-primary-500 hover:bg-primary-600 shadow-soft hover:shadow-medium focus:ring-primary-500'
+            disabled={isSubmitting}
+            className={`inline-flex justify-center items-center w-full md:w-auto px-10 py-4 rounded-full font-semibold text-white text-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+              isSubmitting
+                ? 'bg-neutral-400 cursor-not-allowed'
+                : 'bg-primary-500 hover:bg-primary-600 shadow-soft hover:shadow-medium focus:ring-primary-500'
             }`}
           >
             {isSubmitting ? (
@@ -237,21 +234,13 @@ const ContactForm = () => {
                 </svg>
                 送信中...
               </>
-            ) : submitStatus === 'success' ? (
-              <>
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                送信完了
-              </>
             ) : (
-              '送信する'
+              '無料で相談する'
             )}
           </button>
+          <p className="text-sm text-muted-foreground mt-4">
+            通常1〜2営業日以内に担当者からご返信します。
+          </p>
         </div>
       </form>
     </div>
