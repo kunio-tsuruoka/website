@@ -727,22 +727,22 @@ const articleUrl = `${siteUrl}/column/${columnId}`;
     margin-bottom: 32px; /* 8 × 4 */
   }
 
-  /* CTAボタンスタイル */
-  .markdown-content :global(a[href^="/prooffirst"]),
-  .markdown-content :global(a[href^="/contact"]) {
+  /* CTAボタンスタイル: <p> の唯一の子になっている時だけ pill 化（インラインの普通のリンクには適用しない） */
+  .markdown-content :global(p > a[href^="/prooffirst"]:only-child),
+  .markdown-content :global(p > a[href^="/contact"]:only-child) {
     @apply inline-flex items-center bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-full no-underline;
     padding: 12px 24px;  /* 上下12px (1.5×8), 左右24px (3×8) */
     transition: all 0.3s ease;
     border-bottom: none;
   }
 
-  .markdown-content :global(a[href^="/prooffirst"])::after,
-  .markdown-content :global(a[href^="/contact"])::after {
+  .markdown-content :global(p > a[href^="/prooffirst"]:only-child)::after,
+  .markdown-content :global(p > a[href^="/contact"]:only-child)::after {
     content: none;
   }
 
-  .markdown-content :global(a[href^="/prooffirst"]:hover),
-  .markdown-content :global(a[href^="/contact"]:hover) {
+  .markdown-content :global(p > a[href^="/prooffirst"]:only-child:hover),
+  .markdown-content :global(p > a[href^="/contact"]:only-child:hover) {
     @apply shadow-xl;
     transform: translateY(-2px);
   }
