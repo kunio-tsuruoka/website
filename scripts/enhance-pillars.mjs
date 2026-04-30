@@ -91,7 +91,10 @@ const enhancements = [
     related: [
       { url: '/column/prevent-mismatch', label: '認識齟齬を防ぐコツ' },
       { url: '/column/common-mistakes', label: 'プロジェクトでよくある失敗' },
-      { url: '/column/project-management-complete-guide', label: 'プロジェクトマネジメント完全ガイド' },
+      {
+        url: '/column/project-management-complete-guide',
+        label: 'プロジェクトマネジメント完全ガイド',
+      },
       { url: '/tools/scope-manager', label: '【無料ツール】Scope Manager（FM法）' },
       { url: '/tools/story-builder', label: '【無料ツール】Story Builder（ユーザーストーリー）' },
     ],
@@ -124,7 +127,10 @@ const enhancements = [
     related: [
       { url: '/column/system-development-cost-market', label: 'システム開発の費用相場' },
       { url: '/column/system-development-budget-control', label: 'システム開発の予算管理術' },
-      { url: '/column/system-development-cost-breakdown', label: 'システム開発費用の内訳完全ガイド' },
+      {
+        url: '/column/system-development-cost-breakdown',
+        label: 'システム開発費用の内訳完全ガイド',
+      },
       { url: '/column/web-system-cost-by-scale', label: 'Webシステム開発費用の規模別レンジ' },
       { url: '/column/quote-comparison-checklist', label: '見積もり比較チェックリスト' },
     ],
@@ -132,9 +138,7 @@ const enhancements = [
 ];
 
 function buildAppendHtml(item) {
-  const faqHtml = item.faqs
-    .map((f, i) => `<h2>Q${i + 1}. ${f.q}</h2><p>A. ${f.a}</p>`)
-    .join('');
+  const faqHtml = item.faqs.map((f, i) => `<h2>Q${i + 1}. ${f.q}</h2><p>A. ${f.a}</p>`).join('');
   const relatedHtml = item.related
     .map((r) => `<li><a href="${r.url}">${r.label}</a></li>`)
     .join('');

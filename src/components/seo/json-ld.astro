@@ -19,7 +19,8 @@ const organizationSchema = {
   alternateName: 'Beekle',
   url: siteUrl,
   logo: `${siteUrl}/logo.png`,
-  description: 'AI・Webアプリ・モバイルアプリ開発を手がけるシステム開発会社。初期費用0円のゼロスタートで、動くプロトタイプを体験してから判断できます。',
+  description:
+    'AI・Webアプリ・モバイルアプリ開発を手がけるシステム開発会社。初期費用0円のゼロスタートで、動くプロトタイプを体験してから判断できます。',
   foundingDate: '2023-02-01',
   address: {
     '@type': 'PostalAddress',
@@ -39,73 +40,81 @@ const organizationSchema = {
 };
 
 // 記事（Article）
-const articleSchema = data.title ? {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: data.title,
-  description: data.description || '',
-  image: data.image || `${siteUrl}/og-image.png`,
-  datePublished: data.publishedTime || '',
-  dateModified: data.modifiedTime || data.publishedTime || '',
-  author: {
-    '@type': 'Organization',
-    name: 'Beekle株式会社',
-  },
-  publisher: {
-    '@type': 'Organization',
-    name: 'Beekle株式会社',
-    logo: {
-      '@type': 'ImageObject',
-      url: `${siteUrl}/logo.png`,
-    },
-  },
-  mainEntityOfPage: {
-    '@type': 'WebPage',
-    '@id': data.url || siteUrl,
-  },
-} : null;
+const articleSchema = data.title
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: data.title,
+      description: data.description || '',
+      image: data.image || `${siteUrl}/og-image.png`,
+      datePublished: data.publishedTime || '',
+      dateModified: data.modifiedTime || data.publishedTime || '',
+      author: {
+        '@type': 'Organization',
+        name: 'Beekle株式会社',
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Beekle株式会社',
+        logo: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}/logo.png`,
+        },
+      },
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': data.url || siteUrl,
+      },
+    }
+  : null;
 
 // パンくずリスト（BreadcrumbList）
-const breadcrumbSchema = data.items ? {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: (data.items as Array<{name: string; url: string}>).map((item, index) => ({
-    '@type': 'ListItem',
-    position: index + 1,
-    name: item.name,
-    item: item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`,
-  })),
-} : null;
+const breadcrumbSchema = data.items
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: (data.items as Array<{ name: string; url: string }>).map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: item.name,
+        item: item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`,
+      })),
+    }
+  : null;
 
 // サービス（Service）
-const serviceSchema = data.serviceName ? {
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: data.serviceName,
-  description: data.serviceDescription || '',
-  provider: {
-    '@type': 'Organization',
-    name: 'Beekle株式会社',
-  },
-  areaServed: {
-    '@type': 'Country',
-    name: 'Japan',
-  },
-} : null;
+const serviceSchema = data.serviceName
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: data.serviceName,
+      description: data.serviceDescription || '',
+      provider: {
+        '@type': 'Organization',
+        name: 'Beekle株式会社',
+      },
+      areaServed: {
+        '@type': 'Country',
+        name: 'Japan',
+      },
+    }
+  : null;
 
 // FAQ
-const faqSchema = data.faqs ? {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: (data.faqs as Array<{question: string; answer: string}>).map((faq) => ({
-    '@type': 'Question',
-    name: faq.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: faq.answer,
-    },
-  })),
-} : null;
+const faqSchema = data.faqs
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: (data.faqs as Array<{ question: string; answer: string }>).map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: faq.answer,
+        },
+      })),
+    }
+  : null;
 
 // 選択されたスキーマを取得
 const getSchema = () => {

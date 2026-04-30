@@ -46,9 +46,7 @@ function convertFaqHtml(content) {
   let qCounter = 0;
 
   // 既存の ## Q1. 形式の番号を取得
-  const existingNums = [...result.matchAll(/<h2[^>]*>Q(\d+)\./g)].map((m) =>
-    Number.parseInt(m[1]),
-  );
+  const existingNums = [...result.matchAll(/<h2[^>]*>Q(\d+)\./g)].map((m) => Number.parseInt(m[1]));
   if (existingNums.length > 0) {
     qCounter = Math.max(...existingNums);
   }
@@ -66,7 +64,7 @@ function convertFaqHtml(content) {
       changed = true;
       qCounter++;
       return `<h2>Q${qCounter}. ${q.trim()}</h2><p>A. ${a.trim()}</p>`;
-    },
+    }
   );
 
   // パターン2: <p>Q. question</p><p>A. answer</p>（別々のpタグ）
@@ -76,18 +74,15 @@ function convertFaqHtml(content) {
       changed = true;
       qCounter++;
       return `<h2>Q${qCounter}. ${q.trim()}</h2><p>A. ${a.trim()}</p>`;
-    },
+    }
   );
 
   // パターン3: <p>Q. question A. answer</p>（1つのpタグ内）
-  result = result.replace(
-    /<p(?:\s[^>]*)?>Q\.\s*(.*?)\s+A\.\s*([\s\S]*?)<\/p>/g,
-    (_match, q, a) => {
-      changed = true;
-      qCounter++;
-      return `<h2>Q${qCounter}. ${q.trim()}</h2><p>A. ${a.trim()}</p>`;
-    },
-  );
+  result = result.replace(/<p(?:\s[^>]*)?>Q\.\s*(.*?)\s+A\.\s*([\s\S]*?)<\/p>/g, (_match, q, a) => {
+    changed = true;
+    qCounter++;
+    return `<h2>Q${qCounter}. ${q.trim()}</h2><p>A. ${a.trim()}</p>`;
+  });
 
   return { content: result, changed, qCount: qCounter };
 }
@@ -108,8 +103,7 @@ async function main() {
   for (const article of articles) {
     // インラインFAQパターンがあるか検出
     const hasInlineFaq =
-      /<p[^>]*>(?:<strong>)?Q\.\s/m.test(article.content) ||
-      /<p>FAQ<\/p>/m.test(article.content);
+      /<p[^>]*>(?:<strong>)?Q\.\s/m.test(article.content) || /<p>FAQ<\/p>/m.test(article.content);
 
     if (!hasInlineFaq) {
       skipped++;
