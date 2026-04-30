@@ -89,13 +89,25 @@ const serviceSchema = data.serviceName
       '@type': 'Service',
       name: data.serviceName,
       description: data.serviceDescription || '',
+      url: data.url || siteUrl,
+      ...(data.serviceType ? { serviceType: data.serviceType } : {}),
+      ...(data.image ? { image: data.image } : {}),
       provider: {
         '@type': 'Organization',
         name: 'Beekle株式会社',
+        url: siteUrl,
+        logo: `${siteUrl}/logo.png`,
       },
       areaServed: {
         '@type': 'Country',
         name: 'Japan',
+      },
+      offers: {
+        '@type': 'Offer',
+        name: '無料相談',
+        description: '初期費用0円のゼロスタートで、動くプロトタイプを体験してから判断できます。',
+        url: `${siteUrl}/contact`,
+        availability: 'https://schema.org/InStock',
       },
     }
   : null;
