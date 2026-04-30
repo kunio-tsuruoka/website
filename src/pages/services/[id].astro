@@ -7,20 +7,15 @@ import { services } from '@/data/service';
 import type { ServiceDetail } from '@/types/service';
 import Layout from '../../layouts/layout.astro';
 
-export const prerender = true;
+export const prerender = false;
 
-export function getStaticPaths() {
-  return services.map((service) => ({
-    params: { id: service.id },
-    props: { service },
-  }));
+const { id } = Astro.params;
+const service: ServiceDetail | undefined = services.find((s) => s.id === id);
+
+if (!service) {
+  return new Response(null, { status: 404 });
 }
 
-interface Props {
-  service: ServiceDetail;
-}
-
-const { service } = Astro.props as Props;
 const siteUrl = 'https://beekle.jp';
 const serviceUrl = `${siteUrl}/services/${service.id}`;
 const seoTitle = service.seoTitle ?? service.title;
