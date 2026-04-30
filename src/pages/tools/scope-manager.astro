@@ -1,6 +1,7 @@
 ---
 import { Header } from '../../components/header';
 import { ScopeManager } from '../../components/scope-manager';
+import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import Layout from '../../layouts/layout.astro';
 ---
@@ -241,4 +242,10 @@ import Layout from '../../layouts/layout.astro';
       }
     </script>
   </main>
+  <FloatingCTA
+    href="/contact?source=tool-scope-manager&intent=floating-stuck&phase=mid"
+    label="スコープ判断を一緒に詰める"
+    source="tool-scope-manager"
+    ctaId="floating-stuck"
+  />
 </Layout>

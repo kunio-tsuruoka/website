@@ -1,0 +1,61 @@
+---
+export interface Props {
+  href: string;
+  label: string;
+  source: string;
+  ctaId: string;
+}
+
+const { href, label, source, ctaId } = Astro.props as Props;
+---
+
+<div
+  data-floating-cta
+  class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 max-w-[calc(100vw-2rem)] sm:max-w-sm hidden"
+>
+  <div
+    class="flex items-stretch gap-2 bg-primary-500 text-white rounded-full shadow-2xl pl-5 pr-2 py-2 ring-1 ring-primary-600/30 hover:bg-primary-600 transition-colors"
+  >
+    <a
+      href={href}
+      data-cta-source={source}
+      data-cta-id={ctaId}
+      class="tool-escape-cta flex items-center gap-2 text-sm font-semibold whitespace-nowrap"
+    >
+      <span>{label}</span>
+      <svg
+        class="w-4 h-4 flex-shrink-0"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      </svg>
+    </a>
+    <button
+      type="button"
+      data-floating-cta-close
+      aria-label="閉じる"
+      class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-primary-700 transition-colors flex-shrink-0"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'beekle-floating-cta-dismissed';
+  const root = document.querySelector<HTMLElement>('[data-floating-cta]');
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-floating-cta-close]');
+  if (root && closeBtn) {
+    if (sessionStorage.getItem(STORAGE_KEY) !== '1') {
+      root.classList.remove('hidden');
+    }
+    closeBtn.addEventListener('click', () => {
+      sessionStorage.setItem(STORAGE_KEY, '1');
+      root.classList.add('hidden');
+    });
+  }
+</script>
