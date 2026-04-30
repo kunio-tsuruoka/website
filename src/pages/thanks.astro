@@ -1,0 +1,86 @@
+---
+import { Header } from '../components/header';
+import Layout from '../layouts/layout.astro';
+---
+
+<Layout
+  title="お問い合わせありがとうございました | Beekle"
+  description="Beekleへのお問い合わせを受け付けました。担当者より1〜2営業日以内にご返信いたします。"
+  noindex={true}
+>
+  <Header client:load />
+  <script is:inline>
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+      window.gtag('event', 'contact_complete', { method: 'form' });
+    }
+  </script>
+  <main class="pt-20">
+    <section class="py-20 md:py-32">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mx-auto text-center">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary-50 mb-8">
+            <svg
+              class="w-10 h-10 text-primary-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+
+          <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-6">
+            お問い合わせを受け付けました
+          </h1>
+
+          <p class="text-lg text-foreground/80 leading-relaxed mb-4">
+            ご連絡ありがとうございます。<br />
+            通常 <strong class="text-primary-500">1〜2営業日以内</strong> に担当者よりご返信いたします。
+          </p>
+
+          <p class="text-base text-muted-foreground mb-12">
+            返信が届かない場合は、迷惑メールフォルダのご確認、または
+            <a href="mailto:support@beekle.jp" class="text-primary-500 underline mx-1"
+              >support@beekle.jp</a
+            >
+            まで直接ご連絡ください。
+          </p>
+
+          <div class="border-t border-border pt-12">
+            <p class="text-sm text-muted-foreground mb-6">お待ちの間にどうぞ</p>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <a
+                href="/case-studies"
+                class="block bg-white border border-border rounded-2xl p-6 hover:shadow-soft hover:border-primary-200 transition-all text-left"
+              >
+                <p class="font-semibold text-foreground mb-1">開発実績を見る</p>
+                <p class="text-sm text-muted-foreground">
+                  これまでの開発事例をご紹介
+                </p>
+              </a>
+              <a
+                href="/column"
+                class="block bg-white border border-border rounded-2xl p-6 hover:shadow-soft hover:border-primary-200 transition-all text-left"
+              >
+                <p class="font-semibold text-foreground mb-1">コラムを読む</p>
+                <p class="text-sm text-muted-foreground">
+                  開発のヒントになる記事
+                </p>
+              </a>
+            </div>
+          </div>
+
+          <div class="mt-12">
+            <a
+              href="/"
+              class="inline-flex items-center text-primary-500 hover:text-primary-600 font-medium"
+            >
+              ← トップページへ戻る
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
