@@ -18,8 +18,11 @@ export function defaultCostMode(type: StepType): StepCostMode {
 export function stepLaborCost(step: FlowStep, lanes: FlowLane[]): number {
   if (stepCostMode(step) === 'variable') return 0;
   const lane = lanes.find((l) => l.id === step.laneId);
-  const rate = lane?.rateYenPerHour ?? 0;
-  return (step.durationMin / 60) * rate;
+  const rawRate = lane?.rateYenPerHour ?? 0;
+  // NaN / Infinity は totalMinutes と同様に 0 扱い。UI に "NaN円"／"Infinity円" を出さない保険。
+  const minutes = Number.isFinite(step.durationMin) ? step.durationMin : 0;
+  const rate = Number.isFinite(rawRate) ? rawRate : 0;
+  return (minutes / 60) * rate;
 }
 
 export function stepVariableCost(step: FlowStep): number {

@@ -40,30 +40,44 @@ export function StepCard({
   onDelete: () => void;
   onSwap: (otherStepId: string) => void;
 }) {
+  const [editing, setEditing] = useState(false);
+  const [draftLabel, setDraftLabel] = useState(step.label);
+  // ドラッグ中ハイライト。classList を直接触ると React 再レンダで剥がれるので state で管理。
+  const [dragHover, setDragHover] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const shape = shapeOf(step.type);
+
   // 別カードの上にドラッグ中のステップが乗ったときに発火する drop ハンドラ。
-  // セル側にも drop があるので、ここで stopPropagation して二重発火を防ぐ。
+  // セル側にも drop があるので、step-id の swap 時のみ stopPropagation する。
+  // パレットからの新規ドロップ (text/x-flow-step-type) はカードの当たり判定を素通りさせ、
+  // セルの drop ハンドラで「このカードの直前 / 末尾」に挿入させる。
   const handleCardDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    setDragHover(false);
     const otherId = e.dataTransfer.getData('text/x-flow-step-id');
-    if (!otherId || otherId === step.id) return;
+    if (!otherId || otherId === step.id) return; // パレット drop など → セルへバブル
     e.preventDefault();
     e.stopPropagation();
-    e.currentTarget.classList.remove('ring-4', 'ring-secondary-400', 'ring-offset-2');
     onSwap(otherId);
   };
   const handleCardDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    if (!e.dataTransfer.types.includes('text/x-flow-step-id')) return;
+    const types = e.dataTransfer.types;
+    const isStepMove = types.includes('text/x-flow-step-id');
+    const isPaletteNew = types.includes('text/x-flow-step-type');
+    if (!isStepMove && !isPaletteNew) return;
+    // パレットの新規ドロップはセル側で処理させたいので preventDefault のみ呼ばずバブルさせる
+    if (!isStepMove) return;
     e.preventDefault();
     e.stopPropagation();
     e.dataTransfer.dropEffect = 'move';
-    e.currentTarget.classList.add('ring-4', 'ring-secondary-400', 'ring-offset-2');
+    setDragHover(true);
   };
   const handleCardDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.currentTarget.classList.remove('ring-4', 'ring-secondary-400', 'ring-offset-2');
+    // related target が wrapper の内側ならまだ hover 継続
+    const next = e.relatedTarget as Node | null;
+    if (next && e.currentTarget.contains(next)) return;
+    setDragHover(false);
   };
-  const [editing, setEditing] = useState(false);
-  const [draftLabel, setDraftLabel] = useState(step.label);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const shape = shapeOf(step.type);
+  const dragHighlightClass = dragHover ? 'ring-4 ring-secondary-400 ring-offset-2' : '';
 
   useEffect(() => {
     if (editing && inputRef.current) {
@@ -77,7 +91,7 @@ export function StepCard({
     const CIRCLE_SIZE = 56;
     return (
       <div
-        className={cn('absolute group rounded-lg', HOVER_BRIDGE_CLASS)}
+        className={cn('absolute group rounded-lg', dragHighlightClass, HOVER_BRIDGE_CLASS)}
         style={{ left: box.x, top: box.y, width: box.w, height: box.h }}
         onDragOver={handleCardDragOver}
         onDragLeave={handleCardDragLeave}
@@ -155,7 +169,7 @@ export function StepCard({
               }}
               aria-label="このステップから矢印を引く"
               title="このステップから矢印を引く"
-              className="no-print absolute -right-7 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-secondary-500 text-white text-xs font-bold shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto hover:bg-secondary-600 z-20 transition-opacity flex items-center justify-center"
+              className="no-print absolute -right-7 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-secondary-500 text-white text-xs font-bold shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto hover:bg-secondary-600 z-20 transition-opacity flex items-center justify-center"
             >
               +
             </button>
@@ -167,7 +181,7 @@ export function StepCard({
               }}
               aria-label="このステップを削除"
               title="このステップを削除"
-              className="no-print absolute -right-5 -top-5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto hover:bg-red-600 z-20 transition-opacity flex items-center justify-center"
+              className="no-print absolute -right-5 -top-5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto hover:bg-red-600 z-20 transition-opacity flex items-center justify-center"
             >
               ×
             </button>
@@ -287,7 +301,7 @@ export function StepCard({
             }}
             aria-label="このステップから矢印を引く"
             title="このステップから矢印を引く"
-            className="no-print absolute -right-7 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-secondary-500 text-white text-xs font-bold shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto hover:bg-secondary-600 z-20 transition-opacity flex items-center justify-center"
+            className="no-print absolute -right-7 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-secondary-500 text-white text-xs font-bold shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto hover:bg-secondary-600 z-20 transition-opacity flex items-center justify-center"
           >
             +
           </button>
@@ -299,7 +313,7 @@ export function StepCard({
             }}
             aria-label="このステップを削除"
             title="このステップを削除"
-            className="no-print absolute -right-5 -top-5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto hover:bg-red-600 z-20 transition-opacity flex items-center justify-center"
+            className="no-print absolute -right-5 -top-5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto hover:bg-red-600 z-20 transition-opacity flex items-center justify-center"
           >
             ×
           </button>
