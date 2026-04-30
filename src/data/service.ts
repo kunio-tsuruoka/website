@@ -496,9 +496,9 @@ export const services: ServiceDetail[] = [
       'ChatGPT・Claude・Gemini等のLLM、AIエージェント、RAG構築まで。生成AIを業務に組み込む受託開発サービス。',
     longDescription:
       'OpenAI（ChatGPT/GPT-4o）、Anthropic Claude、Google Gemini等のLLM API活用から、社内文書を活用するRAG（検索拡張生成）、業務を自律実行するAIエージェント、Stable Diffusionによる画像生成まで、生成AIを業務システムに組み込む受託開発を提供します。技術選定・PoC・本番化・運用まで一気通貫でサポート。Claude Code等のAI開発環境を活用し、要件定義から最短2週間でプロトタイプを提供できます。',
-    seoTitle: '生成AI受託開発｜ChatGPT・Claude API活用、AIエージェント・RAG構築',
+    seoTitle: '生成AI受託開発｜最短2週間でPoC｜ChatGPT・Claude・RAG・AIエージェント構築',
     seoDescription:
-      'ChatGPT・Claude・Gemini等LLM活用、RAG構築、AIエージェント開発の受託サービス。技術選定からPoC・本番化・運用まで一気通貫対応。生成AIで業務を自動化したい企業様向け。',
+      '生成AI受託開発の専門チームが、ChatGPT・Claude・Gemini活用、RAG・AIエージェント構築まで対応。最短2週間でPoCを提供し、業務に組み込めるか早期判断。初期費用0円のゼロスタートで無料相談から開始可能です。',
     painPoints: [
       {
         title: '技術選定の難しさ',

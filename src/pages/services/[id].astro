@@ -29,6 +29,9 @@ const seoDescription = service.seoDescription ?? service.description;
     data={{
       serviceName: service.title,
       serviceDescription: service.description,
+      url: serviceUrl,
+      serviceType: service.title,
+      image: `${siteUrl}/og-image.png`,
     }}
   />
   <JsonLd
@@ -37,7 +40,6 @@ const seoDescription = service.seoDescription ?? service.description;
     data={{
       items: [
         { name: 'ホーム', url: '/' },
-        { name: 'サービス', url: '/' },
         { name: service.title, url: `/services/${service.id}` },
       ],
     }}
