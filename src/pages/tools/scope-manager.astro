@@ -17,6 +17,20 @@ import Layout from '../../layouts/layout.astro';
       badge="Tools"
     />
 
+    <div class="bg-amber-50 border-y border-amber-200">
+      <div class="container mx-auto px-6 md:px-8 py-3 text-sm text-amber-900 flex flex-wrap items-center justify-center gap-2">
+        <span>要件の評価軸が決められない／関係者の合意が取れない場合は</span>
+        <a
+          href="/contact?source=tool-scope-manager&intent=tool-stuck&phase=start"
+          data-cta-source="tool-scope-manager"
+          data-cta-id="contact-stuck-start"
+          class="tool-escape-cta font-semibold underline decoration-amber-400 hover:decoration-amber-700"
+        >
+          スコープの絞り込みを一緒に進める相談へ
+        </a>
+      </div>
+    </div>
+
     <section class="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
       <div class="container mx-auto px-6 md:px-8 max-w-7xl">
         {/* このツールでできること */}
@@ -198,10 +212,12 @@ import Layout from '../../layouts/layout.astro';
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a
-            href="/contact"
-            class="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg"
+            href="/contact?source=tool-scope-manager&intent=review-request&phase=complete"
+            data-cta-source="tool-scope-manager"
+            data-cta-id="contact-review-complete"
+            class="tool-escape-cta inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg"
           >
-            無料相談を予約する
+            この判定をレビューしてもらう
           </a>
           <a
             href="/column"
@@ -212,5 +228,17 @@ import Layout from '../../layouts/layout.astro';
         </div>
       </div>
     </section>
+
+    <script>
+      import { trackCtaClick } from '../../lib/analytics';
+      const ctas = document.querySelectorAll<HTMLAnchorElement>('.tool-escape-cta');
+      for (const el of ctas) {
+        el.addEventListener('click', () => {
+          const source = el.dataset.ctaSource ?? 'unknown';
+          const cta = el.dataset.ctaId ?? 'unknown';
+          trackCtaClick({ source, cta });
+        });
+      }
+    </script>
   </main>
 </Layout>
