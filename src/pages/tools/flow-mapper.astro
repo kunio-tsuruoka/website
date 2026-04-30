@@ -1,5 +1,6 @@
 ---
 import { Header } from '../../components/header';
+import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import { FlowMapper } from '../../features/flow-mapper';
 import Layout from '../../layouts/layout.astro';
@@ -247,4 +248,10 @@ import Layout from '../../layouts/layout.astro';
       }
     </script>
   </main>
+  <FloatingCTA
+    href="/contact?source=tool-flow-mapper&intent=floating-stuck&phase=mid"
+    label="迷ったら15分で壁打ち相談"
+    source="tool-flow-mapper"
+    ctaId="floating-stuck"
+  />
 </Layout>

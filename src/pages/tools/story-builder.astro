@@ -1,6 +1,7 @@
 ---
 import { Header } from '../../components/header';
 import { StoryBuilder } from '../../components/story-builder';
+import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import Layout from '../../layouts/layout.astro';
 ---
@@ -218,4 +219,10 @@ import Layout from '../../layouts/layout.astro';
       }
     </script>
   </main>
+  <FloatingCTA
+    href="/contact?source=tool-story-builder&intent=floating-stuck&phase=mid"
+    label="要件のヒアリング相談へ"
+    source="tool-story-builder"
+    ctaId="floating-stuck"
+  />
 </Layout>
