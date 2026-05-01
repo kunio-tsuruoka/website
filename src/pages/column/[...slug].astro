@@ -82,7 +82,8 @@ marked.use({ renderer });
 let htmlContent = marked(column.content || '') as string;
 
 // 記事内の {{MARKER}} ビジュアルプレースホルダーを差し込みHTMLに置換
-htmlContent = renderColumnVisuals(htmlContent);
+// CONTACT_CTA / CONTACT_CTA_MID は記事固有 source で動的生成
+htmlContent = renderColumnVisuals(htmlContent, { source: `column-${columnId}` });
 
 // HTML直書きの<h2>/<h3>にもidを付与し目次データを収集（リッチエディタHTML対応）
 htmlContent = htmlContent.replace(/<h([23])>([^<]+)<\/h[23]>/g, (_match, level, text) => {
