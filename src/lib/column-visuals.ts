@@ -506,6 +506,14 @@ const EARS_TO_GHERKIN_MAP = `<figure class="cv-card cv-card-full">
   </div>
 </figure>`;
 
+const CONTACT_CTA = `<figure class="cv-card">
+  <figcaption class="cv-card-header cv-header-primary">Beekleにご相談ください</figcaption>
+  <div class="cv-card-body">
+    <p>Beekleでは、生成AI／CDP／業務システムの企画・要件定義・開発・運用までワンストップで支援しています。「何を作れば成功か」の整理、検証フェーズの設計、本番化判断まで、発注側の判断材料が揃うように伴走します。費用感の概算だけでも歓迎です。</p>
+    <p style="text-align:center;margin-top:1.25rem;"><a href="/contact">お問い合わせはこちら</a></p>
+  </div>
+</figure>`;
+
 const EARS_GHERKIN_WORKFLOW = `<figure class="cv-whyhow">
   <figcaption class="cv-whyhow-title">ビジネスサイド → エンジニア → デモ／テストの流れ</figcaption>
   <div class="cv-whyhow-box cv-whyhow-why">
@@ -528,6 +536,7 @@ const EARS_GHERKIN_WORKFLOW = `<figure class="cv-whyhow">
 </figure>`;
 
 const VISUALS: Record<string, string> = {
+  CONTACT_CTA,
   USER_STORY_TEMPLATE,
   USER_STORY_EXAMPLE_NURSING,
   USER_STORY_EXAMPLE_WAREHOUSE,
