@@ -25,77 +25,59 @@
 <h3>選択肢1: 1社直接契約（ChatGPT or Claude or Gemini を1つだけ使う）</h3>
 <p>OpenAI／Anthropic／Google のいずれか1社と直接契約し、その会社の生成AIだけを使う方式です。</p>
 
-<div class="cv-card">
-  <div class="cv-card-header cv-header-success">向くケース</div>
-  <div class="cv-card-body">
+<h3>向くケース</h3>
     <ul>
       <li>使う生成AIが固定で、当面切り替えるつもりがない</li>
       <li>その会社のエンタープライズ契約（学習に使われない・データ保持期間設定など）が必須</li>
       <li>システム連携・サポート体制を1社に集約したい</li>
     </ul>
-  </div>
-</div>
+  
 
-<div class="cv-card">
-  <div class="cv-card-header cv-header-success">注意点</div>
-  <div class="cv-card-body">
+<h3>注意点</h3>
     <ul>
       <li>その会社が値上げ・廃止・障害を起こすと、業務がそのまま影響を受ける</li>
       <li>「もっと安い／速い生成AIが出ても、すぐ試せない」</li>
       <li>新しい世代が出るたびに切り替え工数がかかる</li>
     </ul>
-  </div>
-</div>
+  
 
 <h3>選択肢2: 複数モデル使い分け（自前で複数社と契約して切り替える）</h3>
 <p>OpenAI と Anthropic の両方と契約し、用途によって生成AIを使い分ける方式です。社内の検索AIは Claude、要約処理は ChatGPT、軽い分類は Gemini、というように使い分けます。</p>
 
-<div class="cv-card">
-  <div class="cv-card-header cv-header-success">向くケース</div>
-  <div class="cv-card-body">
+<h3>向くケース</h3>
     <ul>
       <li>用途別に最適な生成AIを使ってコスト・精度を最適化したい</li>
       <li>1社障害時の代替手段を確保したい</li>
       <li>新世代が出たときに比較・移行できるようにしたい</li>
     </ul>
-  </div>
-</div>
+  
 
-<div class="cv-card">
-  <div class="cv-card-header cv-header-success">注意点</div>
-  <div class="cv-card-body">
+<h3>注意点</h3>
     <ul>
       <li>複数社との契約・請求管理・利用ガイドラインの維持が必要</li>
       <li>セキュリティ審査・法務確認も会社数分必要</li>
       <li>システム側で「どの場面でどの生成AIを使うか」のロジックを実装する必要</li>
     </ul>
-  </div>
-</div>
+  
 
 <h3>選択肢3: 中継サービスを使う（OpenRouter／AWS Bedrock など）</h3>
 <p>「複数の生成AIを1つの契約でまとめて使える」中継サービスを通して、必要に応じて生成AIを切り替える方式です。代表的な選択肢は <strong>OpenRouter</strong>（独立系の中継サービス）と <strong>AWS Bedrock</strong>（AWS の中継サービス）です。</p>
 
-<div class="cv-card">
-  <div class="cv-card-header cv-header-success">向くケース</div>
-  <div class="cv-card-body">
+<h3>向くケース</h3>
     <ul>
       <li>複数の生成AIを試したいが、複数社契約の管理工数を避けたい</li>
       <li>新しいモデルが出たときにすぐ試せるようにしたい</li>
       <li>請求を1本にまとめたい</li>
     </ul>
-  </div>
-</div>
+  
 
-<div class="cv-card">
-  <div class="cv-card-header cv-header-success">注意点</div>
-  <div class="cv-card-body">
+<h3>注意点</h3>
     <ul>
       <li>中継サービスを通すため、利用料に若干の上乗せがある（ただし通常は数%）</li>
       <li>各生成AIの最新機能が中継サービス側で使えるようになるまでタイムラグがある場合あり</li>
       <li>中継サービス自体の障害リスクが新たに発生</li>
     </ul>
-  </div>
-</div>
+  
 
 <h2>OpenRouter と AWS Bedrock の違い</h2>
 <p>「中継サービス」を選ぶ場合、代表的な2社に違いがあります。</p>
@@ -152,16 +134,13 @@
 
 <p>業務システムの中で生成AIを呼び出す部分を <strong>抽象化レイヤ</strong>（共通の窓口）でくるんでおくと、後から「直接契約 → OpenRouter」「Claude → ChatGPT」のような切り替えが現実的なコストでできます。逆に、特定の生成AIに密結合した実装になっていると、切り替えの再開発で初期構築費の3〜5割が必要になることがあります。</p>
 
-<div class="cv-card">
-  <div class="cv-card-header cv-header-primary">発注先に確認すべきこと</div>
-  <div class="cv-card-body">
+<h3>発注先に確認すべきこと</h3>
     <ul>
       <li>使う生成AIを後から切り替えられる構造で実装するか</li>
       <li>切り替え時の追加費用の見積もり方</li>
       <li>新しい生成AIを評価するためのテストデータが整備されているか</li>
     </ul>
-  </div>
-</div>
+  
 
 <h2>まとめ: 推奨パターン</h2>
 
@@ -179,9 +158,4 @@
 
 <p>どれを選んでも、<strong>「将来切り替えられる構造」</strong>で実装することが最も重要です。生成AI業界は半年単位で勢力図が変わるので、ロックインしない設計が長期コストを左右します。</p>
 
-<div class="cv-card">
-  <div class="cv-card-header cv-header-primary">生成AI選定のご相談</div>
-  <div class="cv-card-body">
-    <p>Beekleでは、生成AIの選定支援、複数モデル使い分けの設計、切り替えやすいシステム構造の実装までを支援しています。「どの選択肢が自社に合うか」段階のご相談を歓迎します。<a href="/contact">お問い合わせはこちら</a>。</p>
-  </div>
-</div>
+{{CONTACT_CTA}}
