@@ -1,3 +1,4 @@
+import { trackCtaClick } from '@/lib/analytics';
 import { useEffect, useRef, useState } from 'react';
 
 const serviceItems = [
@@ -162,7 +163,8 @@ export function Header() {
           <Dropdown label="会社情報" items={companyItems} />
           <li>
             <a
-              href="/contact"
+              href="/contact?source=header-desktop"
+              onClick={() => trackCtaClick({ source: 'header-desktop', cta: 'contact' })}
               className="px-4 py-2 bg-primary-500 text-white rounded-full text-sm font-semibold hover:bg-primary-600 transition-colors shadow-soft hover:shadow-medium"
             >
               お問い合わせ
@@ -272,9 +274,12 @@ export function Header() {
               </li>
               <li>
                 <a
-                  href="/contact"
+                  href="/contact?source=header-mobile"
                   className="px-4 py-2 bg-primary-500 rounded-full text-white hover:bg-primary-600 transition-colors shadow-soft"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    trackCtaClick({ source: 'header-mobile', cta: 'contact' });
+                    setIsOpen(false);
+                  }}
                 >
                   お問い合わせ
                 </a>
