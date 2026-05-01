@@ -75,19 +75,36 @@ const ContactForm = () => {
         );
       }
 
-      if (typeof window.gtag === 'function') {
-        const eventParams: Record<string, string> = {
-          form_id: 'contact',
-          form_type: typeof data.type === 'string' ? data.type : 'unknown',
-        };
-        if (provenance.source) eventParams.source = provenance.source;
-        if (provenance.intent) eventParams.intent = provenance.intent;
-        if (provenance.phase) eventParams.phase = provenance.phase;
-        window.gtag('event', 'generate_lead', eventParams);
-        window.gtag('event', 'form_submit', eventParams);
-      }
+      const eventParams: Record<string, string> = {
+        form_id: 'contact',
+        form_type: typeof data.type === 'string' ? data.type : 'unknown',
+      };
+      if (provenance.source) eventParams.source = provenance.source;
+      if (provenance.intent) eventParams.intent = provenance.intent;
+      if (provenance.phase) eventParams.phase = provenance.phase;
 
-      window.location.href = '/thanks';
+      let navigated = false;
+      const navigate = () => {
+        if (navigated) return;
+        navigated = true;
+        window.location.href = '/thanks';
+      };
+      const fallback = window.setTimeout(navigate, 1500);
+
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'generate_lead', { ...eventParams, transport_type: 'beacon' });
+        window.gtag('event', 'form_submit', {
+          ...eventParams,
+          transport_type: 'beacon',
+          event_callback: () => {
+            window.clearTimeout(fallback);
+            navigate();
+          },
+        });
+      } else {
+        window.clearTimeout(fallback);
+        navigate();
+      }
     } catch (error) {
       const msg = error instanceof Error ? error.message : '不明なエラーが発生しました';
       setErrorMessage(msg);

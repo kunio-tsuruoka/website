@@ -10,9 +10,26 @@ import Layout from '../layouts/layout.astro';
 >
   <Header client:load />
   <script is:inline>
-    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-      window.gtag('event', 'contact_complete', { method: 'form' });
-    }
+    (function () {
+      var fired = false;
+      function fire() {
+        if (fired) return;
+        if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
+        fired = true;
+        window.gtag('event', 'contact_complete', {
+          method: 'form',
+          transport_type: 'beacon',
+        });
+      }
+      // gtag のキューは ga4.astro で stub 化されているので即時で積める
+      fire();
+      // 念のため遅延でも再試行（gtag.js 完全ロード後の保険）
+      if (document.readyState === 'complete') {
+        setTimeout(fire, 0);
+      } else {
+        window.addEventListener('load', function () { setTimeout(fire, 0); });
+      }
+    })();
   </script>
   <main class="pt-20">
     <section class="py-20 md:py-32">
