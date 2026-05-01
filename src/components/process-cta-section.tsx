@@ -1,4 +1,10 @@
-export const CTASection = () => {
+import { trackCtaClick } from '@/lib/analytics';
+
+type CTASectionProps = {
+  source?: string;
+};
+
+export const CTASection = ({ source = 'process-cta-section' }: CTASectionProps) => {
   return (
     <div className="bg-navy-950">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
@@ -9,7 +15,8 @@ export const CTASection = () => {
         <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
           <div className="inline-flex shadow-soft">
             <a
-              href="/contact"
+              href={`/contact?source=${encodeURIComponent(source)}`}
+              onClick={() => trackCtaClick({ source, cta: 'contact' })}
               className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-semibold rounded-full text-navy-950 bg-white hover:bg-gray-50 transition-colors"
             >
               無料相談を予約する

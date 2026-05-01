@@ -262,8 +262,10 @@ import Layout from '../layouts/layout.astro';
               </p>
               <div class="flex flex-col sm:flex-row gap-4 justify-center relative">
                 <a
-                  href="/contact"
-                  class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-50 transition-all shadow-soft hover:shadow-medium hover:scale-105 transform"
+                  href="/contact?source=home-zerostart"
+                  data-cta-source="home-zerostart"
+                  data-cta-id="contact"
+                  class="page-cta inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-50 transition-all shadow-soft hover:shadow-medium hover:scale-105 transform"
                 >
                   ゼロスタートを始める
                   <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -442,8 +444,10 @@ import Layout from '../layouts/layout.astro';
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="/contact"
-              class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-accent-950 bg-white rounded-full hover:bg-gray-100 transition-all shadow-soft hover:shadow-medium"
+              href="/contact?source=home-final-cta"
+              data-cta-source="home-final-cta"
+              data-cta-id="contact"
+              class="page-cta inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-accent-950 bg-white rounded-full hover:bg-gray-100 transition-all shadow-soft hover:shadow-medium"
             >
               無料相談を予約する
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

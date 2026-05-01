@@ -43,5 +43,17 @@ const fullTitle = title.includes('Beekle') ? title : `${title} | Beekle`;
   </head>
   <body class="font-sans">
     <slot />
+    <script>
+      import { trackCtaClick } from '@/lib/analytics';
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const el = target.closest<HTMLElement>('[data-cta-source]');
+        if (!el) return;
+        const source = el.dataset.ctaSource ?? 'unknown';
+        const cta = el.dataset.ctaId ?? 'unknown';
+        trackCtaClick({ source, cta });
+      });
+    </script>
   </body>
 </html>
