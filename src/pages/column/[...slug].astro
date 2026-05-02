@@ -206,10 +206,10 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     {/* Breadcrumb */}
     <section class="py-6 bg-gray-50 border-b border-gray-200">
       <div class="container mx-auto px-6 md:px-8">
-        <nav class="flex items-center gap-2 text-sm text-gray-600">
-          <a href="/" class="hover:text-primary-500 transition-colors">ホーム</a>
+        <nav class="flex items-center gap-2 text-sm text-gray-600 min-h-[44px]">
+          <a href="/" class="hover:text-primary-500 transition-colors py-3 px-1">ホーム</a>
           <span>/</span>
-          <a href="/column" class="hover:text-primary-500 transition-colors">コラム</a>
+          <a href="/column" class="hover:text-primary-500 transition-colors py-3 px-1">コラム</a>
           <span>/</span>
           <span class="text-gray-900">{frontmatter.title}</span>
         </nav>
@@ -356,7 +356,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
             <div class="mt-8 text-center">
               <a
                 href={`/column#${column.category.id}`}
-                class="inline-flex items-center text-primary-500 hover:text-primary-600 font-semibold transition-colors group"
+                class="inline-flex items-center text-primary-500 hover:text-primary-600 font-semibold transition-colors group py-3"
               >
                 <span>「{column.category.title}」の記事をすべて見る</span>
                 <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -374,7 +374,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
       <div class="container mx-auto px-6 md:px-8 max-w-4xl">
         <a
           href="/column"
-          class="inline-flex items-center text-primary-500 hover:text-primary-600 font-semibold transition-colors group"
+          class="inline-flex items-center text-primary-500 hover:text-primary-600 font-semibold transition-colors group py-3"
         >
           <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -412,7 +412,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
             href={subContactHref}
             data-cta-source={ctaSource}
             data-cta-id="contact-pre-tool"
-            class="column-cta-sub underline decoration-white/60 hover:decoration-white font-medium ml-1"
+            class="column-cta-sub underline decoration-white/60 hover:decoration-white font-medium ml-1 inline-block py-2"
           >
             先に相談する
           </a>
