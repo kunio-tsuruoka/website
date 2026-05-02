@@ -24,12 +24,12 @@ Pages project: `website`
 - AI binding name: `AI` (Workers AI、`@cf/baai/bge-m3` で埋め込み)
 
 ## Workers AI binding (column-rag 用)
-- Pages ダッシュボードで Settings → Functions → AI bindings に `AI` を追加すること
-- **`wrangler.toml` には `[ai]` を書かない**。書くと `astro dev` 起動時に `@astrojs/cloudflare` の `getPlatformProxy()` が remote mode で wrangler login を要求して落ちる（AI には local emulation がない）
-- 開発ローカルでは `env.AI` が undefined になり、`src/lib/column-rag.ts#findRelevantColumns` は空配列を返してフォールバック → コラム参照なしで通常応答
-- 埋め込みインデックス再生成: `bun run embed:columns` (=`scripts/build-column-embeddings.mjs`)。MicroCMS 全件取得 → Workers AI REST で BGE-M3 埋め込み → `src/data/column-embeddings.json` に書き出し → git commit
+- AI binding は **wrangler.toml の `[ai] binding = "AI"` ブロックで宣言する**（dashboard UI は Wrangler 管理モードのため編集不可。詳細は下の「Workers AI binding は wrangler.toml 管理」参照）
+- 古い記述「`wrangler.toml` には `[ai]` を書かない」は誤り。当時 dashboard 経由で binding 追加できると思っていたが、実際は wrangler.toml が単一の真実源
+- 開発ローカルでも `bun dev` 一発で動く（`package.json` の dev script が `.cloudflare/api-token` を auto-export するため）。token が無い CI 等では `env.AI` が落ちて `src/lib/column-rag.ts` の REST フォールバックに流れ、それも無ければ `[]` を返す
+- 埋め込みインデックス再生成: `bun run embed:columns` (=`scripts/build-column-embeddings.mjs`)。MicroCMS 全件＋ `scripts/beekle-glossary.mjs` の用語集を Workers AI REST で BGE-M3 埋め込み → `src/data/column-embeddings.json` に書き出し → git commit
 - 必要 env: `MICROCMS_SERVICE_DOMAIN`, `MICROCMS_API_KEY`, `CLOUDFLARE_API_TOKEN` (Workers AI Read 権限), `CLOUDFLARE_ACCOUNT_ID`
-- 記事追加・大幅な改稿のたびに再生成して commit する運用
+- 記事追加・大幅な改稿、または用語集更新のたびに再生成して commit する運用
 
 ## Runtime access
 - All AI demo endpoints `/api/ai/*` must read via `(locals as any).runtime.env.RATE_LIMIT` (KV) and `.TURNSTILE_SECRET_KEY` (string). See `.claude/rules/cloudflare.md`.
@@ -49,3 +49,33 @@ Pages project: `website`
 ## Local credentials path
 - API token at `./.cloudflare/api-token` (gitignored, chmod 600)
 - For wrangler CLI: `export CLOUDFLARE_API_TOKEN=$(cat .cloudflare/api-token); export CLOUDFLARE_ACCOUNT_ID=163fc8ca531cbe925ad7597ee0196f3a`
+
+## Workers AI binding は wrangler.toml 管理（2026-05-02 更新）
+
+過去の comment「`[ai]` を wrangler.toml に書くと astro dev が落ちる」の **ワークアラウンド確立**:
+
+- Pages は Wrangler 管理モードに切り替わったため、AI binding は **wrangler.toml の `[ai]` ブロックでしか宣言できない**（dashboard の Bindings タブは「wrangler.toml で管理されています」表示で編集不可）
+- `[ai] binding = "AI"` `remote = true` を書くと `astro dev` の `getPlatformProxy()` がリモート proxy 経由で接続を試みるが、これは **`CLOUDFLARE_API_TOKEN` が env にあれば通る**
+- `package.json` の `dev` script で `.cloudflare/api-token` を auto-export しているので `bun dev` 一発で動く（`"dev": "CLOUDFLARE_API_TOKEN=\"${CLOUDFLARE_API_TOKEN:-$(cat .cloudflare/api-token 2>/dev/null)}\" CLOUDFLARE_ACCOUNT_ID=\"...\" astro dev"`）
+- 起動時に `workers/subdomain/edge-preview` への API call が 1 つ失敗するエラーログが出るが、これは preview 機能用の権限不足で本体動作には無関係。dev サーバは `astro ready` まで進んで listen する
+- Workers AI はローカルエミュレーション無し（GPU 必要）。リモート proxy 必須なのは構造的制約
+
+## Cloudflare Pages のハルシネーション要因（2026-05-02 incident）
+
+本番の `/api/ai/chat` (IT-advisor) が「FM = Future Mode」「FM = Functional Specification」と捏造、さらに `beekle.co.jp` という存在しないドメインの URL まで作っていた事故。
+
+**根本原因 3 点**:
+1. Pages 本番に AI binding も `CLOUDFLARE_API_TOKEN` も無く、`findRelevantColumns()` が常に `[]` → RAG context ゼロで system prompt のみで回答
+2. `column-rag.ts` の embeddings は MicroCMS コラム本文だけで、Beekle 固有の用語集（FM、AsIs/ToBe 等）が無く、コラム本文に明示的な定義文も少ない
+3. system prompt が「FM 等のキーワードをそのまま使え」とだけ言い、「略語の正式名称を推測するな」というネガ制約が無かった
+
+**入れた多層防御**:
+- `wrangler.toml` に `[ai]` 復活（本番に AI binding 配備）
+- `scripts/beekle-glossary.mjs` に用語集を作り `build-column-embeddings.mjs` で同じ embeddings JSON に混ぜる（FM 等は glossary エントリがトップヒットする）
+- `chat.ts` system prompt に「【ハルシネーション防止 — 最重要】略語の正式名称・英訳・由来は参考コラム抜粋に明示されている場合のみ書く」を明文化
+- `column-rag.ts` の formatColumnContext にも同様のルール追記
+- `chat.ts` で応答後処理 `sanitizeReplyUrls()` を追加。回答内の URL は beekle.jp 配下かつ参考コラム URL に含まれるものだけ通し、それ以外は `[リンク省略]` に置換（プロンプトが破られても URL 捏造は物理的に止まる）
+
+## 用語集の追加方法
+
+`scripts/beekle-glossary.mjs` の `BEEKLE_GLOSSARY` 配列にエントリを足して `bun run embed:columns` で再生成 → `src/data/column-embeddings.json` を commit。新しい固有用語・略語が出てきたら、ここに「正式名称」「**間違いやすい誤訳の例**」「Beekle 内での使い方」を含む 200〜400 字の excerpt を書く。
