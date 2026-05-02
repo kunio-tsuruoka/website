@@ -99,7 +99,8 @@ export function Header() {
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="text-neutral-600 hover:text-accent-600 focus:outline-none"
+            aria-label="メニューを開閉"
+            className="text-neutral-600 hover:text-accent-600 focus:outline-none p-3 -m-3"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
