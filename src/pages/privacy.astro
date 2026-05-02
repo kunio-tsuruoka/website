@@ -1,113 +1,177 @@
 ---
 import { Header } from '../components/header';
 import { PageHero } from '../components/ui/page-hero';
-// src/pages/privacy-policy.astro
 import Layout from '../layouts/layout.astro';
 
-const lastUpdated = '2024年1月1日';
+const lastUpdated = '2026年5月2日';
+const established = '2024年1月1日';
 ---
 
 <Layout
   title="プライバシーポリシー | Beekle"
-  description="株式会社Beekleのプライバシーポリシー。個人情報の取り扱い、利用目的、安全管理措置について定めています。"
+  description="株式会社Beekleのプライバシーポリシー。個人情報の取扱い、AIデモにおける入力情報の処理、業務委託先、外国にある第三者への提供、保有期間、開示請求手続について定めています。"
 >
   <Header client:load />
   <main class="pt-20">
-    <!-- Hero Section -->
-    <PageHero
-      title="プライバシーポリシー"
-      subtitle={`最終更新日: ${lastUpdated}`}
-    />
+    <PageHero title="プライバシーポリシー" subtitle={`最終改訂日: ${lastUpdated} / 制定日: ${established}`} />
 
-    <!-- Policy Content -->
     <section class="py-32">
       <div class="container mx-auto px-8">
         <div class="max-w-3xl mx-auto">
           <div class="prose prose-lg max-w-none">
             <p class="text-gray-600 mb-12">
-              株式会社Beekle（以下「当社」）は、お客様の個人情報保護の重要性を認識し、適切な管理・保護に努めています。
-              当社のプライバシーポリシーについて、以下の通り定めます。
+              株式会社Beekle（以下「当社」といいます）は、個人情報の保護に関する法律（以下「個人情報保護法」）その他関連法令を遵守し、当社が運営するウェブサイト（beekle.jp 配下、以下「本サイト」）における個人情報および個人関連情報の取扱いについて、本プライバシーポリシー（以下「本ポリシー」）のとおり定めます。本ポリシーに同意いただけない場合、本サイトおよび本サイト上で提供する各種機能（お問い合わせフォーム、AIデモを含みます）はご利用いただけません。
             </p>
 
-            <!-- 個人情報の定義 -->
-            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">1. 個人情報の定義</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">1. 適用範囲</h2>
             <p class="text-gray-600 mb-8">
-              本プライバシーポリシーにおける「個人情報」とは、生存する個人に関する情報であって、当該情報に含まれる氏名、生年月日その他の記述等により特定の個人を識別することができるもの（他の情報と容易に照合することができ、それにより特定の個人を識別することができることとなるものを含む）を指します。
+              本ポリシーは、本サイトの利用および当社へのお問い合わせ、当社が提供するAIデモ機能（生成AI相談チャット、OCRデモ等、以下「AIデモ」）の利用を通じて取得する個人情報および個人関連情報の取扱いに適用されます。当社が個別契約に基づきお客様から預託を受ける業務委託案件中の個人情報は、別途締結する契約および個別の取扱規程に従います。
             </p>
 
-            <!-- 収集する情報 -->
-            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">2. 収集する情報</h2>
-            <p class="text-gray-600 mb-4">当社が収集する主な個人情報は以下の通りです：</p>
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">2. 取得する情報</h2>
+            <p class="text-gray-600 mb-4">当社は、以下の情報を取得します。</p>
+            <h3 class="text-lg font-bold text-gray-800 mt-6 mb-3">(1) お問い合わせ・サービス申込時にお客様から直接ご提供いただく情報</h3>
+            <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-6">
+              <li>氏名、会社名、所属部署、役職</li>
+              <li>メールアドレス、電話番号</li>
+              <li>お問い合わせ・ご相談の内容</li>
+              <li>その他フォームに任意で入力された情報</li>
+            </ul>
+            <h3 class="text-lg font-bold text-gray-800 mt-6 mb-3">(2) AIデモのご利用時に処理する情報</h3>
+            <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-6">
+              <li>チャットに入力されたテキスト、OCRデモにアップロードされた画像</li>
+              <li>処理時のIPアドレス（レート制限・不正利用防止のため）</li>
+              <li>Cloudflare Turnstile（後記）の検証トークンおよび検証結果</li>
+            </ul>
+            <p class="text-gray-600 mb-4 bg-yellow-50 border-l-4 border-yellow-400 p-4">
+              <strong>重要：</strong>AIデモは検証用途のデモンストレーションです。氏名・連絡先・取引先情報・契約金額・パスワード・マイナンバー・健康情報・要配慮個人情報・営業秘密など、特定の個人を識別しうる情報および機密情報は<strong>絶対に入力しないでください</strong>。お客様がこれらを入力された場合に生じる結果について、当社は責任を負いません。
+            </p>
+            <h3 class="text-lg font-bold text-gray-800 mt-6 mb-3">(3) アクセス時に自動的に取得する情報</h3>
             <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-8">
-              <li>氏名</li>
-              <li>メールアドレス</li>
-              <li>電話番号</li>
-              <li>会社名</li>
-              <li>お問い合わせ内容</li>
-              <li>その他、サービス提供に必要な情報</li>
+              <li>IPアドレス、ブラウザ種別、リファラ、閲覧ページ、滞在時間、デバイス情報等のアクセスログ</li>
+              <li>Cookie、ローカルストレージ、類似技術により付与・取得する識別子（GA4の client_id 等）</li>
             </ul>
 
-            <!-- 利用目的 -->
-            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">3. 個人情報の利用目的</h2>
-            <p class="text-gray-600 mb-4">当社は、収集した個人情報を以下の目的で利用いたします：</p>
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">3. 利用目的</h2>
+            <p class="text-gray-600 mb-4">当社は、取得した情報を以下の目的の範囲内でのみ利用します。</p>
             <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-8">
-              <li>お問い合わせ・ご相談への対応</li>
-              <li>サービスの提供および運営</li>
-              <li>契約の締結・履行</li>
-              <li>サービスの改善・新規サービスの開発</li>
-              <li>お知らせやメールマガジンの配信</li>
-              <li>アンケート調査の実施</li>
-              <li>法令等の遵守</li>
+              <li>お問い合わせ・ご相談への対応、見積・提案・契約交渉</li>
+              <li>当社サービスの提供、運営、保守、品質改善</li>
+              <li>AIデモのリクエスト処理および応答生成</li>
+              <li>不正アクセス・スパム・利用規約違反の検知および防止</li>
+              <li>レート制限、課金管理、月次予算上限の遵守</li>
+              <li>本サイトおよびサービスの利用状況分析、コンテンツ改善</li>
+              <li>当社からの営業上のご連絡（お客様の同意がある場合に限る）</li>
+              <li>法令・行政機関等からの要請への対応</li>
+            </ul>
+            <p class="text-gray-600 mb-8">
+              当社は、上記利用目的の範囲を超えて個人情報を取り扱う必要が生じた場合、改めて本人の同意を得るか、本ポリシーを改定して通知します。
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">4. AIデモにおける入力情報の取扱い</h2>
+            <p class="text-gray-600 mb-4">AIデモにおける入力情報は、以下の方針で取り扱います。</p>
+            <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-8">
+              <li>入力テキスト・画像はリクエストごとに後記の業務委託先（OpenRouter経由のLLMモデル提供者、Cloudflare Workers AI）に送信され、応答生成にのみ使用されます。</li>
+              <li>当社は、入力情報および応答内容を当社サーバーに永続的に保存しません（ブラウザ内の会話履歴はお客様の端末上にのみ保持されます）。</li>
+              <li>業務委託先における入力データの取扱い（学習利用の有無、保持期間）は、各事業者の利用規約・プライバシーポリシーに従います。当社は、当社が選定する範囲において学習に利用されない設定を選好しますが、第三者であるモデル提供者の運用変更まで保証するものではありません。最新の取扱方針については、リクエスト時点における各社のポリシーをご確認ください。</li>
+              <li>レート制限・不正利用防止のため、IPアドレスを基にしたカウンターを Cloudflare KV に短期間（最大24時間）保持します。</li>
+              <li>個人情報・機密情報を含む入力に起因する結果については、当社は一切の責任を負いません。</li>
             </ul>
 
-            <!-- 安全管理措置 -->
-            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">4. 個人情報の安全管理措置</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">5. 業務委託先・データ処理事業者</h2>
             <p class="text-gray-600 mb-4">
-              当社は、個人情報の漏えい、滅失またはき損を防止するために、以下のような安全管理措置を講じています：
+              当社は、利用目的の達成に必要な範囲で個人情報の取扱いを以下の事業者に委託しています。委託先に対しては、必要かつ適切な監督を行います。
             </p>
-            <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-8">
-              <li>個人情報へのアクセス制御および認証機能の設置</li>
-              <li>個人情報を取り扱う従業者の教育・監督</li>
-              <li>セキュリティ対策の実施および定期的な見直し</li>
-              <li>個人情報保護に関する規程の整備および遵守の徹底</li>
-            </ul>
+            <div class="overflow-x-auto mb-8">
+              <table class="min-w-full border border-gray-200 text-sm">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="border border-gray-200 px-4 py-2 text-left">事業者</th>
+                    <th class="border border-gray-200 px-4 py-2 text-left">所在国</th>
+                    <th class="border border-gray-200 px-4 py-2 text-left">委託する処理</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td class="border border-gray-200 px-4 py-2">Cloudflare, Inc.</td><td class="border border-gray-200 px-4 py-2">米国</td><td class="border border-gray-200 px-4 py-2">本サイトのホスティング（Pages）、CDN、KV（レート制限）、Workers AI（埋め込み生成）、Turnstile（自動操作判定）</td></tr>
+                  <tr><td class="border border-gray-200 px-4 py-2">OpenRouter, Inc.</td><td class="border border-gray-200 px-4 py-2">米国</td><td class="border border-gray-200 px-4 py-2">AIデモにおける生成AIモデル（Google Gemini 等）への中継およびAPI提供</td></tr>
+                  <tr><td class="border border-gray-200 px-4 py-2">株式会社microCMS</td><td class="border border-gray-200 px-4 py-2">日本</td><td class="border border-gray-200 px-4 py-2">公開コンテンツ（コラム等）の管理</td></tr>
+                  <tr><td class="border border-gray-200 px-4 py-2">Google LLC</td><td class="border border-gray-200 px-4 py-2">米国</td><td class="border border-gray-200 px-4 py-2">アクセス解析（Google Analytics 4）、サーチコンソール</td></tr>
+                  <tr><td class="border border-gray-200 px-4 py-2">Slack Technologies, LLC</td><td class="border border-gray-200 px-4 py-2">米国</td><td class="border border-gray-200 px-4 py-2">お問い合わせ通知の社内受信</td></tr>
+                </tbody>
+              </table>
+            </div>
 
-            <!-- 第三者提供 -->
-            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">5. 個人情報の第三者提供</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">6. 外国にある第三者への提供</h2>
             <p class="text-gray-600 mb-8">
-              当社は、以下のいずれかに該当する場合を除き、個人情報を第三者に提供いたしません：
+              前項のとおり、当社は個人情報の取扱いを米国に所在する事業者に委託することがあります。これは個人情報保護法28条に基づく外国にある第三者への提供に該当します。米国の個人情報保護に関する制度の概要、当該事業者が講じている個人情報の保護のための措置に関する情報については、各事業者の公表するプライバシーポリシーおよび個人情報保護委員会が公表する「外国における個人情報の保護に関する制度等の調査」をご参照ください。当社は、これら事業者との間で必要な契約上の措置を講じています。
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">7. 第三者提供</h2>
+            <p class="text-gray-600 mb-4">
+              当社は、前項の業務委託および以下のいずれかに該当する場合を除き、お客様の同意なく個人情報を第三者に提供しません。
             </p>
             <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-8">
-              <li>お客様の同意がある場合</li>
               <li>法令に基づく場合</li>
-              <li>人の生命、身体または財産の保護のために必要がある場合</li>
-              <li>公衆衛生の向上または児童の健全な育成の推進のために特に必要がある場合</li>
+              <li>人の生命、身体または財産の保護のために必要があり、本人の同意を得ることが困難である場合</li>
+              <li>公衆衛生の向上または児童の健全な育成の推進のために特に必要があり、本人の同意を得ることが困難である場合</li>
+              <li>国の機関もしくは地方公共団体またはその委託を受けた者が法令の定める事務を遂行することに対して協力する必要がある場合</li>
+              <li>事業の承継に伴い個人情報が提供される場合（本ポリシーの範囲内で利用される場合に限る）</li>
             </ul>
 
-            <!-- 開示請求 -->
-            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">6. 個人情報の開示・訂正・削除</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">8. Cookie・アクセス解析</h2>
+            <p class="text-gray-600 mb-4">
+              本サイトでは、利用状況の分析および機能提供のために Cookie および類似技術を使用しています。Google Analytics 4（GA4）により、Cookieに付与された識別子・IPアドレス（短縮処理）等を用いて統計情報を取得します。GA4による情報収集を拒否する場合、ブラウザの Cookie 設定変更、または Google が提供するオプトアウトアドオン（<a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" class="text-primary-600 underline">https://tools.google.com/dlpage/gaoptout</a>）をご利用ください。
+            </p>
             <p class="text-gray-600 mb-8">
-              当社は、お客様ご本人からの個人情報の開示、訂正、削除等のご要請に対して、合理的な範囲で速やかに対応いたします。
-              ただし、法令等により開示等をお断りする場合もございます。
+              本サイトの一部機能（AIデモのチャット履歴等）は、ブラウザのローカルストレージにデータを保存します。これらはお客様の端末内で完結し、当社サーバーには送信されません。
             </p>
 
-            <!-- お問い合わせ窓口 -->
-            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">7. お問い合わせ窓口</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">9. 保有期間</h2>
+            <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-8">
+              <li>お問い合わせ情報：受付から3年（取引・係争対応のため）</li>
+              <li>契約関連書類：契約終了後7年（法令保存義務）</li>
+              <li>AIデモのレート制限カウンター：最大24時間</li>
+              <li>アクセスログ（GA4）：最長14か月</li>
+              <li>サーバーのリクエストログ：90日</li>
+            </ul>
+            <p class="text-gray-600 mb-8">
+              利用目的が達成された個人情報は、合理的な期間内に消去または匿名化します。
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">10. 安全管理措置</h2>
+            <p class="text-gray-600 mb-4">当社は、個人情報の漏えい・滅失・毀損を防止するため、以下の安全管理措置を講じています。</p>
+            <ul class="list-disc pl-6 text-gray-600 space-y-2 mb-8">
+              <li><strong>組織的安全管理措置：</strong>個人情報取扱規程の整備、責任者の設置、取扱状況の点検</li>
+              <li><strong>人的安全管理措置：</strong>従業者・委託先への秘密保持義務、教育の実施</li>
+              <li><strong>物理的安全管理措置：</strong>個人情報を取り扱う区域の管理、機器・電子媒体の盗難防止</li>
+              <li><strong>技術的安全管理措置：</strong>アクセス制御、認証、通信経路の暗号化（TLS）、ログ監査、不正アクセス対策（Turnstile、レート制限、月次予算キルスイッチ）</li>
+              <li><strong>外的環境の把握：</strong>個人情報を取り扱う外国（米国）における個人情報保護制度を把握した上で安全管理措置を実施</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">11. 開示・訂正・利用停止等の請求</h2>
+            <p class="text-gray-600 mb-8">
+              お客様は、当社が保有する自己の個人情報について、開示・訂正・追加・削除・利用停止・第三者提供の停止を請求することができます。請求は後記の問合せ窓口までご連絡ください。当社は、本人確認のうえ、法令に従い合理的な期間内に対応します。なお、法令により当社が応じる義務を負わない場合、または他の法令上の義務と抵触する場合は、対応をお断りすることがあります。
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">12. 子どもの情報</h2>
+            <p class="text-gray-600 mb-8">
+              本サイトおよびAIデモは、原則として法人のご担当者様を対象としています。16歳未満の方は、保護者の同意を得たうえでご利用ください。
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">13. 本ポリシーの改定</h2>
+            <p class="text-gray-600 mb-8">
+              当社は、法令の変更、提供サービスの変更、利用する委託先・処理内容の変更等に応じて、本ポリシーを改定することがあります。重要な変更がある場合は、本サイト上での掲示その他適切な方法により告知します。改定後のポリシーは、本サイトに掲載された時点から効力を生じます。
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">14. 問合せ窓口</h2>
             <p class="text-gray-600 mb-4">
-              個人情報の取扱いに関するお問い合わせは、下記までご連絡ください：
+              個人情報の取扱いに関するお問い合わせ・開示等の請求は、以下までご連絡ください。
             </p>
             <div class="bg-gray-50 p-6 rounded-lg mb-8">
-              <p class="text-gray-700 font-medium">株式会社Beekle</p>
+              <p class="text-gray-700 font-medium">株式会社Beekle 個人情報保護管理者</p>
               <p class="text-gray-600">〒146-0082 東京都大田区池上3-7-9 304</p>
               <p class="text-gray-600">Email: support@beekle.jp</p>
             </div>
-
-            <!-- 改定 -->
-            <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-6">8. プライバシーポリシーの改定</h2>
-            <p class="text-gray-600 mb-8">
-              当社は、法令変更や事業内容の変更等に応じて、本プライバシーポリシーを改定することがあります。
-              重要な変更がある場合は、当社ウェブサイト上でお知らせいたします。
-            </p>
           </div>
         </div>
       </div>

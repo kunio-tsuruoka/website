@@ -1,0 +1,59 @@
+---
+import { AiItAdvisor } from '@/features/ai-it-advisor';
+import { Header } from '../../components/header';
+import FloatingCTA from '../../components/ui/floating-cta.astro';
+import { PageHero } from '../../components/ui/page-hero';
+import Layout from '../../layouts/layout.astro';
+
+const runtime = (Astro.locals as { runtime?: { env?: { TURNSTILE_SITE_KEY?: string } } }).runtime;
+const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
+---
+
+<Layout
+  title="AI IT発注相談 (デモ)｜Beekleの相談員AIに気軽に質問 | Beekle"
+  description="システム発注・要件定義・見積もり妥当性など、IT発注のお悩みをBeekleのAI相談員が一次回答。専門用語を避けて短く具体的にお答えします。本格的な発注支援は人間のコンサルタントへ。"
+>
+  <Header client:load />
+  <main class="pt-20">
+    <PageHero
+      title="AI IT発注相談 (デモ)"
+      subtitle="Beekleが公開しているコラムのノウハウをデータソースにして、AIが一次回答します。コラムが増えるほど回答精度も上がっていきます。"
+      badge="AI Demo"
+    />
+
+    <section class="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
+      <div class="container mx-auto px-6 md:px-8 max-w-5xl">
+        <AiItAdvisor client:load sitekey={sitekey} />
+
+        <div class="mt-10 grid md:grid-cols-3 gap-4 text-sm">
+          <div class="p-5 bg-white rounded-2xl border border-gray-200">
+            <p class="font-bold mb-2">用途</p>
+            <p class="text-gray-600">「見積もりが妥当か」「要件定義の進め方」など、相談前の頭の整理に。</p>
+          </div>
+          <div class="p-5 bg-white rounded-2xl border border-gray-200">
+            <p class="font-bold mb-2">注意</p>
+            <p class="text-gray-600">AIの一次回答です。重要な意思決定には人のコンサルタントによる検証を推奨します。</p>
+          </div>
+          <div class="p-5 bg-white rounded-2xl border border-gray-200">
+            <p class="font-bold mb-2">プライバシー</p>
+            <p class="text-gray-600">入力内容はAI応答生成のみに使用し、サーバには保存しません。</p>
+          </div>
+        </div>
+
+        <div class="mt-10 p-6 md:p-8 bg-primary-50 border border-primary-100 rounded-2xl">
+          <p class="font-bold text-primary-900 mb-2">大規模ナレッジBotも構築可能です</p>
+          <p class="text-gray-700 text-sm md:text-base leading-relaxed">
+            このデモはBeekleのコラムをデータソースにした小規模チャットボットですが、社内マニュアル・議事録・規程・FAQなど数千〜数万件規模のドキュメントを学習させた本格的なナレッジBotの構築も承っています。詳しくは<a href="/contact?source=tool-ai-it-advisor-knowledge" class="text-primary-700 underline hover:no-underline font-medium">お問い合わせ</a>まで。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <FloatingCTA source="tool-ai-it-advisor" />
+  </main>
+
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer></script>
+</Layout>

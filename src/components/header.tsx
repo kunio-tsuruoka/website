@@ -6,7 +6,6 @@ const serviceItems = [
   { label: '生成AI受託サービス', href: '/services/ai-development' },
   { label: 'AI搭載BtoBサイト制作', href: '/services/ai-b2b-website' },
   { label: 'CDP開発', href: '/services/cdp-development' },
-  { label: 'グローバルサービス', href: '/services/global-service' },
 ];
 
 const companyItems = [
@@ -20,6 +19,12 @@ const toolsItems = [
   { label: 'ユーザーストーリー作成ツール', href: '/tools/story-builder' },
   { label: 'スコープ管理ツール', href: '/tools/scope-manager' },
   { label: '業務フロー可視化ツール', href: '/tools/flow-mapper' },
+];
+
+const demoItems = [
+  { label: 'デモ一覧', href: '/demos' },
+  { label: 'AI IT発注相談', href: '/demos/it-advisor' },
+  { label: 'AI領収書OCR', href: '/demos/ocr' },
 ];
 
 function Dropdown({
@@ -160,6 +165,7 @@ export function Header() {
             </a>
           </li>
           <Dropdown label="要件定義支援ツール" items={toolsItems} />
+          <Dropdown label="生成AIデモ集" items={demoItems} />
           <Dropdown label="会社情報" items={companyItems} />
           <li>
             <a
@@ -244,6 +250,22 @@ export function Header() {
                 <p className="text-white/60 text-sm mb-2">要件定義支援ツール</p>
                 <ul className="space-y-2">
                   {toolsItems.map((item) => (
+                    <li key={item.href}>
+                      <a
+                        href={item.href}
+                        className="hover:text-accent-300 transition-colors text-base"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li className="border-t border-white/20 pt-4 w-full text-center">
+                <p className="text-white/60 text-sm mb-2">生成AIデモ集</p>
+                <ul className="space-y-2">
+                  {demoItems.map((item) => (
                     <li key={item.href}>
                       <a
                         href={item.href}

@@ -1,7 +1,14 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.4.1/schema.json",
   "files": {
-    "ignore": ["dist/**", "node_modules/**", ".astro/**", ".vscode/**", "*.generated.*"]
+    "ignore": [
+      "dist/**",
+      "node_modules/**",
+      ".astro/**",
+      ".vscode/**",
+      "*.generated.*",
+      "src/data/column-embeddings.json"
+    ]
   },
   "organizeImports": {
     "enabled": true
