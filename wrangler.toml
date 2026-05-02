@@ -7,8 +7,18 @@ binding = "RATE_LIMIT"
 id = "9d7191f03fe84b3f90f14252e5e3d7bd"
 preview_id = "1bf38321066c41c1941881836e25ae48"
 
-# Workers AI バインディング (BGE-M3 埋め込み用) は Pages ダッシュボードで
-# Settings → Functions → AI bindings に "AI" を追加する。
-# wrangler.toml に [ai] を書くと astro dev 時に @astrojs/cloudflare が remote mode で
-# wrangler login を要求して起動失敗するため、ここには書かない。
-# 開発ローカルでは env.AI が undefined になり、column-rag は空配列を返してフォールバック。
+# Workers AI バインディング (BGE-M3 埋め込み + RAG 用)。
+# Pages が Wrangler 管理モードに切り替わったため、ダッシュボード UI ではなく
+# ここで宣言する必要がある (本番/preview 共通)。
+#
+# ローカル dev の落とし穴:
+#   Workers AI はローカルエミュレーション不可 (GPU 不要なエンドポイント無し) のため
+#   getPlatformProxy() がリモート proxy 経由で接続する → 認証必須 → "You must be logged in"
+#   で起動失敗する。
+#   対策: package.json の `dev` スクリプトで .cloudflare/api-token (gitignored) を
+#   CLOUDFLARE_API_TOKEN として export する。これで `bun dev` 一発で動く。
+#   トークンが無い環境 (CI 等) は env.AI が落ちて column-rag.ts の REST フォールバックに
+#   流れるが、そこも CLOUDFLARE_API_TOKEN が無いと最終的に [] が返る。
+[ai]
+binding = "AI"
+remote = true
