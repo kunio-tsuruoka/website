@@ -19,7 +19,9 @@
     "biome:init": "biome init",
     "test": "vitest",
     "test:ci": "vitest run",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "embed:columns": "node scripts/build-column-embeddings.mjs",
+    "embed:columns:dry": "node scripts/build-column-embeddings.mjs --dry"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",

@@ -1,0 +1,21 @@
+# ローカル開発用 secrets。.dev.vars にコピーして値を埋める。
+# .dev.vars は gitignored。
+
+# Turnstile (本番と同じ値で良い、ドメイン制限がCloudflare側で localhost を許可済み)
+TURNSTILE_SECRET_KEY=
+TURNSTILE_SITE_KEY=0x4AAAAAADHmRrTyQk-jx5-X
+
+# OpenRouter (description生成と同じキー使用可)
+OPENROUTER_API_KEY=
+
+# 月次予算 USD (省略時 10)
+AI_MONTHLY_BUDGET_USD=10
+
+# 既存env vars (MicroCMS等) もローカル動作に必要なら追加
+# MICROCMS_API_KEY=
+# MICROCMS_SERVICE_DOMAIN=
+
+# Workers AI BGE-M3 (column-rag) — ローカル開発で env.AI バインディング不在時の REST API フォールバック
+# 本番(Cloudflare Pages)では Pages ダッシュボードで AI バインディングを設定するので不要
+# CLOUDFLARE_API_TOKEN=
+# CLOUDFLARE_ACCOUNT_ID=163fc8ca531cbe925ad7597ee0196f3a

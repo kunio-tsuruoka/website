@@ -1,0 +1,72 @@
+---
+import { Header } from '../../components/header';
+import FloatingCTA from '../../components/ui/floating-cta.astro';
+import { PageHero } from '../../components/ui/page-hero';
+import Layout from '../../layouts/layout.astro';
+
+const demos = [
+  {
+    href: '/demos/it-advisor',
+    label: 'AI IT発注相談',
+    summary:
+      'システム発注・要件定義・見積もりの妥当性などの悩みをBeekleの相談員AIが一次回答します。',
+    badge: 'チャット',
+  },
+  {
+    href: '/demos/ocr',
+    label: 'AI領収書OCR',
+    summary:
+      '領収書の画像から店舗名・日付・合計・明細を自動抽出します。経費精算の自動化を試せます。',
+    badge: 'ビジョン',
+  },
+];
+---
+
+<Layout
+  title="AIデモ｜Beekleが提供する生成AIの体験ページ | Beekle"
+  description="Beekleの生成AI技術を体験できるデモページ。IT発注相談AI、領収書OCRなど、業務効率化の感触を試せます。"
+>
+  <Header client:load />
+  <main class="pt-20">
+    <PageHero
+      title="AIデモ"
+      subtitle="Beekleが提供する生成AIサービスの体験ページです。実装精度や運用感を試した上で、本番導入のご相談ができます。"
+      badge="Demos"
+    />
+
+    <section class="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
+      <div class="container mx-auto px-6 md:px-8 max-w-5xl">
+        <div class="grid md:grid-cols-2 gap-6">
+          {demos.map((d) => (
+            <a
+              href={d.href}
+              class="group block p-6 bg-white rounded-2xl border border-gray-200 shadow-soft hover:shadow-medium hover:border-primary-300 transition"
+            >
+              <span class="inline-block px-2 py-1 text-xs font-bold bg-primary-50 text-primary-700 rounded-md mb-3">
+                {d.badge}
+              </span>
+              <h3 class="text-xl font-bold mb-2 group-hover:text-primary-600 transition">
+                {d.label}
+              </h3>
+              <p class="text-sm text-gray-600 leading-relaxed">{d.summary}</p>
+              <span class="mt-4 inline-flex items-center text-sm font-medium text-primary-600">
+                試してみる →
+              </span>
+            </a>
+          ))}
+        </div>
+
+        <div class="mt-12 p-6 bg-amber-50 border border-amber-200 rounded-2xl text-sm text-amber-900">
+          <p class="font-bold mb-1">注意事項</p>
+          <ul class="list-disc list-inside space-y-1">
+            <li>各デモは検証目的の利用に留めてください。本番業務での精度・連携性能は別途検証が必要です。</li>
+            <li>1日あたりのリクエスト数に上限があります。上限に達した場合は翌日以降にお試しください。</li>
+            <li>入力内容はAI応答生成のみに使用し、サーバには保存しません。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <FloatingCTA source="demos-index" />
+  </main>
+</Layout>

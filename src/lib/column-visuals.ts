@@ -506,6 +506,17 @@ const EARS_TO_GHERKIN_MAP = `<figure class="cv-card cv-card-full">
   </div>
 </figure>`;
 
+function buildContactCta(source: string, intent: string): string {
+  const href = `/contact?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(intent)}`;
+  return `<figure class="cv-card">
+  <figcaption class="cv-card-header cv-header-primary">Beekleにご相談ください</figcaption>
+  <div class="cv-card-body">
+    <p>Beekleでは、生成AI／CDP／業務システムの企画・要件定義・開発・運用までワンストップで支援しています。「何を作れば成功か」の整理、検証フェーズの設計、本番化判断まで、発注側の判断材料が揃うように伴走します。費用感の概算だけでも歓迎です。</p>
+    <p style="text-align:center;margin-top:1.25rem;"><a href="${href}" data-cta-source="${source}" data-cta-id="contact-${intent}">お問い合わせはこちら</a></p>
+  </div>
+</figure>`;
+}
+
 const EARS_GHERKIN_WORKFLOW = `<figure class="cv-whyhow">
   <figcaption class="cv-whyhow-title">ビジネスサイド → エンジニア → デモ／テストの流れ</figcaption>
   <div class="cv-whyhow-box cv-whyhow-why">
@@ -554,17 +565,38 @@ const VISUALS: Record<string, string> = {
   EARS_GHERKIN_WORKFLOW,
 };
 
+export type ColumnVisualContext = {
+  /** 記事スラッグ等を含む source 識別子（例: column-pm-complete-guide） */
+  source: string;
+};
+
 /**
  * 記事 HTML 内のマーカー（`<p>{{NAME}}</p>` または `{{NAME}}`）を
  * 対応するビジュアル HTML に置換する。
+ *
+ * `{{CONTACT_CTA}}` `{{CONTACT_CTA_MID}}` は context を使って計測タグ付きHTMLを動的生成する。
+ *  - CONTACT_CTA → intent=article-final（記事末尾の総括CTA向け）
+ *  - CONTACT_CTA_MID → intent=article-mid（記事途中での誘導向け）
  */
-export function renderColumnVisuals(html: string): string {
+export function renderColumnVisuals(html: string, ctx?: ColumnVisualContext): string {
   let result = html;
   for (const [key, visual] of Object.entries(VISUALS)) {
-    // <p>{{KEY}}</p> パターン（空白を許容）と、裸の {{KEY}} パターンの両方に対応
     const wrapped = new RegExp(`<p>\\s*\\{\\{${key}\\}\\}\\s*</p>`, 'g');
     const bare = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
     result = result.replace(wrapped, visual).replace(bare, visual);
+  }
+
+  if (ctx) {
+    const dynamicMarkers: Array<[string, string]> = [
+      ['CONTACT_CTA', 'article-final'],
+      ['CONTACT_CTA_MID', 'article-mid'],
+    ];
+    for (const [key, intent] of dynamicMarkers) {
+      const visual = buildContactCta(ctx.source, intent);
+      const wrapped = new RegExp(`<p>\\s*\\{\\{${key}\\}\\}\\s*</p>`, 'g');
+      const bare = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+      result = result.replace(wrapped, visual).replace(bare, visual);
+    }
   }
   return result;
 }

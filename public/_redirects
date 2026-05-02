@@ -10,8 +10,10 @@
 /service/cdp                       /services/cdp-development         301
 /service/cdp/                      /services/cdp-development         301
 /cdp                               /services/cdp-development         301
-/service/overseas-website          /services/global-service          301
-/service/overseas-website/         /services/global-service          301
+/service/overseas-website          /services                         301
+/service/overseas-website/         /services                         301
+/services/global-service           /services                         301
+/services/global-service/          /services                         301
 /service/application-development   /services/web-mobile-development  301
 /service/application-development/  /services/web-mobile-development  301
 /service/in-house-support          /services/web-mobile-development  301

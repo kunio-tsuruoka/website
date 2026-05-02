@@ -23,3 +23,11 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 notebooklm-490304-57f96072832e.json
+
+# secrets / local credentials
+.cloudflare/
+*.api-token
+.dev.vars
+
+# wrangler local state
+.wrangler/

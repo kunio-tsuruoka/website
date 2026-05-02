@@ -7,8 +7,8 @@ import Layout from '../layouts/layout.astro';
 ---
 
 <Layout
-  title="ゼロスタート - まず、動くものを見よう | Beekle × TechBeans"
-  description="ゼロスタートは初期費用0円で動くプロトタイプを体験できる新しい開発モデル。見積もりだけで判断を迫られる不安を解消し、実際に動くシステムを見てからの意思決定を可能にします。"
+  title="プロトタイプ無料体験｜初期費用0円で動くシステムを見てから発注 | Beekle"
+  description="システム開発の発注前に「動くプロトタイプ」を初期費用0円で体験できるサービス。見積書と提案資料だけで判断を迫られる不安を解消し、実際に触れる動くデモを見てから本契約を決められます。中堅企業のDX担当者向け。"
 >
   <Header client:load />
   <main class="">
@@ -51,7 +51,13 @@ import Layout from '../layouts/layout.astro';
 
           {/* CTA Buttons */}
           <div class="flex flex-col sm:flex-row gap-4">
-            <ButtonLink href="/contact" variant="primary" size="lg">
+            <ButtonLink
+              href="/contact?source=prooffirst-hero"
+              data-cta-source="prooffirst-hero"
+              data-cta-id="contact"
+              variant="primary"
+              size="lg"
+            >
               証拠から始める開発を体験する
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -157,7 +163,13 @@ import Layout from '../layouts/layout.astro';
           <span class="font-semibold text-primary-500">不安なのは、当たり前。</span>だから私たちは、<br />
           <span class="text-2xl font-bold text-primary-500">まず動くものを見せることにしました。</span>
         </p>
-        <ButtonLink href="/contact" variant="primary" size="lg">
+        <ButtonLink
+          href="/contact?source=prooffirst-mid"
+          data-cta-source="prooffirst-mid"
+          data-cta-id="contact"
+          variant="primary"
+          size="lg"
+        >
           証拠から始める開発を体験する
           <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -601,7 +613,13 @@ import Layout from '../layouts/layout.astro';
             初期費用0円で、実際に動くものを体験できます。<br />
             お気軽にお問い合わせください。
           </p>
-          <ButtonLink href="/contact" variant="white" size="lg">
+          <ButtonLink
+            href="/contact?source=prooffirst-zerostart"
+            data-cta-source="prooffirst-zerostart"
+            data-cta-id="contact"
+            variant="white"
+            size="lg"
+          >
             ゼロスタートを始める
             <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -771,7 +789,13 @@ import Layout from '../layouts/layout.astro';
           </p>
         </Card>
 
-        <ButtonLink href="/contact" variant="white" size="xl">
+        <ButtonLink
+          href="/contact?source=prooffirst-final"
+          data-cta-source="prooffirst-final"
+          data-cta-id="contact"
+          variant="white"
+          size="xl"
+        >
           証拠から始める開発を体験する
           <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
