@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Beekleコンテンツマーケティング 3ヶ月レポート（2026-02〜04）</title>
+<style>
+body { font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; line-height: 1.7; color: #1a1a1a; max-width: 920px; margin: 2em auto; padding: 0 1em; }
+h1 { border-bottom: 3px solid #3D4DB7; padding-bottom: 0.3em; }
+h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; margin-top: 2em; }
+h3 { color: #3D4DB7; margin-top: 1.5em; }
+table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 0.92em; }
+th, td { border: 1px solid #ddd; padding: 6px 10px; text-align: left; }
+th { background: #f5f5f7; font-weight: 600; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.callout { background: #fff8dc; border-left: 4px solid #e6c000; padding: 0.8em 1em; margin: 1em 0; }
+.danger { background: #ffefef; border-left: 4px solid #d04040; padding: 0.8em 1em; margin: 1em 0; }
+.good { background: #eef9ee; border-left: 4px solid #2d8f3a; padding: 0.8em 1em; margin: 1em 0; }
+code { background: #f0f0f3; padding: 0.1em 0.4em; border-radius: 3px; font-size: 0.9em; }
+ul, ol { padding-left: 1.5em; }
+.meta { color: #666; font-size: 0.9em; }
+.priority { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; margin-right: 6px; }
+.p0 { background: #d04040; color: #fff; }
+.p1 { background: #e89000; color: #fff; }
+.p2 { background: #2d8f3a; color: #fff; }
+.p3 { background: #5070b0; color: #fff; }
+</style>
+</head>
+<body>
+
+<h1>Beekleコンテンツマーケティング 3ヶ月レポート</h1>
+<p class="meta">期間: 2026-02-01 〜 2026-04-30 / 比較期間: 2025-11-01 〜 2026-01-31<br>
+対象: GA4 property/355503040 (beekle.jp) / 作成日: 2026-05-01</p>
+
+<h2>1. サマリー（結論先出し）</h2>
+<table>
+<thead><tr><th>観点</th><th>結論</th></tr></thead>
+<tbody>
+<tr><td>集客</td><td>Organic Search が <strong>+34%</strong>（223→299セッション）でドライバー化。月次でも 64 → 117 → 119 と着実に積み上がり、コラム投資のSEO効果が出始めている</td></tr>
+<tr><td>質</td><td>Organic は engagement rate <strong>65%</strong>・平均5分滞在で直流入(36%/2.5分)を質で大きく上回る</td></tr>
+<tr><td>CV計測</td><td><strong>致命的だった→修復済み</strong>。<code>generate_lead</code> と <code>contact_complete</code> が navigation race で全件ドロップしていた問題を 2026-05-01 に修正</td></tr>
+<tr><td>CVファネル</td><td>form_start 107 → form_submit 6（完了率 約3%）。修正後の正確な数値は次の3〜5日で更新</td></tr>
+<tr><td>ツール</td><td>flow-mapper/story-builder/scope-manager 合計でわずか <strong>11ユーザー</strong>（3ヶ月）。集客自体が無い</td></tr>
+</tbody>
+</table>
+
+<h2>2. トラフィック全体（前期間比）</h2>
+
+<h3>チャネル別</h3>
+<table>
+<thead><tr><th>チャネル</th><th class="num">当期セッション</th><th class="num">前期セッション</th><th class="num">増減</th><th class="num">engagement率</th><th class="num">平均滞在</th></tr></thead>
+<tbody>
+<tr><td>Direct</td><td class="num">475</td><td class="num">440</td><td class="num">+8%</td><td class="num">36%</td><td class="num">2:31</td></tr>
+<tr><td><strong>Organic Search</strong></td><td class="num"><strong>299</strong></td><td class="num"><strong>223</strong></td><td class="num"><strong>+34%</strong></td><td class="num"><strong>65%</strong></td><td class="num"><strong>4:58</strong></td></tr>
+<tr><td>Referral</td><td class="num">56</td><td class="num">25</td><td class="num">+124%</td><td class="num">79%</td><td class="num">7:43</td></tr>
+<tr><td>Organic Social</td><td class="num">2</td><td class="num">0</td><td class="num">-</td><td class="num">50%</td><td class="num">1:07</td></tr>
+</tbody>
+</table>
+<ul>
+<li>Organic Search の伸びは質を保ったままの純粋増（engagement率は前期65% → 当期65%で横ばい・PV/session も3.06で同水準）</li>
+<li>Referral の 124% 増は <code>web.yenta-app.com</code> 1ユーザーが33セッション踏んでいるノイズ寄り（除外すれば 25→23 で実質横ばい）</li>
+<li>Direct の伸びはブランド認知由来（社名指名・名刺・営業）。コンテンツマーケで動かせる領域ではない</li>
+</ul>
+
+<h3>月次のOrganic推移</h3>
+<table>
+<thead><tr><th>月</th><th class="num">セッション</th><th class="num">前月比</th></tr></thead>
+<tbody>
+<tr><td>2026-02</td><td class="num">64</td><td class="num">-</td></tr>
+<tr><td>2026-03</td><td class="num">117</td><td class="num">+83%</td></tr>
+<tr><td>2026-04</td><td class="num">119</td><td class="num">+2%</td></tr>
+</tbody>
+</table>
+<p class="callout">3月のジャンプが大きい。コラム公開のタイミングを特定して再現性を検証すべき。</p>
+
+<h2>3. 参照元 / メディア（Source / Medium）</h2>
+
+<h3>全期間サマリー</h3>
+<table>
+<thead><tr><th>参照元 / メディア</th><th class="num">セッション</th><th class="num">UU</th><th class="num">エンゲージ率</th><th class="num">平均滞在</th><th class="num">PV/session</th><th>備考</th></tr></thead>
+<tbody>
+<tr><td>(direct) / (none)</td><td class="num">475</td><td class="num">415</td><td class="num">36%</td><td class="num">2:31</td><td class="num">2.26</td><td>ブランド認知・名刺・営業由来</td></tr>
+<tr><td><strong>google / organic</strong></td><td class="num"><strong>268</strong></td><td class="num"><strong>126</strong></td><td class="num"><strong>65%</strong></td><td class="num"><strong>5:12</strong></td><td class="num"><strong>3.21</strong></td><td><strong>質量ともに最強チャネル</strong></td></tr>
+<tr><td>web.yenta-app.com / referral</td><td class="num">33</td><td class="num">1</td><td class="num">73%</td><td class="num">10:33</td><td class="num">5.48</td><td>1ユーザーが集中アクセス（実質ノイズ）</td></tr>
+<tr><td>bing / organic</td><td class="num">26</td><td class="num">16</td><td class="num">62%</td><td class="num">3:24</td><td class="num">1.73</td><td>Google補完。最適化価値あり</td></tr>
+<tr><td>sales-crowd.jp / referral</td><td class="num">9</td><td class="num">9</td><td class="num">89%</td><td class="num">2:19</td><td class="num">2.33</td><td>営業ツール経由の被リンク</td></tr>
+<tr><td>service.future-search.jp / referral</td><td class="num">5</td><td class="num">1</td><td class="num">80%</td><td class="num">6:34</td><td class="num">2.0</td><td>1ユーザー集中（指名チェック）</td></tr>
+<tr><td>yahoo / organic</td><td class="num">5</td><td class="num">5</td><td class="num">60%</td><td class="num">0:31</td><td class="num">1.6</td><td>浅い</td></tr>
+<tr><td>(not set)</td><td class="num">4</td><td class="num">4</td><td class="num">0%</td><td class="num">0:22</td><td class="num">0.5</td><td>計測欠損</td></tr>
+<tr><td>hnavi-jp.lightning.force.com</td><td class="num">4</td><td class="num">1</td><td class="num">75%</td><td class="num">3:54</td><td class="num">2.0</td><td>Salesforce系1ユーザー</td></tr>
+<tr><td><strong>openai / (not set)</strong></td><td class="num"><strong>3</strong></td><td class="num"><strong>3</strong></td><td class="num"><strong>67%</strong></td><td class="num"><strong>1:33</strong></td><td class="num"><strong>1.0</strong></td><td><strong>ChatGPT検索からの流入</strong></td></tr>
+<tr><td>attackable.masouken.com / referral</td><td class="num">2</td><td class="num">2</td><td class="num">100%</td><td class="num">1:35</td><td class="num">2.0</td><td>-</td></tr>
+<tr><td><strong>chatgpt.com / (not set)</strong></td><td class="num"><strong>2</strong></td><td class="num"><strong>2</strong></td><td class="num"><strong>50%</strong></td><td class="num"><strong>0:55</strong></td><td class="num"><strong>1.5</strong></td><td><strong>ChatGPT直接</strong></td></tr>
+<tr><td>linkers.net / referral</td><td class="num">1</td><td class="num">1</td><td class="num">100%</td><td class="num">11:15</td><td class="num">2.0</td><td>-</td></tr>
+<tr><td>l.facebook.com / referral</td><td class="num">1</td><td class="num">1</td><td class="num">100%</td><td class="num">2:15</td><td class="num">0</td><td>FB共有1件</td></tr>
+<tr><td>docs.google.com / referral</td><td class="num">1</td><td class="num">1</td><td class="num">100%</td><td class="num">0:34</td><td class="num">1.0</td><td>-</td></tr>
+<tr><td>m.facebook.com / referral</td><td class="num">1</td><td class="num">1</td><td class="num">0%</td><td class="num">0:00</td><td class="num">1.0</td><td>-</td></tr>
+<tr><td>sales-tool.ominext.com / referral</td><td class="num">1</td><td class="num">1</td><td class="num">100%</td><td class="num">0:21</td><td class="num">2.0</td><td>-</td></tr>
+</tbody>
+</table>
+
+<h3>月次推移（主要源）</h3>
+<table>
+<thead><tr><th>月</th><th class="num">direct</th><th class="num">google/organic</th><th class="num">bing/organic</th><th class="num">yenta</th><th class="num">yahoo</th></tr></thead>
+<tbody>
+<tr><td>2026-02</td><td class="num">137</td><td class="num">61</td><td class="num">3</td><td class="num">-</td><td class="num">-</td></tr>
+<tr><td>2026-03</td><td class="num">192</td><td class="num">108</td><td class="num">9</td><td class="num">-</td><td class="num">-</td></tr>
+<tr><td>2026-04</td><td class="num">145</td><td class="num">100</td><td class="num">14</td><td class="num">33</td><td class="num">5</td></tr>
+</tbody>
+</table>
+
+<div class="good">
+<strong>注目ポイント</strong>
+<ol>
+<li><strong>google/organic が3ヶ月で 61→108→100 と倍増</strong> — 3月に大きくジャンプして4月でほぼ維持</li>
+<li><strong>bing が右肩上がり</strong>（3→9→14）。母数は小さいが伸び率は大。Bing Webmaster Tools の最適化余地あり</li>
+<li><strong>AI流入が出始めている</strong> — openai 3セッション + chatgpt.com 2セッション。少量だがゼロでない、<strong>LLM検索の波の兆候</strong></li>
+<li><strong>Yenta 33セッション/1UU は4月集中</strong> — 1人の濃いユーザー。CRMで特定できれば直営業の機会</li>
+<li>営業系SaaS経由（sales-crowd, hnavi, future-search, linkers）— 「Beekleが調べられた」シグナル</li>
+</ol>
+</div>
+
+<h2>4. コンテンツ別パフォーマンス（コラム）</h2>
+
+<h3>Top読まれているコラム</h3>
+<table>
+<thead><tr><th>URL</th><th class="num">PV</th><th class="num">UU</th><th class="num">平均UE時間</th><th>評価</th></tr></thead>
+<tbody>
+<tr><td>/column (一覧)</td><td class="num">229</td><td class="num">28</td><td class="num">75秒</td><td>一覧→個別への動線として機能</td></tr>
+<tr><td>/column/project-management-complete-guide</td><td class="num">47</td><td class="num">12</td><td class="num">139秒</td><td>ヘッドコンテンツ。投資継続</td></tr>
+<tr><td>/column/avoid-unused-system</td><td class="num">29</td><td class="num">18</td><td class="num">37秒</td><td>流入はあるが浅い → 改善余地</td></tr>
+<tr><td>/column/nqu29zwuq6</td><td class="num">26</td><td class="num">7</td><td class="num">144秒</td><td>91%エンゲージで密度高</td></tr>
+<tr><td>/column/project-management-01</td><td class="num">21</td><td class="num">6</td><td class="num">188秒</td><td>100%エンゲージで質MAX</td></tr>
+<tr><td>/column/prevent-mismatch</td><td class="num">14</td><td class="num">5</td><td class="num">73秒</td><td>LP流入で41分滞在のセッション有</td></tr>
+</tbody>
+</table>
+
+<h3>Search Console連携データ（GA4経由）</h3>
+<table>
+<thead><tr><th>ランディング</th><th class="num">クリック</th><th class="num">表示</th><th class="num">CTR</th><th class="num">平均順位</th></tr></thead>
+<tbody>
+<tr><td>/</td><td class="num">64</td><td class="num">259</td><td class="num">24.7%</td><td class="num">2.4</td></tr>
+<tr><td>/members</td><td class="num">24</td><td class="num">245</td><td class="num">9.8%</td><td class="num">3.2</td></tr>
+<tr><td>/company</td><td class="num">22</td><td class="num">627</td><td class="num">3.5%</td><td class="num">3.0</td></tr>
+<tr><td><strong>/services/ai-development/</strong></td><td class="num"><strong>6</strong></td><td class="num"><strong>614</strong></td><td class="num"><strong>0.98%</strong></td><td class="num"><strong>31.5</strong></td></tr>
+<tr><td>/column/progress-check-points</td><td class="num">3</td><td class="num">86</td><td class="num">3.5%</td><td class="num">7.0</td></tr>
+<tr><td>/column/avoid-unused-system</td><td class="num">2</td><td class="num">37</td><td class="num">5.4%</td><td class="num">6.3</td></tr>
+<tr><td>/column/project-management-complete-guide</td><td class="num">2</td><td class="num">159</td><td class="num">1.3%</td><td class="num">18.9</td></tr>
+</tbody>
+</table>
+<p class="callout"><strong>注目</strong>: /services/ai-development は 614表示で6クリック（CTR0.98%）、平均順位31位。1ページ目に押し上げれば月間クリック2〜3倍が見込める最大の伸び代。</p>
+
+<h2>5. ツール（/tools/*）の状況</h2>
+<table>
+<thead><tr><th>ツール</th><th class="num">PV</th><th class="num">UU</th><th class="num">総UE時間</th></tr></thead>
+<tbody>
+<tr><td>/tools/flow-mapper</td><td class="num">103</td><td class="num">3</td><td class="num">48分</td></tr>
+<tr><td>/tools/story-builder</td><td class="num">56</td><td class="num">4</td><td class="num">9.6分</td></tr>
+<tr><td>/tools/scope-manager</td><td class="num">30</td><td class="num">4</td><td class="num">5.8分</td></tr>
+</tbody>
+</table>
+<p>合計UU 11人/3ヶ月。flow-mapper はUU3人で48分・103PV → <strong>1人あたり16PV/30分以上の濃いユーザー</strong>がいる。少数のヘビーユーザーに刺さっているので、そのユーザー像を顧客像と一致させて前面に出す価値あり。</p>
+
+<h2>6. CV計測の問題と修復（2026-05-01）</h2>
+
+<div class="danger">
+<strong>当初発見した問題</strong>
+<ul>
+<li>全チャネルで <code>keyEvents = 0</code></li>
+<li>eventName 一覧に <code>generate_lead</code> と <code>contact_complete</code> が完全欠落（<code>form_submit</code> 6件のみ）</li>
+<li>form完了率 約3%（業界水準20-30%の1桁低い）</li>
+</ul>
+</div>
+
+<div class="good">
+<strong>修復内容</strong>
+<ol>
+<li><code>contact-form.tsx</code>: <code>gtag('event',...)</code> 直後の <code>window.location.href = '/thanks'</code> で navigation race が起きてビーコンがdrop していた。<code>event_callback</code> でflush完了を待ってから navigate するように変更（1.5秒fallback付き）</li>
+<li><code>thanks.astro</code>: gtag.js 未ロード時の取りこぼし対策で <code>window.load</code> 再試行を追加</li>
+<li>GA4キーイベントを Admin API で確認・追加（form_submit を新規作成。generate_lead/contact_complete は既登録だった）</li>
+<li>ローカル検証 (verify-contact-cv.mjs) で 3イベント全てがdataLayerに積まれて発火することを確認済み</li>
+</ol>
+コミット: <code>8de0b65 fix(analytics): GA4 CV計測の navigation race を修正、3イベント発火を保証</code>
+</div>
+
+<h2>7. 示唆と次のアクション（優先度順）</h2>
+
+<h3><span class="priority p0">P0</span>計測の検証（修復済みだがGA4反映を見届ける）</h3>
+<ol>
+<li>本番デプロイ後、GA4 Realtime で <code>generate_lead</code> <code>contact_complete</code> の発火を確認</li>
+<li>3〜5日後、レポート上で keyEvents が0以外になることを確認</li>
+<li>Slack webhook の問合せ件数とGA4 form_submit を月次で突合</li>
+</ol>
+
+<h3><span class="priority p1">P1</span>効いている領域への増強投資</h3>
+<ol>
+<li><strong>/services/ai-development の SEO ブースト</strong>: 614 imp / 平均順位31 は最大の伸び代。直近コミット <code>fix(seo): /services/ai-development の SEO meta 強化</code> の効果を3〜4週間後に再計測</li>
+<li><strong>Project Management 系コラム</strong>に内部リンク網: <code>project-management-complete-guide</code> (47PV) と <code>project-management-01</code> (21PV/100%エンゲージ) を中心に関連コラム間リンク強化</li>
+<li><strong>トップページ起点の回遊設計</strong>: / は CTR 24.7% / 平均順位2.4 で既に勝っている。ここから /services/* と /column/* への誘導を再設計</li>
+</ol>
+
+<h3><span class="priority p2">P2</span>ツールの集客連結</h3>
+<ol>
+<li>コラム → ツール の動線設計（例: <code>requirements-definition-process</code> 系コラム末尾に <code>/tools/scope-manager</code> への自然な誘導）</li>
+<li>ツール3種にOG画像と検索流入用LP最適化（「業務フロー図 ツール」「ユーザーストーリー テンプレート」等の検索意図対応）</li>
+</ol>
+
+<h3><span class="priority p3">P3</span>分析基盤・運用</h3>
+<ol>
+<li><strong>LLM経由トラフィックの監視</strong>: openai/chatgpt.com の流入が始まった。dataforseo の <code>ai_opt_*</code> ツールで継続観測</li>
+<li><strong>Bing最適化</strong>: 母数小だが3→9→14と急成長。Bing Webmaster Tools の整備</li>
+<li><code>avoid-unused-system</code> の改善: 流入はあるが engagement 47%・平均37秒。流入クエリと本文冒頭のズレを疑う</li>
+<li><code>/contact/</code> と <code>/contact</code> の正規化（末尾スラッシュで2URL扱いに分裂）。astro <code>trailingSlash</code> + canonical で寄せる（<code>_redirects</code>はNG）</li>
+</ol>
+
+<h2>8. 結論</h2>
+<p><strong>「コンテンツマーケが効いているか」への端的な答え</strong>: SEO資産としては効き始めている（Organic +34%、特に3月以降）。CV貢献の定量評価は計測修復が完了した今日以降、次の3ヶ月で正確に判断可能になる。今期は「種まきが芽吹いた」フェーズ。</p>
+<p>方向性は正しい（直近コミットでSEO/CV回りに継続的に手が入っている）。次スプリントは P0 の計測検証 → P1 の AI開発ページSEO で短期ROIを取りに行くのが妥当。</p>
+
+<hr>
+<p class="meta">付録: データソース GA4 Data API (property/355503040) / Asia/Tokyo / JPY<br>
+計測仕様: <code>.claude/rules/analytics-ga4.md</code> / <code>.claude/rules/gcp-workspace.md</code> / <code>.claude/rules/analytics.md</code></p>
+
+</body>
+</html>

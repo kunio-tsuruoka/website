@@ -1,0 +1,14 @@
+name = "website"
+compatibility_date = "2025-04-01"
+pages_build_output_dir = "./dist"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "9d7191f03fe84b3f90f14252e5e3d7bd"
+preview_id = "1bf38321066c41c1941881836e25ae48"
+
+# Workers AI バインディング (BGE-M3 埋め込み用) は Pages ダッシュボードで
+# Settings → Functions → AI bindings に "AI" を追加する。
+# wrangler.toml に [ai] を書くと astro dev 時に @astrojs/cloudflare が remote mode で
+# wrangler login を要求して起動失敗するため、ここには書かない。
+# 開発ローカルでは env.AI が undefined になり、column-rag は空配列を返してフォールバック。

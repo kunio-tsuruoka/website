@@ -269,6 +269,66 @@ const seoDescription = service.seoDescription ?? service.description;
       </div>
     </Section>
 
+    {service.id === 'ai-development' && (
+      <Section variant="white" padding="lg" decoration="bars">
+        <div class="max-w-5xl mx-auto relative z-10">
+          <SectionHeader
+            client:load
+            title="ブラウザで触れるAIデモ"
+            subtitle="導入前に「実際の挙動」を5分で体感できます"
+            number="05"
+            label="LIVE DEMOS"
+          />
+          <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <a
+              href="/demos/it-advisor"
+              class="group block p-6 bg-white rounded-2xl border border-gray-200 shadow-soft hover:shadow-medium hover:border-primary-300 transition"
+            >
+              <span class="inline-block px-2 py-1 text-xs font-bold bg-primary-50 text-primary-700 rounded-md mb-3">
+                チャット (RAG)
+              </span>
+              <h3 class="text-xl font-bold mb-2 group-hover:text-primary-600 transition">
+                AI IT発注相談
+              </h3>
+              <p class="text-sm text-gray-600 leading-relaxed">
+                Beekleのコラム記事を Embedding 検索でRAG参照する相談員AI。社内文書RAG構築の感触を体感できます。
+              </p>
+              <span class="mt-4 inline-flex items-center text-sm font-medium text-primary-600">
+                試してみる →
+              </span>
+            </a>
+            <a
+              href="/demos/ocr"
+              class="group block p-6 bg-white rounded-2xl border border-gray-200 shadow-soft hover:shadow-medium hover:border-primary-300 transition"
+            >
+              <span class="inline-block px-2 py-1 text-xs font-bold bg-primary-50 text-primary-700 rounded-md mb-3">
+                ビジョン (LLM)
+              </span>
+              <h3 class="text-xl font-bold mb-2 group-hover:text-primary-600 transition">
+                AI領収書OCR
+              </h3>
+              <p class="text-sm text-gray-600 leading-relaxed">
+                画像から店舗名・日付・合計・明細を構造化JSONで抽出。帳票OCR + LLM構造化のPoC感触に。
+              </p>
+              <span class="mt-4 inline-flex items-center text-sm font-medium text-primary-600">
+                試してみる →
+              </span>
+            </a>
+          </div>
+          <div class="text-center">
+            <a
+              href="/demos"
+              data-cta-source={`services-${service.id}-demos`}
+              data-cta-id="demos-index"
+              class="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700 transition"
+            >
+              すべてのAIデモを見る →
+            </a>
+          </div>
+        </div>
+      </Section>
+    )}
+
     <!-- FAQ -->
     <Section variant="white" padding="lg" decoration="blursPurple">
       <div class="max-w-3xl mx-auto relative z-10">
@@ -276,7 +336,7 @@ const seoDescription = service.seoDescription ?? service.description;
           client:load
           title="よくある質問"
           subtitle="お客様からよくいただく質問にお答えします"
-          number="05"
+          number={service.id === 'ai-development' ? '06' : '05'}
           label="FAQ"
         />
         <div class="space-y-4">
