@@ -16,6 +16,7 @@ import 'dotenv/config';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createClient } from 'microcms-js-sdk';
+import { BEEKLE_GLOSSARY } from './beekle-glossary.mjs';
 
 const MICROCMS_SERVICE_DOMAIN = process.env.MICROCMS_SERVICE_DOMAIN;
 const MICROCMS_API_KEY = process.env.MICROCMS_API_KEY;
@@ -120,6 +121,21 @@ async function main() {
       excerpt,
       vector,
     });
+  }
+
+  console.log(`Embedding ${BEEKLE_GLOSSARY.length} glossary entries...`);
+  for (let i = 0; i < BEEKLE_GLOSSARY.length; i++) {
+    const g = BEEKLE_GLOSSARY[i];
+    const embedText = `${g.title}\n\n${g.excerpt}`.trim();
+    if (dry) {
+      console.log(`[glossary ${i + 1}/${BEEKLE_GLOSSARY.length}] ${g.id} :: ${g.title}`);
+      records.push({ id: g.id, title: g.title, url: g.url, excerpt: g.excerpt });
+      continue;
+    }
+    process.stdout.write(`[glossary ${i + 1}/${BEEKLE_GLOSSARY.length}] ${g.id}... `);
+    const [vector] = await embed([embedText]);
+    process.stdout.write(`done (dim=${vector.length})\n`);
+    records.push({ id: g.id, title: g.title, url: g.url, excerpt: g.excerpt, vector });
   }
 
   if (dry) {

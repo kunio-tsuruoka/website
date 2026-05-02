@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "CLOUDFLARE_API_TOKEN=\"${CLOUDFLARE_API_TOKEN:-$(cat .cloudflare/api-token 2>/dev/null)}\" CLOUDFLARE_ACCOUNT_ID=\"${CLOUDFLARE_ACCOUNT_ID:-163fc8ca531cbe925ad7597ee0196f3a}\" astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
