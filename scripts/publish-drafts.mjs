@@ -88,7 +88,7 @@ function resolveCategory(raw) {
 }
 
 const drafts = readdirSync(DRAFTS_DIR)
-  .filter((f) => f.endsWith('.md'))
+  .filter((f) => f.endsWith('.md') || f.endsWith('.html'))
   .sort();
 
 console.log(`Found ${drafts.length} draft files in ${DRAFTS_DIR}`);
@@ -105,7 +105,8 @@ for (const file of drafts) {
   const meta = extractMeta(raw);
   const title = extractTitle(raw);
   const body = stripMetaBlock(raw);
-  const html = marked(body);
+  // .html は marked を通さない（既に HTML 化済み）。.md は従来通り変換。
+  const html = file.endsWith('.html') ? body : marked(body);
   const category = resolveCategory(meta.category);
 
   console.log(`[FILE] ${file}`);

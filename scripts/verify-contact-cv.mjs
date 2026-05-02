@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const BASE = 'http://localhost:4321';
+const BASE = process.env.BASE_URL || 'http://localhost:4321';
 const TEST_EMAIL = `gtag-verify-${Date.now()}@beekle.test`;
 const TEST_MESSAGE = `[GA4 計測検証] form_submit / generate_lead / contact_complete の発火確認用テスト送信。送信時刻 ${new Date().toISOString()}`;
 

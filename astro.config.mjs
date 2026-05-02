@@ -8,7 +8,9 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   output: 'server', // Cloudflare Pagesで動作
   trailingSlash: 'never', // /column/ -> /column 等の正規化（_redirects ではなく config 側で）
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    platformProxy: { enabled: true },
+  }),
   integrations: [react(), tailwind()],
   vite: {
     resolve: {
