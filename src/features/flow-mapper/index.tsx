@@ -166,7 +166,7 @@ export function FlowMapper() {
           <button
             type="button"
             onClick={loadSample}
-            className="px-3 py-1.5 text-xs font-medium text-primary-700 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100"
+            className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium text-primary-700 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100"
           >
             サンプルを読込
           </button>
@@ -174,7 +174,7 @@ export function FlowMapper() {
             <button
               type="button"
               onClick={handleCopyToBe}
-              className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
             >
               As-Isをコピー
             </button>
@@ -184,7 +184,7 @@ export function FlowMapper() {
             onClick={toggleConnectMode}
             disabled={view === 'compare'}
             className={cn(
-              'px-3 py-1.5 text-xs font-medium border rounded-lg transition-colors disabled:opacity-40',
+              'px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium border rounded-lg transition-colors disabled:opacity-40',
               connectMode
                 ? 'text-white bg-secondary-500 border-secondary-600 hover:bg-secondary-600'
                 : 'text-secondary-700 bg-secondary-50 border-secondary-200 hover:bg-secondary-100'
@@ -197,7 +197,7 @@ export function FlowMapper() {
             type="button"
             onClick={toggleFullscreen}
             className={cn(
-              'relative px-3 py-1.5 text-xs font-medium border rounded-lg transition-colors',
+              'relative px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium border rounded-lg transition-colors',
               fullscreen
                 ? 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'
                 : canvasOverflows
@@ -221,7 +221,7 @@ export function FlowMapper() {
           <button
             type="button"
             onClick={handleResetAll}
-            className="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-red-600"
+            className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium text-gray-600 hover:text-red-600"
           >
             リセット
           </button>
@@ -284,7 +284,7 @@ export function FlowMapper() {
             <button
               type="button"
               onClick={dismissOnboarding}
-              className="flex-shrink-0 text-xs text-primary-700 hover:text-primary-900 px-2 py-1 hover:bg-primary-100 rounded"
+              className="flex-shrink-0 text-xs text-primary-700 hover:text-primary-900 px-3 py-2.5 sm:py-1 min-h-[44px] sm:min-h-0 hover:bg-primary-100 rounded"
               title="このガイドを閉じる（次回から表示しません）"
             >
               閉じる ×
