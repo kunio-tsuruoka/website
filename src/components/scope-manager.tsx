@@ -388,11 +388,11 @@ export function ScopeManager() {
             <button
               type="button"
               onClick={onLoadSample}
-              className="inline-flex items-center px-4 py-2 text-sm font-semibold text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
+              className="inline-flex items-center px-5 py-3 min-h-[44px] text-sm font-semibold text-white bg-primary-500 rounded-lg hover:bg-primary-600 shadow-soft transition-colors"
             >
-              サンプルを試す
+              まずサンプルで試す
             </button>
-            <label className="inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors">
+            <label className="inline-flex items-center px-4 py-3 min-h-[44px] text-sm font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors">
               .md ファイルを開く
               <input
                 type="file"
@@ -410,10 +410,21 @@ export function ScopeManager() {
           </div>
         </div>
 
+        {markdown.trim() === '' && (
+          <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 leading-relaxed">
+            <strong>初めての方へ</strong>: まず「<strong>まずサンプルで試す</strong>
+            」を押すと、注文管理システムの要求文サンプルが入ります。 自分の要件を入れる場合は、
+            <a href="/tools/story-builder" className="underline hover:text-blue-700">
+              ユーザーストーリー作成ツール
+            </a>
+            で作ったMarkdownを貼り付けてください。
+          </div>
+        )}
+
         <textarea
           value={markdown}
           onChange={(e) => setMarkdown(e.target.value)}
-          placeholder={'ここにMarkdownを貼り付け、または「サンプルを試す」を押してください。'}
+          placeholder={'ここにMarkdownを貼り付け、または「まずサンプルで試す」を押してください。'}
           className="w-full h-48 p-4 border border-gray-300 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-primary-300 resize-y"
         />
 
