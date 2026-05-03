@@ -1,5 +1,7 @@
 # MicroCMS API
 
+> 本文の文体・AIっぽさ排除・Markdown残骸チェックは `column-writing-style.md` を参照。
+
 ## 基本情報
 
 - APIクライアント: `src/lib/microcms.ts`

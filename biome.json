@@ -6,6 +6,7 @@
       "node_modules/**",
       ".astro/**",
       ".vscode/**",
+      ".wrangler/**",
       "*.generated.*",
       "src/data/column-embeddings.json"
     ]

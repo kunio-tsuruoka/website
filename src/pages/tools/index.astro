@@ -1,0 +1,228 @@
+---
+import { Header } from '../../components/header';
+import FloatingCTA from '../../components/ui/floating-cta.astro';
+import { PageHero } from '../../components/ui/page-hero';
+import Layout from '../../layouts/layout.astro';
+---
+
+<Layout
+  title="発注準備キット｜業務の見える化から要件のたたき台まで | Beekle"
+  description="システム発注の前に、業務の見える化・やりたいことの言語化・作る／作らないの判定を、3つの無料ツールで一気通貫にサポート。発注前の検討材料がそろいます。ブラウザ完結で会員登録不要。"
+>
+  <Header client:load />
+  <main class="pt-20">
+    <PageHero
+      title="発注準備キット"
+      subtitle="システムを発注する前に、現場と一緒に「何を作るか」を決めるための3つの無料ツール。業務の見える化 → やりたいことの言語化 → 作る／作らないの判定 を順に進められます。"
+      badge="Tools"
+    />
+
+    <section class="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
+      <div class="container mx-auto px-6 md:px-8 max-w-6xl">
+        {/* 全体の流れ */}
+        <div class="mb-12 p-6 md:p-8 bg-gradient-to-br from-primary-50 to-white border-2 border-primary-200 rounded-2xl">
+          <h2 class="text-lg md:text-xl font-bold text-primary-900 mb-4">
+            発注前にやることは、だいたい3つ
+          </h2>
+          <p class="text-sm text-gray-700 leading-relaxed mb-5">
+            「いきなり開発会社に相談」が失敗の原因。発注の前に、社内で<strong>業務の現状・やりたいこと・優先順位</strong>を関係者と握っておくと、見積もりブレと作り直しが激減します。
+            それぞれの工程に対応する無料ツールを用意しました。
+          </p>
+          <ol class="space-y-3 text-sm text-gray-800 leading-relaxed list-decimal list-inside">
+            <li>
+              <strong>業務の見える化</strong> — 現状（As-Is）の業務フローを書き出して、どこに時間とコストがかかっているか把握する
+            </li>
+            <li>
+              <strong>やりたいことの言語化</strong> — 頭の中の「こうしたい」を、要件のたたき台にする（たたき台があれば社内議論が進む）
+            </li>
+            <li>
+              <strong>作る／作らないの判定</strong> — 全部作ると予算がパンクするので、ビジネス価値・現場で使えるか・コストで取捨選択する
+            </li>
+          </ol>
+        </div>
+
+        {/* ツール紹介カード */}
+        <div class="space-y-6 mb-12">
+          {/* Step 1 */}
+          <a
+            href="/tools/flow-mapper"
+            class="block group p-6 md:p-8 bg-white rounded-2xl border-2 border-gray-200 hover:border-primary-400 transition-all shadow-soft hover:shadow-medium"
+          >
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold text-lg">
+                1
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-baseline justify-between flex-wrap gap-2 mb-2">
+                  <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
+                    業務フロー可視化ツール
+                  </h3>
+                  <span class="text-xs text-gray-500">/tools/flow-mapper</span>
+                </div>
+                <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                  現状の業務（誰が・何を・どのツールで・どれくらい時間をかけて）を図にして、改善後（To-Be）の姿まで関係者と合意できるツール。AI／DX 導入の「どこをDXすべきか」の判断にも使えます。
+                </p>
+                <ul class="text-xs text-gray-600 space-y-1">
+                  <li>・ 横軸＝工程 × 縦軸＝担当 でステップを並べる</li>
+                  <li>・ 時給を入れると人件費とリードタイムを自動算出</li>
+                  <li>・ 自動化候補・AI 適用候補・並行化候補をタグ付け</li>
+                  <li>・ PNG / SVG / Markdown / PDF で出力可能</li>
+                </ul>
+              </div>
+              <div class="hidden md:block flex-shrink-0 text-primary-500 self-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+              </div>
+            </div>
+          </a>
+
+          {/* Step 2 */}
+          <a
+            href="/tools/story-builder"
+            class="block group p-6 md:p-8 bg-white rounded-2xl border-2 border-gray-200 hover:border-primary-400 transition-all shadow-soft hover:shadow-medium"
+          >
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold text-lg">
+                2
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-baseline justify-between flex-wrap gap-2 mb-2">
+                  <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
+                    ユーザーストーリー作成ツール
+                  </h3>
+                  <span class="text-xs text-gray-500">/tools/story-builder</span>
+                </div>
+                <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                  頭の中にある「こうしたい」を文章で書くだけで、AIが要件のたたき台（誰が／何を／なぜ）と、見落としやすい失敗パターンまで自動生成。開発会社との打ち合わせ前の抜け漏れチェックに使えます。
+                </p>
+                <ul class="text-xs text-gray-600 space-y-1">
+                  <li>・ 普段の言葉で書けばOK、フォーマット不要</li>
+                  <li>・ 世界標準の要件記法（EARS）で整理</li>
+                  <li>・ 通信エラー・入力ミス・権限不足など失敗パターンも提案</li>
+                  <li>・ Markdown で出力、Slack や議事録にそのまま貼れる</li>
+                </ul>
+              </div>
+              <div class="hidden md:block flex-shrink-0 text-primary-500 self-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+              </div>
+            </div>
+          </a>
+
+          {/* Step 3 */}
+          <a
+            href="/tools/scope-manager"
+            class="block group p-6 md:p-8 bg-white rounded-2xl border-2 border-gray-200 hover:border-primary-400 transition-all shadow-soft hover:shadow-medium"
+          >
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold text-lg">
+                3
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-baseline justify-between flex-wrap gap-2 mb-2">
+                  <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
+                    スコープ管理ツール
+                  </h3>
+                  <span class="text-xs text-gray-500">/tools/scope-manager</span>
+                </div>
+                <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                  Step2 で出した要件を「作る／後回し／作らない」に振り分けるツール。ビジネス価値・現場で使えるか・技術コストの3軸で評価して、開発会社や社内の合意形成を加速します。書籍『システムを作らせる技術』のFM手法に準拠。
+                </p>
+                <ul class="text-xs text-gray-600 space-y-1">
+                  <li>・ 要件定義書（Markdown）を貼り付けるだけで一覧化</li>
+                  <li>・ 3軸評価で「作る／後回し／作らない」を自動推定</li>
+                  <li>・ 「作らない」も明示してスコープクリープを防止</li>
+                  <li>・ CSV / Markdown で出力、社内承認や開発会社への提示用に</li>
+                </ul>
+              </div>
+              <div class="hidden md:block flex-shrink-0 text-primary-500 self-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        {/* 使い方の補足 */}
+        <div class="mb-12 p-6 bg-blue-50 border border-blue-200 rounded-2xl">
+          <h2 class="text-base font-bold text-blue-900 mb-2">3つを順番に使う必要はありません</h2>
+          <p class="text-sm text-blue-900 leading-relaxed">
+            「やりたいことが先に頭にある → Step2 から」「すでに要件定義書がある → Step3 から」など、状況に応じて単独で使えます。すべてブラウザだけで動作し、データはお使いの端末にのみ保存されます（サーバーには送信されません）。会員登録も不要です。
+          </p>
+        </div>
+
+        {/* よくある質問 */}
+        <div class="p-6 md:p-8 bg-white rounded-2xl border border-gray-200 shadow-soft">
+          <h2 class="text-lg font-bold text-gray-900 mb-4">よくある質問</h2>
+          <dl class="space-y-4 text-sm">
+            <div>
+              <dt class="font-semibold text-gray-900 mb-1">Q. 本当に無料ですか？</dt>
+              <dd class="text-gray-700 leading-relaxed">
+                A. 無料です。会員登録もメールアドレス入力も不要です。Beekleの活動の一環として、発注前の検討で迷っている方に役立てばと思って公開しています。
+              </dd>
+            </div>
+            <div>
+              <dt class="font-semibold text-gray-900 mb-1">Q. 入力したデータはどこに保存されますか？</dt>
+              <dd class="text-gray-700 leading-relaxed">
+                A. お使いのブラウザ（端末）にのみ保存されます。Beekleのサーバーには送信されません。同じ端末・同じブラウザで開けば続きから編集できます。
+              </dd>
+            </div>
+            <div>
+              <dt class="font-semibold text-gray-900 mb-1">Q. 出力した結果を商用利用していいですか？</dt>
+              <dd class="text-gray-700 leading-relaxed">
+                A. はい。お客様の業務資料・社内文書・発注先への提示資料として自由にご利用いただけます。
+              </dd>
+            </div>
+            <div>
+              <dt class="font-semibold text-gray-900 mb-1">Q. 使い方が分からない／自社のケースだとどう使うか相談したい</dt>
+              <dd class="text-gray-700 leading-relaxed">
+                A. 各ツールページの「迷ったら15分で壁打ち相談」または<a href="/contact" class="text-primary-500 hover:underline">お問い合わせ</a>からお気軽にご連絡ください。
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-accent-950 text-white">
+      <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center">
+        <h2 class="text-2xl md:text-3xl font-bold mb-4">発注準備の伴走、お任せください</h2>
+        <p class="text-white/80 leading-relaxed mb-8">
+          現場ヒアリング・要件整理・スコープ調整、そして開発会社との合意形成まで。<br />
+          発注前の悩みを Beekle がファシリテートします。
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/contact?source=tools-index&intent=consult"
+            data-cta-source="tools-index"
+            data-cta-id="contact-consult"
+            class="tool-escape-cta inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg"
+          >
+            無料で相談してみる
+          </a>
+          <a
+            href="/column"
+            class="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-accent-950 transition-all"
+          >
+            コラムで学ぶ
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      import { trackCtaClick } from '../../lib/analytics';
+      const ctas = document.querySelectorAll<HTMLAnchorElement>('.tool-escape-cta');
+      for (const el of ctas) {
+        el.addEventListener('click', () => {
+          const source = el.dataset.ctaSource ?? 'unknown';
+          const cta = el.dataset.ctaId ?? 'unknown';
+          trackCtaClick({ source, cta });
+        });
+      }
+    </script>
+  </main>
+  <FloatingCTA
+    href="/contact?source=tools-index&intent=floating"
+    label="発注前の悩み、15分で壁打ち"
+    source="tools-index"
+    ctaId="floating-consult"
+  />
+</Layout>
