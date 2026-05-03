@@ -165,7 +165,7 @@ export function StoryBuilder() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="px-3 py-1.5 text-xs font-semibold text-primary-500 border border-primary-200 rounded-md hover:bg-primary-50"
+              className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-semibold text-primary-500 border border-primary-200 rounded-md hover:bg-primary-50"
             >
               ファイルを読み込む（.txt / .md / .docx）
             </button>
@@ -179,14 +179,14 @@ export function StoryBuilder() {
             <button
               type="button"
               onClick={loadSample}
-              className="px-3 py-1.5 text-xs font-semibold text-primary-500 border border-primary-200 rounded-md hover:bg-primary-50"
+              className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-semibold text-primary-500 border border-primary-200 rounded-md hover:bg-primary-50"
             >
               サンプルを試す
             </button>
             <button
               type="button"
               onClick={clearAll}
-              className="px-3 py-1.5 text-xs font-semibold text-gray-500 border border-gray-200 rounded-md hover:bg-gray-50"
+              className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-semibold text-gray-500 border border-gray-200 rounded-md hover:bg-gray-50"
             >
               クリア
             </button>
@@ -208,7 +208,13 @@ export function StoryBuilder() {
           className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-300 leading-relaxed"
         />
 
-        <div className="mt-4 flex flex-wrap items-center gap-3">
+        <p className="mt-4 text-xs text-gray-600">
+          AIに何件ずつ生成させますか?
+          <span className="ml-2 text-gray-400">
+            （正常系=うまくいく場合／異常系=エラー時／境界値=制限ぎりぎり）
+          </span>
+        </p>
+        <div className="mt-2 flex flex-wrap items-center gap-3">
           <CountSelect
             label="正常系"
             value={happyCount}

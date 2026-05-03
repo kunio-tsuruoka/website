@@ -173,7 +173,7 @@ export function Header() {
             <a
               href="/contact?source=header-desktop"
               onClick={() => trackCtaClick({ source: 'header-desktop', cta: 'contact' })}
-              className="px-4 py-2 bg-primary-500 text-white rounded-full text-sm font-semibold hover:bg-primary-600 transition-colors shadow-soft hover:shadow-medium"
+              className="inline-flex items-center px-4 py-3 sm:py-2 min-h-[44px] sm:min-h-0 bg-primary-500 text-white rounded-full text-sm font-semibold hover:bg-primary-600 transition-colors shadow-soft hover:shadow-medium"
             >
               お問い合わせ
             </a>
