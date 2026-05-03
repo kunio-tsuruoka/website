@@ -9,18 +9,18 @@ await page.waitForTimeout(500);
 
 const items = await page.evaluate(() => {
   const out = [];
-  document.querySelectorAll('a, button').forEach((el) => {
+  for (const el of document.querySelectorAll('a, button')) {
     const r = el.getBoundingClientRect();
-    if (r.width === 0 || r.height === 0) return;
-    if (r.width >= 32 && r.height >= 32) return;
+    if (r.width === 0 || r.height === 0) continue;
+    if (r.width >= 32 && r.height >= 32) continue;
     const cs = getComputedStyle(el);
-    if (cs.position === 'fixed') return;
+    if (cs.position === 'fixed') continue;
 
     const path = [];
     let cur = el;
     while (cur && cur !== document.body && path.length < 6) {
       const cls = (cur.className || '').toString().slice(0, 50);
-      path.push(`${cur.tagName.toLowerCase()}${cls ? '.' + cls.split(' ')[0] : ''}`);
+      path.push(`${cur.tagName.toLowerCase()}${cls ? `.${cls.split(' ')[0]}` : ''}`);
       cur = cur.parentElement;
     }
 
@@ -33,7 +33,7 @@ const items = await page.evaluate(() => {
       href: el.getAttribute('href') || '',
       path: path.slice(0, 4).join(' > '),
     });
-  });
+  }
   return out;
 });
 
