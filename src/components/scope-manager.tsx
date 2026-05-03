@@ -1,5 +1,6 @@
+import { trackToolEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 type Score = 0 | 1 | 2 | 3;
 type Verdict = '未判定' | '作る' | '後回し' | '作らない';
@@ -261,7 +262,22 @@ export function ScopeManager() {
     } catch {
       // ignore
     }
+    trackToolEvent('tool_start', { tool: 'scope-manager' });
   }, []);
+
+  const completeFiredRef = useRef(false);
+  const exportCountRef = useRef(0);
+  const fireExportEvent = (format: string) => {
+    exportCountRef.current += 1;
+    trackToolEvent('tool_export', { tool: 'scope-manager', meta: { format } });
+    if (!completeFiredRef.current && requirements.length >= 3 && exportCountRef.current >= 1) {
+      completeFiredRef.current = true;
+      trackToolEvent('tool_complete', {
+        tool: 'scope-manager',
+        meta: { requirements: requirements.length, exports: exportCountRef.current },
+      });
+    }
+  };
 
   // persist
   useEffect(() => {
@@ -327,6 +343,7 @@ export function ScopeManager() {
   };
 
   const onLoadSample = async () => {
+    trackToolEvent('tool_load_sample', { tool: 'scope-manager' });
     try {
       const res = await fetch(SAMPLE_URL);
       const text = await res.text();
@@ -504,18 +521,20 @@ export function ScopeManager() {
             <div className="ml-auto flex gap-2">
               <button
                 type="button"
-                onClick={() =>
-                  downloadFile('scope-result.csv', exportCsv(requirements), 'text/csv')
-                }
+                onClick={() => {
+                  downloadFile('scope-result.csv', exportCsv(requirements), 'text/csv');
+                  fireExportEvent('csv');
+                }}
                 className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 CSV出力
               </button>
               <button
                 type="button"
-                onClick={() =>
-                  downloadFile('scope-result.md', exportMarkdown(requirements), 'text/markdown')
-                }
+                onClick={() => {
+                  downloadFile('scope-result.md', exportMarkdown(requirements), 'text/markdown');
+                  fireExportEvent('markdown');
+                }}
                 className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Markdown出力

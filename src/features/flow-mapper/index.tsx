@@ -1,5 +1,6 @@
+import { trackToolEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CompareView } from './components/CompareView';
 import { CostsPanel } from './components/CostsPanel';
 import { ExportMenu } from './components/ExportMenu';
@@ -63,7 +64,24 @@ export function FlowMapper() {
 
   useEffect(() => {
     hydrateOnboardingFromStorage();
+    trackToolEvent('tool_start', { tool: 'flow-mapper' });
   }, [hydrateOnboardingFromStorage]);
+
+  // 完走判定: ステップ3個以上 + export 1回以上 (起動セッション中1回のみ発火)
+  const completeFiredRef = useRef(false);
+  const exportCountRef = useRef(0);
+  const handleToolExport = (format: string) => {
+    exportCountRef.current += 1;
+    trackToolEvent('tool_export', { tool: 'flow-mapper', meta: { format, view } });
+    const totalSteps = asIs.steps.length + toBe.steps.length;
+    if (!completeFiredRef.current && totalSteps >= 3 && exportCountRef.current >= 1) {
+      completeFiredRef.current = true;
+      trackToolEvent('tool_complete', {
+        tool: 'flow-mapper',
+        meta: { steps: totalSteps, exports: exportCountRef.current },
+      });
+    }
+  };
 
   // テンプレ選択モーダル: 両方のフローが EMPTY (0 ステップ) で
   // かつ「一度も表示してない」場合にのみ表示。
@@ -165,7 +183,10 @@ export function FlowMapper() {
         <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
-            onClick={loadSample}
+            onClick={() => {
+              loadSample();
+              trackToolEvent('tool_load_sample', { tool: 'flow-mapper' });
+            }}
             className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium text-primary-700 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100"
           >
             サンプルを読込
@@ -217,7 +238,7 @@ export function FlowMapper() {
               <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
             ) : null}
           </button>
-          <ExportMenu state={state} view={view} />
+          <ExportMenu state={state} view={view} onExport={handleToolExport} />
           <button
             type="button"
             onClick={handleResetAll}
@@ -383,10 +404,15 @@ export function FlowMapper() {
         <TemplatePicker
           onPickTemplate={(tpl) => {
             loadTemplate(tpl);
+            trackToolEvent('tool_load_template', {
+              tool: 'flow-mapper',
+              meta: { template: tpl.id },
+            });
             markTemplatePickerShown();
           }}
           onLoadSample={() => {
             loadSample();
+            trackToolEvent('tool_load_sample', { tool: 'flow-mapper' });
             markTemplatePickerShown();
           }}
           onStartBlank={markTemplatePickerShown}

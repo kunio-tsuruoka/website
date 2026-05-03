@@ -1,5 +1,6 @@
+import { trackToolEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const MAX_IMPORT_BYTES = 2_000_000;
 
@@ -65,6 +66,24 @@ export function StoryBuilder() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const completeFiredRef = useRef(false);
+  const exportCountRef = useRef(0);
+
+  useEffect(() => {
+    trackToolEvent('tool_start', { tool: 'story-builder' });
+  }, []);
+
+  const fireExportEvent = (format: string) => {
+    exportCountRef.current += 1;
+    trackToolEvent('tool_export', { tool: 'story-builder', meta: { format } });
+    if (!completeFiredRef.current && result && exportCountRef.current >= 1) {
+      completeFiredRef.current = true;
+      trackToolEvent('tool_complete', {
+        tool: 'story-builder',
+        meta: { exports: exportCountRef.current },
+      });
+    }
+  };
 
   async function importFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -103,6 +122,7 @@ export function StoryBuilder() {
     setDescription(SAMPLE_TEXT);
     setResult(null);
     setError(null);
+    trackToolEvent('tool_load_sample', { tool: 'story-builder' });
   }
 
   function clearAll() {
@@ -132,6 +152,7 @@ export function StoryBuilder() {
       }
       const { success: _ignored, ...rest } = data;
       setResult(rest);
+      trackToolEvent('tool_save', { tool: 'story-builder', meta: { source: 'ai-generate' } });
     } catch (err) {
       setError(err instanceof Error ? err.message : '生成に失敗しました');
     } finally {
@@ -149,11 +170,13 @@ export function StoryBuilder() {
     a.download = `${result.usecase.id || 'user-story'}.md`;
     a.click();
     URL.revokeObjectURL(url);
+    fireExportEvent('markdown');
   }
 
   function copyMarkdown() {
     if (!result) return;
     navigator.clipboard.writeText(buildMarkdown(result));
+    fireExportEvent('clipboard');
   }
 
   return (

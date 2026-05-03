@@ -6,7 +6,11 @@ import { downloadFile, exportMarkdown } from '../utils/markdown';
 import { diagramToMermaid } from '../utils/mermaid';
 import { diagramToSvg, svgToPng } from '../utils/svg';
 
-export function ExportMenu({ state, view }: { state: State; view: View }) {
+export function ExportMenu({
+  state,
+  view,
+  onExport,
+}: { state: State; view: View; onExport?: (format: string) => void }) {
   const [open, setOpen] = useState(false);
   const importStateFromJson = useFlowStore((s) => s.importStateFromJson);
   const ts = new Date().toISOString().slice(0, 10);
@@ -15,23 +19,27 @@ export function ExportMenu({ state, view }: { state: State; view: View }) {
 
   function exportJson() {
     downloadFile(`flow-mapper-${ts}.json`, JSON.stringify(state, null, 2), 'application/json');
+    onExport?.('json');
     setOpen(false);
   }
 
   function exportMd() {
     downloadFile(`flow-mapper-${ts}.md`, exportMarkdown(state), 'text/markdown');
+    onExport?.('markdown');
     setOpen(false);
   }
 
   function exportSvg() {
     const svg = diagramToSvg(currentDiagram, currentLabel);
     downloadFile(`flow-mapper-${currentLabel}-${ts}.svg`, svg, 'image/svg+xml');
+    onExport?.('svg');
     setOpen(false);
   }
 
   function exportMermaid() {
     const mmd = diagramToMermaid(currentDiagram, currentLabel);
     downloadFile(`flow-mapper-${currentLabel}-${ts}.mmd`, mmd, 'text/plain');
+    onExport?.('mermaid');
     setOpen(false);
   }
 
@@ -45,6 +53,7 @@ export function ExportMenu({ state, view }: { state: State; view: View }) {
       a.download = `flow-mapper-${currentLabel}-${ts}.png`;
       a.click();
       URL.revokeObjectURL(url);
+      onExport?.('png');
     } catch (err) {
       alert(`PNG変換に失敗しました: ${err instanceof Error ? err.message : String(err)}`);
     }
@@ -75,6 +84,7 @@ export function ExportMenu({ state, view }: { state: State; view: View }) {
 
   function printView() {
     window.print();
+    onExport?.('print');
     setOpen(false);
   }
 
