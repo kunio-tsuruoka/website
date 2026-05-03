@@ -211,7 +211,7 @@ function exportCsv(rows: Requirement[]): string {
 function exportMarkdown(rows: Requirement[]): string {
   const star = (n: Score) => (n === 0 ? '-' : '★'.repeat(n));
   const lines: string[] = [];
-  lines.push('# スコープ管理 結果（FM形式）');
+  lines.push('# スコープ管理 結果（優先度判定）');
   lines.push('');
   lines.push(
     '| ID | カテゴリ | 優先度 | 要求文 | ビジネス価値 | 現場で使えるか | 技術コスト | 判定 | メモ |'

@@ -147,7 +147,12 @@ export function FlowMapper() {
   }
 
   function handleCopyToBe() {
-    if (!confirm('As-IsをTo-Beにコピーします（既存のTo-Beは上書き）。続行しますか？')) return;
+    if (
+      !confirm(
+        '現状（As-Is）を改善後（To-Be）にコピーします（既存の改善後は上書き）。続行しますか？'
+      )
+    )
+      return;
     copyToBeFromAsIs();
   }
 
@@ -175,7 +180,7 @@ export function FlowMapper() {
                   : 'text-gray-700 hover:bg-gray-100'
               )}
             >
-              {v === 'asIs' ? 'As-Is（現状）' : v === 'toBe' ? 'To-Be（改善後）' : '比較'}
+              {v === 'asIs' ? '現状（As-Is）' : v === 'toBe' ? '改善後（To-Be）' : '比較'}
             </button>
           ))}
         </div>
@@ -197,7 +202,7 @@ export function FlowMapper() {
               onClick={handleCopyToBe}
               className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
             >
-              As-Isをコピー
+              現状をコピー
             </button>
           ) : null}
           <button
@@ -293,8 +298,8 @@ export function FlowMapper() {
                   上部の<strong>「全画面」</strong>ボタンで作業領域を最大化（Escで解除）
                 </li>
                 <li>
-                  <strong>As-Is</strong>
-                  （現状）を作ったら「To-Be」タブで改善後を、「比較」タブで差分を確認
+                  <strong>現状（As-Is）</strong>
+                  を作ったら「改善後」タブで改善案を、「比較」タブで差分を確認
                 </li>
               </ol>
               <p className="text-[11px] text-primary-700 mt-2">
@@ -378,7 +383,7 @@ export function FlowMapper() {
                     onChangeExecutionsPerMonth={setExecutionsPerMonth}
                   />
                 ) : null}
-                <CostsPanel diagram={activeDiagram} label={view === 'toBe' ? 'To-Be' : 'As-Is'} />
+                <CostsPanel diagram={activeDiagram} label={view === 'toBe' ? '改善後' : '現状'} />
                 {view === 'toBe' ? (
                   <SuggestionsPanel asIs={asIs} onApply={applySolutionToToBe} />
                 ) : null}

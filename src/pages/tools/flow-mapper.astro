@@ -7,14 +7,14 @@ import Layout from '../../layouts/layout.astro';
 ---
 
 <Layout
-  title="業務フロー可視化ツール｜AI／DX導入前の業務整理から、To-Be改善設計まで | Beekle"
-  description="生成AI／DXを導入する前にまず必要なのは「業務の見える化」。As-Isでフローを整理し、どこをDXすべきかを判断、To-Beを描いて合意形成する流れを1ツールで支援します。コスト・時間ボトルネックの自動分析と、To-Be改善ヒントの自動生成つき。"
+  title="業務フロー可視化ツール｜AI／DX導入前の業務整理から、改善後の設計まで | Beekle"
+  description="生成AI／DXを導入する前にまず必要なのは「業務の見える化」。現状の業務フローを整理し、どこをDXすべきかを判断、改善後の姿を描いて合意形成する流れを1ツールで支援します。コスト・時間ボトルネックの自動分析と、改善ヒントの自動生成つき。"
 >
   <Header client:load />
   <main class="pt-20">
     <PageHero
       title="業務フロー可視化ツール"
-      subtitle="AI／DX を導入する前に、まずは現状（As-Is）で業務を整理。「どこをDXすべきか」を判断してから、改善後（To-Be）を関係者で合意形成する。失敗しないAI／DX導入のための、業務整理ツールです。"
+      subtitle="AI／DX を導入する前に、まずは現状の業務を整理。「どこをDXすべきか」を判断してから、改善後の姿を関係者で合意形成する。失敗しないAI／DX導入のための、業務整理ツールです。"
       badge="Tools"
     />
 
@@ -44,9 +44,9 @@ import Layout from '../../layouts/layout.astro';
             可視化していない状態で「ここをAI化しよう」と話し合っても、結局議論が空回りして失敗します。
           </p>
           <ol class="space-y-2 text-sm text-gray-700 leading-relaxed list-decimal list-inside">
-            <li><strong>As-Isを描く</strong> — 誰が・何を・どのツールで・どれくらい時間をかけて実施しているかを整理</li>
+            <li><strong>現状（As-Is）を描く</strong> — 誰が・何を・どのツールで・どれくらい時間をかけて実施しているかを整理</li>
             <li><strong>DXすべきステップを判断</strong> — どこに時間／コストが偏っているか、どこに「手作業」「待ち」「判断」があるかを把握</li>
-            <li><strong>To-Beを関係者で合意形成</strong> — 改善後の姿を描き、AI／自動化を入れる箇所を絞って合意</li>
+            <li><strong>改善後（To-Be）の姿を関係者で合意形成</strong> — AI／自動化を入れる箇所を絞って合意</li>
           </ol>
           <p class="text-xs text-gray-500 mt-3">
             このツールは、上記3ステップを1画面で進められるよう設計されています。
@@ -57,9 +57,9 @@ import Layout from '../../layouts/layout.astro';
         <div class="mb-10 grid md:grid-cols-3 gap-4">
           <div class="p-5 bg-white rounded-2xl border border-gray-200 shadow-soft">
             <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-3">1</div>
-            <h3 class="font-bold text-gray-900 mb-1">As-Is をスイムレーンで整理</h3>
+            <h3 class="font-bold text-gray-900 mb-1">現状の業務を担当ごとに整理</h3>
             <p class="text-sm text-gray-600 leading-relaxed">
-              横軸＝工程、縦軸＝担当。BPMN形式のステップ（開始・作業・判断・システム・待ち・完了）で
+              横軸＝工程、縦軸＝担当。種別（開始・作業・判断・システム・待ち・完了）で
               「誰が」「何を」「どのツールで」やっているかを図にする。
             </p>
           </div>
@@ -73,9 +73,9 @@ import Layout from '../../layouts/layout.astro';
           </div>
           <div class="p-5 bg-white rounded-2xl border border-gray-200 shadow-soft">
             <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-3">3</div>
-            <h3 class="font-bold text-gray-900 mb-1">To-Be 改善ヒントを自動提案</h3>
+            <h3 class="font-bold text-gray-900 mb-1">改善ヒントを自動提案</h3>
             <p class="text-sm text-gray-600 leading-relaxed">
-              As-Is を分析して「自動化候補」「AI 適用候補」「並行化」「重点改善」「ツール選定」を自動タグ付け。
+              現状を分析して「自動化候補」「AI 適用候補」「並行化」「重点改善」「ツール選定」を自動タグ付け。
               DXすべきステップの議論の起点として活用できます。
             </p>
           </div>
@@ -126,7 +126,7 @@ import Layout from '../../layouts/layout.astro';
 
           <div class="grid md:grid-cols-2 gap-3">
             <div class="p-4 bg-red-50/40 border border-red-200 rounded-xl">
-              <h3 class="text-sm font-bold text-red-900 mb-2">As-Is の課題</h3>
+              <h3 class="text-sm font-bold text-red-900 mb-2">現状（As-Is）の課題</h3>
               <ul class="space-y-1 text-xs text-red-900">
                 <li>メールFAX注文を Excel に手で転記（月3〜5件のミス）</li>
                 <li>在庫を電話で確認（折返し待ちで半日ロス）</li>
@@ -135,7 +135,7 @@ import Layout from '../../layouts/layout.astro';
               </ul>
             </div>
             <div class="p-4 bg-emerald-50/40 border border-emerald-200 rounded-xl">
-              <h3 class="text-sm font-bold text-emerald-900 mb-2">To-Be の改善ポイント</h3>
+              <h3 class="text-sm font-bold text-emerald-900 mb-2">改善後（To-Be）のポイント</h3>
               <ul class="space-y-1 text-xs text-emerald-900">
                 <li>Webフォーム＋入力規則で誤注文を未然防止</li>
                 <li>在庫API連携で電話確認を撤廃</li>
@@ -175,14 +175,14 @@ import Layout from '../../layouts/layout.astro';
             <li class="flex gap-3">
               <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">4</span>
               <div>
-                <strong>To-Be を描き、比較・出力</strong>。「To-Be」タブで「As-Isをコピー」→ 改善ポイントを書き加えます。「比較」タブで差分を確認、PNG／SVG／Markdown／JSON／PDF で出力。データはお使いのブラウザにのみ保存されます（サーバー送信なし）。
+                <strong>改善後の姿を描き、比較・出力</strong>。「改善後（To-Be）」タブで「現状をコピー」→ 改善ポイントを書き加えます。「比較」タブで差分を確認、PNG／SVG／Markdown／JSON／PDF で出力。データはお使いのブラウザにのみ保存されます（サーバー送信なし）。
               </div>
             </li>
           </ol>
           <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 leading-relaxed">
-            <strong>合意形成のコツ</strong>：いきなりTo-Beから描かないこと。
-            まずAs-Isで「誰が」「何で困っているか」を関係者と一致させ、ツールが自動提案する
-            <strong>「To-Be 改善のヒント」</strong>を起点にDXすべきステップを議論すると、
+            <strong>合意形成のコツ</strong>：いきなり改善後から描かないこと。
+            まず現状で「誰が」「何で困っているか」を関係者と一致させ、ツールが自動提案する
+            <strong>「改善のヒント」</strong>を起点にDXすべきステップを議論すると、
             「そんなはずじゃなかった」を防げます。
           </div>
         </div>
@@ -199,7 +199,7 @@ import Layout from '../../layouts/layout.astro';
             </li>
             <li>
               <a href="/tools/story-builder" class="text-primary-500 hover:underline inline-block py-2">2. ユーザーストーリー作成ツール</a>
-              ：改善後（To-Be）で描いた業務を、要件定義書のたたき台に変換
+              ：改善後の姿で描いた業務を、要件定義書のたたき台に変換
             </li>
             <li>
               <a href="/tools/scope-manager" class="text-primary-500 hover:underline inline-block py-2">3. スコープ管理ツール</a>
@@ -218,7 +218,7 @@ import Layout from '../../layouts/layout.astro';
       <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center">
         <h2 class="text-2xl md:text-3xl font-bold mb-4">業務フローの整理、お任せください</h2>
         <p class="text-white/80 leading-relaxed mb-8">
-          As-Isのヒアリング、関係者ワークショップ、To-Beの設計、そして要件定義書まで。<br />
+          現状業務のヒアリング、関係者ワークショップ、改善後の設計、そして要件定義書まで。<br />
           現場と経営の橋渡しを Beekle がファシリテートします。
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
