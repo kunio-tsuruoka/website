@@ -1,3 +1,4 @@
+import { SCOPE_TEMPLATES } from '@/data/scope-manager-templates';
 import { trackToolEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -402,6 +403,32 @@ export function ScopeManager() {
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
+            <select
+              defaultValue=""
+              onChange={(e) => {
+                const tpl = SCOPE_TEMPLATES.find((t) => t.id === e.target.value);
+                if (!tpl) return;
+                setMarkdown(tpl.markdown);
+                setParseHint(
+                  `「${tpl.name}」テンプレートを読み込みました。「要求文を抽出」を押してください。`
+                );
+                trackToolEvent('tool_load_template', {
+                  tool: 'scope-manager',
+                  meta: { template: tpl.id },
+                });
+                e.target.value = '';
+              }}
+              className="inline-flex items-center px-4 py-3 min-h-[44px] text-sm font-semibold text-primary-700 bg-primary-50 border-2 border-primary-200 rounded-lg hover:bg-primary-100 transition-colors cursor-pointer"
+            >
+              <option value="" disabled>
+                業界別テンプレートから始める ▾
+              </option>
+              {SCOPE_TEMPLATES.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}（{t.industry}）
+                </option>
+              ))}
+            </select>
             <button
               type="button"
               onClick={onLoadSample}

@@ -1,3 +1,4 @@
+import { STORY_TEMPLATES } from '@/data/story-builder-templates';
 import { trackToolEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
@@ -199,6 +200,31 @@ export function StoryBuilder() {
               onChange={importFile}
               className="hidden"
             />
+            <select
+              defaultValue=""
+              onChange={(e) => {
+                const tpl = STORY_TEMPLATES.find((t) => t.id === e.target.value);
+                if (!tpl) return;
+                setDescription(tpl.text);
+                setResult(null);
+                setError(null);
+                trackToolEvent('tool_load_template', {
+                  tool: 'story-builder',
+                  meta: { template: tpl.id },
+                });
+                e.target.value = '';
+              }}
+              className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-semibold text-primary-700 bg-primary-50 border-2 border-primary-200 rounded-md hover:bg-primary-100 cursor-pointer"
+            >
+              <option value="" disabled>
+                業界別テンプレートから始める ▾
+              </option>
+              {STORY_TEMPLATES.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}（{t.industry}）
+                </option>
+              ))}
+            </select>
             <button
               type="button"
               onClick={loadSample}
