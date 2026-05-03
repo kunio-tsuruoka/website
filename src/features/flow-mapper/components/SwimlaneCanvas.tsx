@@ -159,7 +159,7 @@ export function SwimlaneCanvas({
                     if (confirm(`フェーズ「${phase.name}」とそのステップを削除しますか？`))
                       onDeletePhase(phase.id);
                   }}
-                  className="text-xs text-gray-400 hover:text-red-500 px-1 opacity-0 group-hover:opacity-100 no-print"
+                  className="text-base leading-none text-gray-400 hover:text-red-500 flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 sm:px-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 no-print"
                   aria-label="フェーズを削除"
                 >
                   ×
@@ -208,7 +208,7 @@ export function SwimlaneCanvas({
                         if (confirm(`担当「${lane.name}」とそのステップを削除しますか？`))
                           onDeleteLane(lane.id);
                       }}
-                      className="text-xs text-gray-400 hover:text-red-500 px-1 opacity-0 group-hover:opacity-100 no-print flex-shrink-0"
+                      className="text-base leading-none text-gray-400 hover:text-red-500 flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 sm:px-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 no-print flex-shrink-0"
                       aria-label="担当を削除"
                     >
                       ×

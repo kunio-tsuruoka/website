@@ -57,7 +57,7 @@ export function TemplatePicker({
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-sm px-2 py-1 rounded hover:bg-gray-100"
+            className="text-gray-400 hover:text-gray-600 text-xl leading-none flex items-center justify-center min-w-[44px] min-h-[44px] rounded hover:bg-gray-100"
             aria-label="閉じる"
           >
             ×

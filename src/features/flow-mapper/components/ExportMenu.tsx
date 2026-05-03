@@ -85,7 +85,7 @@ export function ExportMenu({ state, view }: { state: State; view: View }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="px-3 py-1.5 text-xs font-medium text-white bg-primary-500 border border-primary-600 rounded-lg hover:bg-primary-600"
+        className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium text-white bg-primary-500 border border-primary-600 rounded-lg hover:bg-primary-600"
       >
         エクスポート ▾
       </button>
