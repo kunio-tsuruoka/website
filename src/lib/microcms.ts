@@ -201,12 +201,12 @@ export async function getQAs(categoryId?: string, env?: MicroCMSEnv) {
       queries.filters = `category[equals]${categoryId}`;
     }
     const data = await getClient(env).get({
-      endpoint: 'qa',
+      endpoint: 'qas',
       queries,
     });
     return data.contents as QA[];
   } catch (error) {
-    console.error('Failed to fetch qa:', error);
+    console.error('Failed to fetch qas:', error);
     return [];
   }
 }
@@ -215,7 +215,7 @@ export async function getQAs(categoryId?: string, env?: MicroCMSEnv) {
 export async function getQA(id: string, env?: MicroCMSEnv) {
   try {
     const data = await getClient(env).get({
-      endpoint: 'qa',
+      endpoint: 'qas',
       contentId: id,
     });
     return data as QA;

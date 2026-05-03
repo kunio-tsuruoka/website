@@ -1,5 +1,6 @@
 ---
 import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
 import { type MicroCMSEnv, getQACategories, getQAs } from '../lib/microcms';
@@ -19,6 +20,12 @@ try {
   apiError = error instanceof Error ? error.message : 'Unknown error';
 }
 
+// 内容が固まっていないQAは answer 本文に「(再執筆中)」を含めて非公開化する。
+// 表示・FAQ構造化データの両方から除外することで、半端な内容が公開され続けないようにする。
+// （MicroCMSサニタイザが HTML コメントを剥がすため、可視テキストでマーカーを埋める）
+const DRAFT_MARKER = '再執筆中';
+allQAs = allQAs.filter((qa) => !(qa.answer || '').includes(DRAFT_MARKER));
+
 const qaByCategory = qaCategories
   .map((category) => ({
     ...category,
@@ -34,6 +41,28 @@ const description =
   title="一問一答 - システム開発の発注に関するよくある質問 | Beekle"
   description={description}
 >
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '一問一答', url: '/qa' },
+      ],
+    }}
+  />
+  {allQAs.length > 0 && (
+    <JsonLd
+      slot="head"
+      type="faq"
+      data={{
+        faqs: allQAs.map((qa) => ({
+          question: qa.question,
+          answer: (qa.answer || '').replace(/<[^>]*>/g, '').trim(),
+        })),
+      }}
+    />
+  )}
   <Header client:load />
   <main class="pt-20">
     <PageHero

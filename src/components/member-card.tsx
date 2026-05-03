@@ -7,9 +7,16 @@ interface MemberCardProps {
   position: string;
   description: string;
   index?: number;
+  anchorId?: string;
 }
 
-const MemberCard: React.FC<MemberCardProps> = ({ name, position, description, index = 0 }) => {
+const MemberCard: React.FC<MemberCardProps> = ({
+  name,
+  position,
+  description,
+  index = 0,
+  anchorId,
+}) => {
   // 説明文に改行があれば段落に分割
   const paragraphs = description.split('\n').filter((p) => p.trim() !== '');
 
@@ -26,10 +33,11 @@ const MemberCard: React.FC<MemberCardProps> = ({ name, position, description, in
 
   return (
     <motion.div
+      id={anchorId}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group relative"
+      className="group relative scroll-mt-24"
     >
       {/* 背景のグラデーション効果 */}
       <div

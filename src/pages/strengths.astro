@@ -1,5 +1,6 @@
 ---
 import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
 import { ButtonLink } from '../components/ui/button';
 import { Card, CardDescription, CardIcon, CardTitle } from '../components/ui/card';
 import { PageHero } from '../components/ui/page-hero';
@@ -11,6 +12,16 @@ import Layout from '../layouts/layout.astro';
   title="Beekleの強み | Beekle"
   description="Beekleの4つの強み：卓越した要件定義力、最新技術への対応力、幅広いチーム体制、そして顧客満足度の高いサポート。お客様のビジネス成功を実現します。"
 >
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: 'Beekleの強み', url: '/strengths' },
+      ],
+    }}
+  />
   <Header client:load />
   <main class="pt-20">
     <!-- Hero Section -->

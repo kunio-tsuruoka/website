@@ -269,6 +269,30 @@ const hasPrevPage = currentPage > 1;
   title="導入事例 | Beekle"
   description="Beekleの導入事例。HR Tech、製造業、教育など様々な業界でのシステム開発成功事例をご紹介。ゼロスタート（PoC）から本開発まで、お客様の課題解決をサポートした実績をご覧ください。"
 >
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '導入事例', url: '/case-studies' },
+      ],
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="itemList"
+    data={{
+      name: 'Beekle 導入事例',
+      url: 'https://beekle.jp/case-studies',
+      itemType: 'CreativeWork',
+      items: allCases.map((c) => ({
+        name: c.title,
+        description: c.challenge.description,
+        ...(c.url ? { url: c.url } : {}),
+      })),
+    }}
+  />
   <Header client:load />
   <main class="pt-20">
     <PageHero

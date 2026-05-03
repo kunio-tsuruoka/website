@@ -1,5 +1,6 @@
 ---
 import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
 
@@ -16,6 +17,16 @@ const materials = [
 ---
 
 <Layout title="関連資料 | Beekle">
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '関連資料', url: '/materials' },
+      ],
+    }}
+  />
   <Header client:load />
   <main class="pt-20">
     <PageHero

@@ -1,6 +1,7 @@
 ---
 import ContactForm from '../components/contact-form';
 import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
 ---
@@ -9,6 +10,16 @@ import Layout from '../layouts/layout.astro';
   title="お問い合わせ | Beekle"
   description="Beekleへのお問い合わせページ。Webアプリ・モバイルアプリ・AI開発のご相談、お見積もりなどお気軽にご連絡ください。初期費用0円のゼロスタート開発についてもこちらからお問い合わせいただけます。"
 >
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: 'お問い合わせ', url: '/contact' },
+      ],
+    }}
+  />
   <Header client:load />
   <main class="pt-20">
     <PageHero
