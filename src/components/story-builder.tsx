@@ -1,7 +1,13 @@
+import { STORY_TEMPLATES } from '@/data/story-builder-templates';
+import { trackToolEvent } from '@/lib/analytics';
+import { buildShareUrl, clearShareHash, readSharedFromHash } from '@/lib/share-url';
+import { consumeHandoff, writeHandoff } from '@/lib/tool-handoff';
+import { markToolSaved } from '@/lib/tool-storage';
 import { cn } from '@/lib/utils';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const MAX_IMPORT_BYTES = 2_000_000;
+const STORAGE_KEY = 'beekle-story-builder-v1';
 
 type EarsType = '常時' | 'イベント駆動' | '状態駆動' | 'オプション' | '異常系';
 type Priority = '必須' | '推奨' | '任意';
@@ -65,6 +71,117 @@ export function StoryBuilder() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const completeFiredRef = useRef(false);
+  const exportCountRef = useRef(0);
+
+  const [loadedFromStorage, setLoadedFromStorage] = useState(false);
+
+  // localStorage から復元 (RFPビルダーから読み出せるよう永続化)
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as {
+          description?: string;
+          result?: ApiResult | null;
+          counts?: { happy: number; unwanted: number; boundary: number };
+        };
+        if (parsed.description) setDescription(parsed.description);
+        if (parsed.result) setResult(parsed.result);
+        if (parsed.counts) {
+          setHappyCount(parsed.counts.happy);
+          setUnwantedCount(parsed.counts.unwanted);
+          setBoundaryCount(parsed.counts.boundary);
+        }
+        setLoadedFromStorage(true);
+      }
+    } catch {
+      // ignore
+    }
+    const h = consumeHandoff('story-builder');
+    if (h) {
+      setDescription(h.payload);
+      setError(null);
+      setResult(null);
+    }
+    type Shared = {
+      description: string;
+      result: ApiResult | null;
+      counts: { happy: number; unwanted: number; boundary: number };
+    };
+    const shared = readSharedFromHash<Shared>();
+    if (shared?.description) {
+      const ok = confirm('共有URLから読み込みます。現在の内容は上書きされます。続けますか？');
+      if (ok) {
+        setDescription(shared.description);
+        setResult(shared.result ?? null);
+        if (shared.counts) {
+          setHappyCount(shared.counts.happy);
+          setUnwantedCount(shared.counts.unwanted);
+          setBoundaryCount(shared.counts.boundary);
+        }
+      }
+      clearShareHash();
+    }
+    trackToolEvent('tool_start', { tool: 'story-builder' });
+  }, []);
+
+  // 自動永続化
+  useEffect(() => {
+    if (!loadedFromStorage && !result && description === SAMPLE_TEXT) return;
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          description,
+          result,
+          counts: { happy: happyCount, unwanted: unwantedCount, boundary: boundaryCount },
+        })
+      );
+      markToolSaved('story-builder');
+    } catch (err) {
+      console.warn('[story-builder] localStorage 書き込み失敗:', err);
+    }
+  }, [description, result, happyCount, unwantedCount, boundaryCount, loadedFromStorage]);
+
+  async function copyShareUrl() {
+    const { url, tooLong } = buildShareUrl('/tools/story-builder', {
+      description,
+      result,
+      counts: { happy: happyCount, unwanted: unwantedCount, boundary: boundaryCount },
+    });
+    if (tooLong && !confirm('共有URLが長くなっています。続行しますか？')) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('共有URLをコピーしました。');
+      fireExportEvent('share-url');
+    } catch {
+      alert('クリップボードへのコピーに失敗しました。');
+    }
+  }
+
+  function sendToScopeManager() {
+    if (!result) return;
+    writeHandoff({
+      from: 'story-builder',
+      target: 'scope-manager',
+      payload: buildMarkdown(result),
+    });
+    fireExportEvent('handoff-scope-manager');
+    window.location.href = '/tools/scope-manager';
+  }
+
+  const fireExportEvent = (format: string) => {
+    exportCountRef.current += 1;
+    trackToolEvent('tool_export', { tool: 'story-builder', meta: { format } });
+    if (!completeFiredRef.current && result && exportCountRef.current >= 1) {
+      completeFiredRef.current = true;
+      trackToolEvent('tool_complete', {
+        tool: 'story-builder',
+        meta: { exports: exportCountRef.current },
+      });
+    }
+  };
 
   async function importFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -103,6 +220,7 @@ export function StoryBuilder() {
     setDescription(SAMPLE_TEXT);
     setResult(null);
     setError(null);
+    trackToolEvent('tool_load_sample', { tool: 'story-builder' });
   }
 
   function clearAll() {
@@ -132,6 +250,7 @@ export function StoryBuilder() {
       }
       const { success: _ignored, ...rest } = data;
       setResult(rest);
+      trackToolEvent('tool_save', { tool: 'story-builder', meta: { source: 'ai-generate' } });
     } catch (err) {
       setError(err instanceof Error ? err.message : '生成に失敗しました');
     } finally {
@@ -149,11 +268,13 @@ export function StoryBuilder() {
     a.download = `${result.usecase.id || 'user-story'}.md`;
     a.click();
     URL.revokeObjectURL(url);
+    fireExportEvent('markdown');
   }
 
   function copyMarkdown() {
     if (!result) return;
     navigator.clipboard.writeText(buildMarkdown(result));
+    fireExportEvent('clipboard');
   }
 
   return (
@@ -176,6 +297,31 @@ export function StoryBuilder() {
               onChange={importFile}
               className="hidden"
             />
+            <select
+              defaultValue=""
+              onChange={(e) => {
+                const tpl = STORY_TEMPLATES.find((t) => t.id === e.target.value);
+                if (!tpl) return;
+                setDescription(tpl.text);
+                setResult(null);
+                setError(null);
+                trackToolEvent('tool_load_template', {
+                  tool: 'story-builder',
+                  meta: { template: tpl.id },
+                });
+                e.target.value = '';
+              }}
+              className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-semibold text-primary-700 bg-primary-50 border-2 border-primary-200 rounded-md hover:bg-primary-100 cursor-pointer"
+            >
+              <option value="" disabled>
+                業界別テンプレートから始める ▾
+              </option>
+              {STORY_TEMPLATES.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}（{t.industry}）
+                </option>
+              ))}
+            </select>
             <button
               type="button"
               onClick={loadSample}
@@ -384,6 +530,22 @@ export function StoryBuilder() {
                 className="px-4 py-2 text-sm font-semibold text-primary-500 border border-primary-300 rounded-md hover:bg-primary-50"
               >
                 クリップボードにコピー
+              </button>
+              <button
+                type="button"
+                onClick={sendToScopeManager}
+                className="px-4 py-2 text-sm font-semibold text-secondary-700 bg-secondary-50 border border-secondary-300 rounded-md hover:bg-secondary-100"
+                title="この出力を取り込んで「作る／後回し／作らない」を判定する"
+              >
+                スコープ管理に送る →
+              </button>
+              <button
+                type="button"
+                onClick={copyShareUrl}
+                className="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                title="現在の入力と生成結果を共有URLとしてクリップボードにコピー"
+              >
+                共有URLをコピー
               </button>
             </div>
             <details className="mt-4">

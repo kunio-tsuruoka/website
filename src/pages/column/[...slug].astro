@@ -395,17 +395,32 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a
-            href={categoryCta.primaryHref}
+            href={categoryCta.primary.href}
             data-cta-source={ctaSource}
-            data-cta-id={categoryCta.primaryCtaId}
+            data-cta-id={categoryCta.primary.ctaId}
             class="column-cta-primary inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl"
           >
-            {categoryCta.primaryLabel}
+            {categoryCta.primary.label}
             <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </a>
+          {categoryCta.secondary && (
+            <a
+              href={categoryCta.secondary.href}
+              data-cta-source={ctaSource}
+              data-cta-id={categoryCta.secondary.ctaId}
+              class="column-cta-secondary inline-flex items-center justify-center px-8 py-5 text-lg font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
+            >
+              {categoryCta.secondary.label}
+            </a>
+          )}
         </div>
+        {categoryCta.secondary && (
+          <p class="text-sm text-white/70 mt-3">
+            次の工程で使うツール: {categoryCta.secondary.description}
+          </p>
+        )}
         <p class="text-sm text-white/80 mt-8">
           いきなり試すのが不安な方は
           <a
@@ -424,7 +439,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     <script>
       import { trackCtaClick } from '../../lib/analytics';
       const ctas = document.querySelectorAll<HTMLAnchorElement>(
-        '.column-cta-primary, .column-cta-sub'
+        '.column-cta-primary, .column-cta-secondary, .column-cta-sub'
       );
       for (const el of ctas) {
         el.addEventListener('click', () => {

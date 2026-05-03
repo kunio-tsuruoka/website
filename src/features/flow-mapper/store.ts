@@ -483,7 +483,15 @@ export const useFlowStore = create<StoreState & Actions>()(
         },
         setItem: (key: string, value: string): void => {
           if (typeof window === 'undefined') return;
-          window.localStorage.setItem(key, value);
+          try {
+            window.localStorage.setItem(key, value);
+            // tool-storage の動的 import (循環依存を避ける)
+            import('@/lib/tool-storage')
+              .then((m) => m.markToolSaved('flow-mapper'))
+              .catch(() => {});
+          } catch (err) {
+            console.warn('[flow-mapper] localStorage 書き込み失敗:', err);
+          }
         },
         removeItem: (key: string): void => {
           if (typeof window === 'undefined') return;

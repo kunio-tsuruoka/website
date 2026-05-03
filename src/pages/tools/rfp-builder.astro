@@ -1,0 +1,126 @@
+---
+import { Header } from '../../components/header';
+import { RfpBuilder } from '../../components/rfp-builder';
+import JsonLd from '../../components/seo/json-ld.astro';
+import FloatingCTA from '../../components/ui/floating-cta.astro';
+import { PageHero } from '../../components/ui/page-hero';
+import Layout from '../../layouts/layout.astro';
+---
+
+<Layout
+  title="RFPドラフト自動生成｜発注前の検討内容を1枚にまとめる | Beekle"
+  description="業務フロー可視化ツール／スコープ管理ツールの保存内容を統合して、開発会社に渡せるRFP（提案依頼書）の Markdown ドラフトを自動生成。プロジェクト概要・現状業務・改善後・要件と優先度・連絡先までを章立てで出力します。"
+>
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '発注準備キット', url: '/tools' },
+        { name: 'RFPドラフト自動生成', url: '/tools/rfp-builder' },
+      ],
+    }}
+  />
+  <Header client:load />
+  <main class="pt-20">
+    <PageHero
+      title="RFPドラフト自動生成"
+      subtitle="業務フロー可視化／スコープ管理ツールで作ったデータを統合して、開発会社に渡せる RFP ドラフトを Markdown で出力します。発注準備キットの最終アウトプット。"
+      badge="Tools"
+    />
+
+    <div class="bg-amber-50 border-y border-amber-200">
+      <div class="container mx-auto px-6 md:px-8 py-3 text-sm text-amber-900 flex flex-wrap items-center justify-center gap-2">
+        <span>RFP の書き方や見積もり比較で迷う場合は</span>
+        <a
+          href="/contact?source=tool-rfp-builder&intent=tool-stuck&phase=start"
+          data-cta-source="tool-rfp-builder"
+          data-cta-id="contact-stuck-start"
+          class="tool-escape-cta inline-block py-2 font-semibold underline decoration-amber-400 hover:decoration-amber-700"
+        >
+          RFPレビューを依頼する
+        </a>
+      </div>
+    </div>
+
+    <section class="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
+      <div class="container mx-auto px-6 md:px-8 max-w-4xl">
+        <div class="mb-8 p-5 bg-white rounded-2xl border border-gray-200 shadow-soft text-sm text-gray-700 leading-relaxed">
+          <p class="mb-2"><strong>使い方</strong>:</p>
+          <ol class="list-decimal list-inside space-y-1">
+            <li><a href="/tools/flow-mapper" class="text-primary-500 hover:underline">業務フロー可視化ツール</a> で現状（As-Is）と改善後（To-Be）を作る</li>
+            <li><a href="/tools/scope-manager" class="text-primary-500 hover:underline">スコープ管理ツール</a> で「作る／後回し／作らない」を判定する</li>
+            <li>このページに戻り、プロジェクト基本情報を入力して「RFPドラフトを生成」を押す</li>
+          </ol>
+          <p class="mt-3 text-xs text-gray-500">
+            ※ 各ツールのデータはお使いの端末（ブラウザ）の中にのみ保存されています。同じ端末・同じブラウザで開けば自動で取り込まれます。
+          </p>
+        </div>
+
+        <RfpBuilder client:load />
+
+        <div class="mt-10 p-6 bg-white rounded-2xl border border-gray-200 shadow-soft">
+          <h2 class="text-lg font-bold text-gray-900 mb-3">あわせて使うと便利なもの</h2>
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li>
+              <a href="/tools" class="text-primary-500 hover:underline font-semibold inline-block py-2">発注準備キット (3ツール全体像)</a>
+              ：ここに来る前に作っておくと自動で内容が埋まります
+            </li>
+            <li>
+              <a href="/tools/flow-mapper" class="text-primary-500 hover:underline inline-block py-2">業務フロー可視化ツール</a>
+              ：現状業務と改善後の姿を可視化
+            </li>
+            <li>
+              <a href="/tools/scope-manager" class="text-primary-500 hover:underline inline-block py-2">スコープ管理ツール</a>
+              ：要件の優先度を判定
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-accent-950 text-white">
+      <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center">
+        <h2 class="text-2xl md:text-3xl font-bold mb-4">RFPレビュー、お任せください</h2>
+        <p class="text-white/80 leading-relaxed mb-8">
+          作成したRFPの妥当性チェック、開発会社の見積もり比較、提案資料の評価まで、Beekleがファシリテートします。
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/contact?source=tool-rfp-builder&intent=review-request&phase=complete"
+            data-cta-source="tool-rfp-builder"
+            data-cta-id="contact-review-complete"
+            class="tool-escape-cta inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg"
+          >
+            このRFPをレビューしてもらう
+          </a>
+          <a
+            href="/column"
+            class="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-accent-950 transition-all"
+          >
+            コラムで学ぶ
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      import { trackCtaClick } from '../../lib/analytics';
+      const ctas = document.querySelectorAll<HTMLAnchorElement>('.tool-escape-cta');
+      for (const el of ctas) {
+        el.addEventListener('click', () => {
+          const source = el.dataset.ctaSource ?? 'unknown';
+          const cta = el.dataset.ctaId ?? 'unknown';
+          trackCtaClick({ source, cta });
+        });
+      }
+    </script>
+  </main>
+  <FloatingCTA
+    href="/contact?source=tool-rfp-builder&intent=floating-stuck&phase=mid"
+    label="RFPレビューを依頼"
+    source="tool-rfp-builder"
+    ctaId="floating-stuck"
+  />
+</Layout>

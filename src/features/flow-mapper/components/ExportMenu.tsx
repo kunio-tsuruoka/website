@@ -1,3 +1,4 @@
+import { buildShareUrl } from '@/lib/share-url';
 import { type ChangeEvent, useState } from 'react';
 import { STORAGE_KEY } from '../constants';
 import { useFlowStore } from '../store';
@@ -6,7 +7,11 @@ import { downloadFile, exportMarkdown } from '../utils/markdown';
 import { diagramToMermaid } from '../utils/mermaid';
 import { diagramToSvg, svgToPng } from '../utils/svg';
 
-export function ExportMenu({ state, view }: { state: State; view: View }) {
+export function ExportMenu({
+  state,
+  view,
+  onExport,
+}: { state: State; view: View; onExport?: (format: string) => void }) {
   const [open, setOpen] = useState(false);
   const importStateFromJson = useFlowStore((s) => s.importStateFromJson);
   const ts = new Date().toISOString().slice(0, 10);
@@ -15,23 +20,27 @@ export function ExportMenu({ state, view }: { state: State; view: View }) {
 
   function exportJson() {
     downloadFile(`flow-mapper-${ts}.json`, JSON.stringify(state, null, 2), 'application/json');
+    onExport?.('json');
     setOpen(false);
   }
 
   function exportMd() {
     downloadFile(`flow-mapper-${ts}.md`, exportMarkdown(state), 'text/markdown');
+    onExport?.('markdown');
     setOpen(false);
   }
 
   function exportSvg() {
     const svg = diagramToSvg(currentDiagram, currentLabel);
     downloadFile(`flow-mapper-${currentLabel}-${ts}.svg`, svg, 'image/svg+xml');
+    onExport?.('svg');
     setOpen(false);
   }
 
   function exportMermaid() {
     const mmd = diagramToMermaid(currentDiagram, currentLabel);
     downloadFile(`flow-mapper-${currentLabel}-${ts}.mmd`, mmd, 'text/plain');
+    onExport?.('mermaid');
     setOpen(false);
   }
 
@@ -45,6 +54,7 @@ export function ExportMenu({ state, view }: { state: State; view: View }) {
       a.download = `flow-mapper-${currentLabel}-${ts}.png`;
       a.click();
       URL.revokeObjectURL(url);
+      onExport?.('png');
     } catch (err) {
       alert(`PNG変換に失敗しました: ${err instanceof Error ? err.message : String(err)}`);
     }
@@ -75,6 +85,28 @@ export function ExportMenu({ state, view }: { state: State; view: View }) {
 
   function printView() {
     window.print();
+    onExport?.('print');
+    setOpen(false);
+  }
+
+  async function copyShareUrl() {
+    const { url, tooLong } = buildShareUrl('/tools/flow-mapper', state);
+    if (tooLong) {
+      const ok = confirm(
+        '共有URLが長くなっています。一部ブラウザで開けない可能性がありますが続行しますか？'
+      );
+      if (!ok) {
+        setOpen(false);
+        return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('共有URLをコピーしました。送付先に貼り付けてください。');
+      onExport?.('share-url');
+    } catch {
+      alert('クリップボードへのコピーに失敗しました。');
+    }
     setOpen(false);
   }
 
@@ -155,6 +187,13 @@ export function ExportMenu({ state, view }: { state: State; view: View }) {
               className="w-full text-left px-3 py-2 text-xs hover:bg-gray-50 border-t border-gray-100"
             >
               印刷／PDF保存
+            </button>
+            <button
+              type="button"
+              onClick={copyShareUrl}
+              className="w-full text-left px-3 py-2 text-xs hover:bg-gray-50 border-t border-gray-100"
+            >
+              共有URLをコピー（読み取り用）
             </button>
           </div>
         </>
