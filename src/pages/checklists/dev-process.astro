@@ -39,7 +39,12 @@ const pageDescription =
 const canonical = 'https://beekle.jp/checklists/dev-process';
 ---
 
-<Layout title={pageTitle} description={pageDescription} canonical={canonical}>
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonical={canonical}
+  ogType="article"
+>
   <JsonLd
     slot="head"
     type="breadcrumb"
@@ -48,6 +53,21 @@ const canonical = 'https://beekle.jp/checklists/dev-process';
         { name: 'ホーム', url: '/' },
         { name: 'コラム', url: '/column' },
         { name: '開発プロセスチェックリスト', url: '/checklists/dev-process' },
+      ],
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="article"
+    data={{
+      title: pageTitle,
+      description: pageDescription,
+      url: canonical,
+      articleSection: '開発プロセス',
+      keywords: '開発プロセス,チェックリスト,要件定義,Gherkin,BDD,ユーザーストーリー,Beekle',
+      about: [
+        { name: 'Beekle株式会社', url: 'https://beekle.jp' },
+        { name: '開発プロセス' },
       ],
     }}
   />
