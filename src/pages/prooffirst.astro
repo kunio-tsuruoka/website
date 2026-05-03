@@ -1,5 +1,6 @@
 ---
 import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
 import { ButtonLink } from '../components/ui/button';
 import { Card, CardDescription, CardIcon, CardTitle } from '../components/ui/card';
 import { Section, SectionHeader } from '../components/ui/section';
@@ -10,6 +11,27 @@ import Layout from '../layouts/layout.astro';
   title="プロトタイプ無料体験｜初期費用0円で動くシステムを見てから発注 | Beekle"
   description="システム開発の発注前に「動くプロトタイプ」を初期費用0円で体験できるサービス。見積書と提案資料だけで判断を迫られる不安を解消し、実際に触れる動くデモを見てから本契約を決められます。中堅企業のDX担当者向け。"
 >
+  <JsonLd
+    slot="head"
+    type="service"
+    data={{
+      serviceName: 'プロトタイプ無料体験（ゼロスタート）',
+      serviceDescription:
+        '初期費用0円で動くプロトタイプを体験してから本契約を決められるサービス。見積書と提案資料だけで判断を迫られる不安を解消します。',
+      url: 'https://beekle.jp/prooffirst',
+      serviceType: 'システム開発プロトタイプ作成',
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: 'プロトタイプ無料体験', url: '/prooffirst' },
+      ],
+    }}
+  />
   <Header client:load />
   <main class="">
     {/* Hero Section */}

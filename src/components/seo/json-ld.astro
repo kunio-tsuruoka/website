@@ -2,14 +2,41 @@
 // src/components/seo/json-ld.astro
 // JSON-LD 構造化データコンポーネント
 
+import { type Author, authors, defaultAuthor, defaultReviewer } from '../../data/authors';
+
 export interface Props {
-  type: 'organization' | 'article' | 'breadcrumb' | 'service' | 'faq';
+  type:
+    | 'organization'
+    | 'article'
+    | 'breadcrumb'
+    | 'service'
+    | 'faq'
+    | 'person'
+    | 'softwareApplication'
+    | 'itemList';
   data?: Record<string, unknown>;
 }
 
 const { type, data = {} } = Astro.props;
 
 const siteUrl = 'https://beekle.jp';
+
+// Person を schema.org Person に変換するヘルパー
+const toPersonSchema = (author: Author) => ({
+  '@type': 'Person',
+  '@id': author.url,
+  name: author.name,
+  jobTitle: author.jobTitle,
+  description: author.description,
+  url: author.url,
+  ...(author.sameAs && author.sameAs.length > 0 ? { sameAs: author.sameAs } : {}),
+  ...(author.knowsAbout && author.knowsAbout.length > 0 ? { knowsAbout: author.knowsAbout } : {}),
+  worksFor: {
+    '@type': 'Organization',
+    name: 'Beekle株式会社',
+    url: siteUrl,
+  },
+});
 
 // 会社情報（Organization）
 const organizationSchema = {
@@ -22,6 +49,7 @@ const organizationSchema = {
   description:
     'AI・Webアプリ・モバイルアプリ開発を手がけるシステム開発会社。初期費用0円のゼロスタートで、動くプロトタイプを体験してから判断できます。',
   foundingDate: '2023-02-01',
+  founder: toPersonSchema(authors.tsuruoka),
   address: {
     '@type': 'PostalAddress',
     streetAddress: '久が原3丁目14番27号',
@@ -40,6 +68,18 @@ const organizationSchema = {
 };
 
 // 記事（Article）
+// data.authorId / data.reviewerId で Person を切替可能（未指定なら default）
+// data.reviewerId === null を明示すると監修者を出力しない
+const articleAuthor = data.authorId
+  ? (authors[data.authorId as string] ?? defaultAuthor)
+  : defaultAuthor;
+const articleReviewer =
+  data.reviewerId === null
+    ? null
+    : data.reviewerId
+      ? (authors[data.reviewerId as string] ?? defaultReviewer)
+      : defaultReviewer;
+
 const articleSchema = data.title
   ? {
       '@context': 'https://schema.org',
@@ -49,10 +89,8 @@ const articleSchema = data.title
       image: data.image || `${siteUrl}/og-image.png`,
       datePublished: data.publishedTime || '',
       dateModified: data.modifiedTime || data.publishedTime || '',
-      author: {
-        '@type': 'Organization',
-        name: 'Beekle株式会社',
-      },
+      author: toPersonSchema(articleAuthor),
+      ...(articleReviewer ? { reviewedBy: toPersonSchema(articleReviewer) } : {}),
       publisher: {
         '@type': 'Organization',
         name: 'Beekle株式会社',
@@ -128,6 +166,65 @@ const faqSchema = data.faqs
     }
   : null;
 
+// SoftwareApplication（無料ツール用）
+const softwareApplicationSchema = data.appName
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: data.appName,
+      description: data.appDescription || '',
+      url: data.url || siteUrl,
+      applicationCategory: data.applicationCategory || 'BusinessApplication',
+      operatingSystem: 'Web',
+      isAccessibleForFree: true,
+      browserRequirements: 'Requires JavaScript. Requires HTML5.',
+      inLanguage: 'ja',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'JPY',
+      },
+      author: toPersonSchema(authors.tsuruoka),
+      provider: {
+        '@type': 'Organization',
+        name: 'Beekle株式会社',
+        url: siteUrl,
+        logo: `${siteUrl}/logo.png`,
+      },
+    }
+  : null;
+
+// ItemList（事例集等の一覧用）
+const itemListSchema = data.items
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      ...(data.name ? { name: data.name } : {}),
+      ...(data.url ? { url: data.url } : {}),
+      itemListElement: (
+        data.items as Array<{ name: string; description?: string; url?: string }>
+      ).map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': data.itemType || 'CreativeWork',
+          name: item.name,
+          ...(item.description ? { description: item.description } : {}),
+          ...(item.url ? { url: item.url } : {}),
+        },
+      })),
+    }
+  : null;
+
+// Person 単体（members ページ等で個人を独立して出力する用途）
+const personSchema = data.authorId
+  ? (() => {
+      const a = authors[data.authorId as string];
+      if (!a) return null;
+      return { '@context': 'https://schema.org', ...toPersonSchema(a) };
+    })()
+  : null;
+
 // 選択されたスキーマを取得
 const getSchema = () => {
   switch (type) {
@@ -141,6 +238,12 @@ const getSchema = () => {
       return serviceSchema;
     case 'faq':
       return faqSchema;
+    case 'person':
+      return personSchema;
+    case 'softwareApplication':
+      return softwareApplicationSchema;
+    case 'itemList':
+      return itemListSchema;
     default:
       return null;
   }

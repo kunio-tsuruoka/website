@@ -12,6 +12,7 @@ const companyItems = [
   { label: '会社概要', href: '/company' },
   { label: 'Beekleの強み', href: '/strengths' },
   { label: 'メンバー紹介', href: '/members' },
+  { label: '一問一答（よくある質問）', href: '/qa' },
   { label: '関連資料', href: '/materials' },
 ];
 

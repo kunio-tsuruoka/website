@@ -4,6 +4,7 @@ import { ProcessFAQ } from '@/components/process-faq-section';
 // src/pages/process.astro
 import { ProcessSteps } from '@/components/process-steps';
 import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
 ---
@@ -12,6 +13,16 @@ import Layout from '../layouts/layout.astro';
   title="導入の流れ | Beekle"
   description="Beekleの開発導入プロセスをご紹介。お問い合わせから運用開始まで、段階的に進めていきます。初期費用0円のゼロスタートで、リスクなく開発を始められます。"
 >
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '導入の流れ', url: '/process' },
+      ],
+    }}
+  />
   <Header client:load />
   <main class="pt-20">
     <PageHero
