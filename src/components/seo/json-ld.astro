@@ -80,6 +80,14 @@ const articleReviewer =
       ? (authors[data.reviewerId as string] ?? defaultReviewer)
       : defaultReviewer;
 
+const articleAbout = Array.isArray(data.about)
+  ? (data.about as Array<{ name: string; url?: string }>).map((a) => ({
+      '@type': 'Thing',
+      name: a.name,
+      ...(a.url ? { url: a.url } : {}),
+    }))
+  : undefined;
+
 const articleSchema = data.title
   ? {
       '@context': 'https://schema.org',
@@ -103,6 +111,10 @@ const articleSchema = data.title
         '@type': 'WebPage',
         '@id': data.url || siteUrl,
       },
+      inLanguage: 'ja',
+      ...(data.articleSection ? { articleSection: data.articleSection } : {}),
+      ...(data.keywords ? { keywords: data.keywords } : {}),
+      ...(articleAbout && articleAbout.length > 0 ? { about: articleAbout } : {}),
     }
   : null;
 
