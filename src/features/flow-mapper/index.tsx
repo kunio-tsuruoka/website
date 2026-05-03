@@ -1,5 +1,8 @@
+import { trackToolEvent } from '@/lib/analytics';
+import { clearShareHash, readSharedFromHash } from '@/lib/share-url';
+import { writeHandoff } from '@/lib/tool-handoff';
 import { cn } from '@/lib/utils';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CompareView } from './components/CompareView';
 import { CostsPanel } from './components/CostsPanel';
 import { ExportMenu } from './components/ExportMenu';
@@ -11,6 +14,7 @@ import { SuggestionsPanel } from './components/SuggestionsPanel';
 import { SwimlaneCanvas } from './components/SwimlaneCanvas';
 import { TemplatePicker } from './components/TemplatePicker';
 import { useFlowStore } from './store';
+import type { State as FlowState } from './types';
 import type { DiagramTarget } from './types';
 
 const TEMPLATE_PICKER_FLAG = 'beekle-flow-mapper-template-picker-shown';
@@ -57,13 +61,46 @@ export function FlowMapper() {
   const resetAll = useFlowStore((s) => s.resetAll);
   const copyToBeFromAsIs = useFlowStore((s) => s.copyToBeFromAsIs);
 
+  const importStateFromJson = useFlowStore((s) => s.importStateFromJson);
   const target: DiagramTarget = view === 'toBe' ? 'toBe' : 'asIs';
   const activeDiagram = view === 'compare' ? null : view === 'toBe' ? toBe : asIs;
   const state = useMemo(() => ({ asIs, toBe }), [asIs, toBe]);
+  const [sharedView, setSharedView] = useState(false);
+
+  useEffect(() => {
+    const shared = readSharedFromHash<FlowState>();
+    if (shared?.asIs?.lanes && shared?.toBe?.lanes) {
+      const ok = confirm(
+        '共有URLからフローを読み込みます。現在編集中のデータは上書きされます。続けますか？'
+      );
+      if (ok) {
+        importStateFromJson(shared);
+        setSharedView(true);
+      }
+      clearShareHash();
+    }
+  }, [importStateFromJson]);
 
   useEffect(() => {
     hydrateOnboardingFromStorage();
+    trackToolEvent('tool_start', { tool: 'flow-mapper' });
   }, [hydrateOnboardingFromStorage]);
+
+  // 完走判定: ステップ3個以上 + export 1回以上 (起動セッション中1回のみ発火)
+  const completeFiredRef = useRef(false);
+  const exportCountRef = useRef(0);
+  const handleToolExport = (format: string) => {
+    exportCountRef.current += 1;
+    trackToolEvent('tool_export', { tool: 'flow-mapper', meta: { format, view } });
+    const totalSteps = asIs.steps.length + toBe.steps.length;
+    if (!completeFiredRef.current && totalSteps >= 3 && exportCountRef.current >= 1) {
+      completeFiredRef.current = true;
+      trackToolEvent('tool_complete', {
+        tool: 'flow-mapper',
+        meta: { steps: totalSteps, exports: exportCountRef.current },
+      });
+    }
+  };
 
   // テンプレ選択モーダル: 両方のフローが EMPTY (0 ステップ) で
   // かつ「一度も表示してない」場合にのみ表示。
@@ -129,7 +166,12 @@ export function FlowMapper() {
   }
 
   function handleCopyToBe() {
-    if (!confirm('As-IsをTo-Beにコピーします（既存のTo-Beは上書き）。続行しますか？')) return;
+    if (
+      !confirm(
+        '現状（As-Is）を改善後（To-Be）にコピーします（既存の改善後は上書き）。続行しますか？'
+      )
+    )
+      return;
     copyToBeFromAsIs();
   }
 
@@ -157,7 +199,7 @@ export function FlowMapper() {
                   : 'text-gray-700 hover:bg-gray-100'
               )}
             >
-              {v === 'asIs' ? 'As-Is（現状）' : v === 'toBe' ? 'To-Be（改善後）' : '比較'}
+              {v === 'asIs' ? '現状（As-Is）' : v === 'toBe' ? '改善後（To-Be）' : '比較'}
             </button>
           ))}
         </div>
@@ -165,7 +207,10 @@ export function FlowMapper() {
         <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
-            onClick={loadSample}
+            onClick={() => {
+              loadSample();
+              trackToolEvent('tool_load_sample', { tool: 'flow-mapper' });
+            }}
             className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium text-primary-700 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100"
           >
             サンプルを読込
@@ -176,7 +221,7 @@ export function FlowMapper() {
               onClick={handleCopyToBe}
               className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
             >
-              As-Isをコピー
+              現状をコピー
             </button>
           ) : null}
           <button
@@ -217,7 +262,35 @@ export function FlowMapper() {
               <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
             ) : null}
           </button>
-          <ExportMenu state={state} view={view} />
+          <ExportMenu state={state} view={view} onExport={handleToolExport} />
+          <button
+            type="button"
+            onClick={() => {
+              const diagram = view === 'toBe' ? toBe : asIs;
+              if (diagram.steps.length === 0) {
+                alert('まずステップを追加してください。');
+                return;
+              }
+              const lines = diagram.steps.map((s) => {
+                const lane = diagram.lanes.find((l) => l.id === s.laneId)?.name ?? '';
+                const tool = s.tool ? `（${s.tool}使用）` : '';
+                const pain = s.pain ? ` / 課題: ${s.pain}` : '';
+                return `- ${lane}: ${s.label}${tool}${pain}`;
+              });
+              const text = `業務名: ${diagram.title || '業務フロー'}\n\n以下の業務をシステム化／改善したい:\n${lines.join('\n')}`;
+              writeHandoff({ from: 'flow-mapper', target: 'story-builder', payload: text });
+              trackToolEvent('tool_export', {
+                tool: 'flow-mapper',
+                meta: { format: 'handoff-story-builder', view },
+              });
+              window.location.href = '/tools/story-builder';
+            }}
+            disabled={view === 'compare'}
+            className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium text-secondary-700 bg-secondary-50 border border-secondary-200 rounded-lg hover:bg-secondary-100 disabled:opacity-40"
+            title="このフローをユーザーストーリー作成ツールに送って要件のたたき台を作る"
+          >
+            ストーリーに送る →
+          </button>
           <button
             type="button"
             onClick={handleResetAll}
@@ -272,8 +345,8 @@ export function FlowMapper() {
                   上部の<strong>「全画面」</strong>ボタンで作業領域を最大化（Escで解除）
                 </li>
                 <li>
-                  <strong>As-Is</strong>
-                  （現状）を作ったら「To-Be」タブで改善後を、「比較」タブで差分を確認
+                  <strong>現状（As-Is）</strong>
+                  を作ったら「改善後」タブで改善案を、「比較」タブで差分を確認
                 </li>
               </ol>
               <p className="text-[11px] text-primary-700 mt-2">
@@ -357,7 +430,7 @@ export function FlowMapper() {
                     onChangeExecutionsPerMonth={setExecutionsPerMonth}
                   />
                 ) : null}
-                <CostsPanel diagram={activeDiagram} label={view === 'toBe' ? 'To-Be' : 'As-Is'} />
+                <CostsPanel diagram={activeDiagram} label={view === 'toBe' ? '改善後' : '現状'} />
                 {view === 'toBe' ? (
                   <SuggestionsPanel asIs={asIs} onApply={applySolutionToToBe} />
                 ) : null}
@@ -383,10 +456,15 @@ export function FlowMapper() {
         <TemplatePicker
           onPickTemplate={(tpl) => {
             loadTemplate(tpl);
+            trackToolEvent('tool_load_template', {
+              tool: 'flow-mapper',
+              meta: { template: tpl.id },
+            });
             markTemplatePickerShown();
           }}
           onLoadSample={() => {
             loadSample();
+            trackToolEvent('tool_load_sample', { tool: 'flow-mapper' });
             markTemplatePickerShown();
           }}
           onStartBlank={markTemplatePickerShown}

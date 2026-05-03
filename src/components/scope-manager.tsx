@@ -1,5 +1,10 @@
+import { SCOPE_TEMPLATES } from '@/data/scope-manager-templates';
+import { trackToolEvent } from '@/lib/analytics';
+import { buildShareUrl, clearShareHash, readSharedFromHash } from '@/lib/share-url';
+import { consumeHandoff } from '@/lib/tool-handoff';
+import { markToolSaved } from '@/lib/tool-storage';
 import { cn } from '@/lib/utils';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 type Score = 0 | 1 | 2 | 3;
 type Verdict = '未判定' | '作る' | '後回し' | '作らない';
@@ -210,7 +215,7 @@ function exportCsv(rows: Requirement[]): string {
 function exportMarkdown(rows: Requirement[]): string {
   const star = (n: Score) => (n === 0 ? '-' : '★'.repeat(n));
   const lines: string[] = [];
-  lines.push('# スコープ管理 結果（FM形式）');
+  lines.push('# スコープ管理 結果（優先度判定）');
   lines.push('');
   lines.push(
     '| ID | カテゴリ | 優先度 | 要求文 | ビジネス価値 | 現場で使えるか | 技術コスト | 判定 | メモ |'
@@ -261,15 +266,63 @@ export function ScopeManager() {
     } catch {
       // ignore
     }
+    const h = consumeHandoff('scope-manager');
+    if (h) {
+      setMarkdown(h.payload);
+      setParseHint(`${h.from} から要件を受け取りました。「要求文を抽出」を押してください。`);
+    }
+    const shared = readSharedFromHash<State>();
+    if (shared?.markdown !== undefined && Array.isArray(shared.requirements)) {
+      const ok = confirm(
+        '共有URLからスコープデータを読み込みます。現在の入力は上書きされます。続けますか？'
+      );
+      if (ok) {
+        setMarkdown(shared.markdown);
+        setRequirements(shared.requirements);
+        setParseHint('共有URLから読み込みました。');
+      }
+      clearShareHash();
+    }
+    trackToolEvent('tool_start', { tool: 'scope-manager' });
   }, []);
+
+  async function copyShareUrl() {
+    const { url, tooLong } = buildShareUrl<State>('/tools/scope-manager', {
+      markdown,
+      requirements,
+    });
+    if (tooLong && !confirm('共有URLが長くなっています。続行しますか？')) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('共有URLをコピーしました。');
+      trackToolEvent('tool_export', { tool: 'scope-manager', meta: { format: 'share-url' } });
+    } catch {
+      alert('クリップボードへのコピーに失敗しました。');
+    }
+  }
+
+  const completeFiredRef = useRef(false);
+  const exportCountRef = useRef(0);
+  const fireExportEvent = (format: string) => {
+    exportCountRef.current += 1;
+    trackToolEvent('tool_export', { tool: 'scope-manager', meta: { format } });
+    if (!completeFiredRef.current && requirements.length >= 3 && exportCountRef.current >= 1) {
+      completeFiredRef.current = true;
+      trackToolEvent('tool_complete', {
+        tool: 'scope-manager',
+        meta: { requirements: requirements.length, exports: exportCountRef.current },
+      });
+    }
+  };
 
   // persist
   useEffect(() => {
     if (!loadedFromStorage && requirements.length === 0 && markdown === '') return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ markdown, requirements }));
-    } catch {
-      // storage full or unavailable - ignore
+      markToolSaved('scope-manager');
+    } catch (err) {
+      console.warn('[scope-manager] localStorage 書き込み失敗:', err);
     }
   }, [markdown, requirements, loadedFromStorage]);
 
@@ -327,6 +380,7 @@ export function ScopeManager() {
   };
 
   const onLoadSample = async () => {
+    trackToolEvent('tool_load_sample', { tool: 'scope-manager' });
     try {
       const res = await fetch(SAMPLE_URL);
       const text = await res.text();
@@ -385,6 +439,32 @@ export function ScopeManager() {
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
+            <select
+              defaultValue=""
+              onChange={(e) => {
+                const tpl = SCOPE_TEMPLATES.find((t) => t.id === e.target.value);
+                if (!tpl) return;
+                setMarkdown(tpl.markdown);
+                setParseHint(
+                  `「${tpl.name}」テンプレートを読み込みました。「要求文を抽出」を押してください。`
+                );
+                trackToolEvent('tool_load_template', {
+                  tool: 'scope-manager',
+                  meta: { template: tpl.id },
+                });
+                e.target.value = '';
+              }}
+              className="inline-flex items-center px-4 py-3 min-h-[44px] text-sm font-semibold text-primary-700 bg-primary-50 border-2 border-primary-200 rounded-lg hover:bg-primary-100 transition-colors cursor-pointer"
+            >
+              <option value="" disabled>
+                業界別テンプレートから始める ▾
+              </option>
+              {SCOPE_TEMPLATES.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}（{t.industry}）
+                </option>
+              ))}
+            </select>
             <button
               type="button"
               onClick={onLoadSample}
@@ -504,21 +584,31 @@ export function ScopeManager() {
             <div className="ml-auto flex gap-2">
               <button
                 type="button"
-                onClick={() =>
-                  downloadFile('scope-result.csv', exportCsv(requirements), 'text/csv')
-                }
+                onClick={() => {
+                  downloadFile('scope-result.csv', exportCsv(requirements), 'text/csv');
+                  fireExportEvent('csv');
+                }}
                 className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 CSV出力
               </button>
               <button
                 type="button"
-                onClick={() =>
-                  downloadFile('scope-result.md', exportMarkdown(requirements), 'text/markdown')
-                }
+                onClick={() => {
+                  downloadFile('scope-result.md', exportMarkdown(requirements), 'text/markdown');
+                  fireExportEvent('markdown');
+                }}
                 className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Markdown出力
+              </button>
+              <button
+                type="button"
+                onClick={copyShareUrl}
+                className="px-3 py-2 text-sm font-medium text-secondary-700 bg-secondary-50 border border-secondary-300 rounded-lg hover:bg-secondary-100 transition-colors"
+                title="現在の入力と判定を共有URLとしてクリップボードにコピー"
+              >
+                共有URLをコピー
               </button>
             </div>
           </div>

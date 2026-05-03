@@ -16,10 +16,11 @@ const companyItems = [
 ];
 
 const toolsItems = [
-  { label: '発注準備キット (3ツール一覧)', href: '/tools' },
+  { label: '発注準備キット (全体像)', href: '/tools' },
   { label: '1. 業務フロー可視化ツール', href: '/tools/flow-mapper' },
   { label: '2. ユーザーストーリー作成ツール', href: '/tools/story-builder' },
   { label: '3. スコープ管理ツール', href: '/tools/scope-manager' },
+  { label: '4. RFPドラフト自動生成', href: '/tools/rfp-builder' },
 ];
 
 const demoItems = [
