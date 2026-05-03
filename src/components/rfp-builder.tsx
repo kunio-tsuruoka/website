@@ -1,5 +1,11 @@
 import { trackToolEvent } from '@/lib/analytics';
-import { EMPTY_INPUTS, type RfpInputs, buildRfpMarkdown } from '@/lib/build-rfp-draft';
+import {
+  EMPTY_INPUTS,
+  type RfpInputs,
+  buildRfpHtml,
+  buildRfpMarkdown,
+  buildRfpPlainText,
+} from '@/lib/build-rfp-draft';
 import { useEffect, useState } from 'react';
 
 const STORAGE_KEY = 'beekle-rfp-builder-v1';
@@ -51,10 +57,31 @@ export function RfpBuilder() {
     trackToolEvent('tool_save', { tool: 'flow-mapper', meta: { variant: 'rfp-builder' } });
   }
 
-  function download() {
-    const md = preview || buildRfpMarkdown(inputs);
-    downloadFile(`rfp-draft-${new Date().toISOString().slice(0, 10)}.md`, md, 'text/markdown');
+  const ts = () => new Date().toISOString().slice(0, 10);
+
+  function downloadMarkdown() {
+    downloadFile(`rfp-draft-${ts()}.md`, buildRfpMarkdown(inputs), 'text/markdown');
     trackToolEvent('tool_export', { tool: 'flow-mapper', meta: { format: 'rfp-markdown' } });
+  }
+
+  function downloadPlainText() {
+    downloadFile(`rfp-draft-${ts()}.txt`, buildRfpPlainText(inputs), 'text/plain');
+    trackToolEvent('tool_export', { tool: 'flow-mapper', meta: { format: 'rfp-plaintext' } });
+  }
+
+  function openHtmlForPrint() {
+    const html = buildRfpHtml(inputs);
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const w = window.open(url, '_blank');
+    if (!w) {
+      alert('ポップアップがブロックされました。ブラウザの設定で許可してください。');
+      URL.revokeObjectURL(url);
+      return;
+    }
+    // 開いたタブで印刷ダイアログを少し遅らせて開く
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    trackToolEvent('tool_export', { tool: 'flow-mapper', meta: { format: 'rfp-html-print' } });
   }
 
   function copyToClipboard() {
@@ -177,11 +204,30 @@ export function RfpBuilder() {
           </button>
           <button
             type="button"
-            onClick={download}
+            onClick={downloadPlainText}
+            disabled={!preview}
+            className="px-4 py-3 min-h-[44px] text-sm font-semibold text-secondary-700 bg-secondary-50 border border-secondary-300 rounded-lg hover:bg-secondary-100 disabled:opacity-40"
+            title="社内共有しやすい体裁の.txtをダウンロード（記号なし、フォントOK）"
+          >
+            テキスト(.txt)でダウンロード
+          </button>
+          <button
+            type="button"
+            onClick={openHtmlForPrint}
+            disabled={!preview}
+            className="px-4 py-3 min-h-[44px] text-sm font-semibold text-secondary-700 bg-secondary-50 border border-secondary-300 rounded-lg hover:bg-secondary-100 disabled:opacity-40"
+            title="HTMLを別タブで開きます。ブラウザの印刷ダイアログから「PDFとして保存」できます"
+          >
+            HTMLで開く（PDF印刷用）
+          </button>
+          <button
+            type="button"
+            onClick={downloadMarkdown}
             disabled={!preview}
             className="px-4 py-3 min-h-[44px] text-sm font-semibold text-primary-700 bg-primary-50 border border-primary-300 rounded-lg hover:bg-primary-100 disabled:opacity-40"
+            title="開発会社にそのまま渡せる Markdown形式"
           >
-            Markdownをダウンロード
+            Markdownでダウンロード
           </button>
           <button
             type="button"
@@ -192,6 +238,9 @@ export function RfpBuilder() {
             クリップボードにコピー
           </button>
         </div>
+        <p className="mt-2 text-xs text-gray-500 leading-relaxed">
+          社内・上長への共有なら「テキスト(.txt)」または「HTMLで開く（PDF印刷用）」がおすすめ。開発会社に渡すなら「Markdown」。
+        </p>
         {preview && (
           <details open className="mt-4">
             <summary className="text-sm text-gray-600 cursor-pointer">プレビュー</summary>

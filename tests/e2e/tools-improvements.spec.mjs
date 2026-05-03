@@ -27,7 +27,13 @@ const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
 // ───────────────── Scenario 1: 4ページとも 200 + 主要要素 ─────────────────
 {
   const page = await ctx.newPage();
-  for (const path of ['/tools', '/tools/flow-mapper', '/tools/story-builder', '/tools/scope-manager', '/tools/rfp-builder']) {
+  for (const path of [
+    '/tools',
+    '/tools/flow-mapper',
+    '/tools/story-builder',
+    '/tools/scope-manager',
+    '/tools/rfp-builder',
+  ]) {
     const res = await page.goto(`${BASE}${path}`, { waitUntil: 'domcontentloaded' });
     const status = res?.status() ?? 0;
     record(`page ${path} status 200`, status === 200, `status=${status}`);
@@ -66,9 +72,7 @@ const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
   const page = await ctx.newPage();
   await page.goto(`${BASE}/tools/flow-mapper`, { waitUntil: 'networkidle' });
   // テンプレモーダルが出ていれば選ぶ (受注〜出荷を読み込み)
-  await page.evaluate(() =>
-    localStorage.setItem('beekle-flow-mapper-template-picker-shown', '1')
-  );
+  await page.evaluate(() => localStorage.setItem('beekle-flow-mapper-template-picker-shown', '1'));
   await page.reload({ waitUntil: 'networkidle' });
   // サンプル読込ボタン
   const loadSample = page.getByRole('button', { name: 'サンプルを読込' });
@@ -90,7 +94,11 @@ const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
 
     await page.waitForTimeout(500);
     // textarea に流し込まれたか
-    const textareaVal = await page.locator('textarea').first().inputValue().catch(() => '');
+    const textareaVal = await page
+      .locator('textarea')
+      .first()
+      .inputValue()
+      .catch(() => '');
     const hasHandoff = textareaVal.includes('業務名') || textareaVal.includes('改善');
     record('story-builder: handoff payload 受信', hasHandoff, `len=${textareaVal.length}`);
   }
@@ -125,7 +133,7 @@ const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
     await page.waitForTimeout(500);
     const clipText = await page.evaluate(() => navigator.clipboard.readText());
     const valid = clipText.includes('/tools/scope-manager#share=');
-    record('scope-manager: 共有URL 形式', valid, valid ? clipText.slice(0, 80) + '...' : clipText);
+    record('scope-manager: 共有URL 形式', valid, valid ? `${clipText.slice(0, 80)}...` : clipText);
 
     if (valid) {
       // 別タブで開いてデータ復元 (confirm は accept、上書き挙動を信頼)
@@ -133,7 +141,11 @@ const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
       tab2.on('dialog', (d) => d.accept()); // confirm を accept
       await tab2.goto(clipText, { waitUntil: 'networkidle' });
       await tab2.waitForTimeout(800);
-      const ta = await tab2.locator('textarea').first().inputValue().catch(() => '');
+      const ta = await tab2
+        .locator('textarea')
+        .first()
+        .inputValue()
+        .catch(() => '');
       record(
         'scope-manager: 共有URL 受信時に markdown 復元',
         ta.length > 0,
@@ -152,9 +164,7 @@ const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
 
   // flow-mapper にサンプル投入
   await page.goto(`${BASE}/tools/flow-mapper`, { waitUntil: 'networkidle' });
-  await page.evaluate(() =>
-    localStorage.setItem('beekle-flow-mapper-template-picker-shown', '1')
-  );
+  await page.evaluate(() => localStorage.setItem('beekle-flow-mapper-template-picker-shown', '1'));
   await page.reload({ waitUntil: 'networkidle' });
   const loadSample = page.getByRole('button', { name: 'サンプルを読込' });
   if ((await loadSample.count()) > 0) {
@@ -169,7 +179,11 @@ const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
   // 生成ボタン
   await page.getByRole('button', { name: 'RFPドラフトを生成' }).click();
   await page.waitForTimeout(500);
-  const previewText = await page.locator('pre').first().innerText().catch(() => '');
+  const previewText = await page
+    .locator('pre')
+    .first()
+    .innerText()
+    .catch(() => '');
   const hasProj = previewText.includes('E2E テストプロジェクト');
   const hasFlow = previewText.includes('業務名') || previewText.includes('現状業務');
   record('rfp-builder: プレビューにプロジェクト名', hasProj);
@@ -182,9 +196,9 @@ await browser.close();
 // ───────────────── レポート ─────────────────
 const passed = results.filter((r) => r.ok).length;
 const failed = results.filter((r) => !r.ok).length;
-console.log(`\n========================================`);
+console.log('\n========================================');
 console.log(`Total: ${results.length} / Passed: ${passed} / Failed: ${failed}`);
-console.log(`========================================`);
+console.log('========================================');
 if (failed > 0) {
   console.log('\nFailed tests:');
   for (const r of results.filter((x) => !x.ok)) console.log(`  ✗ ${r.name} — ${r.detail}`);

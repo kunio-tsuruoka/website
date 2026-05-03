@@ -20,8 +20,9 @@ export function writeHandoff(input: Omit<Handoff, 'expires'>): void {
   try {
     const data: Handoff = { ...input, expires: Date.now() + TTL_MS };
     localStorage.setItem(HANDOFF_KEY, JSON.stringify(data));
-  } catch {
-    /* storage full or disabled */
+  } catch (err) {
+    // QuotaExceededError 等。ハンドオフは ephemeral なので失敗しても致命的ではないが警告は出す
+    console.warn('[tool-handoff] localStorage 書き込み失敗:', err);
   }
 }
 

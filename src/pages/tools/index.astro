@@ -1,6 +1,7 @@
 ---
 import { Header } from '../../components/header';
 import JsonLd from '../../components/seo/json-ld.astro';
+import { ToolWizard } from '../../components/tool-wizard';
 import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import Layout from '../../layouts/layout.astro';
@@ -56,6 +57,11 @@ import Layout from '../../layouts/layout.astro';
 
     <section class="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
       <div class="container mx-auto px-6 md:px-8 max-w-6xl">
+        {/* ウィザード型オンボーディング: 状況に応じてスタート地点を提案 */}
+        <div class="mb-12">
+          <ToolWizard client:load />
+        </div>
+
         {/* 全体の流れ */}
         <div class="mb-12 p-6 md:p-8 bg-gradient-to-br from-primary-50 to-white border-2 border-primary-200 rounded-2xl">
           <h2 class="text-lg md:text-xl font-bold text-primary-900 mb-4">

@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
 
 const MAX_IMPORT_BYTES = 2_000_000;
+const STORAGE_KEY = 'beekle-story-builder-v1';
 
 type EarsType = '常時' | 'イベント駆動' | '状態駆動' | 'オプション' | '異常系';
 type Priority = '必須' | '推奨' | '任意';
@@ -72,7 +73,30 @@ export function StoryBuilder() {
   const completeFiredRef = useRef(false);
   const exportCountRef = useRef(0);
 
+  const [loadedFromStorage, setLoadedFromStorage] = useState(false);
+
+  // localStorage から復元 (RFPビルダーから読み出せるよう永続化)
   useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as {
+          description?: string;
+          result?: ApiResult | null;
+          counts?: { happy: number; unwanted: number; boundary: number };
+        };
+        if (parsed.description) setDescription(parsed.description);
+        if (parsed.result) setResult(parsed.result);
+        if (parsed.counts) {
+          setHappyCount(parsed.counts.happy);
+          setUnwantedCount(parsed.counts.unwanted);
+          setBoundaryCount(parsed.counts.boundary);
+        }
+        setLoadedFromStorage(true);
+      }
+    } catch {
+      // ignore
+    }
     const h = consumeHandoff('story-builder');
     if (h) {
       setDescription(h.payload);
@@ -100,6 +124,23 @@ export function StoryBuilder() {
     }
     trackToolEvent('tool_start', { tool: 'story-builder' });
   }, []);
+
+  // 自動永続化
+  useEffect(() => {
+    if (!loadedFromStorage && !result && description === SAMPLE_TEXT) return;
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          description,
+          result,
+          counts: { happy: happyCount, unwanted: unwantedCount, boundary: boundaryCount },
+        })
+      );
+    } catch {
+      // ignore
+    }
+  }, [description, result, happyCount, unwantedCount, boundaryCount, loadedFromStorage]);
 
   async function copyShareUrl() {
     const { url, tooLong } = buildShareUrl('/tools/story-builder', {
