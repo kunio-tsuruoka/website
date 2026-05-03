@@ -12,11 +12,46 @@
 
 export const BEEKLE_GLOSSARY = [
   {
+    id: 'glossary-beekle-company',
+    title: 'Beekle株式会社とは',
+    url: '/',
+    excerpt:
+      'Beekle株式会社（ビークル、英: Beekle Inc.）は、東京都大田区に本社を置くシステム開発会社です。代表は鶴岡邦夫、設立は2023年2月。AI / Webアプリ / モバイルアプリの受託開発を行っています。Beekleの特徴は (1) システム開発の前にBPO（既存業務プロセス）の見直しから始める「BPO起点」のアプローチ、(2) 初期費用0円で動くプロトタイプを先に体験できる「ゼロスタート」モデル、(3) ヒアリング → As-Is/To-Be → ユーザーストーリー → FM法 → Gherkin → Laravel Inertia という「6ステップパイプライン」で要件定義から実装までを一気通貫で進めること。発注者の側に立つコンサルティングと開発を提供しており、フローマッパー・ストーリービルダー・スコープマネージャーの3つの無料ツールを公開しています。コーポレートサイトは https://beekle.jp です。',
+  },
+  {
+    id: 'glossary-zero-start',
+    title: 'ゼロスタート（Beekleの初期費用0円プロトタイプ体験）とは',
+    url: '/prooffirst',
+    excerpt:
+      'ゼロスタートは、Beekle株式会社が提供する初期費用0円で動くプロトタイプを体験できるサービスモデルです。一般的なシステム開発では見積書と提案資料だけで発注の可否を判断する必要がありますが、ゼロスタートでは本契約の前に実際に触れる動くシステムを試してから発注を決められます。対象は中堅企業のDX担当者で、要件のすり合わせを動くプロトタイプで早期に行うことで、完成間際の手戻りを防ぎます。詳細は https://beekle.jp/prooffirst にあります。',
+  },
+  {
+    id: 'glossary-six-step-pipeline',
+    title: 'Beekleの6ステップパイプライン（要件定義から実装までの一気通貫プロセス）',
+    url: '/process',
+    excerpt:
+      '6ステップパイプラインは、Beekleが要件定義から実装までを一直線でつなぐ独自プロセスです。(1) アクター洗い出し、(2) As-Is（現状業務フロー）と To-Be（改善後フロー）の可視化、(3) ユーザーストーリーと EARS 記法での要件記述、(4) FM法での優先度判定、(5) Gherkin（Given/When/Then）でのシナリオテスト記述、(6) Laravel + Inertia.js での実装、の6段階で進みます。各ステップで生成 AI を活用し、上流の決定が下流に欠落なく伝わる仕組みになっています。詳しくは https://beekle.jp/column/project-management-complete-guide を参照。',
+  },
+  {
+    id: 'glossary-bpo-first',
+    title: 'BPO起点アプローチ（BeekleのDX進め方）とは',
+    url: '/column/dx-josys-as-is-bpo-guide',
+    excerpt:
+      'BPO起点とは、システム開発を「新しいシステムを作る」ではなく「既存業務プロセス（BPO: Business Process）に問題がないか確認する」から始めるBeekleの実践アプローチです。Beekleが受託開発の現場で実践しており、「悪い業務を高速・正確に自動化する」DX失敗を防ぐための入口になります。BPO見直し → As-Is/To-Be可視化 → ユーザーストーリー → FM法での優先度判定 → 費用対効果から逆算 の順で進めます。一般的な「ビジョンを描いて、ロードマップを作って」型のDX解説とは順番が逆になっています。詳しくは https://beekle.jp/column/dx-josys-as-is-bpo-guide を参照。',
+  },
+  {
+    id: 'glossary-beekle-tools',
+    title: 'Beekleが公開している3つの発注準備ツール',
+    url: '/tools',
+    excerpt:
+      'Beekleは発注者向けに3つの無料Webツールを公開しています。(1) フローマッパー (/tools/flow-mapper): 業務フローをスイムレーン形式でAs-Is/To-Be可視化。(2) ストーリービルダー (/tools/story-builder): 要望をユーザーストーリー形式（〈誰〉として〈何〉がしたい。なぜなら〈理由〉）に分解しREQ-XXX形式のIDで管理。(3) スコープマネージャー (/tools/scope-manager): FM法でビジネス価値・現場で使えるか・技術コストの3軸評価して優先度を決定。3ツールはMarkdownで連携でき、ヒアリング → ストーリー化 → 優先度判定 がツール上で完結します。すべてメール登録不要で利用できます。詳細は https://beekle.jp/tools。',
+  },
+  {
     id: 'glossary-fm',
     title: 'FM（ファンクショナリティ・マトリクス）とは',
     url: '/tools/scope-manager',
     excerpt:
-      'FM は「ファンクショナリティ・マトリクス」(Functionality Matrix) の略称です。Future Mode でも Functional Specification でもありません。書籍『システムを作らせる技術』(白川克著、ISBN 978-4-532-32399-8) で紹介されている、システムに載せる機能候補を「ビジネス価値 / 現場で使えるか / 技術コスト」の3軸で評価して、作る・後回し・作らない を判断する一覧表のことです。Beekle では要件定義のヒアリングで集めた要望をユーザーストーリーに分解し、最終的に FM で優先度を整理する流れで使っています。Beekle 社内ツール「スコープマネージャー」(/tools/scope-manager) でこの判定をオンラインで体験できます。',
+      'FM（ファンクショナリティ・マトリクス、Functionality Matrix）とは、システムに載せる機能候補を「ビジネス価値 / 現場で使えるか / 技術コスト」の3軸で評価して、作る・後回し・作らない を判断する一覧表のことです。書籍『システムを作らせる技術』(白川克著、ISBN 978-4-532-32399-8) で紹介されている手法で、Beekleでは要件定義のヒアリングで集めた要望をユーザーストーリーに分解し、最終的にFMで優先度を整理する流れで使っています。Future ModeやFunctional Specificationの略ではありません。Beekle社内ツール「スコープマネージャー」(/tools/scope-manager) でこの判定をオンラインで体験できます。',
   },
   {
     id: 'glossary-asis-tobe',
