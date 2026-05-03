@@ -1,5 +1,6 @@
 import { STORY_TEMPLATES } from '@/data/story-builder-templates';
 import { trackToolEvent } from '@/lib/analytics';
+import { buildShareUrl, clearShareHash, readSharedFromHash } from '@/lib/share-url';
 import { consumeHandoff, writeHandoff } from '@/lib/tool-handoff';
 import { cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
@@ -78,8 +79,43 @@ export function StoryBuilder() {
       setError(null);
       setResult(null);
     }
+    type Shared = {
+      description: string;
+      result: ApiResult | null;
+      counts: { happy: number; unwanted: number; boundary: number };
+    };
+    const shared = readSharedFromHash<Shared>();
+    if (shared?.description) {
+      const ok = confirm('共有URLから読み込みます。現在の内容は上書きされます。続けますか？');
+      if (ok) {
+        setDescription(shared.description);
+        setResult(shared.result ?? null);
+        if (shared.counts) {
+          setHappyCount(shared.counts.happy);
+          setUnwantedCount(shared.counts.unwanted);
+          setBoundaryCount(shared.counts.boundary);
+        }
+      }
+      clearShareHash();
+    }
     trackToolEvent('tool_start', { tool: 'story-builder' });
   }, []);
+
+  async function copyShareUrl() {
+    const { url, tooLong } = buildShareUrl('/tools/story-builder', {
+      description,
+      result,
+      counts: { happy: happyCount, unwanted: unwantedCount, boundary: boundaryCount },
+    });
+    if (tooLong && !confirm('共有URLが長くなっています。続行しますか？')) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('共有URLをコピーしました。');
+      fireExportEvent('share-url');
+    } catch {
+      alert('クリップボードへのコピーに失敗しました。');
+    }
+  }
 
   function sendToScopeManager() {
     if (!result) return;
@@ -459,6 +495,14 @@ export function StoryBuilder() {
                 title="この出力を取り込んで「作る／後回し／作らない」を判定する"
               >
                 スコープ管理に送る →
+              </button>
+              <button
+                type="button"
+                onClick={copyShareUrl}
+                className="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                title="現在の入力と生成結果を共有URLとしてクリップボードにコピー"
+              >
+                共有URLをコピー
               </button>
             </div>
             <details className="mt-4">

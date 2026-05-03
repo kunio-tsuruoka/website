@@ -1,5 +1,6 @@
 import { SCOPE_TEMPLATES } from '@/data/scope-manager-templates';
 import { trackToolEvent } from '@/lib/analytics';
+import { buildShareUrl, clearShareHash, readSharedFromHash } from '@/lib/share-url';
 import { consumeHandoff } from '@/lib/tool-handoff';
 import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -269,8 +270,35 @@ export function ScopeManager() {
       setMarkdown(h.payload);
       setParseHint(`${h.from} から要件を受け取りました。「要求文を抽出」を押してください。`);
     }
+    const shared = readSharedFromHash<State>();
+    if (shared?.markdown !== undefined && Array.isArray(shared.requirements)) {
+      const ok = confirm(
+        '共有URLからスコープデータを読み込みます。現在の入力は上書きされます。続けますか？'
+      );
+      if (ok) {
+        setMarkdown(shared.markdown);
+        setRequirements(shared.requirements);
+        setParseHint('共有URLから読み込みました。');
+      }
+      clearShareHash();
+    }
     trackToolEvent('tool_start', { tool: 'scope-manager' });
   }, []);
+
+  async function copyShareUrl() {
+    const { url, tooLong } = buildShareUrl<State>('/tools/scope-manager', {
+      markdown,
+      requirements,
+    });
+    if (tooLong && !confirm('共有URLが長くなっています。続行しますか？')) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('共有URLをコピーしました。');
+      trackToolEvent('tool_export', { tool: 'scope-manager', meta: { format: 'share-url' } });
+    } catch {
+      alert('クリップボードへのコピーに失敗しました。');
+    }
+  }
 
   const completeFiredRef = useRef(false);
   const exportCountRef = useRef(0);
@@ -571,6 +599,14 @@ export function ScopeManager() {
                 className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Markdown出力
+              </button>
+              <button
+                type="button"
+                onClick={copyShareUrl}
+                className="px-3 py-2 text-sm font-medium text-secondary-700 bg-secondary-50 border border-secondary-300 rounded-lg hover:bg-secondary-100 transition-colors"
+                title="現在の入力と判定を共有URLとしてクリップボードにコピー"
+              >
+                共有URLをコピー
               </button>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import { trackToolEvent } from '@/lib/analytics';
+import { clearShareHash, readSharedFromHash } from '@/lib/share-url';
 import { writeHandoff } from '@/lib/tool-handoff';
 import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -13,6 +14,7 @@ import { SuggestionsPanel } from './components/SuggestionsPanel';
 import { SwimlaneCanvas } from './components/SwimlaneCanvas';
 import { TemplatePicker } from './components/TemplatePicker';
 import { useFlowStore } from './store';
+import type { State as FlowState } from './types';
 import type { DiagramTarget } from './types';
 
 const TEMPLATE_PICKER_FLAG = 'beekle-flow-mapper-template-picker-shown';
@@ -59,9 +61,25 @@ export function FlowMapper() {
   const resetAll = useFlowStore((s) => s.resetAll);
   const copyToBeFromAsIs = useFlowStore((s) => s.copyToBeFromAsIs);
 
+  const importStateFromJson = useFlowStore((s) => s.importStateFromJson);
   const target: DiagramTarget = view === 'toBe' ? 'toBe' : 'asIs';
   const activeDiagram = view === 'compare' ? null : view === 'toBe' ? toBe : asIs;
   const state = useMemo(() => ({ asIs, toBe }), [asIs, toBe]);
+  const [sharedView, setSharedView] = useState(false);
+
+  useEffect(() => {
+    const shared = readSharedFromHash<FlowState>();
+    if (shared?.asIs?.lanes && shared?.toBe?.lanes) {
+      const ok = confirm(
+        '共有URLからフローを読み込みます。現在編集中のデータは上書きされます。続けますか？'
+      );
+      if (ok) {
+        importStateFromJson(shared);
+        setSharedView(true);
+      }
+      clearShareHash();
+    }
+  }, [importStateFromJson]);
 
   useEffect(() => {
     hydrateOnboardingFromStorage();

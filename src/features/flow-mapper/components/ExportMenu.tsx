@@ -1,3 +1,4 @@
+import { buildShareUrl } from '@/lib/share-url';
 import { type ChangeEvent, useState } from 'react';
 import { STORAGE_KEY } from '../constants';
 import { useFlowStore } from '../store';
@@ -88,6 +89,27 @@ export function ExportMenu({
     setOpen(false);
   }
 
+  async function copyShareUrl() {
+    const { url, tooLong } = buildShareUrl('/tools/flow-mapper', state);
+    if (tooLong) {
+      const ok = confirm(
+        '共有URLが長くなっています。一部ブラウザで開けない可能性がありますが続行しますか？'
+      );
+      if (!ok) {
+        setOpen(false);
+        return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('共有URLをコピーしました。送付先に貼り付けてください。');
+      onExport?.('share-url');
+    } catch {
+      alert('クリップボードへのコピーに失敗しました。');
+    }
+    setOpen(false);
+  }
+
   const isCompareView = view === 'compare';
 
   return (
@@ -165,6 +187,13 @@ export function ExportMenu({
               className="w-full text-left px-3 py-2 text-xs hover:bg-gray-50 border-t border-gray-100"
             >
               印刷／PDF保存
+            </button>
+            <button
+              type="button"
+              onClick={copyShareUrl}
+              className="w-full text-left px-3 py-2 text-xs hover:bg-gray-50 border-t border-gray-100"
+            >
+              共有URLをコピー（読み取り用）
             </button>
           </div>
         </>
