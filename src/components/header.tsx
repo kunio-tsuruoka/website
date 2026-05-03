@@ -16,9 +16,10 @@ const companyItems = [
 ];
 
 const toolsItems = [
-  { label: 'ユーザーストーリー作成ツール', href: '/tools/story-builder' },
-  { label: 'スコープ管理ツール', href: '/tools/scope-manager' },
-  { label: '業務フロー可視化ツール', href: '/tools/flow-mapper' },
+  { label: '発注準備キット (3ツール一覧)', href: '/tools' },
+  { label: '1. 業務フロー可視化ツール', href: '/tools/flow-mapper' },
+  { label: '2. ユーザーストーリー作成ツール', href: '/tools/story-builder' },
+  { label: '3. スコープ管理ツール', href: '/tools/scope-manager' },
 ];
 
 const demoItems = [
@@ -99,7 +100,8 @@ export function Header() {
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="text-neutral-600 hover:text-accent-600 focus:outline-none"
+            aria-label="メニューを開閉"
+            className="text-neutral-600 hover:text-accent-600 focus:outline-none p-3 -m-3"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +166,7 @@ export function Header() {
               お客様の声
             </a>
           </li>
-          <Dropdown label="要件定義支援ツール" items={toolsItems} />
+          <Dropdown label="発注準備キット" items={toolsItems} />
           <Dropdown label="生成AIデモ集" items={demoItems} />
           <Dropdown label="会社情報" items={companyItems} />
           <li>
@@ -247,7 +249,7 @@ export function Header() {
                 </ul>
               </li>
               <li className="border-t border-white/20 pt-4 w-full text-center">
-                <p className="text-white/60 text-sm mb-2">要件定義支援ツール</p>
+                <p className="text-white/60 text-sm mb-2">発注準備キット</p>
                 <ul className="space-y-2">
                   {toolsItems.map((item) => (
                     <li key={item.href}>
