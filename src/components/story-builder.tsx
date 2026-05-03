@@ -2,6 +2,7 @@ import { STORY_TEMPLATES } from '@/data/story-builder-templates';
 import { trackToolEvent } from '@/lib/analytics';
 import { buildShareUrl, clearShareHash, readSharedFromHash } from '@/lib/share-url';
 import { consumeHandoff, writeHandoff } from '@/lib/tool-handoff';
+import { markToolSaved } from '@/lib/tool-storage';
 import { cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
 
@@ -137,8 +138,9 @@ export function StoryBuilder() {
           counts: { happy: happyCount, unwanted: unwantedCount, boundary: boundaryCount },
         })
       );
-    } catch {
-      // ignore
+      markToolSaved('story-builder');
+    } catch (err) {
+      console.warn('[story-builder] localStorage 書き込み失敗:', err);
     }
   }, [description, result, happyCount, unwantedCount, boundaryCount, loadedFromStorage]);
 

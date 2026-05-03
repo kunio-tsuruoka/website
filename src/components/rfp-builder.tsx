@@ -6,6 +6,7 @@ import {
   buildRfpMarkdown,
   buildRfpPlainText,
 } from '@/lib/build-rfp-draft';
+import { markToolSaved } from '@/lib/tool-storage';
 import { useEffect, useState } from 'react';
 
 const STORAGE_KEY = 'beekle-rfp-builder-v1';
@@ -42,8 +43,9 @@ export function RfpBuilder() {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(inputs));
-    } catch {
-      /* ignore */
+      markToolSaved('rfp-builder');
+    } catch (err) {
+      console.warn('[rfp-builder] localStorage 書き込み失敗:', err);
     }
   }, [inputs]);
 

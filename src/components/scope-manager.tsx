@@ -2,6 +2,7 @@ import { SCOPE_TEMPLATES } from '@/data/scope-manager-templates';
 import { trackToolEvent } from '@/lib/analytics';
 import { buildShareUrl, clearShareHash, readSharedFromHash } from '@/lib/share-url';
 import { consumeHandoff } from '@/lib/tool-handoff';
+import { markToolSaved } from '@/lib/tool-storage';
 import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -319,8 +320,9 @@ export function ScopeManager() {
     if (!loadedFromStorage && requirements.length === 0 && markdown === '') return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ markdown, requirements }));
-    } catch {
-      // storage full or unavailable - ignore
+      markToolSaved('scope-manager');
+    } catch (err) {
+      console.warn('[scope-manager] localStorage 書き込み失敗:', err);
     }
   }, [markdown, requirements, loadedFromStorage]);
 

@@ -1,4 +1,5 @@
 ---
+import { DataHousekeeping } from '../../components/data-housekeeping';
 import { Header } from '../../components/header';
 import JsonLd from '../../components/seo/json-ld.astro';
 import { ToolWizard } from '../../components/tool-wizard';
@@ -100,7 +101,6 @@ import Layout from '../../layouts/layout.astro';
                   <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
                     業務フロー可視化ツール
                   </h3>
-                  <span class="text-xs text-gray-500">/tools/flow-mapper</span>
                 </div>
                 <p class="text-sm text-gray-700 leading-relaxed mb-3">
                   現状の業務（誰が・何を・どのツールで・どれくらい時間をかけて）を図にして、改善後（To-Be）の姿まで関係者と合意できるツール。AI／DX 導入の「どこをDXすべきか」の判断にも使えます。
@@ -132,7 +132,6 @@ import Layout from '../../layouts/layout.astro';
                   <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
                     ユーザーストーリー作成ツール
                   </h3>
-                  <span class="text-xs text-gray-500">/tools/story-builder</span>
                 </div>
                 <p class="text-sm text-gray-700 leading-relaxed mb-3">
                   頭の中にある「こうしたい」を文章で書くだけで、AIが要件のたたき台（誰が／何を／なぜ）と、見落としやすい失敗パターンまで自動生成。開発会社との打ち合わせ前の抜け漏れチェックに使えます。
@@ -164,7 +163,6 @@ import Layout from '../../layouts/layout.astro';
                   <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
                     スコープ管理ツール
                   </h3>
-                  <span class="text-xs text-gray-500">/tools/scope-manager</span>
                 </div>
                 <p class="text-sm text-gray-700 leading-relaxed mb-3">
                   Step2 で出した要件を「作る／後回し／作らない」に振り分けるツール。ビジネス価値・現場で使えるか・技術コストの3軸で評価して、開発会社や社内の合意形成を加速します。書籍『システムを作らせる技術』のFM手法に準拠。
@@ -196,14 +194,13 @@ import Layout from '../../layouts/layout.astro';
                   <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
                     RFPドラフト自動生成 <span class="text-xs font-medium text-primary-500 align-middle ml-1">最終アウトプット</span>
                   </h3>
-                  <span class="text-xs text-gray-500">/tools/rfp-builder</span>
                 </div>
                 <p class="text-sm text-gray-700 leading-relaxed mb-3">
                   Step 1〜3 で作ったデータと、ここで入力するプロジェクト基本情報（名称・予算・希望時期等）を統合して、開発会社に渡せる RFP（提案依頼書）の Markdown ドラフトを自動生成します。
                 </p>
                 <ul class="text-xs text-gray-600 space-y-1">
                   <li>・ 章立て: 概要／背景／現状／改善後／要件と優先度／提案依頼／連絡先</li>
-                  <li>・ 各ツールの localStorage を読み込んで自動で章を埋める</li>
+                  <li>・ 各ツールがブラウザに保存しているデータを読み込んで自動で章を埋める</li>
                   <li>・ Markdown でダウンロード、クリップボードにコピー</li>
                   <li>・ 単独でも基本情報だけ書いて RFP テンプレとして使える</li>
                 </ul>
@@ -213,6 +210,11 @@ import Layout from '../../layouts/layout.astro';
               </div>
             </div>
           </a>
+        </div>
+
+        {/* 保存データ管理 */}
+        <div class="mb-12">
+          <DataHousekeeping client:load />
         </div>
 
         {/* 使い方の補足 */}
