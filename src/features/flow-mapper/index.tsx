@@ -1,4 +1,5 @@
 import { trackToolEvent } from '@/lib/analytics';
+import { writeHandoff } from '@/lib/tool-handoff';
 import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CompareView } from './components/CompareView';
@@ -244,6 +245,34 @@ export function FlowMapper() {
             ) : null}
           </button>
           <ExportMenu state={state} view={view} onExport={handleToolExport} />
+          <button
+            type="button"
+            onClick={() => {
+              const diagram = view === 'toBe' ? toBe : asIs;
+              if (diagram.steps.length === 0) {
+                alert('まずステップを追加してください。');
+                return;
+              }
+              const lines = diagram.steps.map((s) => {
+                const lane = diagram.lanes.find((l) => l.id === s.laneId)?.name ?? '';
+                const tool = s.tool ? `（${s.tool}使用）` : '';
+                const pain = s.pain ? ` / 課題: ${s.pain}` : '';
+                return `- ${lane}: ${s.label}${tool}${pain}`;
+              });
+              const text = `業務名: ${diagram.title || '業務フロー'}\n\n以下の業務をシステム化／改善したい:\n${lines.join('\n')}`;
+              writeHandoff({ from: 'flow-mapper', target: 'story-builder', payload: text });
+              trackToolEvent('tool_export', {
+                tool: 'flow-mapper',
+                meta: { format: 'handoff-story-builder', view },
+              });
+              window.location.href = '/tools/story-builder';
+            }}
+            disabled={view === 'compare'}
+            className="px-3 py-2.5 sm:py-1.5 min-h-[44px] sm:min-h-0 text-xs font-medium text-secondary-700 bg-secondary-50 border border-secondary-200 rounded-lg hover:bg-secondary-100 disabled:opacity-40"
+            title="このフローをユーザーストーリー作成ツールに送って要件のたたき台を作る"
+          >
+            ストーリーに送る →
+          </button>
           <button
             type="button"
             onClick={handleResetAll}

@@ -1,5 +1,6 @@
 import { STORY_TEMPLATES } from '@/data/story-builder-templates';
 import { trackToolEvent } from '@/lib/analytics';
+import { consumeHandoff, writeHandoff } from '@/lib/tool-handoff';
 import { cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
 
@@ -71,8 +72,25 @@ export function StoryBuilder() {
   const exportCountRef = useRef(0);
 
   useEffect(() => {
+    const h = consumeHandoff('story-builder');
+    if (h) {
+      setDescription(h.payload);
+      setError(null);
+      setResult(null);
+    }
     trackToolEvent('tool_start', { tool: 'story-builder' });
   }, []);
+
+  function sendToScopeManager() {
+    if (!result) return;
+    writeHandoff({
+      from: 'story-builder',
+      target: 'scope-manager',
+      payload: buildMarkdown(result),
+    });
+    fireExportEvent('handoff-scope-manager');
+    window.location.href = '/tools/scope-manager';
+  }
 
   const fireExportEvent = (format: string) => {
     exportCountRef.current += 1;
@@ -433,6 +451,14 @@ export function StoryBuilder() {
                 className="px-4 py-2 text-sm font-semibold text-primary-500 border border-primary-300 rounded-md hover:bg-primary-50"
               >
                 クリップボードにコピー
+              </button>
+              <button
+                type="button"
+                onClick={sendToScopeManager}
+                className="px-4 py-2 text-sm font-semibold text-secondary-700 bg-secondary-50 border border-secondary-300 rounded-md hover:bg-secondary-100"
+                title="この出力を取り込んで「作る／後回し／作らない」を判定する"
+              >
+                スコープ管理に送る →
               </button>
             </div>
             <details className="mt-4">

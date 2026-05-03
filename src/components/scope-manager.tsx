@@ -1,5 +1,6 @@
 import { SCOPE_TEMPLATES } from '@/data/scope-manager-templates';
 import { trackToolEvent } from '@/lib/analytics';
+import { consumeHandoff } from '@/lib/tool-handoff';
 import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -262,6 +263,11 @@ export function ScopeManager() {
       }
     } catch {
       // ignore
+    }
+    const h = consumeHandoff('scope-manager');
+    if (h) {
+      setMarkdown(h.payload);
+      setParseHint(`${h.from} から要件を受け取りました。「要求文を抽出」を押してください。`);
     }
     trackToolEvent('tool_start', { tool: 'scope-manager' });
   }, []);
