@@ -43,3 +43,11 @@ window.gtag('event', 'form_submit', {
 ## 検証スクリプト
 
 `scripts/verify-contact-cv.mjs` を `node` で実行。`bun dev` 起動後に走らせると、Playwright が `/contact` → submit → `/thanks` を自動で踏んで dataLayer に積まれた gtag イベントを検証する。
+
+# `form_submit` イベントは2026-02〜04時点でスパム前提
+
+GA4の `form_submit` `generate_lead` `contact_complete` は **`/contact` フォーム経由のスパム送信を多く含む**（実問い合わせはこの期間ほぼゼロ）。CV率の逆算KPI（月X件リード = 月Yセッション）には使えない。
+
+**how to apply**: リード件数を語るときは GA4 のフォームイベントではなく **手元で集計した実問い合わせ件数**（メール / Slack 通知の到着数）を使う。GA4 月次レポートにフォームCV欄を入れる時は「スパム含む」と明記するか、項目自体を外す。
+
+**why**: 2026-05-03 のレポート作成時、ユーザーから「form_submit はスパムなので無視」と明示された。`/contact` には Turnstile を入れているが、bot がトークン取得できる経路があるのか実質的にすり抜けている。CAPTCHA/Honeypot の追加検討余地あり。
