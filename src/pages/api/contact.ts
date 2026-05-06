@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { z } from 'zod';
 
 export const prerender = false;
 
@@ -12,6 +13,22 @@ const TYPE_LABELS: Record<string, string> = {
   other: 'その他',
   download_zero_start: '【資料DL】ゼロスタート開発サービスデック',
 };
+
+const ContactSchema = z.object({
+  email: z.string().trim().email('メールアドレスを正しく入力してください'),
+  message: z
+    .string()
+    .trim()
+    .min(1, 'お問い合わせ内容を入力してください')
+    .max(5000, 'お問い合わせ内容が長すぎます'),
+  type: z.string().optional().default(''),
+  name: z.string().optional().default(''),
+  company: z.string().optional().default(''),
+  phone: z.string().optional().default(''),
+  source: z.string().optional().default(''),
+  intent: z.string().optional().default(''),
+  phase: z.string().optional().default(''),
+});
 
 const SLACK_TIMEOUT_MS = 8000;
 const MAX_RETRIES = 2;
@@ -54,23 +71,22 @@ export const POST: APIRoute = async ({ request, locals }) => {
       return jsonError(400, '不正なリクエスト形式です', 'invalid json');
     }
 
-    const { message, email, name, type, company, phone, source, intent, phase } = body as Record<
-      string,
-      unknown
-    >;
-
-    if (typeof email !== 'string' || !email.includes('@')) {
-      return jsonError(400, 'メールアドレスを正しく入力してください', 'invalid email');
+    const parsed = ContactSchema.safeParse(body);
+    if (!parsed.success) {
+      const first = parsed.error.issues[0];
+      return jsonError(
+        400,
+        first?.message ?? '入力内容を確認してください',
+        first?.path.join('.') ?? 'validation'
+      );
     }
-    if (typeof message !== 'string' || message.trim().length < 5) {
-      return jsonError(400, 'お問い合わせ内容を入力してください', 'message too short');
-    }
+    const { message, email, name, type, company, phone, source, intent, phase } = parsed.data;
 
-    const typeStr = typeof type === 'string' ? type : '';
+    const typeStr = type;
     const provenanceParts = [
-      typeof source === 'string' && source ? `source: ${source}` : '',
-      typeof intent === 'string' && intent ? `intent: ${intent}` : '',
-      typeof phase === 'string' && phase ? `phase: ${phase}` : '',
+      source ? `source: ${source}` : '',
+      intent ? `intent: ${intent}` : '',
+      phase ? `phase: ${phase}` : '',
     ].filter(Boolean);
     const provenanceText =
       provenanceParts.length > 0 ? provenanceParts.join(' / ') : '直接アクセス';
@@ -86,18 +102,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
           fields: [
             { type: 'mrkdwn', text: `*種別:*\n${TYPE_LABELS[typeStr] || typeStr || '未選択'}` },
             { type: 'mrkdwn', text: `*メール:*\n${email}` },
-            {
-              type: 'mrkdwn',
-              text: `*お名前:*\n${typeof name === 'string' && name ? name : '未記入'}`,
-            },
-            {
-              type: 'mrkdwn',
-              text: `*会社名:*\n${typeof company === 'string' && company ? company : '未記入'}`,
-            },
-            {
-              type: 'mrkdwn',
-              text: `*電話番号:*\n${typeof phone === 'string' && phone ? phone : '未記入'}`,
-            },
+            { type: 'mrkdwn', text: `*お名前:*\n${name || '未記入'}` },
+            { type: 'mrkdwn', text: `*会社名:*\n${company || '未記入'}` },
+            { type: 'mrkdwn', text: `*電話番号:*\n${phone || '未記入'}` },
           ],
         },
         {
