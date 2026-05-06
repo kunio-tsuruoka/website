@@ -1,6 +1,18 @@
 ---
 import { Header } from '../components/header';
 import Layout from '../layouts/layout.astro';
+
+const FROM_CONFIGS: Record<
+  string,
+  { title: string; lead: string; downloadUrl?: string; downloadFileName?: string }
+> = {
+  'zero-start': {
+    title: '資料ダウンロードの準備ができました',
+    lead: 'お申し込みありがとうございます。下のボタンから資料（PDF）をダウンロードいただけます。<br />ダウンロードが自動で始まらない場合はボタンをクリックしてください。',
+    downloadUrl: '/downloads/beekle-zero-start-sales-deck.pdf',
+    downloadFileName: 'beekle-zero-start-sales-deck.pdf',
+  },
+};
 ---
 
 <Layout
@@ -9,25 +21,54 @@ import Layout from '../layouts/layout.astro';
   noindex={true}
 >
   <Header client:load />
-  <script is:inline>
+  <script is:inline define:vars={{ FROM_CONFIGS }}>
     (function () {
       var fired = false;
+      var sp = new URLSearchParams(window.location.search);
+      var from = sp.get('from') || '';
+      var cfg = FROM_CONFIGS[from] || null;
+
       function fire() {
         if (fired) return;
         if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
         fired = true;
         window.gtag('event', 'contact_complete', {
           method: 'form',
+          from: from || 'contact',
           transport_type: 'beacon',
         });
+        if (cfg && cfg.downloadFileName) {
+          window.gtag('event', 'file_download', {
+            file_name: cfg.downloadFileName,
+            file_extension: 'pdf',
+            from: from,
+            transport_type: 'beacon',
+          });
+        }
       }
-      // gtag のキューは ga4.astro で stub 化されているので即時で積める
       fire();
-      // 念のため遅延でも再試行（gtag.js 完全ロード後の保険）
       if (document.readyState === 'complete') {
         setTimeout(fire, 0);
       } else {
         window.addEventListener('load', function () { setTimeout(fire, 0); });
+      }
+
+      // 自動ダウンロード（DL系のみ）
+      if (cfg && cfg.downloadUrl) {
+        var trigger = function () {
+          var a = document.createElement('a');
+          a.href = cfg.downloadUrl;
+          a.download = cfg.downloadFileName || '';
+          a.rel = 'noopener';
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function () { document.body.removeChild(a); }, 100);
+        };
+        if (document.readyState === 'complete') {
+          setTimeout(trigger, 600);
+        } else {
+          window.addEventListener('load', function () { setTimeout(trigger, 600); });
+        }
       }
     })();
   </script>
@@ -47,22 +88,56 @@ import Layout from '../layouts/layout.astro';
             </svg>
           </div>
 
-          <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-6">
-            お問い合わせを受け付けました
-          </h1>
+          {Astro.url.searchParams.get('from') === 'zero-start' && FROM_CONFIGS['zero-start'] ? (
+            <>
+              <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-6">
+                {FROM_CONFIGS['zero-start'].title}
+              </h1>
+              <p
+                class="text-lg text-foreground/80 leading-relaxed mb-8"
+                set:html={FROM_CONFIGS['zero-start'].lead}
+              />
+              <div class="mb-12">
+                <a
+                  href={FROM_CONFIGS['zero-start'].downloadUrl}
+                  download={FROM_CONFIGS['zero-start'].downloadFileName}
+                  class="inline-flex items-center justify-center px-8 py-4 min-h-[52px] rounded-full font-semibold text-white bg-primary-500 hover:bg-primary-600 transition-colors shadow-soft hover:shadow-medium"
+                >
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  資料をダウンロード（PDF）
+                </a>
+                <p class="text-sm text-muted-foreground mt-4">
+                  資料に関するご質問は <a href="mailto:support@beekle.jp" class="text-primary-500 underline">support@beekle.jp</a> まで。
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-6">
+                お問い合わせを受け付けました
+              </h1>
 
-          <p class="text-lg text-foreground/80 leading-relaxed mb-4">
-            ご連絡ありがとうございます。<br />
-            通常 <strong class="text-primary-500">1〜2営業日以内</strong> に担当者よりご返信いたします。
-          </p>
+              <p class="text-lg text-foreground/80 leading-relaxed mb-4">
+                ご連絡ありがとうございます。<br />
+                通常 <strong class="text-primary-500">1〜2営業日以内</strong> に担当者よりご返信いたします。
+              </p>
 
-          <p class="text-base text-muted-foreground mb-12">
-            返信が届かない場合は、迷惑メールフォルダのご確認、または
-            <a href="mailto:support@beekle.jp" class="text-primary-500 underline mx-1"
-              >support@beekle.jp</a
-            >
-            まで直接ご連絡ください。
-          </p>
+              <p class="text-base text-muted-foreground mb-12">
+                返信が届かない場合は、迷惑メールフォルダのご確認、または
+                <a href="mailto:support@beekle.jp" class="text-primary-500 underline mx-1"
+                  >support@beekle.jp</a
+                >
+                まで直接ご連絡ください。
+              </p>
+            </>
+          )}
 
           <div class="border-t border-border pt-12">
             <p class="text-sm text-muted-foreground mb-6">お待ちの間にどうぞ</p>

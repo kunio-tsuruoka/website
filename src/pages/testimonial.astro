@@ -1,5 +1,6 @@
 ---
 import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
 import TestimonialSection from '../components/testimonial-section';
 import { ButtonLink } from '../components/ui/button';
 import { PageHero } from '../components/ui/page-hero';
@@ -11,6 +12,16 @@ import Layout from '../layouts/layout.astro';
   title="お客様の声 | Beekle"
   description="Beekleでシステム開発をご依頼いただいたお客様の声をご紹介。導入効果や開発プロセスについての評価、満足度をご覧いただけます。"
 >
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: 'お客様の声', url: '/testimonial' },
+      ],
+    }}
+  />
   <Header client:load />
   <main class="pt-20">
     <!-- Hero Section -->

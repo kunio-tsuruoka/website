@@ -32,7 +32,17 @@ interface AdditionalSection {
   title: string;
   subtitle?: string;
   paragraphs: string[];
-  cards?: { title: string; description: string }[];
+  cards?: {
+    title: string;
+    description: string;
+    link?: { href: string; label: string };
+  }[];
+}
+
+interface RelatedColumn {
+  slug: string;
+  title: string;
+  description?: string;
 }
 
 export interface ServiceDetail {
@@ -49,4 +59,5 @@ export interface ServiceDetail {
   benefits: string[];
   faq: FAQ[];
   additionalSections?: AdditionalSection[];
+  relatedColumns?: RelatedColumn[];
 }

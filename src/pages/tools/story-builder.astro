@@ -1,5 +1,6 @@
 ---
 import { Header } from '../../components/header';
+import JsonLd from '../../components/seo/json-ld.astro';
 import { StoryBuilder } from '../../components/story-builder';
 import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
@@ -10,6 +11,27 @@ import Layout from '../../layouts/layout.astro';
   title="ユーザーストーリー作成ツール｜やりたいことを書くだけで要件定義書のたたき台ができる | Beekle"
   description="頭の中にある『こうしたい』を文章で書くだけで、AIがユーザーストーリーと要件のたたき台を自動生成。失敗パターンも提案するので、開発会社との打ち合わせ前の抜け漏れチェックに使えます。"
 >
+  <JsonLd
+    slot="head"
+    type="softwareApplication"
+    data={{
+      appName: 'ユーザーストーリー作成ツール（Story Builder）',
+      appDescription:
+        '頭の中の「こうしたい」を文章で書くだけで、ユーザーストーリーと要件のたたき台を自動生成。失敗パターンの提案つき。開発会社との打ち合わせ前の抜け漏れチェックに。会員登録不要・ブラウザ完結。',
+      url: 'https://beekle.jp/tools/story-builder',
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '発注準備キット', url: '/tools' },
+        { name: 'ユーザーストーリー作成ツール', url: '/tools/story-builder' },
+      ],
+    }}
+  />
   <Header client:load />
   <main class="pt-20">
     <PageHero

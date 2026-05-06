@@ -1,5 +1,6 @@
 ---
 import { Header } from '../../components/header';
+import JsonLd from '../../components/seo/json-ld.astro';
 import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import { FlowMapper } from '../../features/flow-mapper';
@@ -10,6 +11,27 @@ import Layout from '../../layouts/layout.astro';
   title="業務フロー可視化ツール｜AI／DX導入前の業務整理から、改善後の設計まで | Beekle"
   description="生成AI／DXを導入する前にまず必要なのは「業務の見える化」。現状の業務フローを整理し、どこをDXすべきかを判断、改善後の姿を描いて合意形成する流れを1ツールで支援します。コスト・時間ボトルネックの自動分析と、改善ヒントの自動生成つき。"
 >
+  <JsonLd
+    slot="head"
+    type="softwareApplication"
+    data={{
+      appName: '業務フロー可視化ツール（Flow Mapper）',
+      appDescription:
+        '現状（As-Is）と改善後（To-Be）の業務フローをスイムレーン図で書き出し、コスト・時間ボトルネックを自動分析。生成AI／DX導入前の業務整理に。会員登録不要・ブラウザ完結。',
+      url: 'https://beekle.jp/tools/flow-mapper',
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '発注準備キット', url: '/tools' },
+        { name: '業務フロー可視化ツール', url: '/tools/flow-mapper' },
+      ],
+    }}
+  />
   <Header client:load />
   <main class="pt-20">
     <PageHero

@@ -12,6 +12,18 @@
 
 - `categories` - カテゴリー一覧
 - `columns` - コラム記事
+- `qa-categories` - 一問一答カテゴリー
+- `qas` - 一問一答（複数形 `qas`、コードの `getQAs/getQA` も `qas` に揃える）
+
+**注意**: MicroCMS の API スキーマ作成時のエンドポイント名は **コード側 (`src/lib/microcms.ts` の `endpoint:` 引数) と完全一致** している必要がある。単数 / 複数の揺れで GET が空配列を返すと、ページは描画されるが構造化データだけ抜け落ちる事故になる（2026-05-03 に `qa` vs `qas` でこのパターン発生）。新スキーマ追加時は **(1) microcms.ts の endpoint 文字列 (2) MicroCMS 管理画面の API ID (3) 入稿スクリプトの endpoint** の3点を必ず揃える。
+
+# microcms-js-sdk の `status: 'draft'` は client.create() で効かない（2026-05-03 確認）
+
+`scripts/publish-drafts.mjs` で `client.create({ endpoint: 'columns', contentId, content, status: 'draft' })` のように呼んでいるが、**実際には公開状態で作成される**（`publishedAt` が現在時刻で設定され、通常の Content API GET でそのまま取れる）。コメントには「下書き状態で投稿（管理画面で確認後に公開）」と書いてあるが、実態と合っていない。
+
+**how to apply**: 「draft 投入してから管理画面で公開」を期待してはいけない。`publish-drafts.mjs --apply` を走らせた瞬間に **本番公開と同じ扱い**になる前提で確認・レビューしてから実行する。draft で止めたい場合は管理画面から `status` を手動で変更するか、別の API オプション（`microcms-js-sdk` v2 系の new API）を調査する必要がある。
+
+**why**: 2026-05-03、情シス向けDXコラム4本を「draft で投入したつもり」が、実は即時公開されていた。`publishedAt` が現在時刻で設定されている＝公開済みのサイン。フロント `/column/<slug>` も HTTP 200 で表示。幸い内容に問題なかったので公開のまま運用するが、本来はレビュー機会を失っている事故。
 
 ## 使用例
 

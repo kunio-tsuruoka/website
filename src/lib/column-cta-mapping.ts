@@ -72,6 +72,8 @@ const MAPPING: Record<string, CategoryCta> = {
   'ai-development': buildCta(FLOW_MAPPER, SCOPE_MANAGER),
   // CDP: 業務フロー → スコープ
   cdp: buildCta(FLOW_MAPPER, SCOPE_MANAGER),
+  // DX・AI導入: BPO見直し → 要件のたたき台
+  dx: buildCta(FLOW_MAPPER, STORY_BUILDER),
 };
 
 export function getCategoryCta(categoryId: string | undefined): CategoryCta {

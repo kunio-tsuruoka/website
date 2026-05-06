@@ -3,17 +3,43 @@ import Layout from '@/layouts/layout.astro';
 import { Header } from '../components/header';
 import MemberCard from '../components/member-card';
 import { PageHero } from '../components/ui/page-hero';
+import { authors } from '../data/authors';
+
+const siteUrl = 'https://beekle.jp';
+const membersJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  url: `${siteUrl}/members`,
+  about: {
+    '@type': 'Organization',
+    name: 'Beekle株式会社',
+    url: siteUrl,
+  },
+  mainEntity: Object.values(authors).map((a) => ({
+    '@type': 'Person',
+    '@id': a.url,
+    name: a.name,
+    jobTitle: a.jobTitle,
+    description: a.description,
+    url: a.url,
+    ...(a.sameAs && a.sameAs.length > 0 ? { sameAs: a.sameAs } : {}),
+    ...(a.knowsAbout && a.knowsAbout.length > 0 ? { knowsAbout: a.knowsAbout } : {}),
+    worksFor: { '@type': 'Organization', name: 'Beekle株式会社', url: siteUrl },
+  })),
+};
 
 interface Member {
   id: number;
   name: string;
   position: string;
   description: string;
+  anchorId?: string;
 }
 
 const members: Member[] = [
   {
     id: 1,
+    anchorId: 'tsuruoka',
     name: '鶴岡邦夫',
     position: '代表取締役社長',
     description:
@@ -28,6 +54,7 @@ const members: Member[] = [
   },
   {
     id: 3,
+    anchorId: 'nakamura',
     name: '中村 有貴',
     position: '外部技術顧問',
     description:
@@ -61,6 +88,7 @@ const members: Member[] = [
   title="メンバー紹介 | Beekle"
   description="Beekleのチームメンバー紹介。デザイナー、エンジニア、マーケターなど多様なスキルを持つプロフェッショナルが在籍し、幅広い開発案件に対応します。"
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(membersJsonLd)} />
   <Header client:load />
   <main class="pt-20">
     <PageHero
@@ -80,6 +108,7 @@ const members: Member[] = [
                 position={member.position}
                 description={member.description}
                 index={index}
+                anchorId={member.anchorId}
                 client:load
               />
             ))

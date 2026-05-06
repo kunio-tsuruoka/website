@@ -1,5 +1,6 @@
 ---
 import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
 import { type MicroCMSEnv, getCategories, getColumns, getPillarSlug } from '../lib/microcms';
@@ -62,6 +63,32 @@ const columnCategories = categories
   title="コラムで学ぶ - システム開発を成功させる発注側の技術 | Beekle"
   description="システム開発の発注・外注を成功させるためのノウハウをコラムでご紹介。要件定義、見積もりの見方、ベンダー選定など、発注側が知っておくべき知識を解説します。"
 >
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: 'コラム', url: '/column' },
+      ],
+    }}
+  />
+  {allColumns.length > 0 && (
+    <JsonLd
+      slot="head"
+      type="itemList"
+      data={{
+        name: 'Beekle コラム一覧',
+        url: 'https://beekle.jp/column',
+        itemType: 'Article',
+        items: allColumns.map((column) => ({
+          name: column.title,
+          ...(column.description ? { description: column.description } : {}),
+          url: `https://beekle.jp/column/${column.id}`,
+        })),
+      }}
+    />
+  )}
   <Header client:load />
   <main class="pt-20">
     {/* Hero Section */}
