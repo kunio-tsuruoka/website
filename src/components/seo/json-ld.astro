@@ -123,11 +123,13 @@ const breadcrumbSchema = data.items
   ? {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
-      itemListElement: (data.items as Array<{ name: string; url: string }>).map((item, index) => ({
+      itemListElement: (data.items as Array<{ name: string; url?: string }>).map((item, index) => ({
         '@type': 'ListItem',
         position: index + 1,
         name: item.name,
-        item: item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`,
+        ...(item.url
+          ? { item: item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}` }
+          : {}),
       })),
     }
   : null;
