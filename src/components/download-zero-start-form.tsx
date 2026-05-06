@@ -122,7 +122,7 @@ const DownloadZeroStartForm = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label className="block text-sm font-medium text-foreground/80 mb-2" htmlFor="dl-email">
             メールアドレス <span className="text-destructive">*</span>

@@ -116,7 +116,7 @@ const ContactForm = () => {
 
   return (
     <div className="bg-white rounded-[32px] shadow-soft p-8 md:p-12">
-      <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="type">
             ご相談内容の種別 <span className="text-destructive">*</span>
