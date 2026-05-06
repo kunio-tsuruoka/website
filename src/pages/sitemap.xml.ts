@@ -26,6 +26,7 @@ const staticPages = [
   { url: '/demos/it-advisor', priority: '0.7', changefreq: 'monthly' },
   { url: '/demos/ocr', priority: '0.7', changefreq: 'monthly' },
   { url: '/checklists/dev-process', priority: '0.6', changefreq: 'monthly' },
+  { url: '/downloads/zero-start', priority: '0.7', changefreq: 'monthly' },
   { url: '/privacy', priority: '0.3', changefreq: 'yearly' },
 ];
 
