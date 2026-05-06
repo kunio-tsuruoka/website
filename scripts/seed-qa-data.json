@@ -1,11 +1,41 @@
 {
   "categories": [
-    { "id": "estimate", "title": "見積もり・費用", "description": "見積書の見方・適正価格・追加費用・予算オーバーの防ぎ方。", "order": 1 },
-    { "id": "requirements", "title": "要件定義の進め方", "description": "要件定義書の作り方・抜け漏れ対策・要望と要件の切り分け・優先順位付け。", "order": 2 },
-    { "id": "vendor-contract", "title": "ベンダー選定・契約", "description": "RFP・相見積もり・契約形態・開発会社の選び方。", "order": 3 },
-    { "id": "project-management", "title": "プロジェクト進行・コミュニケーション", "description": "炎上回避・進捗管理・週次デモ・エンジニアとの会話の仕方。", "order": 4 },
-    { "id": "poc-ai-dx", "title": "PoC・AI／DX導入", "description": "PoCの範囲・AI/DX失敗パターン・ゼロスタート・生成AI開発の進め方。", "order": 5 },
-    { "id": "data-platform", "title": "データ基盤・CDP・BigQuery", "description": "CDP・BigQuery・データ基盤の発注検討に必要な観点。", "order": 6 }
+    {
+      "id": "estimate",
+      "title": "見積もり・費用",
+      "description": "見積書の見方・適正価格・追加費用・予算オーバーの防ぎ方。",
+      "order": 1
+    },
+    {
+      "id": "requirements",
+      "title": "要件定義の進め方",
+      "description": "要件定義書の作り方・抜け漏れ対策・要望と要件の切り分け・優先順位付け。",
+      "order": 2
+    },
+    {
+      "id": "vendor-contract",
+      "title": "ベンダー選定・契約",
+      "description": "RFP・相見積もり・契約形態・開発会社の選び方。",
+      "order": 3
+    },
+    {
+      "id": "project-management",
+      "title": "プロジェクト進行・コミュニケーション",
+      "description": "炎上回避・進捗管理・週次デモ・エンジニアとの会話の仕方。",
+      "order": 4
+    },
+    {
+      "id": "poc-ai-dx",
+      "title": "PoC・AI／DX導入",
+      "description": "PoCの範囲・AI/DX失敗パターン・ゼロスタート・生成AI開発の進め方。",
+      "order": 5
+    },
+    {
+      "id": "data-platform",
+      "title": "データ基盤・CDP・BigQuery",
+      "description": "CDP・BigQuery・データ基盤の発注検討に必要な観点。",
+      "order": 6
+    }
   ],
   "qas": [
     {

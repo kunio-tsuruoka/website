@@ -26,6 +26,26 @@ try {
 const DRAFT_MARKER = '再執筆中';
 allQAs = allQAs.filter((qa) => !(qa.answer || '').includes(DRAFT_MARKER));
 
+// FAQPage 構造化データ用にHTMLタグ除去・エンティティ復号・空白整形を行う
+const stripHtmlForFaq = (html: string): string =>
+  html
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const faqEntries = allQAs
+  .map((qa) => ({
+    question: (qa.question || '').trim(),
+    answer: stripHtmlForFaq(qa.answer || ''),
+  }))
+  .filter((e) => e.question && e.answer);
+
 const qaByCategory = qaCategories
   .map((category) => ({
     ...category,
@@ -51,16 +71,11 @@ const description =
       ],
     }}
   />
-  {allQAs.length > 0 && (
+  {faqEntries.length > 0 && (
     <JsonLd
       slot="head"
       type="faq"
-      data={{
-        faqs: allQAs.map((qa) => ({
-          question: qa.question,
-          answer: (qa.answer || '').replace(/<[^>]*>/g, '').trim(),
-        })),
-      }}
+      data={{ faqs: faqEntries }}
     />
   )}
   <Header client:load />
