@@ -515,26 +515,31 @@ import Layout from '../layouts/layout.astro';
         <div class="grid md:grid-cols-3 gap-5 md:gap-6 max-w-6xl mx-auto">
           {[
             { tag: '医療DX企業', tagColor: 'text-primary-500', img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=70',
-              metricLabel: '問診時間', metricNum: '35', metricUnit: '%削減', desc: 'AI問診プロトタイプを3週間で検証。導入後、問診時間を35%短縮し、患者満足度が大幅に向上。' },
+              outcome: 'スムーズに買い取り完了',
+              desc: 'RFPがしっかり書かれていたため、そこからデモを作成。要件を満たしていて大きな問題もなく、ヒアリング後に多少の修正を加えてシステムをそのまま引き渡し、買い取りで終了。明確な要件定義からスムーズに実装へ。' },
             { tag: '製造業', tagColor: 'text-secondary-600', img: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=70',
-              metricLabel: '稼働率', metricNum: '18', metricUnit: '%向上', desc: '設備稼働の可視化PoCを実施。導入後、稼働率が18%向上し、年間コストを約2,400万円削減。' },
+              outcome: '最高のアプリ開発に成功',
+              desc: '複雑なドメイン知識が必要な製造業向けシステム。当初は値段重視でオフショア企業を検討されていたが、AI駆動開発でしっかり要件を詰めた方がいいと説得し契約。プロトタイプをもとに要件を話し合い、業務効率化のためのアプリ開発を実現。' },
             { tag: '人材会社', tagColor: 'text-primary-500', img: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=70',
-              metricLabel: '成約率', metricNum: '27', metricUnit: '%アップ', desc: 'AIマッチングの精度検証で成約率を改善。導入後、成約率27%アップで、売上目標を達成。' },
+              outcome: 'アジャイル開発で継続改善中',
+              desc: '現場で「どのような人を選べばいいか解像度が高くない」という悩みを抱える採用代行会社。心理学の知見を活かしたAI適性診断のプロトタイプを一日で作成。さらなる精度向上を求めて購入の依頼があり、デモを改善するアジャイル開発に移行。' },
           ].map((c) => (
-            <div class="bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-medium transition-shadow border border-neutral-100">
+            <div class="bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-medium transition-shadow border border-neutral-100 flex flex-col">
               <div class="relative h-44 md:h-48 overflow-hidden">
                 <img src={c.img} alt={c.tag} class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
                 <span class={`absolute top-3 left-3 px-3 py-1 bg-white/95 backdrop-blur ${c.tagColor} rounded-full text-xs font-bold shadow-soft`}>
                   {c.tag}
                 </span>
-                <div class="absolute bottom-3 right-3 bg-highlight-500 rounded-xl px-3 py-1.5 shadow-medium">
-                  <p class="text-[9px] text-accent-950/80 leading-none">{c.metricLabel}</p>
-                  <p class="text-lg md:text-xl font-extrabold text-accent-950 leading-tight">{c.metricNum}<span class="text-xs">{c.metricUnit}</span></p>
-                </div>
               </div>
-              <div class="p-5">
+              <div class="p-5 flex flex-col gap-4 flex-1">
                 <p class="text-xs md:text-sm text-neutral-700 leading-relaxed">{c.desc}</p>
+                <div class="mt-auto inline-flex items-center gap-2 self-start bg-highlight-500 rounded-full px-3 py-1.5 shadow-soft">
+                  <svg class="w-3.5 h-3.5 text-accent-950" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+                  </svg>
+                  <span class="text-xs md:text-sm font-bold text-accent-950 leading-tight">{c.outcome}</span>
+                </div>
               </div>
             </div>
           ))}
