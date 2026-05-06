@@ -10,6 +10,7 @@ const TYPE_LABELS: Record<string, string> = {
   ai: 'AI/AIエージェント開発について',
   global: '海外向けサービス開発について',
   other: 'その他',
+  download_zero_start: '【資料DL】ゼロスタート開発サービスデック',
 };
 
 const SLACK_TIMEOUT_MS = 8000;

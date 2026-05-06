@@ -1,6 +1,7 @@
 ---
 import { Header } from '../../components/header';
 import { ScopeManager } from '../../components/scope-manager';
+import JsonLd from '../../components/seo/json-ld.astro';
 import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import Layout from '../../layouts/layout.astro';
@@ -10,6 +11,27 @@ import Layout from '../../layouts/layout.astro';
   title="スコープ管理ツール｜要件を「作る／後回し／作らない」に振り分け | Beekle"
   description="要件定義書(Markdown)を取り込み、機能ごとに『ビジネス価値・現場で使えるか・技術コスト』を評価して『作る／後回し／作らない』を可視化。開発の予算オーバーを防ぎ、合意形成を加速します。"
 >
+  <JsonLd
+    slot="head"
+    type="softwareApplication"
+    data={{
+      appName: 'スコープ管理ツール（Scope Manager）',
+      appDescription:
+        '要件をビジネス価値・現場で使えるか・技術コストの3軸で評価し、「作る／後回し／作らない」に振り分け。書籍『システムを作らせる技術』のFM法を参考にした優先度判定。会員登録不要・ブラウザ完結。',
+      url: 'https://beekle.jp/tools/scope-manager',
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '発注準備キット', url: '/tools' },
+        { name: 'スコープ管理ツール', url: '/tools/scope-manager' },
+      ],
+    }}
+  />
   <Header client:load />
   <main class="pt-20">
     <PageHero

@@ -1,9 +1,29 @@
 ---
 import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
 
-const materials = [
+type Material = {
+  title: string;
+  description: string;
+  category: string;
+  /** 直接DL: PDFパス／ゲート付き: 専用LPへのリンク */
+  fileName?: string;
+  fileUrl?: string;
+  landingUrl?: string;
+  ctaLabel?: string;
+};
+
+const materials: Material[] = [
+  {
+    title: 'ゼロスタート開発 サービスデック',
+    description:
+      '初期費用0円で動くプロトタイプを体験してから判断する仕組み・対象企業・進行プロセスをまとめたサービス資料です（フォーム入力後にダウンロード）。',
+    category: 'サービス資料',
+    landingUrl: '/downloads/zero-start',
+    ctaLabel: '詳細・ダウンロード',
+  },
   {
     title: 'ワンテクワールドd-popsアライアンス',
     description:
@@ -15,7 +35,21 @@ const materials = [
 ];
 ---
 
-<Layout title="関連資料 | Beekle">
+<Layout
+  title="関連資料 | Beekle"
+  description="Beekleの関連資料・提携アライアンス資料のダウンロードページ。"
+  noindex={true}
+>
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '関連資料', url: '/materials' },
+      ],
+    }}
+  />
   <Header client:load />
   <main class="pt-20">
     <PageHero
@@ -26,11 +60,11 @@ const materials = [
     <section class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-16">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {materials.map((material) => (
-          <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-            <div class="p-8">
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+            <div class="p-8 flex flex-col flex-1">
               {/* カテゴリバッジ */}
               <div class="mb-4">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-700">
+                <span class={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${material.landingUrl ? 'bg-secondary-100 text-secondary-700' : 'bg-primary-100 text-primary-700'}`}>
                   {material.category}
                 </span>
               </div>
@@ -41,31 +75,33 @@ const materials = [
               </h2>
 
               {/* 説明 */}
-              <p class="text-gray-600 mb-6 min-h-[48px]">
+              <p class="text-gray-600 mb-6 flex-1">
                 {material.description}
               </p>
 
-              {/* ダウンロードボタン */}
-              <a
-                href={material.fileUrl}
-                download={material.fileName}
-                class="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors duration-200"
-              >
-                <svg
-                  class="w-5 h-5 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              {/* CTAボタン: ゲート付きはLPへ、直DLはPDF */}
+              {material.landingUrl ? (
+                <a
+                  href={material.landingUrl}
+                  class="inline-flex items-center justify-center w-full px-6 py-3 min-h-[44px] text-base font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors duration-200"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
-                ダウンロード
-              </a>
+                  {material.ctaLabel || '詳細・ダウンロード'}
+                  <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </a>
+              ) : (
+                <a
+                  href={material.fileUrl}
+                  download={material.fileName}
+                  class="inline-flex items-center justify-center w-full px-6 py-3 min-h-[44px] text-base font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors duration-200"
+                >
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  ダウンロード
+                </a>
+              )}
             </div>
           </div>
         ))}

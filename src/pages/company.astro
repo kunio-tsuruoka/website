@@ -3,6 +3,7 @@
 
 import Layout from '@/layouts/layout.astro';
 import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
 
 const companyInfo = {
@@ -36,6 +37,16 @@ const companyInfo = {
   title="会社概要 | Beekle"
   description="株式会社Beekleの会社概要。2023年設立、東京都大田区に拠点を置くシステム開発会社です。Webアプリ、モバイルアプリ、AI開発など幅広い案件に対応。デザイナーからエンジニアまで多様なチームで一貫した開発をサポートします。"
 >
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '会社概要', url: '/company' },
+      ],
+    }}
+  />
   <Header client:load />
   <main class="pt-20">
     <!-- Hero Section -->

@@ -26,6 +26,8 @@
 # 削除された新形式 services パス
 /services/prototype-poc   /services  301
 /services/prototype-poc/  /services  301
+/services/ai-b2b-website   /services  301
+/services/ai-b2b-website/  /services  301
 
 # 旧 knowledge ページ（column へ統合済み: コミット f76e661）
 /knowledge/*  /column  301
