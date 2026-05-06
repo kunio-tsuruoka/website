@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 const serviceItems = [
   { label: 'WEBアプリ・モバイルアプリ開発', href: '/services/web-mobile-development' },
   { label: '生成AI受託サービス', href: '/services/ai-development' },
-  { label: 'AI搭載BtoBサイト制作', href: '/services/ai-b2b-website' },
   { label: 'CDP開発', href: '/services/cdp-development' },
 ];
 
@@ -13,7 +12,7 @@ const companyItems = [
   { label: 'Beekleの強み', href: '/strengths' },
   { label: 'メンバー紹介', href: '/members' },
   { label: '一問一答（よくある質問）', href: '/qa' },
-  { label: '関連資料', href: '/materials' },
+  { label: '関連資料・資料ダウンロード', href: '/materials' },
 ];
 
 const toolsItems = [
