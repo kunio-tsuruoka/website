@@ -10,6 +10,67 @@ import { Header } from '../components/header';
 import { ServiceCard } from '../components/service-card';
 import { services } from '../data/service';
 import Layout from '../layouts/layout.astro';
+import { type MicroCMSEnv, getColumns } from '../lib/microcms';
+
+const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
+const env = runtime?.env;
+
+const FEATURED_COLUMN_IDS = [
+  'requirements-definition-complete-guide',
+  'requirements-vs-requests',
+  'web-system-cost-by-scale',
+  'ears-requirements-syntax-guide',
+  'project-management-complete-guide',
+  'ai-era-development-flow',
+];
+
+let featuredColumns: {
+  id: string;
+  title: string;
+  description?: string;
+  categoryTitle?: string;
+}[] = [];
+try {
+  const all = await getColumns(undefined, env);
+  const map = new Map(all.map((c) => [c.id, c]));
+  featuredColumns = FEATURED_COLUMN_IDS.map((id) => map.get(id))
+    .filter((c): c is NonNullable<typeof c> => Boolean(c))
+    .map((c) => ({
+      id: c.id,
+      title: c.title,
+      description: c.description,
+      categoryTitle: c.category?.title,
+    }));
+} catch (e) {
+  console.error('Failed to load featured columns:', e);
+}
+
+const featuredTools = [
+  {
+    href: '/tools/flow-mapper',
+    name: '業務フロー可視化ツール',
+    description: '現状(As-Is)と改善後(To-Be)を書き出し、ボトルネックを自動分析。',
+    label: 'Flow Mapper',
+  },
+  {
+    href: '/tools/story-builder',
+    name: 'ユーザーストーリー作成ツール',
+    description: 'やりたいことを書くだけで、要件のたたき台を自動生成。',
+    label: 'Story Builder',
+  },
+  {
+    href: '/tools/scope-manager',
+    name: 'スコープ管理ツール',
+    description: '要件を「作る／後回し／作らない」に振り分け、予算オーバーを防ぐ。',
+    label: 'Scope Manager',
+  },
+  {
+    href: '/tools/rfp-builder',
+    name: 'RFP作成支援ツール',
+    description: '提案依頼書のドラフトを、対話形式で生成。',
+    label: 'RFP Builder',
+  },
+];
 ---
 
 <Layout
@@ -286,8 +347,112 @@ import Layout from '../layouts/layout.astro';
     </section>
 
 
-    {/* よくあるお悩み - Pop Style */}
+    {/* COLUMNS - 発注前に読むコラム */}
+    <section class="py-32 bg-neutral-50 relative overflow-hidden">
+      <div class="absolute top-20 left-0 w-32 h-64 decoration-bar-purple opacity-8"></div>
+      <div class="absolute bottom-20 right-0 w-40 h-80 decoration-bar-cyan opacity-8"></div>
+
+      <div class="container mx-auto px-8 lg:px-12 relative">
+        <div class="text-center mb-16">
+          <span class="number-label">04</span>
+          <span class="section-label ml-4">COLUMNS</span>
+          <h2 class="text-4xl lg:text-5xl font-bold text-navy-950 mb-4 mt-4">
+            発注前に読む<span class="text-primary-500">コラム</span>
+          </h2>
+          <p class="text-xl text-neutral-600">
+            見積もり・要件定義・費用相場・AI開発まで、発注者目線で解説しています
+          </p>
+        </div>
+
+        {featuredColumns.length > 0 && (
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {featuredColumns.map((c) => (
+              <a href={`/column/${c.id}`} class="group">
+                <div class="card-base card-hover card-lift p-6 h-full flex flex-col">
+                  {c.categoryTitle && (
+                    <span class="inline-block text-xs font-bold text-primary-500 mb-3">
+                      {c.categoryTitle}
+                    </span>
+                  )}
+                  <h3 class="text-lg font-bold text-navy-950 group-hover:text-primary-500 transition-colors mb-3 leading-snug">
+                    {c.title}
+                  </h3>
+                  {c.description && (
+                    <p class="text-sm text-neutral-600 leading-relaxed flex-grow line-clamp-3">
+                      {c.description}
+                    </p>
+                  )}
+                  <span class="mt-4 inline-flex items-center text-sm font-semibold text-primary-500 group-hover:text-primary-600 transition-colors">
+                    記事を読む
+                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+
+        <div class="text-center mt-12">
+          <ButtonLink href="/column" variant="outlinePrimary" size="lg">
+            すべてのコラムを見る
+          </ButtonLink>
+        </div>
+      </div>
+    </section>
+
+    {/* TOOLS - 発注準備ツール */}
     <section class="py-32 bg-white relative overflow-hidden">
+      <div class="absolute top-20 right-0 w-32 h-64 decoration-bar-yellow opacity-10"></div>
+      <div class="absolute bottom-20 left-0 w-40 h-80 decoration-bar-purple opacity-8"></div>
+
+      <div class="container mx-auto px-8 lg:px-12 relative">
+        <div class="text-center mb-16">
+          <span class="number-label">05</span>
+          <span class="section-label ml-4">TOOLS</span>
+          <h2 class="text-4xl lg:text-5xl font-bold text-navy-950 mb-4 mt-4">
+            発注準備に使える<span class="text-primary-500">無料ツール</span>
+          </h2>
+          <p class="text-xl text-neutral-600">
+            ブラウザで完結、会員登録不要。発注前の検討材料がそろいます。
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          {featuredTools.map((t) => (
+            <a href={t.href} class="group">
+              <div class="card-base card-hover card-lift p-6 h-full flex flex-col">
+                <span class="inline-block text-xs font-bold text-secondary-500 mb-3">
+                  {t.label}
+                </span>
+                <h3 class="text-lg font-bold text-navy-950 group-hover:text-primary-500 transition-colors mb-3">
+                  {t.name}
+                </h3>
+                <p class="text-sm text-neutral-600 leading-relaxed flex-grow">
+                  {t.description}
+                </p>
+                <span class="mt-4 inline-flex items-center text-sm font-semibold text-primary-500 group-hover:text-primary-600 transition-colors">
+                  使ってみる
+                  <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <div class="text-center mt-12">
+          <ButtonLink href="/tools" variant="outlinePrimary" size="lg">
+            すべてのツールを見る
+          </ButtonLink>
+        </div>
+      </div>
+    </section>
+
+    {/* よくあるお悩み - Pop Style */}
+    <section class="py-32 bg-neutral-50 relative overflow-hidden">
       {/* Pop decorations */}
       <div class="absolute top-20 right-0 w-40 h-80 decoration-bar-cyan opacity-8"></div>
       <div class="absolute bottom-20 left-0 w-32 h-64 decoration-bar-purple opacity-8"></div>
@@ -299,7 +464,7 @@ import Layout from '../layouts/layout.astro';
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center mb-16">
           {/* Number Label */}
-          <span class="number-label">04</span>
+          <span class="number-label">06</span>
           <span class="section-label ml-4">Q&A</span>
 
           <h2 class="text-4xl lg:text-5xl font-bold text-navy-950 mb-4 mt-4">
@@ -381,7 +546,7 @@ import Layout from '../layouts/layout.astro';
     <section id="faq" class="py-32 bg-neutral-50">
       <div class="container mx-auto px-8 lg:px-12 mb-8">
         <div class="text-center">
-          <span class="number-label">05</span>
+          <span class="number-label">07</span>
           <span class="section-label ml-4">FAQ</span>
         </div>
       </div>
@@ -402,7 +567,7 @@ import Layout from '../layouts/layout.astro';
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center mb-12">
           {/* Number Label */}
-          <span class="number-label">06</span>
+          <span class="number-label">08</span>
           <span class="section-label ml-4">CONTACT</span>
 
           <h2 class="text-4xl lg:text-5xl font-bold text-navy-950 mb-4 mt-4">
