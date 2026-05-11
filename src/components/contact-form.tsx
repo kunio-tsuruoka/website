@@ -1,3 +1,4 @@
+import { useTurnstile } from '@/lib/use-turnstile';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 
@@ -15,6 +16,10 @@ type Provenance = {
   phase: string;
 };
 
+type ContactFormProps = {
+  sitekey?: string;
+};
+
 const PROVENANCE_MAX_LENGTH = 80;
 const PROVENANCE_PATTERN = /^[a-zA-Z0-9_\-./]+$/;
 
@@ -24,7 +29,13 @@ function sanitizeParam(raw: string | null): string {
   return PROVENANCE_PATTERN.test(raw) ? raw : '';
 }
 
-const ContactForm = () => {
+const ContactForm = ({ sitekey }: ContactFormProps) => {
+  const turnstileEnabled = !!sitekey;
+  const {
+    containerRef,
+    token: turnstileToken,
+    reset: resetTurnstile,
+  } = useTurnstile(sitekey ?? '');
   const [status, setStatus] = useState<SubmitStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [provenance, setProvenance] = useState<Provenance>({ source: '', intent: '', phase: '' });
@@ -46,6 +57,14 @@ const ContactForm = () => {
     setStatus('submitting');
     setErrorMessage('');
 
+    if (turnstileEnabled && !turnstileToken) {
+      setErrorMessage(
+        'セキュリティチェックが完了していません。ページを再読み込みしてお試しください。'
+      );
+      setStatus('error');
+      return;
+    }
+
     const form = e.currentTarget;
     const formData = new FormData(form);
     const data = {
@@ -58,6 +77,7 @@ const ContactForm = () => {
       source: provenance.source,
       intent: provenance.intent,
       phase: provenance.phase,
+      turnstileToken: turnstileToken ?? '',
     };
 
     try {
@@ -109,10 +129,12 @@ const ContactForm = () => {
       const msg = error instanceof Error ? error.message : '不明なエラーが発生しました';
       setErrorMessage(msg);
       setStatus('error');
+      resetTurnstile();
     }
   };
 
   const isSubmitting = status === 'submitting';
+  const submitDisabled = isSubmitting || (turnstileEnabled && !turnstileToken);
 
   return (
     <div className="bg-white rounded-[32px] shadow-soft p-8 md:p-12">
@@ -254,12 +276,18 @@ const ContactForm = () => {
           </div>
         )}
 
+        {turnstileEnabled && (
+          <div className="flex flex-col items-center gap-2">
+            <div ref={containerRef} aria-label="セキュリティチェック" />
+          </div>
+        )}
+
         <div className="text-center pt-2">
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={submitDisabled}
             className={`inline-flex justify-center items-center w-full md:w-auto px-10 py-4 rounded-full font-semibold text-white text-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-              isSubmitting
+              submitDisabled
                 ? 'bg-neutral-400 cursor-not-allowed'
                 : 'bg-primary-500 hover:bg-primary-600 shadow-soft hover:shadow-medium focus:ring-primary-500'
             }`}

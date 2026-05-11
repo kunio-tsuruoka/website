@@ -12,6 +12,7 @@ const companyItems = [
   { label: 'Beekleの強み', href: '/strengths' },
   { label: 'メンバー紹介', href: '/members' },
   { label: '一問一答（よくある質問）', href: '/qa' },
+  { label: 'ゼロスタート開発 資料DL', href: '/downloads/zero-start' },
   { label: '関連資料・資料ダウンロード', href: '/materials' },
 ];
 
@@ -297,16 +298,23 @@ export function Header() {
                   ))}
                 </ul>
               </li>
-              <li>
+              <li className="pt-2 flex flex-col items-center gap-3 w-full">
                 <a
                   href="/contact?source=header-mobile"
-                  className="px-4 py-2 bg-primary-500 rounded-full text-white hover:bg-primary-600 transition-colors shadow-soft"
+                  className="inline-flex items-center justify-center w-full max-w-xs px-6 py-3 min-h-[48px] bg-primary-500 rounded-full text-white text-base font-semibold hover:bg-primary-600 transition-colors shadow-soft"
                   onClick={() => {
                     trackCtaClick({ source: 'header-mobile', cta: 'contact' });
                     setIsOpen(false);
                   }}
                 >
                   お問い合わせ
+                </a>
+                <a
+                  href="/downloads/zero-start?source=header-mobile"
+                  className="inline-flex items-center justify-center w-full max-w-xs px-6 py-3 min-h-[48px] bg-white/10 border border-white/40 rounded-full text-white text-base font-medium hover:bg-white/20 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  資料ダウンロード（無料）
                 </a>
               </li>
             </ul>
