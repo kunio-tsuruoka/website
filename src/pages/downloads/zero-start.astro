@@ -4,6 +4,9 @@ import { Header } from '../../components/header';
 import JsonLd from '../../components/seo/json-ld.astro';
 import Layout from '../../layouts/layout.astro';
 
+const runtime = (Astro.locals as { runtime?: { env?: { TURNSTILE_SITE_KEY?: string } } }).runtime;
+const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
+
 const heroBullets = [
   '初期費用0円・成果連動でリスクを最小化する仕組み',
   '見積書ではなく「動くプロトタイプ」で判断する流れ',
@@ -166,7 +169,7 @@ const contents = [
           </div>
 
           <div id="form">
-            <DownloadZeroStartForm client:load />
+            <DownloadZeroStartForm client:load sitekey={sitekey} />
           </div>
         </div>
       </div>
@@ -214,4 +217,9 @@ const contents = [
       </div>
     </section>
   </main>
+
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer></script>
 </Layout>

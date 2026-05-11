@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
+import { verifyTurnstile } from '../../lib/turnstile';
 
 export const prerender = false;
 
@@ -28,6 +29,7 @@ const ContactSchema = z.object({
   source: z.string().optional().default(''),
   intent: z.string().optional().default(''),
   phase: z.string().optional().default(''),
+  turnstileToken: z.string().optional().default(''),
 });
 
 const SLACK_TIMEOUT_MS = 8000;
@@ -58,8 +60,15 @@ async function postToSlack(webhookUrl: string, payload: unknown): Promise<void> 
 
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
-    const runtime = (locals as { runtime?: { env?: { SLACK_WEBHOOK_URL?: string } } }).runtime;
+    const runtime = (
+      locals as {
+        runtime?: {
+          env?: { SLACK_WEBHOOK_URL?: string; TURNSTILE_SECRET_KEY?: string };
+        };
+      }
+    ).runtime;
     const webhookUrl = runtime?.env?.SLACK_WEBHOOK_URL;
+    const turnstileSecret = runtime?.env?.TURNSTILE_SECRET_KEY;
 
     if (!webhookUrl) {
       console.error('[contact] SLACK_WEBHOOK_URL is not configured');
@@ -80,7 +89,24 @@ export const POST: APIRoute = async ({ request, locals }) => {
         first?.path.join('.') ?? 'validation'
       );
     }
-    const { message, email, name, type, company, phone, source, intent, phase } = parsed.data;
+    const { message, email, name, type, company, phone, source, intent, phase, turnstileToken } =
+      parsed.data;
+
+    if (turnstileSecret) {
+      const remoteIp =
+        request.headers.get('cf-connecting-ip') ?? request.headers.get('x-forwarded-for') ?? '';
+      const verify = await verifyTurnstile(turnstileSecret, turnstileToken, remoteIp);
+      if (!verify.ok) {
+        console.warn('[contact] turnstile failed', verify.errorCodes);
+        return jsonError(
+          403,
+          'セキュリティチェックに失敗しました。ページを再読み込みして再度お試しください。',
+          `turnstile: ${verify.errorCodes.join(',')}`
+        );
+      }
+    } else {
+      console.warn('[contact] TURNSTILE_SECRET_KEY not configured; skipping verification');
+    }
 
     const typeStr = type;
     const provenanceParts = [
