@@ -14,7 +14,7 @@ export const companyInfo = {
     'コンサルティング業務',
     '前各号に附帯関連する一切の事業',
   ],
-  address: '東京都大田区池上3-7-9 304',
+  address: '東京都大田区久が原３丁目１４番２７号',
   email: 'support@beekle.jp',
   holidays: '土曜日、日曜日、祝日',
   advisors: {
