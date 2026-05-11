@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import { chromium } from 'playwright';
 import { mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { chromium } from 'playwright';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT = join(__dirname, '..', 'claudedocs', 'screenshots', 'cvr-quick-wins');
