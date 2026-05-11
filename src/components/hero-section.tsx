@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 function RightVisual() {
   return (
-    <div className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[58%] lg:block">
+    <div className="pointer-events-none absolute inset-0 z-0 opacity-20 lg:inset-y-0 lg:left-auto lg:right-0 lg:w-[58%] lg:opacity-100">
       <svg
         viewBox="0 0 760 720"
         className="h-full w-full"
@@ -147,7 +147,9 @@ export const HeroSection = () => {
 
             {/* H1 */}
             <h1 className="text-4xl md:text-5xl xl:text-6xl font-semibold leading-tight text-navy-950 mb-6">
-              <span className="text-primary-500">爆速</span>のPoCで、
+            <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-violet-500 bg-clip-text text-transparent">
+                爆速
+              </span>のPoCで、
               <br />
               動くプロトタイプを。
             </h1>
