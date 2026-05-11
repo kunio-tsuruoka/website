@@ -147,9 +147,10 @@ export const HeroSection = () => {
 
             {/* H1 */}
             <h1 className="text-4xl md:text-5xl xl:text-6xl font-semibold leading-tight text-navy-950 mb-6">
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-violet-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-violet-500 bg-clip-text text-transparent">
                 爆速
-              </span>のPoCで、
+              </span>
+              のPoCで、
               <br />
               動くプロトタイプを。
             </h1>
@@ -192,6 +193,21 @@ export const HeroSection = () => {
                 開発の流れを見る
               </a>
             </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="mt-5 text-sm text-neutral-600"
+            >
+              先に資料で全体像を知りたい方は
+              <a
+                href="/downloads/zero-start?source=hero"
+                className="ml-1 text-primary-600 font-medium underline hover:no-underline"
+              >
+                ゼロスタート開発サービス資料（無料DL）
+              </a>
+            </motion.p>
           </motion.div>
         </div>
       </div>

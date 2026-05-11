@@ -4,6 +4,24 @@ import { Header } from '../components/header';
 import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
+
+const runtime = (Astro.locals as { runtime?: { env?: { TURNSTILE_SITE_KEY?: string } } }).runtime;
+const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
+
+const trustPoints = [
+  {
+    title: '通常1〜2営業日で返信',
+    body: '営業時間内なら当日返信も多いです。返信が無い場合はメール受信を再度ご確認ください。',
+  },
+  {
+    title: '無料相談・しつこい営業なし',
+    body: 'ご検討段階のご相談歓迎。「合わなさそう」と感じた場合の連絡停止もメール1通で完了します。',
+  },
+  {
+    title: '初期費用0円のゼロスタート開発',
+    body: '見積書ではなく動くプロトタイプから判断できる仕組みもご用意しています。',
+  },
+];
 ---
 
 <Layout
@@ -30,7 +48,24 @@ import Layout from '../layouts/layout.astro';
     <section class="py-20 md:py-28">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl mx-auto">
-          <ContactForm client:load />
+          <div class="grid sm:grid-cols-3 gap-4 mb-10">
+            {trustPoints.map((p) => (
+              <div class="bg-white border border-primary-100 rounded-2xl p-5 shadow-soft">
+                <p class="text-sm font-bold text-primary-700 mb-1">{p.title}</p>
+                <p class="text-xs text-foreground/70 leading-relaxed">{p.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div class="mb-8 rounded-2xl bg-primary-50 border border-primary-100 p-5">
+            <p class="text-sm text-foreground/85 leading-relaxed">
+              事前に資料で全体像を把握したい方は
+              <a href="/downloads/zero-start?source=contact-trust" class="text-primary-600 font-medium underline hover:no-underline">ゼロスタート開発サービス資料(無料)</a>
+              もご利用ください。実例や対象企業がまとまっています。
+            </p>
+          </div>
+
+          <ContactForm client:load sitekey={sitekey} />
 
           <details class="mt-8 rounded-xl border border-amber-200 bg-amber-50 p-5 md:p-6">
             <summary class="cursor-pointer font-semibold text-gray-800 list-none flex items-center justify-between">
@@ -63,4 +98,9 @@ import Layout from '../layouts/layout.astro';
       </div>
     </section>
   </main>
+
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer></script>
 </Layout>

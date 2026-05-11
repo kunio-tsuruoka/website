@@ -1,3 +1,4 @@
+import { useTurnstile } from '@/lib/use-turnstile';
 import type React from 'react';
 import { useState } from 'react';
 
@@ -16,13 +17,31 @@ const PHASE_OPTIONS = [
   { value: 'rfp_planned', label: '提案・見積依頼を予定' },
 ] as const;
 
-const DownloadZeroStartForm = () => {
+type DownloadZeroStartFormProps = {
+  sitekey?: string;
+};
+
+const DownloadZeroStartForm = ({ sitekey }: DownloadZeroStartFormProps) => {
   const [status, setStatus] = useState<SubmitStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const turnstileEnabled = !!sitekey;
+  const {
+    containerRef,
+    token: turnstileToken,
+    reset: resetTurnstile,
+  } = useTurnstile(sitekey ?? '');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (status === 'submitting') return;
+
+    if (turnstileEnabled && !turnstileToken) {
+      setErrorMessage(
+        'セキュリティチェックが完了していません。ページを再読み込みしてお試しください。'
+      );
+      setStatus('error');
+      return;
+    }
 
     setStatus('submitting');
     setErrorMessage('');
@@ -48,6 +67,7 @@ const DownloadZeroStartForm = () => {
       message,
       source: 'download-zero-start',
       phase: phaseValue,
+      turnstileToken: turnstileToken ?? '',
     };
 
     try {
@@ -106,10 +126,12 @@ const DownloadZeroStartForm = () => {
       const msg = error instanceof Error ? error.message : '不明なエラーが発生しました';
       setErrorMessage(msg);
       setStatus('error');
+      resetTurnstile();
     }
   };
 
   const isSubmitting = status === 'submitting';
+  const submitDisabled = isSubmitting || (turnstileEnabled && !turnstileToken);
 
   return (
     <div className="bg-white rounded-[32px] shadow-soft p-8 md:p-10 border border-primary-100">
@@ -141,13 +163,12 @@ const DownloadZeroStartForm = () => {
 
         <div>
           <label className="block text-sm font-medium text-foreground/80 mb-2" htmlFor="dl-company">
-            会社名 <span className="text-destructive">*</span>
+            会社名（任意）
           </label>
           <input
             type="text"
             id="dl-company"
             name="company_name"
-            required
             autoComplete="organization"
             className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="株式会社○○"
@@ -156,13 +177,12 @@ const DownloadZeroStartForm = () => {
 
         <div>
           <label className="block text-sm font-medium text-foreground/80 mb-2" htmlFor="dl-name">
-            お名前 <span className="text-destructive">*</span>
+            お名前（任意）
           </label>
           <input
             type="text"
             id="dl-name"
             name="from_name"
-            required
             autoComplete="name"
             className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="山田 太郎"
@@ -230,12 +250,18 @@ const DownloadZeroStartForm = () => {
           </div>
         )}
 
+        {turnstileEnabled && (
+          <div className="flex flex-col items-center gap-2">
+            <div ref={containerRef} aria-label="セキュリティチェック" />
+          </div>
+        )}
+
         <div className="pt-2">
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={submitDisabled}
             className={`inline-flex justify-center items-center w-full px-8 py-4 min-h-[52px] rounded-full font-semibold text-white text-base transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-              isSubmitting
+              submitDisabled
                 ? 'bg-neutral-400 cursor-not-allowed'
                 : 'bg-primary-500 hover:bg-primary-600 shadow-soft hover:shadow-medium focus:ring-primary-500'
             }`}
