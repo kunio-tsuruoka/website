@@ -2,36 +2,136 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 
+function RightVisual() {
+  return (
+    <div className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[58%] lg:block">
+      <svg
+        viewBox="0 0 760 720"
+        className="h-full w-full"
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+      >
+        <title>Hero decorative visual</title>
+        <defs>
+          <linearGradient id="shapeA" x1="120" y1="80" x2="620" y2="620">
+            <stop stopColor="#8ea2ff" stopOpacity="0.28" />
+            <stop offset="0.55" stopColor="#b7ecff" stopOpacity="0.24" />
+            <stop offset="1" stopColor="#ffffff" stopOpacity="0.1" />
+          </linearGradient>
+
+          <linearGradient id="shapeB" x1="600" y1="40" x2="220" y2="640">
+            <stop stopColor="#8d7cff" stopOpacity="0.22" />
+            <stop offset="1" stopColor="#67d8f3" stopOpacity="0.24" />
+          </linearGradient>
+
+          <radialGradient id="orb" cx="35%" cy="30%" r="70%">
+            <stop stopColor="#ffffff" stopOpacity="0.95" />
+            <stop offset="0.42" stopColor="#bfdcff" stopOpacity="0.72" />
+            <stop offset="0.78" stopColor="#5445e8" stopOpacity="0.5" />
+            <stop offset="1" stopColor="#172554" stopOpacity="0.16" />
+          </radialGradient>
+
+          <filter id="blurSoft">
+            <feGaussianBlur stdDeviation="18" />
+          </filter>
+
+          <filter id="shadowOrb" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow
+              dx="0"
+              dy="18"
+              stdDeviation="18"
+              floodColor="#4557d8"
+              floodOpacity="0.25"
+            />
+          </filter>
+        </defs>
+
+        {/* large pale circular glow */}
+        <circle cx="250" cy="390" r="210" fill="#dff5ff" opacity="0.38" />
+
+        {/* abstract brand-like ribbons */}
+        <rect
+          x="418"
+          y="-60"
+          width="220"
+          height="650"
+          rx="110"
+          fill="url(#shapeA)"
+          transform="rotate(-25 520 280)"
+        />
+
+        <rect
+          x="440"
+          y="140"
+          width="160"
+          height="520"
+          rx="80"
+          fill="url(#shapeB)"
+          transform="rotate(32 520 400)"
+        />
+
+        <path
+          d="M420 65 C510 210 590 330 705 505"
+          fill="none"
+          stroke="#6d7cff"
+          strokeOpacity="0.32"
+          strokeWidth="2"
+        />
+
+        <path
+          d="M150 670 C330 560 460 475 705 408"
+          fill="none"
+          stroke="white"
+          strokeOpacity="0.9"
+          strokeWidth="2"
+        />
+
+        {/* dotted texture */}
+        <g opacity="0.38">
+          {Array.from({ length: 9 }).map((_, row) =>
+            Array.from({ length: 9 }).map((_, col) => (
+              <circle
+                key={`${row}-${col}`}
+                cx={330 + col * 18}
+                cy={220 + row * 18}
+                r="1.5"
+                fill="white"
+              />
+            ))
+          )}
+        </g>
+
+        {/* light flare */}
+        <circle cx="660" cy="220" r="48" fill="#ffffff" opacity="0.45" filter="url(#blurSoft)" />
+
+        {/* glass orb */}
+        <circle cx="385" cy="560" r="48" fill="url(#orb)" filter="url(#shadowOrb)" />
+        <circle cx="370" cy="540" r="20" fill="white" opacity="0.55" />
+
+        {/* small accents */}
+        <circle cx="265" cy="230" r="8" fill="#3cccd2" opacity="0.75" />
+        <circle cx="625" cy="610" r="13" fill="#7278df" opacity="0.55" />
+      </svg>
+    </div>
+  );
+}
+
 export const HeroSection = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div className="relative min-h-[calc(100vh-120px)] lg:mx-12 pt-20">
       <div className="relative mt-20 rounded-[48px] border border-navy-950/10 overflow-hidden bg-gradient-to-br from-white via-primary-50/40 to-primary-100/50 min-h-[calc(100vh-200px)]">
-        {/* Background ambient glows */}
-        <div className="absolute inset-0 pointer-events-none">
-          <motion.div
-            className="absolute top-1/4 right-1/4 w-[28rem] h-[28rem] bg-primary-200/30 rounded-full blur-3xl"
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, repeatType: 'reverse' }}
-          />
-          <motion.div
-            className="absolute bottom-20 left-20 w-64 h-64 bg-secondary-100/30 rounded-full blur-3xl"
-            animate={{ scale: [1.1, 1, 1.1] }}
-            transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, repeatType: 'reverse' }}
-          />
-          <div className="absolute top-40 left-1/3 w-3 h-3 rounded-full bg-primary-500 opacity-40" />
-          <div className="absolute bottom-32 left-1/4 w-4 h-4 rounded-full bg-secondary-400 opacity-40" />
-        </div>
+        {/* Right-side abstract SVG visual */}
+        <RightVisual />
 
-        {/* Content grid */}
-        <div className="relative grid lg:grid-cols-[1.2fr_1fr] gap-8 lg:gap-12 p-8 md:p-12 xl:p-20 items-center">
-          {/* LEFT: Copy */}
+        {/* Content (left-aligned, sits over SVG via z-index) */}
+        <div className="relative z-10 p-8 md:p-12 xl:p-20 flex flex-col justify-center min-h-[inherit]">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="relative z-10"
+            className="max-w-2xl"
           >
             {/* Category badge */}
             <motion.div
@@ -91,86 +191,6 @@ export const HeroSection = () => {
               </a>
             </motion.div>
           </motion.div>
-
-          {/* RIGHT: Abstract geometric graphic (lg+ only) */}
-          <div className="hidden lg:block relative aspect-square min-h-[420px]">
-            {/* Main diamond — rotated rounded square with layered gradients */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, rotate: 35 }}
-              animate={{ opacity: 1, scale: 1, rotate: 45 }}
-              transition={{ duration: 1.2, delay: 0.3, ease: 'easeOut' }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-            >
-              <div className="relative w-64 h-64 xl:w-80 xl:h-80">
-                {/* Drop shadow */}
-                <div className="absolute inset-0 bg-primary-900/25 rounded-3xl translate-y-10 blur-2xl scale-95" />
-                {/* Main body (purple gradient) */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary-200 via-primary-400 to-primary-700 shadow-2xl" />
-                {/* Top-left white highlight (glass effect) */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/55 via-white/0 to-transparent" />
-                {/* Inner sheen */}
-                <div className="absolute inset-6 rounded-2xl bg-gradient-to-tl from-white/20 via-transparent to-white/30 opacity-70" />
-                {/* Edge highlight ring */}
-                <div className="absolute inset-0 rounded-3xl ring-1 ring-white/40" />
-              </div>
-            </motion.div>
-
-            {/* Cone (top-left) */}
-            <motion.div
-              initial={{ opacity: 0, y: -30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="absolute top-2 left-4 xl:top-0 xl:left-0"
-            >
-              <div className="relative w-20 h-28 xl:w-24 xl:h-32">
-                <div className="absolute inset-0 bg-primary-900/20 blur-xl translate-y-3" />
-                <div
-                  className="absolute inset-0 bg-gradient-to-b from-primary-200 via-primary-400 to-primary-600 shadow-xl"
-                  style={{ clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)' }}
-                />
-                <div
-                  className="absolute inset-0 bg-gradient-to-b from-white/50 to-transparent"
-                  style={{ clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)' }}
-                />
-              </div>
-            </motion.div>
-
-            {/* Sphere (bottom-right) */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.7, ease: 'easeOut' }}
-              className="absolute bottom-2 right-2 xl:bottom-6 xl:right-6"
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-primary-900/30 rounded-full blur-xl translate-y-3" />
-                <div
-                  className="relative w-20 h-20 xl:w-24 xl:h-24 rounded-full shadow-xl"
-                  style={{
-                    background:
-                      'radial-gradient(circle at 30% 25%, #ffffff 0%, #e0e3f6 25%, #a2abe4 60%, #3D4DB7 95%)',
-                  }}
-                />
-              </div>
-            </motion.div>
-
-            {/* Small accent cube (top-right) */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.9 }}
-              className="absolute top-8 right-4 xl:top-12 xl:right-12"
-            >
-              <div className="w-10 h-10 xl:w-14 xl:h-14 rounded-xl bg-gradient-to-br from-secondary-200 to-secondary-500 rotate-12 shadow-lg" />
-            </motion.div>
-
-            {/* Floating yellow dot (bottom-left) */}
-            <motion.div
-              animate={{ y: [-8, 8] }}
-              transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY, repeatType: 'reverse' }}
-              className="absolute bottom-16 left-8 w-5 h-5 xl:w-6 xl:h-6 rounded-full bg-gradient-to-br from-highlight-300 to-highlight-500 shadow-md"
-            />
-          </div>
         </div>
       </div>
     </div>
