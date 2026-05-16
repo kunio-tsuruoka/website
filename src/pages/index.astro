@@ -7,6 +7,7 @@ import { ProcessHero } from '@/components/process-hero';
 import { ProcessSteps } from '@/components/process-steps';
 import { ButtonLink } from '@/components/ui/button';
 import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
 import { ServiceCard } from '../components/service-card';
 import { services } from '../data/service';
 import Layout from '../layouts/layout.astro';
@@ -77,6 +78,7 @@ const featuredTools = [
   title="動くプロトタイプから始めるシステム開発｜初期費用0円のゼロスタート | Beekle株式会社"
   description="Beekle株式会社は、AI・Webアプリ・モバイルアプリ開発を手がけるシステム開発会社です。初期費用0円のゼロスタートで、動くプロトタイプを見てから判断できる新しい開発体験を提供します。"
 >
+  <JsonLd slot="head" type="website" />
   <Header client:load />
   <main class="">
     {/* メインビジュアル */}

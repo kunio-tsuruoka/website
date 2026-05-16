@@ -13,7 +13,8 @@ export interface Props {
     | 'faq'
     | 'person'
     | 'softwareApplication'
-    | 'itemList';
+    | 'itemList'
+    | 'website';
   data?: Record<string, unknown>;
 }
 
@@ -64,7 +65,25 @@ const organizationSchema = {
     contactType: 'customer service',
     availableLanguage: 'Japanese',
   },
-  sameAs: [],
+  sameAs: [
+    'https://info.gbiz.go.jp/hojin/ichiran?hojinBango=8010801033652',
+    'https://www.houjin-bangou.nta.go.jp/henkorireki-johoto-1?selHouzinNo=8010801033652',
+  ],
+};
+
+// WebSite（サイト全体の identity、検索ボックス展開などにも使われる）
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Beekle',
+  alternateName: 'Beekle株式会社',
+  url: siteUrl,
+  inLanguage: 'ja',
+  publisher: {
+    '@type': 'Organization',
+    name: 'Beekle株式会社',
+    url: siteUrl,
+  },
 };
 
 // 記事（Article）
@@ -258,6 +277,8 @@ const getSchema = () => {
       return softwareApplicationSchema;
     case 'itemList':
       return itemListSchema;
+    case 'website':
+      return websiteSchema;
     default:
       return null;
   }
