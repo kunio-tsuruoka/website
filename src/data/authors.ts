@@ -20,7 +20,10 @@ export const authors: Record<string, Author> = {
     description:
       'フリーランスエンジニアとしてシステム開発に従事した後、Beekle株式会社を創業。新規事業領域で要件定義からデザイン・実装まで一気通貫で担当。0-1から1-100フェーズまでのプロダクト開発、上流工程、システム設計、ITコンサルティングを得意とする。',
     url: 'https://beekle.jp/members#tsuruoka',
-    sameAs: ['https://www.facebook.com/profile.php?id=100008095631404'],
+    sameAs: [
+      'https://github.com/kunio-tsuruoka',
+      'https://www.facebook.com/profile.php?id=100008095631404',
+    ],
     knowsAbout: [
       'システム開発',
       'プロダクトマネジメント',
