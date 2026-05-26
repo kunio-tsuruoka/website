@@ -2,6 +2,10 @@ name = "website"
 compatibility_date = "2025-04-01"
 pages_build_output_dir = "./dist"
 
+[vars]
+PUBLIC_GA_MEASUREMENT_ID = "G-R7BXGC7XN6"
+TURNSTILE_SITE_KEY = "0x4AAAAAADHmRrTyQk-jx5-X"
+
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
 id = "9d7191f03fe84b3f90f14252e5e3d7bd"
