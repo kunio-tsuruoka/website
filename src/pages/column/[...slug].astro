@@ -1,6 +1,7 @@
 ---
 import { Renderer, marked } from 'marked';
 import { Header } from '../../components/header';
+import AuthorByline from '../../components/seo/author-byline.astro';
 import JsonLd from '../../components/seo/json-ld.astro';
 import Layout from '../../layouts/layout.astro';
 import { getCategoryCta } from '../../lib/column-cta-mapping';
@@ -18,6 +19,16 @@ import { type TocItem, slugify } from '../../lib/toc';
 export const prerender = false;
 const { slug } = Astro.params;
 const columnId = slug as string;
+
+// SEOカニバリ統合: 旧スラッグから統合先へ301リダイレクト
+const columnRedirects: Record<string, string> = {
+  'project-management-01': '/column/requirements-definition-process',
+  'system-development-cost-market': '/column/web-system-cost-by-scale',
+  'system-estimate-uncertainty': '/column/system-estimate-validity',
+};
+if (columnId in columnRedirects) {
+  return Astro.redirect(columnRedirects[columnId], 301);
+}
 
 // Cloudflare Pages SSR: ランタイム環境変数を取得
 const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
@@ -84,6 +95,20 @@ let htmlContent = marked(column.content || '') as string;
 // 記事内の {{MARKER}} ビジュアルプレースホルダーを差し込みHTMLに置換
 // CONTACT_CTA / CONTACT_CTA_MID は記事固有 source で動的生成
 htmlContent = renderColumnVisuals(htmlContent, { source: `column-${columnId}` });
+
+// CTA pill 化: <p> 内が空白＋単独 <a href="/contact..."> のみのときだけ cv-cta-button クラスを付与する。
+// CSS の :only-child は要素兄弟しか見ないため、テキストに挟まれた inline link も誤マッチしてしまう（FAQ 内の
+// 「Beekleの<a href="/prooffirst">ゼロスタート</a>」のような表現がピル化される）。post-process で <p>↔<a>↔</p>
+// の間に他テキストが無いケースに限定してクラスを付ける。
+htmlContent = htmlContent.replace(
+  /<p([^>]*)>\s*(<a\s[^>]*href="\/contact[^"]*"[^>]*>[^<]+<\/a>)\s*<\/p>/g,
+  (_match, pAttrs, anchor) => {
+    const withClass = / class="/.test(anchor)
+      ? anchor.replace(/class="([^"]*)"/, 'class="$1 cv-cta-button"')
+      : anchor.replace('<a ', '<a class="cv-cta-button" ');
+    return `<p${pAttrs}>${withClass}</p>`;
+  }
+);
 
 // HTML直書きの<h2>/<h3>にもidを付与し目次データを収集（リッチエディタHTML対応）
 htmlContent = htmlContent.replace(/<h([23])>([^<]+)<\/h[23]>/g, (_match, level, text) => {
@@ -245,20 +270,25 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     {/* Article Header */}
     <section class="py-12 md:py-16 bg-gradient-to-br from-primary-50 to-primary-100">
       <div class="container mx-auto px-6 md:px-8 max-w-4xl">
-        {/* Meta Info */}
-        <div class="flex flex-wrap items-center gap-3 mb-6">
-          {isPillar && (
+        {isPillar && (
+          <div class="mb-6">
             <span class="inline-flex items-center px-3 py-1 bg-primary-500 text-white text-xs font-bold rounded-full">
               完全ガイド
             </span>
-          )}
-          <span class="text-sm text-gray-600">{frontmatter.publishedAt}</span>
-        </div>
+          </div>
+        )}
 
         {/* Title */}
-        <h1 class="text-3xl md:text-5xl font-bold text-gray-900 leading-tight">
+        <h1 class="text-3xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
           {frontmatter.title}
         </h1>
+
+        {/* Author Byline (compact) */}
+        <AuthorByline
+          variant="compact"
+          publishedAt={column.publishedAt}
+          updatedAt={column.updatedAt}
+        />
       </div>
     </section>
 
@@ -292,13 +322,20 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     )}
 
     {/* Article Content */}
-    <article class="py-16 md:py-24 bg-white">
+    <article class="py-16 md:py-20 bg-white">
       <div class="container mx-auto px-6 md:px-12 max-w-3xl">
         <div class="markdown-content">
           <Fragment set:html={htmlContent} />
         </div>
       </div>
     </article>
+
+    {/* Author Bio (detailed) - E-E-A-T signals for AI search and humans */}
+    <section class="pb-16 md:pb-20 bg-white">
+      <div class="container mx-auto px-6 md:px-12 max-w-3xl">
+        <AuthorByline variant="detailed" />
+      </div>
+    </section>
 
     {/* クラスター記事 → ピラー記事への戻りリンク */}
     {pillarColumn && (
