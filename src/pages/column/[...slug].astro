@@ -37,10 +37,7 @@ const env = runtime?.env;
 // MicroCMSから記事を取得
 const column = await getColumn(columnId, env);
 
-// knowledge カテゴリの記事はナレッジセクションへ 301 リダイレクト
-if (column?.category?.id === 'knowledge') {
-  return Astro.redirect(`/knowledge/${columnId}`, 301);
-}
+const isKnowledge = column?.category?.id === 'knowledge';
 
 if (!column) {
   return Astro.redirect('/404');
@@ -203,7 +200,8 @@ for (const match of (column.content || '').matchAll(headingFaqPattern)) {
 
 // SEO: URL
 const siteUrl = 'https://beekle.jp';
-const articleUrl = `${siteUrl}/column/${columnId}`;
+const sectionPath = isKnowledge ? 'knowledge' : 'column';
+const articleUrl = `${siteUrl}/${sectionPath}/${columnId}`;
 
 // CV: カテゴリ別の主CTA + 共通の副CTA(/contact)
 const categoryCta = getCategoryCta(column.category?.id);
@@ -244,9 +242,11 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     data={{
       items: [
         { name: 'ホーム', url: '/' },
-        { name: 'コラム', url: '/column' },
-        ...(column.category ? [{ name: column.category.title, url: `/column#${column.category.id}` }] : []),
-        { name: column.title, url: `/column/${columnId}` },
+        isKnowledge
+          ? { name: 'ナレッジ', url: '/knowledge' }
+          : { name: 'コラム', url: '/column' },
+        ...(!isKnowledge && column.category ? [{ name: column.category.title, url: `/column#${column.category.id}` }] : []),
+        { name: column.title, url: `/${sectionPath}/${columnId}` },
       ],
     }}
   />
@@ -265,7 +265,9 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
         <nav class="flex items-center gap-2 text-sm text-gray-600 min-h-[44px]">
           <a href="/" class="hover:text-primary-500 transition-colors py-3 px-1">ホーム</a>
           <span>/</span>
-          <a href="/column" class="hover:text-primary-500 transition-colors py-3 px-1">コラム</a>
+          <a href={isKnowledge ? '/knowledge' : '/column'} class="hover:text-primary-500 transition-colors py-3 px-1">
+            {isKnowledge ? 'ナレッジ' : 'コラム'}
+          </a>
           <span>/</span>
           <span class="text-gray-900">{frontmatter.title}</span>
         </nav>
