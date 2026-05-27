@@ -55,7 +55,29 @@ export const authors: Record<string, Author> = {
       'システム設計レビュー',
     ],
   },
+  sato: {
+    id: 'sato',
+    name: '佐藤 瑛隆',
+    jobTitle: 'データサイエンティスト',
+    description:
+      '京都大学理学研究科数学・数理解析専攻修了。株式会社RUTILEAにてAIソリューション開発のチーフエンジニアを経験後、アクセンチュア株式会社でデータサイエンティストとして統計モデル・機械学習を用いたSCM領域のDX支援に従事。現在はフリーランスとしてデータ分析、企業向け研修、教材制作支援を行う。Beekleでは生成AI・CDP関連コラムの技術監修を担当。',
+    url: 'https://beekle.jp/members',
+    knowsAbout: [
+      'データサイエンス',
+      '統計モデル',
+      '機械学習',
+      'Python',
+      'AI開発',
+      'SCM最適化',
+      '確率解析',
+    ],
+  },
 };
 
 export const defaultAuthor = authors.tsuruoka;
 export const defaultReviewer = authors.nakamura;
+
+export const categoryReviewerMap: Record<string, string> = {
+  'ai-development': 'sato',
+  'cdp-development': 'sato',
+};

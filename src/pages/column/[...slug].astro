@@ -4,6 +4,7 @@ import { Header } from '../../components/header';
 import AuthorByline from '../../components/seo/author-byline.astro';
 import JsonLd from '../../components/seo/json-ld.astro';
 import Layout from '../../layouts/layout.astro';
+import { categoryReviewerMap } from '../../data/authors';
 import { getCategoryCta } from '../../lib/column-cta-mapping';
 import { renderColumnVisuals } from '../../lib/column-visuals';
 import {
@@ -207,6 +208,7 @@ const articleUrl = `${siteUrl}/${sectionPath}/${columnId}`;
 const categoryCta = getCategoryCta(column.category?.id);
 const ctaSource = `column-${columnId}`;
 const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=pre-tool`;
+const reviewerId = column.category?.id ? categoryReviewerMap[column.category.id] : undefined;
 ---
 
 <Layout
@@ -293,6 +295,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
         {/* Author Byline (compact) */}
         <AuthorByline
           variant="compact"
+          reviewerId={reviewerId}
           publishedAt={column.publishedAt}
           updatedAt={column.updatedAt}
         />
@@ -340,7 +343,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     {/* Author Bio (detailed) - E-E-A-T signals for AI search and humans */}
     <section class="pb-16 md:pb-20 bg-white">
       <div class="container mx-auto px-6 md:px-12 max-w-3xl">
-        <AuthorByline variant="detailed" />
+        <AuthorByline variant="detailed" reviewerId={reviewerId} />
       </div>
     </section>
 
