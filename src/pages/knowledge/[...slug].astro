@@ -6,13 +6,7 @@ import JsonLd from '../../components/seo/json-ld.astro';
 import Layout from '../../layouts/layout.astro';
 import { getCategoryCta } from '../../lib/column-cta-mapping';
 import { renderColumnVisuals } from '../../lib/column-visuals';
-import {
-  type MicroCMSEnv,
-  getColumn,
-  getPillarSlug,
-  getRelatedColumns,
-  isPillarArticle,
-} from '../../lib/microcms';
+import { type MicroCMSEnv, getColumn, getRelatedColumns } from '../../lib/microcms';
 import { type TocItem, slugify } from '../../lib/toc';
 
 // SSR: リクエスト時にMicroCMSから取得
@@ -20,25 +14,23 @@ export const prerender = false;
 const { slug } = Astro.params;
 const columnId = slug as string;
 
-// SEOカニバリ統合: 旧スラッグから統合先へ301リダイレクト
-const columnRedirects: Record<string, string> = {
-  'project-management-01': '/column/requirements-definition-process',
-  'system-development-cost-market': '/column/web-system-cost-by-scale',
-  'system-estimate-uncertainty': '/column/system-estimate-validity',
-  // Knowledge section migration
-  'gherkin-bdd-introduction': '/knowledge/gherkin-bdd-introduction',
-  'ears-requirements-syntax-guide': '/knowledge/ears-requirements-syntax-guide',
-  'ears-gherkin-workflow': '/knowledge/ears-gherkin-workflow',
-};
-if (columnId in columnRedirects) {
-  return Astro.redirect(columnRedirects[columnId], 301);
+// Knowledge section で公開する記事のスラッグ一覧
+const KNOWLEDGE_SLUGS = [
+  'gherkin-bdd-introduction',
+  'ears-requirements-syntax-guide',
+  'ears-gherkin-workflow',
+];
+
+// Knowledge に含まれないスラッグはコラムへ 301 リダイレクト
+if (!KNOWLEDGE_SLUGS.includes(columnId)) {
+  return Astro.redirect(`/column/${columnId}`, 301);
 }
 
 // Cloudflare Pages SSR: ランタイム環境変数を取得
 const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
 const env = runtime?.env;
 
-// MicroCMSから記事を取得
+// MicroCMSから記事を取得（columns エンドポイントを共用）
 const column = await getColumn(columnId, env);
 
 if (!column) {
@@ -75,7 +67,7 @@ renderer.listitem = ({ text, task, checked }) => {
     return `<li class="${className}">${cleanText}</li>\n`;
   }
 
-  // MicroCMS形式: テキストが [ ] や [x] で始まる場合も変換（•ビュレット付きも対応）
+  // MicroCMS形式: テキストが [ ] や [x] で始まる場合も変換（ビュレット付きも対応）
   const checkboxMatch = text.match(/^[•・]?\s*\[([xX\s]?)\]\s*/);
   if (checkboxMatch) {
     const isChecked = checkboxMatch[1].toLowerCase() === 'x';
@@ -97,13 +89,9 @@ marked.use({ renderer });
 let htmlContent = marked(column.content || '') as string;
 
 // 記事内の {{MARKER}} ビジュアルプレースホルダーを差し込みHTMLに置換
-// CONTACT_CTA / CONTACT_CTA_MID は記事固有 source で動的生成
-htmlContent = renderColumnVisuals(htmlContent, { source: `column-${columnId}` });
+htmlContent = renderColumnVisuals(htmlContent, { source: `knowledge-${columnId}` });
 
 // CTA pill 化: <p> 内が空白＋単独 <a href="/contact..."> のみのときだけ cv-cta-button クラスを付与する。
-// CSS の :only-child は要素兄弟しか見ないため、テキストに挟まれた inline link も誤マッチしてしまう（FAQ 内の
-// 「Beekleの<a href="/prooffirst">ゼロスタート</a>」のような表現がピル化される）。post-process で <p>↔<a>↔</p>
-// の間に他テキストが無いケースに限定してクラスを付ける。
 htmlContent = htmlContent.replace(
   /<p([^>]*)>\s*(<a\s[^>]*href="\/contact[^"]*"[^>]*>[^<]+<\/a>)\s*<\/p>/g,
   (_match, pAttrs, anchor) => {
@@ -128,7 +116,6 @@ htmlContent = htmlContent.replace(/<h([23])>([^<]+)<\/h[23]>/g, (_match, level, 
 htmlContent = htmlContent.replace(
   /(<div class="faq-item">)([\s\S]*?)(?=<div class="faq-item">|<hr|$)/g,
   (_match, open, content) => {
-    // 既に閉じタグがなければ追加
     return `${open}${content}</div>`;
   }
 );
@@ -137,17 +124,10 @@ const frontmatter = {
   publishedAt: new Date(column.publishedAt).toLocaleDateString('ja-JP'),
 };
 
-// ピラー記事判定
-const isPillar = isPillarArticle(columnId);
-
 // 同カテゴリの関連記事を取得（トピッククラスタ内部リンク）
 const relatedColumns = column.category
   ? await getRelatedColumns(columnId, column.category.id, 20, env)
   : [];
-
-// クラスター記事の場合: ピラー記事へのリンク情報を取得
-const pillarSlug = column.category ? getPillarSlug(column.category.id) : undefined;
-const pillarColumn = pillarSlug && !isPillar ? await getColumn(pillarSlug, env) : null;
 
 // SEO: meta description（AI生成があればそちらを優先、なければ本文から自動生成）
 const fallbackDescription = (() => {
@@ -163,9 +143,6 @@ const fallbackDescription = (() => {
 const metaDescription = column.description || fallbackDescription;
 
 // SEO: FAQ構造化データを記事内から自動抽出
-// パターンA: <p>Q. question A. answer</p>
-// パターンB: <p><strong>Q. question</strong> A. answer</p>
-// パターンC: <p>Q. question</p><p>A. answer</p>
 const faqPatterns = [
   /<p><strong>Q\.\s*(.*?)<\/strong>\s*A\.\s*([\s\S]*?)<\/p>/g,
   /<p>Q\.\s*(.*?)\s*A\.\s*([\s\S]*?)<\/p>/g,
@@ -202,11 +179,11 @@ for (const match of (column.content || '').matchAll(headingFaqPattern)) {
 
 // SEO: URL
 const siteUrl = 'https://beekle.jp';
-const articleUrl = `${siteUrl}/column/${columnId}`;
+const articleUrl = `${siteUrl}/knowledge/${columnId}`;
 
 // CV: カテゴリ別の主CTA + 共通の副CTA(/contact)
 const categoryCta = getCategoryCta(column.category?.id);
-const ctaSource = `column-${columnId}`;
+const ctaSource = `knowledge-${columnId}`;
 const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=pre-tool`;
 ---
 
@@ -243,9 +220,8 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     data={{
       items: [
         { name: 'ホーム', url: '/' },
-        { name: 'コラム', url: '/column' },
-        ...(column.category ? [{ name: column.category.title, url: `/column#${column.category.id}` }] : []),
-        { name: column.title, url: `/column/${columnId}` },
+        { name: 'ナレッジ', url: '/knowledge' },
+        { name: column.title, url: `/knowledge/${columnId}` },
       ],
     }}
   />
@@ -264,7 +240,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
         <nav class="flex items-center gap-2 text-sm text-gray-600 min-h-[44px]">
           <a href="/" class="hover:text-primary-500 transition-colors py-3 px-1">ホーム</a>
           <span>/</span>
-          <a href="/column" class="hover:text-primary-500 transition-colors py-3 px-1">コラム</a>
+          <a href="/knowledge" class="hover:text-primary-500 transition-colors py-3 px-1">ナレッジ</a>
           <span>/</span>
           <span class="text-gray-900">{frontmatter.title}</span>
         </nav>
@@ -272,15 +248,13 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     </section>
 
     {/* Article Header */}
-    <section class="py-12 md:py-16 bg-gradient-to-br from-primary-50 to-primary-100">
+    <section class="py-12 md:py-16 bg-gradient-to-br from-cyan-50 to-cyan-100">
       <div class="container mx-auto px-6 md:px-8 max-w-4xl">
-        {isPillar && (
-          <div class="mb-6">
-            <span class="inline-flex items-center px-3 py-1 bg-primary-500 text-white text-xs font-bold rounded-full">
-              完全ガイド
-            </span>
-          </div>
-        )}
+        <div class="mb-6">
+          <span class="inline-flex items-center px-3 py-1 bg-secondary-500 text-white text-xs font-bold rounded-full">
+            Beekleのナレッジ
+          </span>
+        </div>
 
         {/* Title */}
         <h1 class="text-3xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
@@ -302,7 +276,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
         <div class="container mx-auto px-6 md:px-12 max-w-3xl">
           <nav class="toc-container bg-gray-50 rounded-2xl p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-secondary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
               </svg>
               目次
@@ -312,9 +286,9 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
                 <li class={item.level === 3 ? 'ml-4' : ''}>
                   <a
                     href={`#${item.id}`}
-                    class="text-gray-600 hover:text-primary-500 transition-colors text-sm block py-1"
+                    class="text-gray-600 hover:text-secondary-500 transition-colors text-sm block py-1"
                   >
-                    {item.level === 3 && <span class="text-gray-400 mr-1">─</span>}
+                    {item.level === 3 && <span class="text-gray-400 mr-1">--</span>}
                     {item.text}
                   </a>
                 </li>
@@ -341,73 +315,38 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
       </div>
     </section>
 
-    {/* クラスター記事 → ピラー記事への戻りリンク */}
-    {pillarColumn && (
-      <section class="py-8 bg-primary-50 border-y border-primary-100">
-        <div class="container mx-auto px-6 md:px-8 max-w-4xl">
-          <a
-            href={`/column/${pillarSlug}`}
-            class="flex items-center gap-4 group"
-          >
-            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
-            </div>
-            <div class="flex-1">
-              <p class="text-sm font-bold text-primary-600 mb-0.5">このテーマの全体像を知る</p>
-              <p class="text-lg font-bold text-gray-900 group-hover:text-primary-500 transition-colors leading-tight">
-                {pillarColumn.title}
-              </p>
-            </div>
-            <svg class="w-5 h-5 text-primary-500 group-hover:translate-x-1 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
-      </section>
-    )}
-
-    {/* Related Articles - トピッククラスタ内部リンク */}
+    {/* Related Articles - トピッククラスタ内部リンク（リンク先はコラムのまま） */}
     {relatedColumns.length > 0 && (
       <section class="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-white">
         <div class="container mx-auto px-6 md:px-8 max-w-4xl">
           <div class="mb-10">
             <div class="flex items-center gap-3 mb-2">
-              <div class="w-1.5 h-8 bg-gradient-to-b from-primary-500 to-primary-600 rounded"></div>
+              <div class="w-1.5 h-8 bg-gradient-to-b from-secondary-500 to-secondary-600 rounded"></div>
               <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
-                {isPillar ? 'このガイドの関連記事' : '関連記事'}
+                関連記事
               </h2>
             </div>
             {column.category && (
               <p class="text-gray-600 ml-5">
-                {isPillar
-                  ? `「${column.category.title}」の個別テーマを深掘りする記事`
-                  : `「${column.category.title}」カテゴリの他の記事`
-                }
+                「{column.category.title}」カテゴリの他の記事
               </p>
             )}
           </div>
 
           <div class="grid md:grid-cols-2 gap-6">
-            {relatedColumns.map((related, index) => (
+            {relatedColumns.map((related) => (
               <a
                 href={`/column/${related.id}`}
-                class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all p-6 border border-gray-100 hover:border-primary-200"
+                class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all p-6 border border-gray-100 hover:border-secondary-200"
               >
-                {isPillar && (
-                  <span class="inline-block text-xs font-bold text-primary-500 bg-primary-50 px-2 py-1 rounded-full mb-3">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                )}
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-500 transition-colors mb-3 leading-tight">
+                <h3 class="text-lg font-bold text-gray-900 group-hover:text-secondary-500 transition-colors mb-3 leading-tight">
                   {related.title}
                 </h3>
                 <div class="flex items-center justify-between">
                   <span class="text-sm text-gray-500">
                     {new Date(related.publishedAt).toLocaleDateString('ja-JP')}
                   </span>
-                  <div class="flex items-center text-primary-500 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+                  <div class="flex items-center text-secondary-500 font-semibold text-sm group-hover:translate-x-1 transition-transform">
                     <span>読む</span>
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -419,11 +358,11 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
           </div>
 
           {/* カテゴリ一覧へのリンク */}
-          {column.category && !isPillar && (
+          {column.category && (
             <div class="mt-8 text-center">
               <a
                 href={`/column#${column.category.id}`}
-                class="inline-flex items-center text-primary-500 hover:text-primary-600 font-semibold transition-colors group py-3"
+                class="inline-flex items-center text-secondary-500 hover:text-secondary-600 font-semibold transition-colors group py-3"
               >
                 <span>「{column.category.title}」の記事をすべて見る</span>
                 <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -436,23 +375,23 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
       </section>
     )}
 
-    {/* Back to Column List */}
+    {/* Back to Knowledge List */}
     <section class="py-16 bg-white">
       <div class="container mx-auto px-6 md:px-8 max-w-4xl">
         <a
-          href="/column"
-          class="inline-flex items-center text-primary-500 hover:text-primary-600 font-semibold transition-colors group py-3"
+          href="/knowledge"
+          class="inline-flex items-center text-secondary-500 hover:text-secondary-600 font-semibold transition-colors group py-3"
         >
           <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
-          <span>コラム一覧に戻る</span>
+          <span>ナレッジ一覧に戻る</span>
         </a>
       </div>
     </section>
 
     {/* CTA Section: 主動線(関連ツール体験) + 副動線(相談) */}
-    <section class="py-20 bg-primary-500">
+    <section class="py-20 bg-secondary-500">
       <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center">
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
           この知識を実践してみませんか？
@@ -465,7 +404,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
             href={categoryCta.primary.href}
             data-cta-source={ctaSource}
             data-cta-id={categoryCta.primary.ctaId}
-            class="column-cta-primary inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl"
+            class="knowledge-cta-primary inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-secondary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl"
           >
             {categoryCta.primary.label}
             <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -477,7 +416,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
               href={categoryCta.secondary.href}
               data-cta-source={ctaSource}
               data-cta-id={categoryCta.secondary.ctaId}
-              class="column-cta-secondary inline-flex items-center justify-center px-8 py-5 text-lg font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
+              class="knowledge-cta-secondary inline-flex items-center justify-center px-8 py-5 text-lg font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-secondary-500 transition-all"
             >
               {categoryCta.secondary.label}
             </a>
@@ -494,7 +433,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
             href={subContactHref}
             data-cta-source={ctaSource}
             data-cta-id="contact-pre-tool"
-            class="column-cta-sub underline decoration-white/60 hover:decoration-white font-medium ml-1 inline-block py-2"
+            class="knowledge-cta-sub underline decoration-white/60 hover:decoration-white font-medium ml-1 inline-block py-2"
           >
             先に相談する
           </a>
@@ -506,7 +445,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     <script>
       import { trackCtaClick } from '../../lib/analytics';
       const ctas = document.querySelectorAll<HTMLAnchorElement>(
-        '.column-cta-primary, .column-cta-secondary, .column-cta-sub'
+        '.knowledge-cta-primary, .knowledge-cta-secondary, .knowledge-cta-sub'
       );
       for (const el of ctas) {
         el.addEventListener('click', () => {
@@ -531,7 +470,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
   }
 
   .markdown-content :global(h2) {
-    @apply font-bold text-gray-900 text-2xl md:text-3xl mt-16 mb-6 pb-3 border-b-4 border-primary-400;
+    @apply font-bold text-gray-900 text-2xl md:text-3xl mt-16 mb-6 pb-3 border-b-4 border-secondary-400;
     scroll-margin-top: 6rem;
   }
 
@@ -542,7 +481,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
 
   .markdown-content :global(h3)::before {
     content: '';
-    @apply absolute left-0 w-1.5 bg-gradient-to-b from-primary-500 to-primary-600 rounded;
+    @apply absolute left-0 w-1.5 bg-gradient-to-b from-secondary-500 to-secondary-600 rounded;
     top: 0.2em;
     height: 1.3em;
   }
@@ -562,19 +501,19 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
 
   /* リンクスタイル - 目立つがエレガント */
   .markdown-content :global(a) {
-    @apply text-primary-500 font-medium no-underline;
+    @apply text-secondary-500 font-medium no-underline;
     position: relative;
     transition: all 0.2s ease;
     border-bottom: 2px solid transparent;
   }
 
   .markdown-content :global(a):hover {
-    @apply text-primary-600;
+    @apply text-secondary-600;
     border-bottom-color: currentColor;
   }
 
   .markdown-content :global(a)::after {
-    content: '→';
+    content: '\2192';
     margin-left: 0.25rem;
     opacity: 0;
     transition: all 0.2s ease;
@@ -588,8 +527,8 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
 
   /* 強調テキスト */
   .markdown-content :global(strong) {
-    @apply font-bold text-primary-700;
-    background: linear-gradient(180deg, transparent 60%, rgba(199, 210, 254, 0.4) 60%);
+    @apply font-bold text-secondary-600;
+    background: linear-gradient(180deg, transparent 60%, rgba(0, 196, 204, 0.15) 60%);
     padding: 0 0.2em;
   }
 
@@ -616,8 +555,8 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     top: 0.7em;
     width: 8px;
     height: 8px;
-    background: linear-gradient(135deg, #3D4DB7, #3544a4);
-    box-shadow: 0 0 0 3px rgba(61, 77, 183, 0.15);
+    background: linear-gradient(135deg, #00c4cc, #009ea5);
+    box-shadow: 0 0 0 3px rgba(0, 196, 204, 0.15);
   }
 
   /* チェックボックス（- [ ] / - [x] マークダウン記法） */
@@ -673,28 +612,28 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
   .markdown-content :global(ol li)::before {
     content: counter(item);
     @apply absolute left-0 w-8 h-8 text-white rounded-full flex items-center justify-center font-bold text-sm;
-    background: linear-gradient(135deg, #3D4DB7, #3544a4);
+    background: linear-gradient(135deg, #00c4cc, #009ea5);
     top: 0.15em;
   }
 
   /* 引用ブロック */
   .markdown-content :global(blockquote) {
-    @apply bg-gradient-to-r from-primary-50 to-primary-100 rounded-xl;
-    margin-top: 40px;    /* 8 × 5 */
-    margin-bottom: 40px; /* 8 × 5 */
-    padding: 24px;       /* 8 × 3 */
-    border-left: 4px solid #3D4DB7;
+    @apply bg-gradient-to-r from-cyan-50 to-cyan-100 rounded-xl;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding: 24px;
+    border-left: 4px solid #00c4cc;
     font-style: italic;
     position: relative;
   }
 
   .markdown-content :global(blockquote)::before {
-    content: '"';
+    content: '\201C';
     position: absolute;
-    top: -8px;           /* 8 × -1 */
-    left: 16px;          /* 8 × 2 */
+    top: -8px;
+    left: 16px;
     font-size: 4rem;
-    color: rgba(61, 77, 183, 0.2);
+    color: rgba(0, 196, 204, 0.2);
     font-family: Georgia, serif;
     line-height: 1;
   }
@@ -705,17 +644,17 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
 
   /* コードブロック */
   .markdown-content :global(code) {
-    @apply bg-gray-100 text-primary-500 rounded;
-    padding: 4px 8px;    /* 上下4px (0.5×8), 左右8px (1×8) */
+    @apply bg-gray-100 text-secondary-500 rounded;
+    padding: 4px 8px;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    font-size: 14px;     /* 本文より少し小さく */
+    font-size: 14px;
   }
 
   .markdown-content :global(pre) {
     @apply bg-gray-900 text-gray-100 rounded-xl overflow-x-auto shadow-lg;
-    margin-top: 40px;    /* 8 × 5 */
-    margin-bottom: 40px; /* 8 × 5 */
-    padding: 24px;       /* 8 × 3 */
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding: 24px;
   }
 
   .markdown-content :global(pre code) {
@@ -726,36 +665,36 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
   /* テーブル */
   .markdown-content :global(table) {
     @apply w-full border-collapse rounded-lg overflow-hidden shadow-md;
-    margin-top: 40px;    /* 8 × 5 */
-    margin-bottom: 40px; /* 8 × 5 */
+    margin-top: 40px;
+    margin-bottom: 40px;
   }
 
   .markdown-content :global(thead) {
-    @apply bg-gradient-to-r from-primary-500 to-primary-600;
+    @apply bg-gradient-to-r from-secondary-500 to-secondary-600;
   }
 
   .markdown-content :global(th) {
     @apply text-left text-white font-bold;
-    padding: 16px;       /* 8 × 2 */
+    padding: 16px;
     font-size: 16px;
   }
 
   .markdown-content :global(td) {
     @apply border-t border-gray-200 text-gray-700;
-    padding: 16px;       /* 8 × 2 */
+    padding: 16px;
     font-size: 16px;
     line-height: 1.5;
   }
 
   .markdown-content :global(tbody tr):hover {
-    @apply bg-primary-50;
+    @apply bg-cyan-50;
   }
 
   /* 画像 */
   .markdown-content :global(img) {
     @apply rounded-xl shadow-lg mx-auto;
-    margin-top: 40px;    /* 8 × 5 */
-    margin-bottom: 40px; /* 8 × 5 */
+    margin-top: 40px;
+    margin-bottom: 40px;
     max-width: 100%;
     height: auto;
   }
@@ -763,16 +702,16 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
   /* 水平線 */
   .markdown-content :global(hr) {
     @apply border-0;
-    margin-top: 64px;    /* 8 × 8 */
-    margin-bottom: 64px; /* 8 × 8 */
+    margin-top: 64px;
+    margin-bottom: 64px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, #e0e7ff, transparent);
+    background: linear-gradient(90deg, transparent, #cffafe, transparent);
   }
 
   /* FAQ専用スタイル */
   .markdown-content :global(.faq-item) {
     @apply bg-white rounded-2xl shadow-soft mb-8 overflow-hidden;
-    border: 1px solid rgba(61, 77, 183, 0.1);
+    border: 1px solid rgba(0, 196, 204, 0.1);
     transition: box-shadow 0.3s ease;
   }
 
@@ -783,8 +722,8 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
   .markdown-content :global(.faq-question) {
     @apply flex items-center gap-4 text-xl md:text-2xl font-bold text-gray-900 border-b-0 mt-0 mb-0 pl-0;
     padding: 24px 28px;
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
-    border-bottom: 1px solid rgba(61, 77, 183, 0.1);
+    background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%);
+    border-bottom: 1px solid rgba(0, 196, 204, 0.1);
     scroll-margin-top: 6rem;
   }
 
@@ -796,8 +735,8 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     @apply flex-shrink-0 flex items-center justify-center text-white font-bold text-base rounded-full;
     width: 44px;
     height: 44px;
-    background: linear-gradient(135deg, #3D4DB7, #3544a4);
-    box-shadow: 0 4px 12px rgba(61, 77, 183, 0.3);
+    background: linear-gradient(135deg, #00c4cc, #009ea5);
+    box-shadow: 0 4px 12px rgba(0, 196, 204, 0.3);
   }
 
   .markdown-content :global(.faq-text) {
@@ -825,22 +764,22 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
 
   /* FAQ回答の最初の太字テキスト（A. 回答）をハイライト */
   .markdown-content :global(.faq-item > p:first-of-type strong) {
-    @apply text-primary-600 text-lg;
-    background: linear-gradient(180deg, transparent 60%, rgba(199, 210, 254, 0.5) 60%);
+    @apply text-secondary-600 text-lg;
+    background: linear-gradient(180deg, transparent 60%, rgba(0, 196, 204, 0.15) 60%);
   }
 
 
   /* カスタムボックススタイル（もし使われていれば） */
   .markdown-content :global(div[style*="background"]) {
     @apply rounded-xl;
-    padding: 24px;       /* 8 × 3 */
-    margin-top: 32px;    /* 8 × 4 */
-    margin-bottom: 32px; /* 8 × 4 */
+    padding: 24px;
+    margin-top: 32px;
+    margin-bottom: 32px;
   }
 
-  /* CTAボタン pill 化: post-process で <p> 直下の単独 <a href="/contact..."> のみに cv-cta-button クラスが付与される */
+  /* CTAボタン pill 化 */
   .markdown-content :global(a.cv-cta-button) {
-    @apply inline-flex items-center bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-full no-underline;
+    @apply inline-flex items-center bg-gradient-to-r from-secondary-500 to-secondary-600 text-white font-bold rounded-full no-underline;
     padding: 12px 24px;
     transition: all 0.3s ease;
     border-bottom: none;
@@ -885,7 +824,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
   }
 
   .markdown-content :global(.cv-header-primary) {
-    background: linear-gradient(135deg, #3D4DB7, #3544a4);
+    background: linear-gradient(135deg, #00c4cc, #009ea5);
   }
 
   .markdown-content :global(.cv-header-success) {
@@ -916,8 +855,8 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
   }
 
   .markdown-content :global(.cv-label-who) {
-    background: #E8EAFF;
-    color: #3D4DB7;
+    background: #ecfeff;
+    color: #00818a;
   }
 
   .markdown-content :global(.cv-label-what) {
@@ -939,7 +878,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     margin: 0;
   }
 
-  /* Why → Hows ダイアグラム */
+  /* Why -> Hows ダイアグラム */
   .markdown-content :global(.cv-whyhow) {
     @apply rounded-2xl border border-gray-200 bg-gray-50 p-5 shadow-soft;
   }
@@ -962,8 +901,8 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
   }
 
   .markdown-content :global(.cv-whyhow-how) {
-    background: #E8EAFF;
-    border-left-color: #3D4DB7;
+    background: #ecfeff;
+    border-left-color: #00c4cc;
   }
 
   .markdown-content :global(.cv-whyhow-label) {
@@ -974,7 +913,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
 
   .markdown-content :global(.cv-whyhow-num) {
     @apply inline-block text-xs font-bold mr-2;
-    color: #3D4DB7;
+    color: #00818a;
   }
 
   .markdown-content :global(.cv-whyhow-text) {
@@ -1160,7 +1099,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
   .markdown-content :global(.cv-fm-effect) {
     @apply text-gray-700 text-sm;
     background: #f9fafb;
-    border-left: 4px solid #3D4DB7;
+    border-left: 4px solid #00c4cc;
     padding: 10px 14px;
     margin: 0 0 8px 0;
     line-height: 1.7;
@@ -1189,7 +1128,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
 
   /* EARS 完成例カード */
   .markdown-content :global(.cv-card-full) {
-    border-color: #c7d2fe;
+    border-color: #a5f3fc;
   }
 
   .markdown-content :global(.cv-full-body) {
@@ -1198,7 +1137,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
 
   .markdown-content :global(.cv-full-section) {
     padding: 18px 20px;
-    border-bottom: 1px solid #eef2ff;
+    border-bottom: 1px solid #ecfeff;
   }
 
   .markdown-content :global(.cv-full-section:last-child) {
@@ -1207,7 +1146,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
 
   .markdown-content :global(.cv-full-title) {
     @apply font-bold;
-    color: #3D4DB7;
+    color: #00818a;
     font-size: 0.95rem;
     margin: 0 0 10px 0;
     padding: 0;
@@ -1265,8 +1204,8 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
   }
 
   .markdown-content :global(.cv-tag-ubiquitous) {
-    background: #E8EAFF;
-    color: #3D4DB7;
+    background: #ecfeff;
+    color: #00818a;
   }
 
   .markdown-content :global(.cv-tag-event) {
@@ -1408,7 +1347,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
     width: 18px;
     height: 18px;
     border-radius: 4px;
-    border: 2px solid #c7d2fe;
+    border: 2px solid #a5f3fc;
     background: #fff;
   }
 

@@ -555,7 +555,6 @@ function buildZeroStartConsultCta(source: string, intent: string): string {
 </figure>`;
 }
 
-
 const EARS_GHERKIN_WORKFLOW = `<figure class="cv-whyhow">
   <figcaption class="cv-whyhow-title">ビジネスサイド → エンジニア → デモ／テストの流れ</figcaption>
   <div class="cv-whyhow-box cv-whyhow-why">
@@ -657,7 +656,6 @@ export function renderColumnVisuals(html: string, ctx?: ColumnVisualContext): st
       const bare = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
       result = result.replace(wrapped, visual).replace(bare, visual);
     }
-
 
     const bridgeMarkers: Array<[string, string]> = [['BRIDGE_CTA', 'bridge']];
     for (const [key, _intent] of bridgeMarkers) {

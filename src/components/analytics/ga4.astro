@@ -3,10 +3,12 @@
 // import.meta.env はビルド時のみ有効。Cloudflare Pages のビルド環境に
 // PUBLIC_GA_MEASUREMENT_ID が設定されていないとタグごと消えるため、
 // TURNSTILE_SITE_KEY と同じく公開値はハードコードフォールバックで保証する。
-const runtime = (Astro.locals as { runtime?: { env?: { PUBLIC_GA_MEASUREMENT_ID?: string } } }).runtime;
-const GA_MEASUREMENT_ID = runtime?.env?.PUBLIC_GA_MEASUREMENT_ID
-  ?? import.meta.env.PUBLIC_GA_MEASUREMENT_ID
-  ?? 'G-R7BXGC7XN6';
+const runtime = (Astro.locals as { runtime?: { env?: { PUBLIC_GA_MEASUREMENT_ID?: string } } })
+  .runtime;
+const GA_MEASUREMENT_ID =
+  runtime?.env?.PUBLIC_GA_MEASUREMENT_ID ??
+  import.meta.env.PUBLIC_GA_MEASUREMENT_ID ??
+  'G-R7BXGC7XN6';
 ---
 
 <!-- Google tag (gtag.js) -->

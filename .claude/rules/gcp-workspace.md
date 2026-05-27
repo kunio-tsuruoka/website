@@ -20,6 +20,29 @@ const token = (await (await auth.getClient()).getAccessToken()).token;
 
 `POST https://analyticsadmin.googleapis.com/v1beta/properties/355503040/keyEvents` で `{eventName, countingMethod: "ONCE_PER_EVENT"}` を投げれば作成。`accessBindings` 系だけは `analytics.manage.users` も必要なので注意。
 
+## GSC (Search Console) は OAuth 必須 — SA では使えない (2026-05-28)
+
+- SA (`ga4-mcp@ga4-mcp-beekle.iam.gserviceaccount.com`) は GSC プロパティに追加**できない**。Google 側のバグで「このメールアドレスは Google アカウントと一致しません」と拒否される（https://support.google.com/analytics/thread/428546868 参照）
+- `.mcp.json` の `gsc` MCP は `GOOGLE_APPLICATION_CREDENTIALS` に SA キーを指定しているが、`siteUnverifiedUser` になりデータ取得不可
+- **回避策**: `scripts/gsc-oauth-setup.mjs` で OAuth 認証を完了し、トークンを `~/.gcp-keys/gsc-token.json` に保存済み
+- GSC API 経由で `searchAnalytics.query` (readonly scope) は取得可能
+- サイトマップ送信 (`webmasters.readonly` scope では権限不足) は管理画面から手動送信が必要
+
+### GSC データ取得スクリプト
+
+```bash
+node scripts/gsc-query.mjs                       # JSON (全件, query+page)
+node scripts/gsc-query.mjs --query-only --top 100 # クエリ上位100件
+node scripts/gsc-query.mjs --page-only --csv      # ページ別 CSV
+node scripts/gsc-query.mjs --start 2026-05-01 --end 2026-05-28
+```
+
+トークンは自動リフレッシュされる（期限切れ時に `refresh_token` でアクセストークンを再取得し `gsc-token.json` に上書き保存）。`refresh_token` 自体が失効した場合は `node scripts/gsc-oauth-setup.mjs` を再実行してブラウザ認証をやり直す。
+
+### MCP 側の制約
+
+`mcp-server-gsc` (npm) は `GoogleAuth({ keyFile })` で SA 認証のみ対応。OAuth トークンは読めない。将来 OAuth 対応の GSC MCP が出るか、`mcp-server-gsc` を fork するまではスクリプト経由で取得する運用。
+
 ## Workspace OAuth の落とし穴
 - `gcloud auth login --scopes=...analytics.edit...` のように **restricted/sensitive スコープ** を Google Cloud SDK (Client ID `32555940559`) で要求すると "App is blocked" でブロックされる
 - Workspace 管理画面 (admin.google.com) の Allowlist や trusted apps 設定では解除不可 (Google Cloud SDK 自体が Workspace ユーザー向けスコープ allowlist を持っているため)
