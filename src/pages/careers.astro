@@ -12,11 +12,11 @@ const siteUrl = 'https://beekle.jp';
 const jobPostingJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'JobPosting',
-  title: '新卒・インターンエンジニア',
+  title: 'エンジニア（新卒・中途）',
   datePosted: '2026-05-28',
   description:
     'フルリモート・フレックスタイム制のスモールチームで、システム開発の問題解決に取り組むエンジニアを募集',
-  employmentType: ['FULL_TIME', 'INTERN'],
+  employmentType: ['FULL_TIME'],
   hiringOrganization: {
     '@type': 'Organization',
     '@id': siteUrl,
@@ -75,8 +75,9 @@ const appealCards = [
 ];
 
 const recruitmentDetails = [
-  { label: '募集対象', value: '新卒（2027年卒）、インターン' },
-  { label: '雇用形態', value: '正社員（新卒）、インターン' },
+  { label: '募集対象', value: '新卒（2027年卒）、中途' },
+  { label: '雇用形態', value: '正社員' },
+  { label: '給与', value: 'スキル見合い（経験・能力に応じて決定）' },
   {
     label: '勤務形態',
     value: 'フレックスタイム制（コアタイムあり、月精算160時間）',
@@ -128,8 +129,8 @@ const workItems = [
 ---
 
 <Layout
-  title="新卒・インターン採用 | Beekle"
-  description="Beekle株式会社の新卒・インターン採用情報。フルリモート・フレックスタイム制。論理的で優しいスモールチームで、問題解決が好きな仲間を募集しています。"
+  title="採用情報 | Beekle"
+  description="Beekle株式会社の採用情報。新卒・中途募集。フルリモート・フレックスタイム制。論理的で優しいスモールチームで、問題解決が好きな仲間を募集しています。"
 >
   <JsonLd
     slot="head"
@@ -152,7 +153,7 @@ const workItems = [
     <!-- Hero -->
     <PageHero
       badge="Careers"
-      title="新卒・インターン採用"
+      title="採用情報"
       subtitle="問題解決が好きな人と、一緒に考えたい。"
     />
 
