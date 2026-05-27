@@ -837,7 +837,7 @@ const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=
   /* CTAボタン pill 化: post-process で <p> 直下の単独 <a href="/contact..."> のみに cv-cta-button クラスが付与される */
   .markdown-content :global(a.cv-cta-button) {
     @apply inline-flex items-center bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-full no-underline;
-    padding: 12px 24px;  /* 上下12px (1.5×8), 左右24px (3×8) */
+    padding: 12px 24px;
     transition: all 0.3s ease;
     border-bottom: none;
   }
