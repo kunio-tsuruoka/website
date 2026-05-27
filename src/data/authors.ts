@@ -39,7 +39,7 @@ export const authors: Record<string, Author> = {
     name: '中村 有貴',
     jobTitle: '外部技術顧問 / エンジニア',
     description:
-      '中小規模SIerでキャリアをスタートし、エンジニア・プログラマーとして10年以上の実務経験を持つ。香港の日系企業に所属しながら、個人事業として複数の日本企業の開発に技術顧問・実装の両面で参画。Vue.js/Nuxt.js/React/Node.js/TypeScript/Go/PHP(Laravel・Symfony)/Ruby on RailsからAWSインフラまで横断的にカバーし、システム設計レビューを専門領域とする。Beekleでは外部技術顧問として全コラム記事の技術監修を担当。若手エンジニアのメンター活動も継続している。',
+      '中小規模SIerでキャリアをスタートし、エンジニア・プログラマーとして20年の実務経験を持つ。香港の日系企業に所属しながら、個人事業として複数の日本企業の開発に技術顧問・実装の両面で参画。Vue.js/Nuxt.js/React/Node.js/TypeScript/Go/PHP(Laravel・Symfony)/Ruby on RailsからAWSインフラまで横断的にカバーし、システム設計レビューを専門領域とする。Beekleでは外部技術顧問として全コラム記事の技術監修を担当。若手エンジニアのメンター活動も継続している。',
     url: 'https://beekle.jp/members#nakamura',
     sameAs: ['https://github.com/ynaka6', 'https://nakamu.me/', 'https://www.shien.tech/'],
     knowsAbout: [
