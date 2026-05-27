@@ -29,11 +29,6 @@
 /services/ai-b2b-website   /services  301
 /services/ai-b2b-website/  /services  301
 
-# 旧 knowledge ページ（column へ統合済み: コミット f76e661）
-/knowledge/*  /column  301
-/knowledge    /column  301
-/knowledge/   /column  301
-
 # 旧 development-issues ページ（削除済み）
 /development-issues/*  /case-studies  301
 /development-issues    /case-studies  301
