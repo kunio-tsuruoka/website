@@ -506,6 +506,22 @@ const EARS_TO_GHERKIN_MAP = `<figure class="cv-card cv-card-full">
   </div>
 </figure>`;
 
+function buildBridgeCta(source: string): string {
+  // Zero Start導線: エンジニア向け記事 → 要件定義コンテンツ → ゼロスタート
+  return `<figure class="cv-card">
+  <figcaption class="cv-card-header cv-header-primary">この記事の手法をプロジェクトに活かす</figcaption>
+  <div class="cv-card-body">
+    <p>EARS記法やGherkinを実際のプロジェクトで使うには、上流の要件整理が鍵になります。</p>
+    <ul>
+      <li><a href="/column/requirements-definition-complete-guide">要件定義の進め方・完全ガイド</a> -- 上流工程の全体像と実務テクニック</li>
+      <li><a href="/column/requirements-vs-requests">要求定義と要件定義の違い</a> -- 混同が手戻りを招く3つの判別軸</li>
+      <li><a href="/column/how-to-write-rfp">失敗しないRFPの作り方</a> -- ベンダー選定に必要な提案依頼書の書き方</li>
+    </ul>
+    <p>要件定義から開発まで一気通貫で進めたい場合は、初期費用0円で動くプロトタイプから始められる<a href="/prooffirst?source=${encodeURIComponent(source)}&intent=bridge-engineer">ゼロスタート開発</a>もご検討ください。</p>
+  </div>
+</figure>`;
+}
+
 function buildContactCta(source: string, intent: string): string {
   const href = `/contact?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(intent)}`;
   return `<figure class="cv-card">
@@ -513,6 +529,28 @@ function buildContactCta(source: string, intent: string): string {
   <div class="cv-card-body">
     <p>Beekleでは、生成AI／CDP／業務システムの企画・要件定義・開発・運用までワンストップで支援しています。「何を作れば成功か」の整理、検証フェーズの設計、本番化判断まで、発注側の判断材料が揃うように伴走します。費用感の概算だけでも歓迎です。</p>
     <p style="text-align:center;margin-top:1.25rem;"><a href="${href}" data-cta-source="${source}" data-cta-id="contact-${intent}">お問い合わせはこちら</a></p>
+  </div>
+</figure>`;
+}
+
+function buildZeroStartCta(source: string, intent: string): string {
+  const href = `/downloads/zero-start?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(intent)}`;
+  return `<figure class="cv-card">
+  <figcaption class="cv-card-header cv-header-primary">初期費用0円のMVP開発・PoC開発・プロトタイプ開発を発注前に試せる</figcaption>
+  <div class="cv-card-body">
+    <p>Beekleの「ゼロスタート開発」は、初期費用0円で動くプロトタイプを体験してから本契約を判断できるMVP開発・PoC開発・プロトタイプ開発のサービスです。見積書とPowerPointの提案だけで判断するのではなく、実際に動くものを触って「現場で使えるか」「投資に見合うか」を確認したうえで契約に進めます。仕組み・対象企業・進行プロセス・実例ベースの導入ステップをまとめたサービス資料を無料配布しています。</p>
+    <p style="text-align:center;margin-top:1.25rem;"><a href="${href}" data-cta-source="${source}" data-cta-id="zero-start-${intent}">サービス資料を無料ダウンロード</a></p>
+  </div>
+</figure>`;
+}
+
+function buildZeroStartConsultCta(source: string, intent: string): string {
+  const href = `/contact?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(intent)}`;
+  return `<figure class="cv-card">
+  <figcaption class="cv-card-header cv-header-primary">まずは小さく始めてみませんか？</figcaption>
+  <div class="cv-card-body">
+    <p>Beekleのゼロスタート（MVP開発・PoC開発・プロトタイプ開発）なら、1〜2週間で動くプロトタイプを作り、「本当に業務で使えるか」を実際に触って確認してから本格開発に進めます。AI導入の第一歩として、まずはお気軽にご相談ください。</p>
+    <p style="text-align:center;margin-top:1.25rem;"><a href="${href}" data-cta-source="${source}" data-cta-id="zero-start-${intent}">ゼロスタートについて相談する</a></p>
   </div>
 </figure>`;
 }
@@ -587,12 +625,41 @@ export function renderColumnVisuals(html: string, ctx?: ColumnVisualContext): st
   }
 
   if (ctx) {
-    const dynamicMarkers: Array<[string, string]> = [
+    const contactMarkers: Array<[string, string]> = [
       ['CONTACT_CTA', 'article-final'],
       ['CONTACT_CTA_MID', 'article-mid'],
     ];
-    for (const [key, intent] of dynamicMarkers) {
+    for (const [key, intent] of contactMarkers) {
       const visual = buildContactCta(ctx.source, intent);
+      const wrapped = new RegExp(`<p>\\s*\\{\\{${key}\\}\\}\\s*</p>`, 'g');
+      const bare = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+      result = result.replace(wrapped, visual).replace(bare, visual);
+    }
+
+    const zeroStartMarkers: Array<[string, string]> = [
+      ['ZERO_START_CTA', 'article-final'],
+      ['ZERO_START_CTA_MID', 'article-mid'],
+    ];
+    for (const [key, intent] of zeroStartMarkers) {
+      const visual = buildZeroStartCta(ctx.source, intent);
+      const wrapped = new RegExp(`<p>\\s*\\{\\{${key}\\}\\}\\s*</p>`, 'g');
+      const bare = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+      result = result.replace(wrapped, visual).replace(bare, visual);
+    }
+
+    const zeroStartConsultMarkers: Array<[string, string]> = [
+      ['ZERO_START_CONSULT_CTA', 'zero-start-consult'],
+    ];
+    for (const [key, intent] of zeroStartConsultMarkers) {
+      const visual = buildZeroStartConsultCta(ctx.source, intent);
+      const wrapped = new RegExp(`<p>\\s*\\{\\{${key}\\}\\}\\s*</p>`, 'g');
+      const bare = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+      result = result.replace(wrapped, visual).replace(bare, visual);
+    }
+
+    const bridgeMarkers: Array<[string, string]> = [['BRIDGE_CTA', 'bridge']];
+    for (const [key, _intent] of bridgeMarkers) {
+      const visual = buildBridgeCta(ctx.source);
       const wrapped = new RegExp(`<p>\\s*\\{\\{${key}\\}\\}\\s*</p>`, 'g');
       const bare = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
       result = result.replace(wrapped, visual).replace(bare, visual);
