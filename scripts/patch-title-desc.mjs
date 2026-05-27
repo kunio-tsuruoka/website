@@ -135,7 +135,7 @@ for (const patch of PATCHES) {
     });
     const titleOk = verified.title === newTitle;
     const descOk = verified.description === newDesc;
-    console.log(`  -> verify title: ${titleOk ? 'OK' : 'MISMATCH (got: ' + verified.title + ')'}`);
+    console.log(`  -> verify title: ${titleOk ? 'OK' : `MISMATCH (got: ${verified.title})`}`);
     console.log(`  -> verify desc:  ${descOk ? 'OK' : 'MISMATCH'}`);
     if (titleOk && descOk) {
       succeeded++;
