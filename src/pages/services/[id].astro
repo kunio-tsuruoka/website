@@ -73,8 +73,11 @@ const seoDescription = service.seoDescription ?? service.description;
             {service.title}
           </h1>
 
-          <p class="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-10">
+          <p class="hidden md:block text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-10">
             {service.longDescription}
+          </p>
+          <p class="md:hidden text-base text-white/80 max-w-xl mx-auto leading-relaxed mb-8">
+            {service.description}
           </p>
 
           <div class="flex flex-col sm:flex-row gap-4 justify-center">

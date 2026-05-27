@@ -25,6 +25,8 @@ const companyItems = [
   { label: '会社概要', href: '/company' },
   { label: 'Beekleの強み', href: '/strengths' },
   { label: 'メンバー紹介', href: '/members' },
+  { label: 'お客様の声', href: '/testimonial' },
+  { label: 'ナレッジ', href: '/knowledge' },
   { label: '採用情報', href: '/careers' },
   { label: '一問一答（よくある質問）', href: '/qa' },
   { label: 'ゼロスタート開発 資料DL', href: '/downloads/zero-start' },
@@ -239,22 +241,6 @@ export function Header() {
               className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
             >
               発注者向けコラム
-            </a>
-          </li>
-          <li>
-            <a
-              href="/knowledge"
-              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
-            >
-              ナレッジ
-            </a>
-          </li>
-          <li>
-            <a
-              href="/testimonial"
-              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
-            >
-              お客様の声
             </a>
           </li>
           <Dropdown label="発注準備キット" items={toolsItems} />
