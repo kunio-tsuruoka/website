@@ -3,41 +3,20 @@ import { Header } from '../../components/header';
 import JsonLd from '../../components/seo/json-ld.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import Layout from '../../layouts/layout.astro';
-import { type MicroCMSEnv, getColumn } from '../../lib/microcms';
+import { type MicroCMSEnv, getColumns } from '../../lib/microcms';
 
 export const prerender = false;
-
-const KNOWLEDGE_SLUGS = [
-  'gherkin-bdd-introduction',
-  'ears-requirements-syntax-guide',
-  'ears-gherkin-workflow',
-];
 
 const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
 const env = runtime?.env;
 
-const articles: Array<{
-  id: string;
-  title: string;
-  description?: string;
-  publishedAt: string;
-}> = [];
-
-for (const slug of KNOWLEDGE_SLUGS) {
-  try {
-    const column = await getColumn(slug, env);
-    if (column) {
-      articles.push({
-        id: column.id,
-        title: column.title,
-        description: column.description,
-        publishedAt: column.publishedAt,
-      });
-    }
-  } catch (e) {
-    console.error(`Failed to load knowledge article: ${slug}`, e);
-  }
-}
+const allColumns = await getColumns('knowledge', env);
+const articles = allColumns.map((c) => ({
+  id: c.id,
+  title: c.title,
+  description: c.description,
+  publishedAt: c.publishedAt,
+}));
 ---
 
 <Layout

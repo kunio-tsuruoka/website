@@ -9,13 +9,6 @@ import { type MicroCMSEnv, getCategories, getColumns, getPillarSlug } from '../l
 const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
 const env = runtime?.env;
 
-// Knowledge section に移動済みのスラッグ（コラム一覧から除外）
-const KNOWLEDGE_SLUGS = [
-  'gherkin-bdd-introduction',
-  'ears-requirements-syntax-guide',
-  'ears-gherkin-workflow',
-];
-
 // SSR: リクエスト時にMicroCMSから取得
 let categories: Awaited<ReturnType<typeof getCategories>> = [];
 let allColumns: Awaited<ReturnType<typeof getColumns>> = [];
@@ -24,8 +17,8 @@ let apiError: string | null = null;
 try {
   categories = await getCategories(env);
   const rawColumns = await getColumns(undefined, env);
-  // Knowledge section に移動した記事をコラム一覧から除外
-  allColumns = rawColumns.filter((c) => !KNOWLEDGE_SLUGS.includes(c.id));
+  // knowledge カテゴリの記事はナレッジセクションに表示するため除外
+  allColumns = rawColumns.filter((c) => c.category?.id !== 'knowledge');
 
   // 環境変数が設定されているのにデータが空の場合
   if (categories.length === 0 && allColumns.length === 0) {

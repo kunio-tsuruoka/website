@@ -14,27 +14,20 @@ export const prerender = false;
 const { slug } = Astro.params;
 const columnId = slug as string;
 
-// Knowledge section で公開する記事のスラッグ一覧
-const KNOWLEDGE_SLUGS = [
-  'gherkin-bdd-introduction',
-  'ears-requirements-syntax-guide',
-  'ears-gherkin-workflow',
-];
-
-// Knowledge に含まれないスラッグはコラムへ 301 リダイレクト
-if (!KNOWLEDGE_SLUGS.includes(columnId)) {
-  return Astro.redirect(`/column/${columnId}`, 301);
-}
-
 // Cloudflare Pages SSR: ランタイム環境変数を取得
 const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
 const env = runtime?.env;
 
-// MicroCMSから記事を取得（columns エンドポイントを共用）
+// MicroCMSから記事を取得
 const column = await getColumn(columnId, env);
 
 if (!column) {
   return Astro.redirect('/404');
+}
+
+// knowledge カテゴリ以外はコラムへ 301 リダイレクト
+if (column.category?.id !== 'knowledge') {
+  return Astro.redirect(`/column/${columnId}`, 301);
 }
 
 // 目次データを収集しながらHTMLを生成するカスタムレンダラー
