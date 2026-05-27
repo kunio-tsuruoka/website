@@ -1,0 +1,182 @@
+---
+import { type Author, authors, defaultAuthor, defaultReviewer } from '../../data/authors';
+
+interface Props {
+  authorId?: string;
+  reviewerId?: string | null;
+  variant?: 'compact' | 'detailed';
+  publishedAt?: string;
+  updatedAt?: string;
+}
+
+const { authorId, reviewerId, variant = 'compact', publishedAt, updatedAt } = Astro.props;
+
+const author: Author = authorId ? (authors[authorId] ?? defaultAuthor) : defaultAuthor;
+const reviewer: Author | null =
+  reviewerId === null
+    ? null
+    : reviewerId
+      ? (authors[reviewerId] ?? defaultReviewer)
+      : defaultReviewer;
+
+const formatDate = (d?: string) =>
+  d
+    ? new Date(d).toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    : '';
+
+const initial = (name: string) => name.replace(/\s/g, '').charAt(0);
+const showUpdated =
+  updatedAt &&
+  publishedAt &&
+  new Date(updatedAt).getTime() - new Date(publishedAt).getTime() > 24 * 60 * 60 * 1000;
+---
+
+{variant === 'compact' ? (
+  <div class="author-byline-compact flex flex-wrap items-center gap-x-5 gap-y-3 text-sm">
+    <a href={author.url} class="byline-link inline-flex items-center gap-2 min-h-[44px] py-2" rel="author">
+      <span class="author-avatar author-avatar-primary" aria-hidden="true">{initial(author.name)}</span>
+      <span class="leading-tight">
+        <span class="block text-xs text-gray-500">執筆</span>
+        <span class="font-semibold text-gray-900 byline-name">{author.name}</span>
+      </span>
+    </a>
+    {reviewer && (
+      <a href={reviewer.url} class="byline-link inline-flex items-center gap-2 min-h-[44px] py-2">
+        <span class="author-avatar author-avatar-secondary" aria-hidden="true">{initial(reviewer.name)}</span>
+        <span class="leading-tight">
+          <span class="block text-xs text-gray-500">技術監修</span>
+          <span class="font-semibold text-gray-900 byline-name">{reviewer.name}</span>
+        </span>
+      </a>
+    )}
+    <div class="flex flex-col text-sm text-gray-600 leading-tight">
+      {publishedAt && <span>公開: {formatDate(publishedAt)}</span>}
+      {showUpdated && <span class="text-gray-500">更新: {formatDate(updatedAt)}</span>}
+    </div>
+  </div>
+) : (
+  <aside class="author-bio-detailed not-prose bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-2xl p-6 md:p-8" aria-labelledby="author-bio-heading">
+    <h2 id="author-bio-heading" class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-6">
+      この記事の執筆者
+    </h2>
+    <div class="flex flex-col gap-6">
+      <div class="flex items-start gap-4">
+        <span class="author-avatar-lg author-avatar-primary flex-shrink-0" aria-hidden="true">{initial(author.name)}</span>
+        <div class="flex-1 min-w-0">
+          <div class="flex flex-wrap items-baseline gap-2 mb-2">
+            <span class="text-xs font-bold text-primary-700 bg-primary-50 px-2 py-1 rounded">執筆</span>
+            <a href={author.url} class="text-lg font-bold text-gray-900 hover:text-primary-500 transition-colors py-1" rel="author">
+              {author.name}
+            </a>
+            <span class="text-sm text-gray-600">{author.jobTitle}</span>
+          </div>
+          <p class="text-sm text-gray-700 leading-relaxed">{author.description}</p>
+          {author.knowsAbout && author.knowsAbout.length > 0 && (
+            <div class="flex flex-wrap gap-1.5 mt-3">
+              {author.knowsAbout.slice(0, 8).map((k) => (
+                <span class="text-xs text-gray-700 bg-white border border-gray-200 px-2 py-1 rounded">{k}</span>
+              ))}
+            </div>
+          )}
+          <div class="mt-4 flex flex-wrap items-center gap-4">
+            <a href={author.url} class="inline-flex items-center text-sm font-semibold text-primary-500 hover:text-primary-600 transition-colors min-h-[44px] py-2">
+              詳しいプロフィール
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+            {author.sameAs?.[0] && (
+              <a
+                href={author.sameAs[0]}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-sm text-gray-600 hover:text-primary-500 underline min-h-[44px] py-2 inline-flex items-center"
+              >
+                外部プロフィール
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {reviewer && (
+        <div class="flex items-start gap-4 pt-6 border-t border-gray-200">
+          <span class="author-avatar-lg author-avatar-secondary flex-shrink-0" aria-hidden="true">{initial(reviewer.name)}</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-baseline gap-2 mb-2">
+              <span class="text-xs font-bold text-secondary-700 bg-secondary-50 px-2 py-1 rounded">技術監修</span>
+              <a href={reviewer.url} class="text-lg font-bold text-gray-900 hover:text-primary-500 transition-colors py-1">
+                {reviewer.name}
+              </a>
+              <span class="text-sm text-gray-600">{reviewer.jobTitle}</span>
+            </div>
+            <p class="text-sm text-gray-700 leading-relaxed">{reviewer.description}</p>
+            {reviewer.knowsAbout && reviewer.knowsAbout.length > 0 && (
+              <div class="flex flex-wrap gap-1.5 mt-3">
+                {reviewer.knowsAbout.slice(0, 8).map((k) => (
+                  <span class="text-xs text-gray-700 bg-white border border-gray-200 px-2 py-1 rounded">{k}</span>
+                ))}
+              </div>
+            )}
+            <div class="mt-4 flex flex-wrap items-center gap-4">
+              <a href={reviewer.url} class="inline-flex items-center text-sm font-semibold text-primary-500 hover:text-primary-600 transition-colors min-h-[44px] py-2">
+                詳しいプロフィール
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+    <p class="text-xs text-gray-500 mt-6 leading-relaxed">
+      Beekleのコラムは現役のエンジニア・PMが執筆し、外部技術顧問が技術監修を担当しています。記事内容はBeekle社内の実務経験と公開情報に基づきます。
+    </p>
+  </aside>
+)}
+
+<style>
+  .author-avatar,
+  .author-avatar-lg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    border-radius: 9999px;
+    flex-shrink: 0;
+    font-family: 'Poppins', 'Noto Sans JP', sans-serif;
+  }
+  .author-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+  }
+  .author-avatar-lg {
+    width: 56px;
+    height: 56px;
+    font-size: 22px;
+  }
+  .author-avatar-primary {
+    background: linear-gradient(135deg, #3d4db7, #3544a4);
+    box-shadow: 0 4px 12px rgba(61, 77, 183, 0.25);
+  }
+  .author-avatar-secondary {
+    background: linear-gradient(135deg, #00c4cc, #00a2a8);
+    box-shadow: 0 4px 12px rgba(0, 196, 204, 0.25);
+  }
+  .byline-link {
+    transition: opacity 0.2s ease;
+  }
+  .byline-link:hover {
+    opacity: 0.75;
+  }
+  .byline-link:hover .byline-name {
+    color: #3d4db7;
+  }
+</style>
