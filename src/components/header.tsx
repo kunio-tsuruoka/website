@@ -150,7 +150,7 @@ export function Header() {
               href="/column"
               className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
             >
-              コラム
+              発注者向けコラム
             </a>
           </li>
           <li>
@@ -222,7 +222,7 @@ export function Header() {
                   className="hover:text-accent-300 transition-colors text-lg"
                   onClick={() => setIsOpen(false)}
                 >
-                  コラム
+                  発注者向けコラム
                 </a>
               </li>
               <li>
