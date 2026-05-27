@@ -10,6 +10,9 @@ import { Header } from '../components/header';
 import JsonLd from '../components/seo/json-ld.astro';
 import { ServiceCard } from '../components/service-card';
 import { services } from '../data/service';
+
+const TOP_SERVICE_IDS = ['ai-development', 'web-mobile-development', 'cdp-development'];
+const topServices = services.filter((s) => TOP_SERVICE_IDS.includes(s.id));
 import Layout from '../layouts/layout.astro';
 import { type MicroCMSEnv, getColumns } from '../lib/microcms';
 
@@ -270,7 +273,7 @@ const featuredTools = [
         </div>
 
         <div class="grid md:grid-cols-3 gap-8">
-          {services.map((service, index) => (
+          {topServices.map((service, index) => (
             <div
               class="transform transition-all duration-500 hover:-translate-y-2"
               style={{ transitionDelay: `${index * 100}ms` }}
