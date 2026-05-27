@@ -30,7 +30,7 @@ authUrl.searchParams.set('prompt', 'consent');
 console.log('Opening browser for Google authentication...');
 console.log('If browser does not open, visit:', authUrl.toString());
 
-import('child_process').then((cp) => cp.exec(`open "${authUrl.toString()}"`));
+import('node:child_process').then((cp) => cp.exec(`open "${authUrl.toString()}"`));
 
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${REDIRECT_PORT}`);

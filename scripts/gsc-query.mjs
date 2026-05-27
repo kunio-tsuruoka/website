@@ -140,8 +140,7 @@ async function refreshAccessToken(creds, token) {
 
   if (data.error) {
     fatal(
-      `Token refresh failed: ${data.error_description || data.error}\n` +
-        'You may need to re-run "node scripts/gsc-oauth-setup.mjs".'
+      `Token refresh failed: ${data.error_description || data.error}\nYou may need to re-run "node scripts/gsc-oauth-setup.mjs".`
     );
   }
 
@@ -270,7 +269,7 @@ function toCsv(formatted, dimensions) {
   for (const row of formatted) {
     const vals = headers.map((h) => {
       const v = row[h];
-      if (h === 'ctr') return (v * 100).toFixed(2) + '%';
+      if (h === 'ctr') return `${(v * 100).toFixed(2)}%`;
       if (h === 'position') return Number(v).toFixed(1);
       return escapeCsvField(v);
     });
