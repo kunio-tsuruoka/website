@@ -25,10 +25,6 @@ const columnRedirects: Record<string, string> = {
   'project-management-01': '/column/requirements-definition-process',
   'system-development-cost-market': '/column/web-system-cost-by-scale',
   'system-estimate-uncertainty': '/column/system-estimate-validity',
-  // Knowledge section migration
-  'gherkin-bdd-introduction': '/knowledge/gherkin-bdd-introduction',
-  'ears-requirements-syntax-guide': '/knowledge/ears-requirements-syntax-guide',
-  'ears-gherkin-workflow': '/knowledge/ears-gherkin-workflow',
 };
 if (columnId in columnRedirects) {
   return Astro.redirect(columnRedirects[columnId], 301);
@@ -40,6 +36,11 @@ const env = runtime?.env;
 
 // MicroCMSから記事を取得
 const column = await getColumn(columnId, env);
+
+// knowledge カテゴリの記事はナレッジセクションへ 301 リダイレクト
+if (column?.category?.id === 'knowledge') {
+  return Astro.redirect(`/knowledge/${columnId}`, 301);
+}
 
 if (!column) {
   return Astro.redirect('/404');
