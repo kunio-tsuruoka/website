@@ -18,37 +18,36 @@ const client = createClient({
 });
 
 // --- PATCH 対象 -----------------------------------------------------------
-// title: null のときは変更しない（現行維持）
 const PATCHES = [
   {
     slug: 'requirements-vs-requests',
-    title: '要求定義と要件定義の違い｜混同が手戻りを招く3つの判別軸と正しい変換手順',
+    title: '要求とは？要件との違いを3軸で判別｜発注前に混同を防ぐチェックリスト',
     description:
-      '要求定義と要件定義を混同すると、開発着手後に「これじゃない」の手戻りが発生します。主語・抽象度・検証可能性の3軸で判別し、要求を要件へ変換する手順を失敗実例つきで解説。発注担当・PM必読。',
+      '要求とは「ユーザーが実現したいこと（WHY）」、要件は「システムが満たすべき条件（HOW）」。この2つを混同したまま発注すると手戻りコストが倍増する。主語・抽象度・検証可能性の3軸で判別する方法と、要求から要件への変換手順を失敗実例つきで解説。',
   },
   {
     slug: 'web-system-cost-by-scale',
-    title: 'Webシステム開発の費用相場｜予算超過しないための規模別チェックポイント',
+    title: 'Webシステム開発の費用相場｜規模別300万〜4,000万超の内訳と予算超過を防ぐ方法',
     description:
-      '小規模300万〜大規模4,000万超。Webシステム開発費用は見積もり時の想定と実際の乖離が最大の落とし穴。体制・追加費用・運用コストまで規模別に分解し、予算超過を防ぐための判断軸を提示。',
+      'Webシステム開発の費用相場を規模別に整理。小規模（LP+管理画面）100〜300万円、中規模（業務システム）500〜1,500万円、大規模（基幹連携）2,000〜4,000万円超。見積もりと実費がズレる3つの構造的原因と、発注前に確認すべきチェックポイントを掲載。',
+  },
+  {
+    slug: 'cdp-cost-and-period',
+    title: 'CDP導入費用の相場｜SaaS型 月数千円〜自社構築 数千万円、規模別に比較',
+    description:
+      'CDP導入費用をSaaS型（月額数千〜数万円）、パッケージ型（初期100〜500万円+月額）、自社構築型（数百万〜数千万円）の3パターンで比較。Treasure Data・Salesforce CDP・BigQuery自社開発の費用感と構築期間、3年間の総コストで見るべき理由を解説。',
   },
   {
     slug: 'ai-development-cost-guide',
-    title: '生成AI開発の費用相場｜PoC→本番運用の内訳と見積もり比較のポイント',
+    title: '生成AI開発の費用相場｜PoC 50万〜本番1,000万超、見積もり比較の5項目',
     description:
-      '生成AI開発はPoC50万〜本番運用1,000万超と幅が大きい。検証・試作・本番の3段階で費用構造が変わる理由と、複数社の見積もりで必ず確認すべき比較ポイントを発注担当者向けに整理。',
+      '生成AI開発の費用をPoC（50〜200万円）、プロトタイプ（200〜500万円）、本番開発（500〜1,500万円超）の3段階で整理。受託開発の見積もり内訳がわからないまま発注すると追加費用で倍額になることも。複数社の見積もりを比較する際に確認すべき5つのポイントを掲載。',
   },
   {
-    slug: 'mvp-development-guide',
-    title: 'MVP開発とは｜PoC・プロトタイプとの違い・費用相場・進め方を発注者目線で解説',
+    slug: 'churn-prediction-guide',
+    title: 'チャーン分析とは？解約予測の仕組みと経営判断に活かす方法',
     description:
-      'MVP・PoC・プロトタイプ開発の違いと使い分け、費用の目安、発注時の注意点を1記事で整理。「動くものを先に見てから判断したい」発注者に向けて、ゼロスタート開発を含む実践的な選択肢を提示。',
-  },
-  {
-    slug: 'quote-comparison-checklist',
-    title: null, // 現行タイトル維持
-    description:
-      'システム開発の見積書を総額だけで比較すると、安い方に飛びついて追加費用で結局高くつく。人月単価・工数根拠・保守費用など13のチェック項目で見積もりの「罠」を洗い出す方法を具体例つきで解説。',
+      'チャーン分析（解約予測）は既存顧客の離脱リスクをスコア化し、介入の優先順位を決める手法。予測モデルでわかること・できないことの境界線と、解約率をKPIにする際の落とし穴、PMF前後で判断軸が変わる理由を解説。',
   },
 ];
 
@@ -81,14 +80,10 @@ for (const patch of PATCHES) {
   // 2. diff 表示
   console.log(`--- ${slug} ---`);
 
-  if (newTitle !== null) {
-    const changed = current.title !== newTitle;
-    console.log(`  title (old): ${current.title}`);
-    console.log(`  title (new): ${newTitle}`);
-    console.log(`  title changed: ${changed ? 'YES' : 'no (identical)'}`);
-  } else {
-    console.log(`  title: SKIP (keep current: ${current.title})`);
-  }
+  const titleChanged = current.title !== newTitle;
+  console.log(`  title (old): ${current.title}`);
+  console.log(`  title (new): ${newTitle}`);
+  console.log(`  title changed: ${titleChanged ? 'YES' : 'no (identical)'}`);
 
   const oldDesc = current.description || '(empty)';
   console.log(`  desc  (old): ${oldDesc}`);
@@ -97,7 +92,7 @@ for (const patch of PATCHES) {
 
   // 3. PATCH 内容を組み立て（変更があるフィールドのみ）
   const content = {};
-  if (newTitle !== null && current.title !== newTitle) {
+  if (current.title !== newTitle) {
     content.title = newTitle;
   }
   if ((current.description || '') !== newDesc) {
@@ -123,13 +118,35 @@ for (const patch of PATCHES) {
       contentId: slug,
       content,
     });
-    console.log(`  -> PATCH applied: [${Object.keys(content).join(', ')}]\n`);
-    succeeded++;
+    console.log(`  -> PATCH applied: [${Object.keys(content).join(', ')}]`);
   } catch (e) {
     const msg = `${slug}: PATCH failed - ${e.message}`;
     console.error(`  -> [NG] ${msg}\n`);
     errors.push(msg);
+    continue;
   }
+
+  // 5. 検証: re-read して title/description が反映されたか確認
+  try {
+    const verified = await client.get({
+      endpoint: 'columns',
+      contentId: slug,
+      queries: { fields: 'id,title,description' },
+    });
+    const titleOk = verified.title === newTitle;
+    const descOk = verified.description === newDesc;
+    console.log(`  -> verify title: ${titleOk ? 'OK' : 'MISMATCH (got: ' + verified.title + ')'}`);
+    console.log(`  -> verify desc:  ${descOk ? 'OK' : 'MISMATCH'}`);
+    if (titleOk && descOk) {
+      succeeded++;
+    } else {
+      errors.push(`${slug}: verification mismatch`);
+    }
+  } catch (e) {
+    console.error(`  -> verify GET failed: ${e.message}`);
+    errors.push(`${slug}: verify failed - ${e.message}`);
+  }
+  console.log('');
 }
 
 console.log('========================================');

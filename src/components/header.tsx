@@ -154,6 +154,14 @@ export function Header() {
           </li>
           <li>
             <a
+              href="/knowledge"
+              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
+            >
+              ナレッジ
+            </a>
+          </li>
+          <li>
+            <a
               href="/case-studies"
               className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
             >
@@ -214,6 +222,15 @@ export function Header() {
                   onClick={() => setIsOpen(false)}
                 >
                   コラム
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/knowledge"
+                  className="hover:text-accent-300 transition-colors text-lg"
+                  onClick={() => setIsOpen(false)}
+                >
+                  ナレッジ
                 </a>
               </li>
               <li>
