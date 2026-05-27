@@ -11,6 +11,7 @@ const companyItems = [
   { label: '会社概要', href: '/company' },
   { label: 'Beekleの強み', href: '/strengths' },
   { label: 'メンバー紹介', href: '/members' },
+  { label: '採用情報', href: '/careers' },
   { label: '一問一答（よくある質問）', href: '/qa' },
   { label: 'ゼロスタート開発 資料DL', href: '/downloads/zero-start' },
   { label: '関連資料・資料ダウンロード', href: '/materials' },
