@@ -218,6 +218,14 @@ export function Header() {
             </a>
           </li>
           <AiDevDropdown />
+          <li>
+            <a
+              href="/demos"
+              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
+            >
+              AIデモ
+            </a>
+          </li>
           <Dropdown label="システム開発" items={serviceItems} />
           <li>
             <a
@@ -322,6 +330,15 @@ export function Header() {
                     </ul>
                   </div>
                 )}
+              </li>
+              <li className="border-t border-white/20 pt-4 w-full text-center">
+                <a
+                  href="/demos"
+                  className="hover:text-accent-300 transition-colors text-lg"
+                  onClick={() => setIsOpen(false)}
+                >
+                  AIデモ
+                </a>
               </li>
               <li className="border-t border-white/20 pt-4 w-full text-center">
                 <p className="text-white/60 text-sm mb-2">システム開発</p>

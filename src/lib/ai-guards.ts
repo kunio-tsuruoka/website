@@ -17,8 +17,14 @@ export type AiRuntimeEnv = {
   OPENROUTER_API_KEY: string;
   OPENROUTER_MODEL_CHAT?: string;
   OPENROUTER_MODEL_OCR?: string;
+  // ヒアリングデモ用。JSON 出力安定性が必要なため chat とは別モデル指定可
+  OPENROUTER_MODEL_HEARING?: string;
   AI_MONTHLY_BUDGET_USD?: string;
   SLACK_WEBHOOK_URL?: string;
+  // 開発・自動テスト時のみ Turnstile を skip するフラグ。
+  // 本番 (Cloudflare Pages production) では絶対に設定しないこと。
+  // 値が 'true' の場合のみ effect (それ以外は通常検証)。
+  AI_TURNSTILE_BYPASS?: string;
   AI?: {
     run(model: string, input: { text: string[] }): Promise<{ data: number[][] }>;
   };
@@ -65,9 +71,13 @@ export async function aiGuards(
   const limit = await limitByIp(env.RATE_LIMIT, request, profile);
   if (!limit.ok) return rateLimitResponse(limit);
 
-  const token = await readTurnstileToken(request);
-  const verify = await verifyTurnstile(env.TURNSTILE_SECRET_KEY, token, getClientIp(request));
-  if (!verify.ok) return turnstileFailureResponse(verify);
+  // dev/test bypass: AI_TURNSTILE_BYPASS=true が env にある時のみ Turnstile を skip。
+  // 本番では設定しない (= 必ず Turnstile 検証が走る)。
+  if (env.AI_TURNSTILE_BYPASS !== 'true') {
+    const token = await readTurnstileToken(request);
+    const verify = await verifyTurnstile(env.TURNSTILE_SECRET_KEY, token, getClientIp(request));
+    if (!verify.ok) return turnstileFailureResponse(verify);
+  }
 
   const budgetUsd = Number.parseFloat(env.AI_MONTHLY_BUDGET_USD ?? '10');
   const budget = await checkBudget(env.RATE_LIMIT, budgetUsd);

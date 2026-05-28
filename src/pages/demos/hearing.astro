@@ -1,0 +1,59 @@
+---
+import { AiHearing } from '@/features/ai-hearing';
+import { Header } from '../../components/header';
+import FloatingCTA from '../../components/ui/floating-cta.astro';
+import { PageHero } from '../../components/ui/page-hero';
+import Layout from '../../layouts/layout.astro';
+
+const runtime = (Astro.locals as { runtime?: { env?: { TURNSTILE_SITE_KEY?: string } } }).runtime;
+const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
+---
+
+<Layout
+  title="AIヒアリング (デモ)｜発注前の課題整理をAIが代行 | Beekle"
+  description="Beekleが普段の初回ヒアリングで聞いている項目をAIが対話で代行。会話で答えるだけで、業務課題・規模・予算感などを整理し、そのままBeekleに相談を送れます。"
+>
+  <Header client:load />
+  <main class="pt-20">
+    <PageHero
+      title="AIヒアリング (デモ)"
+      subtitle="Beekleが初回ヒアリングで実際に聞いている項目をAIが対話で代行します。整理後、そのままBeekleに送れば、最初の打ち合わせから具体提案に入れます。"
+      badge="AI Demo"
+    />
+
+    <section class="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
+      <div class="container mx-auto px-6 md:px-8 max-w-3xl">
+        <AiHearing client:load sitekey={sitekey} />
+
+        <div class="mt-10 grid md:grid-cols-3 gap-4 text-sm">
+          <div class="p-5 bg-white rounded-2xl border border-gray-200">
+            <p class="font-bold mb-2">所要時間の目安</p>
+            <p class="text-gray-600">3〜5分。進捗バーで残り感がわかります。途中で切り上げてもOK。</p>
+          </div>
+          <div class="p-5 bg-white rounded-2xl border border-gray-200">
+            <p class="font-bold mb-2">あなた側のメリット</p>
+            <p class="text-gray-600">初回打ち合わせから具体提案に入れます。説明の手間が一段抜けます。</p>
+          </div>
+          <div class="p-5 bg-white rounded-2xl border border-gray-200">
+            <p class="font-bold mb-2">プライバシー</p>
+            <p class="text-gray-600">入力内容はBeekle社内の確認用のみに使用します。連絡先は最後に任意で入力です。</p>
+          </div>
+        </div>
+
+        <div class="mt-10 p-6 md:p-8 bg-primary-50 border border-primary-100 rounded-2xl">
+          <p class="font-bold text-primary-900 mb-2">このデモ自体、業務に組み込めます</p>
+          <p class="text-gray-700 text-sm md:text-base leading-relaxed">
+            営業の初回ヒアリング、採用候補者の事前面談、サポート問い合わせの一次対応など、人間がやっている「型のある対話」はAIで安全に自動化できます。社内に組み込みたい場合は<a href="/contact?source=demo-hearing" class="text-primary-700 underline hover:no-underline font-medium">お問い合わせ</a>まで。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <FloatingCTA source="demo-hearing" />
+  </main>
+
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer></script>
+</Layout>
