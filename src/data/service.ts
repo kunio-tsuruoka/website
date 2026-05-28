@@ -439,7 +439,7 @@ export const services: ServiceDetail[] = [
     ],
     caseStudies: [
       {
-        title: '要件管理メタシステム「PM on Rails」の自社開発',
+        title: '上流工程AIエージェントシステムの自社開発',
         challenge:
           '要件のトレーサビリティ欠如、PMとリードエンジニアの属人化、要件ドリフトによる手戻り。議事録・チャットが分散して意思決定の根拠と要件のつながりが追えない。',
         solution:
