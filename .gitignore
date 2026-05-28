@@ -29,5 +29,8 @@ notebooklm-490304-57f96072832e.json
 *.api-token
 .dev.vars
 
+# local marketing research / drafts
+docs/marketing/
+
 # wrangler local state
 .wrangler/
