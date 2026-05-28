@@ -31,6 +31,7 @@ notebooklm-490304-57f96072832e.json
 
 # local marketing research / drafts
 docs/marketing/
+tasks.md
 
 # wrangler local state
 .wrangler/
