@@ -1,0 +1,82 @@
+---
+import { SectionHeader } from '@/components/ui';
+import type { ServiceDetail } from '@/types/service';
+
+interface Props {
+  solutions: ServiceDetail['solutions'];
+}
+
+const { solutions } = Astro.props;
+
+const iconPaths = {
+  compass:
+    'M16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76zM12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z',
+  search: 'M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z',
+  bot: 'M12 8V4H8M16 4h-4M6 8h12a2 2 0 0 1 2 2v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-7a2 2 0 0 1 2-2zM9 13h.01M15 13h.01M9 17h6',
+  shield: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
+  plug: 'M12 22v-5M9 8V2M15 8V2M7 8h10v4a5 5 0 0 1-10 0V8zM8 17h8',
+  chart: 'M3 3v18h18M7 16l4-4 3 3 5-7',
+  file: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h6',
+};
+
+function getSolutionIcon(title: string) {
+  if (/RAG|検索|文書|ナレッジ/.test(title)) return iconPaths.search;
+  if (/エージェント|AI FAQ|チャット|自動回答/.test(title)) return iconPaths.bot;
+  if (/セキュリティ|ガバナンス|本番|運用|デプロイ/.test(title)) return iconPaths.shield;
+  if (/統合|連携|システム|API|MCP|Function/.test(title)) return iconPaths.plug;
+  if (/評価|品質|分析|ダッシュボード|改善/.test(title)) return iconPaths.chart;
+  if (/OCR|帳票|レビュー|データ/.test(title)) return iconPaths.file;
+  return iconPaths.compass;
+}
+---
+
+<section id="solutions" class="relative overflow-hidden bg-neutral-50 py-20 md:py-28">
+  <div class="container mx-auto px-6 lg:px-12 relative">
+    <SectionHeader
+      client:load
+      title="解決方法"
+      subtitle="PoCで終わらせず、業務で使える状態まで設計します"
+      number="02"
+      label="SOLUTIONS"
+    />
+    <div class="grid gap-5 lg:grid-cols-2">
+      {solutions.map((solution, index) => (
+        <article class="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-white p-6 shadow-soft transition hover:-translate-y-0.5 hover:border-primary-200 hover:shadow-medium">
+          <div class="absolute inset-x-0 top-0 h-1 bg-primary-500"></div>
+          <div class="flex items-start gap-4">
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent-950 text-white">
+              <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d={getSolutionIcon(solution.title)}></path>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-bold tracking-wide text-primary-500">
+                SOLUTION {String(index + 1).padStart(2, '0')}
+              </p>
+              <h3 class="mt-2 text-xl font-bold leading-snug text-navy-950 group-hover:text-primary-600">
+                {solution.title}
+              </h3>
+            </div>
+          </div>
+
+          <p class="mt-5 text-sm leading-relaxed text-neutral-700 md:text-base">
+            {solution.description}
+          </p>
+
+          <div class="mt-5 grid gap-2">
+            {solution.results.map((result) => (
+              <div class="flex items-start gap-2 rounded-xl bg-neutral-50 px-3.5 py-3">
+                <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white">
+                  <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 6 9 17l-5-5"></path>
+                  </svg>
+                </span>
+                <span class="text-sm font-bold leading-relaxed text-neutral-800">{result}</span>
+              </div>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,8 +1,16 @@
 ---
 import { Header } from '@/components/header';
 import JsonLd from '@/components/seo/json-ld.astro';
+import ServiceAdditionalSections from '@/components/services/service-additional-sections.astro';
+import ServiceCaseStudies from '@/components/services/service-case-studies.astro';
+import ServiceFaq from '@/components/services/service-faq.astro';
+import ServiceFeatures from '@/components/services/service-features.astro';
+import ServiceHero from '@/components/services/service-hero.astro';
+import ServicePainPoints from '@/components/services/service-pain-points.astro';
+import ServiceScanSummary from '@/components/services/service-scan-summary.astro';
+import ServiceSolutions from '@/components/services/service-solutions.astro';
 import { Section, SectionHeader } from '@/components/ui';
-import { PageHero } from '@/components/ui/page-hero';
+import { getAiServicePageConfig } from '@/data/ai-service-page-config';
 import { services } from '@/data/service';
 import type { ServiceDetail } from '@/types/service';
 import Layout from '../../layouts/layout.astro';
@@ -20,6 +28,13 @@ const siteUrl = 'https://beekle.jp';
 const serviceUrl = `${siteUrl}/services/${service.id}`;
 const seoTitle = service.seoTitle ?? service.title;
 const seoDescription = service.seoDescription ?? service.description;
+const servicePageConfig = getAiServicePageConfig(service.id);
+const faqNumber =
+  service.id === 'ai-development'
+    ? '07'
+    : service.relatedColumns && service.relatedColumns.length > 0
+      ? '06'
+      : '05';
 ---
 
 <Layout title={`${seoTitle} | Beekle`} description={seoDescription} canonical={serviceUrl}>
@@ -55,257 +70,17 @@ const seoDescription = service.seoDescription ?? service.description;
   )}
   <Header client:load />
   <main class="pt-20">
-    <!-- Hero -->
-    <section class="relative bg-gradient-to-br from-navy-950 via-primary-600 to-primary-500 py-24 md:py-32 overflow-hidden">
-      <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
-      <div class="absolute top-0 right-0 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-      <div class="absolute bottom-0 left-0 w-80 h-80 bg-primary-300/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
+    <ServiceHero service={service} config={servicePageConfig} />
+    <ServiceScanSummary service={service} />
+    <ServicePainPoints painPoints={service.painPoints} />
+    <ServiceSolutions solutions={service.solutions} />
 
-      <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl relative">
-        <div class="text-center">
-          <div class="inline-block mb-6">
-            <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm text-white/80 rounded-full text-sm font-medium border border-white/10">
-              Beekle の生成AI開発
-            </span>
-          </div>
-
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 font-Montserrat leading-tight">
-            {service.title}
-          </h1>
-
-          <p class="hidden md:block text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-10">
-            {service.longDescription}
-          </p>
-          <p class="md:hidden text-base text-white/80 max-w-xl mx-auto leading-relaxed mb-8">
-            {service.description}
-          </p>
-
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href={`/contact?source=services-${service.id}-hero`}
-              data-cta-source={`services-${service.id}-hero`}
-              data-cta-id="contact"
-              class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-navy-950 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
-            >
-              無料相談する
-              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </a>
-            <a
-              href="/prooffirst"
-              class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-white/10 border border-white/30 rounded-full hover:bg-white/20 backdrop-blur-sm transition-all"
-            >
-              初期費用0円で始める
-            </a>
-          </div>
-        </div>
-
-        {/* 特徴カード */}
-        <div class="grid md:grid-cols-3 gap-4 mt-16">
-          {service.benefits.slice(0, 3).map((benefit) => (
-            <div class="bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-5 border border-white/10">
-              <div class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-secondary-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span class="text-sm text-white/90 font-medium leading-relaxed">{benefit}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- Pain Points -->
-    <Section variant="navy" padding="lg" decoration="none">
-      <div class="max-w-5xl mx-auto relative z-10">
-        <SectionHeader
-          client:load
-          title="よくある課題"
-          subtitle="お客様が直面している主な課題"
-          number="01"
-          label="PAIN POINTS"
-          dark
-        />
-        <div class="grid md:grid-cols-2 gap-6">
-          {service.painPoints.map((point, index) => (
-            <div class="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/15 transition-all">
-              <div class="flex items-start gap-5">
-                <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-secondary-400 to-secondary-500 text-white flex items-center justify-center text-lg font-bold font-Poppins shadow-md">
-                  {index + 1}
-                </div>
-                <div>
-                  <h3 class="text-xl font-bold text-white mb-2 group-hover:text-secondary-300 transition-colors">
-                    {point.title}
-                  </h3>
-                  <p class="text-white/70 leading-relaxed">
-                    {point.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </Section>
-
-    <!-- Solutions -->
-    <Section variant="lightPurple" padding="lg" decoration="blursCyan">
-      <div class="max-w-5xl mx-auto relative z-10">
-        <SectionHeader
-          client:load
-          title="解決方法"
-          subtitle="私たちが提供する具体的な解決策"
-          number="02"
-          label="SOLUTIONS"
-        />
-        <div class="space-y-8">
-          {service.solutions.map((solution) => (
-            <div class="bg-white rounded-2xl p-8 md:p-10 shadow-soft border border-gray-100">
-              <h3 class="text-2xl font-bold text-navy-950 mb-4 font-Montserrat">
-                {solution.title}
-              </h3>
-              <p class="text-gray-600 mb-8 leading-relaxed text-lg">
-                {solution.description}
-              </p>
-              <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-                {solution.results.map((result) => (
-                  <div class="flex items-center gap-2.5 bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl px-4 py-3">
-                    <svg class="w-5 h-5 text-secondary-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span class="text-sm font-medium text-gray-700">{result}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </Section>
+    <ServiceCaseStudies caseStudies={service.caseStudies} />
+    <ServiceFeatures features={service.features} />
 
     {service.additionalSections && service.additionalSections.length > 0 && (
-      <Section variant="white" padding="lg" decoration="blursPurple">
-        <div class="max-w-4xl mx-auto relative z-10 space-y-16">
-          {service.additionalSections.map((section) => (
-            <article>
-              <h2 class="text-3xl md:text-4xl font-bold text-navy-950 mb-3 font-Montserrat leading-tight">
-                {section.title}
-              </h2>
-              {section.subtitle && (
-                <p class="text-base md:text-lg text-primary-500 font-medium mb-6">
-                  {section.subtitle}
-                </p>
-              )}
-              <div class="space-y-5">
-                {section.paragraphs.map((paragraph) => (
-                  <p class="text-gray-700 leading-relaxed text-base md:text-lg">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
-              {section.cards && section.cards.length > 0 && (
-                <div class="grid md:grid-cols-2 gap-5 mt-8">
-                  {section.cards.map((card) => (
-                    <div class="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-2xl p-6 border border-primary-100">
-                      <h3 class="text-lg font-bold text-navy-950 mb-2 font-Montserrat">
-                        {card.title}
-                      </h3>
-                      <p class="text-gray-700 leading-relaxed text-sm">
-                        {card.description}
-                      </p>
-                      {card.link && (
-                        <a
-                          href={card.link.href}
-                          class="mt-3 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700 transition"
-                        >
-                          {card.link.label}
-                          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                          </svg>
-                        </a>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </article>
-          ))}
-        </div>
-      </Section>
+      <ServiceAdditionalSections sections={service.additionalSections} />
     )}
-
-    <!-- Case Studies -->
-    <Section variant="lightPurple" padding="lg" decoration="blursPurple">
-      <div class="max-w-5xl mx-auto relative z-10">
-        <SectionHeader
-          client:load
-          title="導入事例"
-          subtitle="実際のお客様の成功事例"
-          number="03"
-          label="CASE STUDIES"
-        />
-        <div class="grid md:grid-cols-2 gap-8">
-          {service.caseStudies.map((caseStudy) => (
-            <div class="bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-medium transition-all border border-gray-100">
-              <div class="h-1 bg-gradient-to-r from-primary-500 to-primary-600"></div>
-              <div class="p-8">
-                <h3 class="text-xl font-bold text-navy-950 mb-6 font-Montserrat">
-                  {caseStudy.title}
-                </h3>
-                <div class="space-y-4">
-                  <div class="border-l-2 border-primary-300 pl-4">
-                    <p class="text-sm font-bold text-primary-500 mb-1">課題</p>
-                    <p class="text-gray-700">{caseStudy.challenge}</p>
-                  </div>
-                  <div class="border-l-2 border-primary-300 pl-4">
-                    <p class="text-sm font-bold text-primary-500 mb-1">解決策</p>
-                    <p class="text-gray-700">{caseStudy.solution}</p>
-                  </div>
-                  <div class="border-l-2 border-primary-300 pl-4">
-                    <p class="text-sm font-bold text-primary-500 mb-1">成果</p>
-                    <ul class="space-y-1">
-                      {caseStudy.results.map((result) => (
-                        <li class="flex items-start gap-2 text-gray-700">
-                          <span class="text-primary-400 mt-1">-</span>
-                          {result}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </Section>
-
-    <!-- Features -->
-    <Section variant="lightCyan" padding="lg" decoration="none">
-      <div class="max-w-5xl mx-auto relative z-10">
-        <SectionHeader
-          client:load
-          title="サービス内容"
-          subtitle="提供サービスの詳細"
-          number="04"
-          label="FEATURES"
-        />
-        <div class="grid md:grid-cols-2 gap-6">
-          {service.features.map((feature) => (
-            <div class="group bg-white rounded-2xl p-8 shadow-soft hover:shadow-medium transition-all border border-gray-100 hover:border-secondary-200">
-              <h3 class="text-xl font-bold text-navy-950 mb-3 group-hover:text-primary-500 transition-colors font-Montserrat">
-                {feature.title}
-              </h3>
-              <p class="text-gray-600 leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </Section>
 
     {service.id === 'ai-development' && (
       <Section variant="white" padding="lg" decoration="bars">
@@ -368,7 +143,7 @@ const seoDescription = service.seoDescription ?? service.description;
     )}
 
     {service.relatedColumns && service.relatedColumns.length > 0 && (
-      <Section variant="lightCyan" padding="lg" decoration="dots">
+      <Section variant="lightPurple" padding="lg" decoration="blursPurple">
         <div class="max-w-5xl mx-auto relative z-10">
           <SectionHeader
             client:load
@@ -401,33 +176,7 @@ const seoDescription = service.seoDescription ?? service.description;
       </Section>
     )}
 
-    <!-- FAQ -->
-    <Section variant="white" padding="lg" decoration="blursPurple">
-      <div class="max-w-3xl mx-auto relative z-10">
-        <SectionHeader
-          client:load
-          title="よくある質問"
-          subtitle="お客様からよくいただく質問にお答えします"
-          number={service.id === 'ai-development' ? '07' : (service.relatedColumns && service.relatedColumns.length > 0 ? '06' : '05')}
-          label="FAQ"
-        />
-        <div class="space-y-4">
-          {service.faq.map((item) => (
-            <div class="bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden">
-              <div class="p-6 md:p-8">
-                <h3 class="text-lg font-bold text-navy-950 mb-3 flex items-start gap-3">
-                  <span class="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center text-sm font-bold font-Poppins">Q</span>
-                  <span class="pt-1">{item.question}</span>
-                </h3>
-                <p class="text-gray-600 leading-relaxed ml-11">
-                  {item.answer}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </Section>
+    <ServiceFaq faq={service.faq} number={faqNumber} />
 
     <!-- CTA -->
     <section class="relative py-20 md:py-32 overflow-hidden bg-gradient-to-br from-primary-500 to-primary-600">

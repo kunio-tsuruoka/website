@@ -1,0 +1,273 @@
+---
+import type { ServiceDetail } from '@/types/service';
+
+interface Props {
+  sections: NonNullable<ServiceDetail['additionalSections']>;
+}
+
+const { sections } = Astro.props;
+
+function getLead(paragraphs: string[]) {
+  return paragraphs[0] ?? '';
+}
+
+function getBody(paragraphs: string[]) {
+  return paragraphs.slice(1);
+}
+
+function getSummaryText(text: string) {
+  const firstSentence = text.split('。')[0];
+  return firstSentence.length > 72 ? `${firstSentence.slice(0, 70)}…` : firstSentence;
+}
+
+const graphRagStorySteps = [
+  {
+    label: 'RAGの課題 1',
+    title: '必要な情報が複数資料に分散する',
+    text: '回答に必要な根拠が、仕様書・議事録・障害報告・問い合わせ履歴に分かれていると、通常RAGでは拾い切れないことがあります。',
+  },
+  {
+    label: 'RAGの課題 2',
+    title: '全体の流れを見落としやすい',
+    text: 'チャンク単位で検索するため、文書全体の流れや背景を踏まえた判断が苦手です。',
+  },
+  {
+    label: 'RAGの課題 3',
+    title: '似た資料が多いとノイズが増える',
+    text: '文書量が増えるほど似た内容の資料も増え、本当に必要な情報が検索結果に埋もれやすくなります。',
+  },
+  {
+    label: 'GraphRAG',
+    title: '情報のつながりから全体像を整理する',
+    text: '資料同士の関係をたどることで、分散した根拠、背景、必要な確認先をまとめて見つけやすくします。',
+  },
+];
+
+const graphRagAnswerItems = [
+  {
+    label: '原因候補',
+    value: '3月の請求API変更後、月次締めの差分が増えています。',
+  },
+  {
+    label: '影響範囲',
+    value: '請求承認、月次締め、顧客別レポートに関係しています。',
+  },
+  {
+    label: '確認先',
+    value: '業務システム部Aさんと、3月12日の議事録を確認してください。',
+  },
+];
+
+const graphRagReasons = [
+  '分散した情報をたどりやすい',
+  '文書全体の流れを踏まえやすい',
+  '大規模な資料群でも文脈で絞り込みやすい',
+];
+---
+
+<section class="relative overflow-hidden bg-white py-20 md:py-28">
+  <div class="container relative mx-auto px-6 lg:px-12">
+    <div class="mx-auto max-w-5xl space-y-14">
+      {
+        sections.map((section, sectionIndex) => {
+          const lead = getLead(section.paragraphs);
+          const body = getBody(section.paragraphs);
+          const summaryItems =
+            section.cards && section.cards.length > 0
+              ? section.cards.slice(0, 3).map((card) => card.title)
+              : section.paragraphs.slice(0, 3).map(getSummaryText);
+          const isGraphRagComparison = section.title.includes('通常のRAG');
+
+          return (
+            <article class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-soft md:p-8">
+              <header>
+                <p class="text-sm font-bold tracking-wide text-primary-500">
+                  GUIDE {String(sectionIndex + 1).padStart(2, '0')}
+                </p>
+                <h2 class="mt-3 text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
+                  {isGraphRagComparison
+                    ? 'GraphRAGなら、資料をまたいだ全体像までわかる'
+                    : section.title}
+                </h2>
+                {section.subtitle && (
+                  <p class="mt-3 text-base font-bold leading-relaxed text-primary-500 md:text-lg">
+                    {isGraphRagComparison
+                      ? '「資料を探すAI」と「状況を整理するAI」の違い'
+                      : section.subtitle}
+                  </p>
+                )}
+              </header>
+
+              {isGraphRagComparison ? (
+                <div class="mt-7 space-y-6">
+                  <div class="rounded-3xl border border-primary-100 bg-primary-50 p-5 md:p-7">
+                    <p class="text-sm font-bold text-primary-600">具体例</p>
+                    <h3 class="mt-2 text-2xl font-bold leading-tight text-accent-950 md:text-3xl">
+                      「請求金額が合わない。何が原因で、誰に確認すべき？」
+                    </h3>
+                    <p class="mt-4 text-base leading-relaxed text-neutral-800">
+                      この質問は、1つの資料だけでは答えにくいです。仕様書、議事録、障害報告、問い合わせ履歴をまたいで、情報のつながりを見る必要があります。
+                    </p>
+                  </div>
+
+                  <div class="rounded-3xl border border-neutral-200 bg-white p-5 md:p-6">
+                    <p class="text-sm font-bold text-primary-600">精度が上がりやすい条件</p>
+                    <h3 class="mt-2 text-2xl font-bold leading-tight text-accent-950">
+                      必要な情報が複数資料・複数チャンクに分かれているとき
+                    </h3>
+                    <p class="mt-4 text-base leading-relaxed text-neutral-700">
+                      通常RAGは、少数の資料に答えがまとまっている質問では強力です。一方で、答えに必要な情報が複数資料に分散している場合や、大量の資料から関係する情報だけを絞りたい場合、GraphRAGは部署・案件・時期・出来事などの文脈でたどれるため、より網羅的で判断しやすい回答になりやすいです。
+                    </p>
+                  </div>
+
+                  <div class="grid gap-4 md:grid-cols-4">
+                    {graphRagStorySteps.map((step, index) => (
+                      <div class="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm">
+                        <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary-500 text-sm font-bold text-white">
+                          {index + 1}
+                        </span>
+                        <p class="mt-4 text-xs font-bold tracking-wide text-primary-600">
+                          {step.label}
+                        </p>
+                        <h3 class="mt-2 text-lg font-bold leading-snug text-accent-950">
+                          {step.title}
+                        </h3>
+                        <p class="mt-3 text-sm leading-relaxed text-neutral-700">{step.text}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div class="grid gap-4 md:grid-cols-[0.95fr_1.05fr]">
+                    <div class="rounded-3xl border border-neutral-200 bg-neutral-50 p-5 md:p-6">
+                      <p class="text-sm font-bold text-neutral-600">通常のRAGの回答</p>
+                      <h3 class="mt-2 text-2xl font-bold leading-tight text-accent-950">
+                        関連資料の一覧で止まりやすい
+                      </h3>
+                      <div class="mt-5 rounded-2xl bg-white p-4">
+                        <p class="text-sm leading-relaxed text-neutral-700">
+                          関連資料は「請求API仕様書」「3月12日の議事録」「障害報告」です。
+                          それぞれ確認してください。
+                        </p>
+                      </div>
+                      <p class="mt-4 text-sm leading-relaxed text-neutral-700">
+                        資料は見つかります。ただし、資料同士がどう関係しているかは利用者が読み解く必要があります。
+                      </p>
+                    </div>
+
+                    <div class="rounded-3xl border-2 border-primary-500 bg-white p-5 shadow-soft md:p-6">
+                      <p class="text-sm font-bold text-primary-600">GraphRAGの回答</p>
+                      <h3 class="mt-2 text-2xl font-bold leading-tight text-accent-950">
+                        状況を整理して、次の確認先まで出せる
+                      </h3>
+                      <div class="mt-5 space-y-3">
+                        {graphRagAnswerItems.map((item) => (
+                          <div class="rounded-2xl bg-primary-50 p-4">
+                            <p class="text-xs font-bold text-primary-600">{item.label}</p>
+                            <p class="mt-1 text-sm font-bold leading-relaxed text-accent-950">
+                              {item.value}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="rounded-3xl bg-accent-950 p-5 md:p-6">
+                    <p class="text-sm font-bold text-white">なぜ通常のRAGより強いのか</p>
+                    <div class="mt-4 grid gap-3 md:grid-cols-3">
+                      {graphRagReasons.map((reason) => (
+                        <div class="rounded-2xl bg-white p-4">
+                          <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary-500 text-sm font-bold text-white">
+                            ✓
+                          </span>
+                          <p class="mt-3 text-sm font-bold leading-relaxed text-accent-950">
+                            {reason}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div class="mt-7 grid gap-3 md:grid-cols-3">
+                    {summaryItems.map((item, index) => (
+                      <div class="rounded-2xl bg-primary-50 p-4">
+                        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-sm font-bold text-white">
+                          {index + 1}
+                        </span>
+                        <p class="mt-3 text-sm font-bold leading-relaxed text-accent-950">
+                          {item}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {lead && (
+                    <p class="mt-7 border-l-4 border-primary-500 bg-primary-50 py-4 pl-5 pr-4 text-lg font-bold leading-relaxed text-navy-950 md:text-xl">
+                      {lead}
+                    </p>
+                  )}
+
+                  {body.length > 0 && (
+                    <div class="mt-6 grid gap-4">
+                      {body.map((paragraph, index) => (
+                        <section class="rounded-2xl bg-neutral-50 p-5 md:p-6">
+                          <p class="text-xs font-bold tracking-wide text-primary-500">
+                            POINT {String(index + 2).padStart(2, '0')}
+                          </p>
+                          <p class="mt-3 text-base leading-relaxed text-neutral-700 md:text-lg">
+                            {paragraph}
+                          </p>
+                        </section>
+                      ))}
+                    </div>
+                  )}
+
+                  {section.cards && section.cards.length > 0 && (
+                    <div class="mt-7 grid gap-4 md:grid-cols-2">
+                      {section.cards.map((card, index) => (
+                        <div class="rounded-2xl border border-primary-100 bg-primary-50/60 p-5">
+                          <p class="text-xs font-bold text-primary-500">
+                            {String(index + 1).padStart(2, '0')}
+                          </p>
+                          <h3 class="mt-2 text-lg font-bold leading-snug text-navy-950">
+                            {card.title}
+                          </h3>
+                          <p class="mt-3 text-sm leading-relaxed text-neutral-700">
+                            {card.description}
+                          </p>
+                          {card.link && (
+                            <a
+                              href={card.link.href}
+                              class="mt-4 inline-flex items-center text-sm font-bold text-primary-600 hover:text-primary-700"
+                            >
+                              {card.link.label}
+                              <svg
+                                class="ml-1 h-4 w-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M9 5l7 7-7 7"
+                                />
+                              </svg>
+                            </a>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </article>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
