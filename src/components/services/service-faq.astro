@@ -1,0 +1,41 @@
+---
+import { SectionHeader } from '@/components/ui';
+import type { ServiceDetail } from '@/types/service';
+
+interface Props {
+  faq: ServiceDetail['faq'];
+  number: string;
+}
+
+const { faq, number } = Astro.props;
+---
+
+<section class="bg-white py-20 md:py-28">
+  <div class="container mx-auto px-6 lg:px-12">
+    <div class="mx-auto max-w-4xl">
+      <SectionHeader
+        client:load
+        title="よくある質問"
+        subtitle="発注前に確認されやすい論点をまとめています"
+        number={number}
+        label="FAQ"
+      />
+      <div class="divide-y divide-neutral-200 rounded-3xl border border-neutral-200 bg-white shadow-soft">
+        {faq.map((item) => (
+          <details class="group p-6 open:bg-neutral-50 md:p-7">
+            <summary class="flex cursor-pointer list-none items-start justify-between gap-4">
+              <span class="flex gap-3 text-lg font-bold leading-snug text-navy-950">
+                <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-500 text-sm text-white">Q</span>
+                {item.question}
+              </span>
+              <span class="mt-1 text-2xl leading-none text-primary-500 transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-4 pl-11 text-base leading-relaxed text-neutral-700">
+              {item.answer}
+            </p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
