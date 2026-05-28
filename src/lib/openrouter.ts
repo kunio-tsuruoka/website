@@ -23,6 +23,7 @@ export type ChatCompletionRequest = {
   messages: ChatMessage[];
   max_tokens?: number;
   temperature?: number;
+  response_format?: { type: 'json_object' };
 };
 
 export type ChatCompletionResult = {
