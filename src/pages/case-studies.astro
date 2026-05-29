@@ -472,9 +472,9 @@ const hasPrevPage = currentPage > 1;
       <div class="mt-24 text-center pb-16">
         <h2 class="text-3xl font-bold text-gray-900">お客様の事業成長をサポートします</h2>
         <p class="mt-4 text-xl text-gray-600">
-          まずは無料相談からお気軽にお問い合わせください
+          無料相談、または「初期費用0円で動くプロトタイプから判断する」仕組みをまとめた資料からどうぞ
         </p>
-        <div class="mt-8">
+        <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href="/contact?source=case-studies-final"
             data-cta-source="case-studies-final"
@@ -486,7 +486,19 @@ const hasPrevPage = currentPage > 1;
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </a>
+          <a
+            href="/downloads/zero-start?ref=case-studies"
+            data-cta-source="case-studies-final"
+            data-cta-id="download-zero-start"
+            class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-primary-600 bg-white border-2 border-primary-500 rounded-full hover:bg-primary-50"
+          >
+            サービス資料をダウンロード
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </a>
         </div>
+        <p class="mt-4 text-sm text-gray-500">PDF・約20ページ・無料／メールアドレスのみで受け取れます</p>
       </div>
     </section>
   </main>
