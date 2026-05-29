@@ -56,8 +56,21 @@ const DownloadZeroStartForm = ({ sitekey }: DownloadZeroStartFormProps) => {
       PHASE_OPTIONS.find((o) => o.value === phaseValue)?.label || phaseValue || '未選択';
     const note = String(formData.get('note') || '').trim();
 
+    // 流入元ページ（CTAの ?ref=... ）をリード通知とGA4に反映する
+    const rawRef = new URLSearchParams(window.location.search).get('ref') || '';
+    const ref = rawRef.replace(/[^a-zA-Z0-9-]/g, '').slice(0, 40);
+    const refLabel = ref
+      ? ref === 'case-studies'
+        ? '導入事例ページ'
+        : ref.startsWith('services-')
+          ? `サービスページ（${ref.slice('services-'.length)}）`
+          : ref
+      : '';
+    const source = ref ? `download-zero-start-${ref}` : 'download-zero-start';
+
+    const refBlock = refLabel ? `\n流入元: ${refLabel}` : '';
     const noteBlock = note ? `\nご質問・補足:\n${note}` : '※ご質問・補足はありません';
-    const message = `【ゼロスタート開発 サービスデックDL】\n検討段階: ${phaseLabel}\n${noteBlock}`;
+    const message = `【ゼロスタート開発 サービスデックDL】\n検討段階: ${phaseLabel}${refBlock}\n${noteBlock}`;
 
     const payload = {
       type: 'download_zero_start',
@@ -65,7 +78,7 @@ const DownloadZeroStartForm = ({ sitekey }: DownloadZeroStartFormProps) => {
       name,
       company,
       message,
-      source: 'download-zero-start',
+      source,
       phase: phaseValue,
       turnstileToken: turnstileToken ?? '',
     };
@@ -86,7 +99,7 @@ const DownloadZeroStartForm = ({ sitekey }: DownloadZeroStartFormProps) => {
       const eventParams: Record<string, string> = {
         form_id: 'download-zero-start',
         form_type: 'download_zero_start',
-        source: 'download-zero-start',
+        source,
         phase: phaseValue || 'unknown',
       };
 

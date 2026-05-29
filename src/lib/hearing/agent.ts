@@ -280,10 +280,7 @@ export async function runAgentTurn(
   profile: HearingProfile
 ): Promise<AgentTurnResult> {
   // ヒアリング専用モデルを優先 (JSON 出力厳守と instruction-following が必要)
-  const model =
-    env.OPENROUTER_MODEL_HEARING ??
-    env.OPENROUTER_MODEL_CHAT ??
-    'openai/gpt-4o-mini';
+  const model = env.OPENROUTER_MODEL_HEARING ?? env.OPENROUTER_MODEL_CHAT ?? 'openai/gpt-4o-mini';
   const messages = buildMessagesForLLM(history, profile);
 
   // 1回目
