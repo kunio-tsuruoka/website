@@ -133,6 +133,45 @@ export function useFlowInterview() {
     }
   }, [store]);
 
+  const suggest = useCallback(async (): Promise<void> => {
+    const { sessionId, suggesting, diagram } = store.getState();
+    if (!sessionId || suggesting || diagram.steps.length === 0) return;
+    store.setState({ suggesting: true, error: null });
+    trackToolEvent('tool_export', {
+      tool: 'flow-mapper',
+      meta: { variant: 'flow-interview', format: 'suggest-to-be' },
+    });
+    try {
+      const res = await fetch('/api/flow/suggest', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      });
+      const data = (await res.json()) as {
+        summary?: string;
+        suggestions?: import('@/lib/flow-interview/suggest').FlowSuggestion[];
+        error?: string;
+      };
+      if (!res.ok || !data.suggestions) {
+        store.setState({
+          suggesting: false,
+          error:
+            data.error === 'rate_limited'
+              ? '短時間に多くの操作が行われました。少し待ってからお試しください。'
+              : '改善案の生成に失敗しました。時間をおいて再度お試しください。',
+        });
+        return;
+      }
+      store.setState({
+        suggesting: false,
+        suggestSummary: data.summary ?? null,
+        suggestions: data.suggestions,
+      });
+    } catch {
+      store.setState({ suggesting: false, error: '通信エラーが発生しました。' });
+    }
+  }, [store]);
+
   const toggleRecording = useCallback(async () => {
     const { recording } = store.getState();
     if (recording) {
@@ -164,5 +203,5 @@ export function useFlowInterview() {
     }
   }, [store, finishRecording]);
 
-  return { start, answer, toggleRecording };
+  return { start, answer, suggest, toggleRecording };
 }

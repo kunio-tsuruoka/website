@@ -112,7 +112,7 @@ export function ChatPanel({ onSubmit, onToggleRecording }: Props) {
           </button>
         </div>
         <p className="mt-2 text-[11px] text-gray-400">
-          🎤 ボタンで音声入力できます（対応ブラウザのみ）。聞き取った内容は送信前に編集できます。
+          マイクボタンで音声入力できます（対応ブラウザのみ）。聞き取った内容は送信前に編集できます。
         </p>
       </div>
     </div>

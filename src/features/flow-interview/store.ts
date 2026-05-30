@@ -1,4 +1,5 @@
 import type { FlowDiagram } from '@/features/flow-mapper/types';
+import type { FlowSuggestion } from '@/lib/flow-interview/suggest';
 import { create } from 'zustand';
 import { EMPTY_DIAGRAM, type Message } from './types';
 
@@ -13,6 +14,10 @@ type FlowInterviewState = {
   transcribing: boolean; // 文字起こし処理中
   isReady: boolean;
   error: string | null;
+  // To-Be 改善提案
+  suggesting: boolean;
+  suggestSummary: string | null;
+  suggestions: FlowSuggestion[] | null;
 };
 
 type Actions = {
@@ -32,6 +37,9 @@ const INITIAL: FlowInterviewState = {
   transcribing: false,
   isReady: false,
   error: null,
+  suggesting: false,
+  suggestSummary: null,
+  suggestions: null,
 };
 
 export const useFlowInterviewStore = create<FlowInterviewState & Actions>()((set) => ({

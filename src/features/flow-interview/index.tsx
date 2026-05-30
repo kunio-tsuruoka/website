@@ -1,6 +1,7 @@
 import { useTurnstile } from '@/lib/use-turnstile';
 import { ChatPanel } from './components/ChatPanel';
 import { DiagramPreview } from './components/DiagramPreview';
+import { SuggestionsPanel } from './components/SuggestionsPanel';
 import { useFlowInterview } from './hooks/useFlowInterview';
 import { useFlowInterviewStore } from './store';
 
@@ -13,7 +14,7 @@ export function FlowInterview({ sitekey }: { sitekey: string }) {
   const started = useFlowInterviewStore((s) => s.started);
   const loading = useFlowInterviewStore((s) => s.loading);
   const error = useFlowInterviewStore((s) => s.error);
-  const { start, answer, toggleRecording } = useFlowInterview();
+  const { start, answer, suggest, toggleRecording } = useFlowInterview();
 
   if (!started) {
     return (
@@ -24,8 +25,8 @@ export function FlowInterview({ sitekey }: { sitekey: string }) {
         </p>
         <ul className="text-xs text-gray-600 space-y-1 mb-6">
           <li>・専門用語は不要、普段の言葉で大丈夫です</li>
-          <li>・🎤 音声入力に対応（対応ブラウザのみ）</li>
-          <li>・できた図はそのまま編集したり、改善相談に進めます</li>
+          <li>・音声入力に対応（マイクボタン、対応ブラウザのみ）</li>
+          <li>・できた図はそのまま改善相談や編集に進めます</li>
         </ul>
 
         <div className="mb-4 flex flex-col items-center gap-2">
@@ -60,8 +61,11 @@ export function FlowInterview({ sitekey }: { sitekey: string }) {
           onToggleRecording={() => void toggleRecording()}
         />
       </div>
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-soft p-4 sm:p-5">
-        <DiagramPreview />
+      <div className="space-y-4">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-soft p-4 sm:p-5">
+          <DiagramPreview />
+        </div>
+        <SuggestionsPanel onSuggest={() => void suggest()} />
       </div>
     </div>
   );
