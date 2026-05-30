@@ -15,7 +15,7 @@ export function FlowInterview({ sitekey }: { sitekey: string }) {
   const started = useFlowInterviewStore((s) => s.started);
   const loading = useFlowInterviewStore((s) => s.loading);
   const error = useFlowInterviewStore((s) => s.error);
-  const { start, answer, suggest, generateRfp, toggleRecording } = useFlowInterview();
+  const { start, answer, suggest, generateRfp, toggleRecording, syncDiagram } = useFlowInterview();
 
   if (!started) {
     return (
@@ -64,7 +64,7 @@ export function FlowInterview({ sitekey }: { sitekey: string }) {
       </div>
       <div className="space-y-4">
         <div className="bg-white rounded-2xl border border-gray-200 shadow-soft p-4 sm:p-5">
-          <DiagramPreview />
+          <DiagramPreview onEdit={syncDiagram} />
         </div>
         <SuggestionsPanel onSuggest={() => void suggest()} />
         <RfpPanel onGenerate={() => void generateRfp()} />

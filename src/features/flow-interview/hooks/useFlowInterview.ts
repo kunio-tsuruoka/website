@@ -148,6 +148,24 @@ export function useFlowInterview() {
     }
   }, [store]);
 
+  // インライン編集後、編集済み図をサーバセッションへデバウンス同期する。
+  // これ以降のチャット・改善案・RFP が編集後の図を使う。
+  const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const syncDiagram = useCallback(() => {
+    if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+    syncTimerRef.current = setTimeout(() => {
+      const { sessionId, diagram } = store.getState();
+      if (!sessionId) return;
+      void fetch('/api/flow/diagram', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ sessionId, diagram }),
+      }).catch(() => {
+        /* 同期失敗は致命的でない（次の編集で再送される） */
+      });
+    }, 800);
+  }, [store]);
+
   const suggest = useCallback(async (): Promise<void> => {
     const { sessionId, suggesting, diagram } = store.getState();
     if (!sessionId || suggesting || diagram.steps.length === 0) return;
@@ -249,5 +267,5 @@ export function useFlowInterview() {
     }
   }, [store, finishRecording]);
 
-  return { start, answer, suggest, generateRfp, toggleRecording };
+  return { start, answer, suggest, generateRfp, toggleRecording, syncDiagram };
 }
