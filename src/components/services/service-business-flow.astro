@@ -1,0 +1,80 @@
+---
+interface Props {
+  flow?: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    steps: readonly {
+      label: string;
+      title: string;
+      description: string;
+    }[];
+    outcome: string;
+  };
+}
+
+const { flow } = Astro.props;
+---
+
+{flow && (
+  <section class="relative overflow-hidden bg-white py-16 md:py-20">
+    <div class="absolute -right-20 top-6 h-56 w-56 rounded-full bg-primary-100/50 blur-3xl"></div>
+    <div class="absolute -left-16 bottom-6 h-48 w-48 rounded-full bg-primary-100/40 blur-3xl"></div>
+
+    <div class="container relative mx-auto px-6 lg:px-12">
+      <div class="mx-auto max-w-6xl">
+        <div class="max-w-3xl">
+          <p class="text-sm font-bold tracking-wide text-primary-500">{flow.eyebrow}</p>
+          <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+            {flow.title}
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-neutral-700 md:text-lg">{flow.lead}</p>
+        </div>
+
+        <div class="mt-8 grid gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:items-stretch">
+          {flow.steps.map((step, index) => (
+            <>
+              <article class:list={[
+                'rounded-3xl border p-5 shadow-soft md:p-6',
+                index === 0
+                  ? 'border-neutral-200 bg-neutral-50'
+                  : index === flow.steps.length - 1
+                    ? 'border-primary-200 bg-primary-50'
+                    : 'border-primary-200 bg-primary-50',
+              ]}>
+                <div class="flex items-center gap-3">
+                  <span class:list={[
+                    'flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white',
+                    index === 0
+                      ? 'bg-neutral-500'
+                      : index === flow.steps.length - 1
+                        ? 'bg-primary-600'
+                        : 'bg-primary-500',
+                  ]}>
+                    {index + 1}
+                  </span>
+                  <p class="text-xs font-bold tracking-wide text-primary-600">{step.label}</p>
+                </div>
+                <h3 class="mt-4 text-xl font-bold leading-snug text-accent-950">{step.title}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-neutral-700">{step.description}</p>
+              </article>
+              {index < flow.steps.length - 1 && (
+                <div class="flex items-center justify-center text-primary-400" aria-hidden="true">
+                  <span class="hidden text-3xl font-bold md:block">→</span>
+                  <span class="text-2xl font-bold md:hidden">↓</span>
+                </div>
+              )}
+            </>
+          ))}
+        </div>
+
+        <div class="mt-5 flex items-start gap-3 rounded-2xl bg-accent-950 p-4 text-white shadow-soft md:px-5">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-300 text-sm font-bold text-accent-950">
+            ✓
+          </span>
+          <p class="text-sm font-bold leading-relaxed md:text-base">{flow.outcome}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
