@@ -37,6 +37,15 @@ export const FlowDiagramSchema = z.object({
 
 export const EMPTY_DIAGRAM = { title: '業務フロー', phases: [], lanes: [], steps: [] };
 
+// セッションに保存する改善提案（lib/flow-interview/suggest.ts の FlowSuggestion 相当を緩く検証）
+export const SessionSuggestionSchema = z.object({
+  kind: z.string(),
+  target: z.string(),
+  title: z.string(),
+  effect: z.string(),
+  detail: z.string(),
+});
+
 export const SessionStateSchema = z.object({
   sessionId: z.string(),
   createdAt: z.number(),
@@ -45,6 +54,8 @@ export const SessionStateSchema = z.object({
   diagram: FlowDiagramSchema,
   turns: z.number().default(0),
   status: z.enum(['active', 'done']).default('active'),
+  suggestSummary: z.string().nullable().default(null),
+  suggestions: z.array(SessionSuggestionSchema).default([]),
 });
 export type SessionState = z.infer<typeof SessionStateSchema>;
 

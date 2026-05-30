@@ -49,5 +49,7 @@ export function createSession(now: number = Date.now()): SessionState {
     diagram: { ...EMPTY_DIAGRAM },
     turns: 0,
     status: 'active',
+    suggestSummary: null,
+    suggestions: [],
   };
 }

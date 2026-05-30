@@ -1,6 +1,6 @@
 import { getAiEnv } from '@/lib/ai-guards';
-import { readSession, writeSession } from '@/lib/flow-interview/session';
-import { runSuggest } from '@/lib/flow-interview/suggest';
+import { formatRfpMarkdown, runRfp } from '@/lib/flow-interview/rfp';
+import { readSession } from '@/lib/flow-interview/session';
 import { limitByIp, rateLimitResponse } from '@/lib/rate-limit';
 import type { APIRoute } from 'astro';
 
@@ -19,11 +19,10 @@ export const POST: APIRoute = async ({ locals, request }) => {
   if (!env.RATE_LIMIT) return jsonError(503, 'binding_missing');
   if (!env.OPENROUTER_API_KEY) return jsonError(503, 'openrouter_key_missing');
 
-  // Turnstile は start で通過済み。改善提案は重いので IP レート制限を強めに。
   const limit = await limitByIp(env.RATE_LIMIT, request, {
-    endpoint: 'flow-suggest',
-    perMin: 5,
-    perDay: 40,
+    endpoint: 'flow-rfp',
+    perMin: 4,
+    perDay: 30,
   });
   if (!limit.ok) return rateLimitResponse(limit);
 
@@ -41,7 +40,7 @@ export const POST: APIRoute = async ({ locals, request }) => {
   if (!session) return jsonError(404, 'session_not_found');
   if (session.diagram.steps.length === 0) return jsonError(400, 'diagram_empty');
 
-  const result = await runSuggest(
+  const rfp = await runRfp(
     {
       RATE_LIMIT: env.RATE_LIMIT,
       OPENROUTER_API_KEY: env.OPENROUTER_API_KEY,
@@ -49,18 +48,14 @@ export const POST: APIRoute = async ({ locals, request }) => {
       OPENROUTER_MODEL_HEARING: env.OPENROUTER_MODEL_HEARING,
       SLACK_WEBHOOK_URL: env.SLACK_WEBHOOK_URL,
     },
-    session.diagram
+    session.diagram,
+    session.suggestions,
+    session.suggestSummary
   );
 
-  if (!result) return jsonError(502, 'suggest_failed');
+  if (!rfp) return jsonError(502, 'rfp_failed');
 
-  // RFP 生成で再利用できるようセッションに保存する。
-  session.suggestSummary = result.summary;
-  session.suggestions = result.suggestions;
-  session.updatedAt = Date.now();
-  await writeSession(env.RATE_LIMIT, session);
-
-  return new Response(JSON.stringify(result), {
+  return new Response(JSON.stringify({ rfp, markdown: formatRfpMarkdown(rfp) }), {
     status: 200,
     headers: { 'content-type': 'application/json' },
   });

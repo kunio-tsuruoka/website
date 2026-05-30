@@ -172,6 +172,37 @@ export function useFlowInterview() {
     }
   }, [store]);
 
+  const generateRfp = useCallback(async (): Promise<void> => {
+    const { sessionId, rfpLoading, diagram } = store.getState();
+    if (!sessionId || rfpLoading || diagram.steps.length === 0) return;
+    store.setState({ rfpLoading: true, error: null });
+    trackToolEvent('tool_export', {
+      tool: 'flow-mapper',
+      meta: { variant: 'flow-interview', format: 'rfp-userstories' },
+    });
+    try {
+      const res = await fetch('/api/flow/rfp', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      });
+      const data = (await res.json()) as { markdown?: string; error?: string };
+      if (!res.ok || !data.markdown) {
+        store.setState({
+          rfpLoading: false,
+          error:
+            data.error === 'rate_limited'
+              ? '短時間に多くの操作が行われました。少し待ってからお試しください。'
+              : 'RFPの生成に失敗しました。時間をおいて再度お試しください。',
+        });
+        return;
+      }
+      store.setState({ rfpLoading: false, rfpMarkdown: data.markdown });
+    } catch {
+      store.setState({ rfpLoading: false, error: '通信エラーが発生しました。' });
+    }
+  }, [store]);
+
   const toggleRecording = useCallback(async () => {
     const { recording } = store.getState();
     if (recording) {
@@ -203,5 +234,5 @@ export function useFlowInterview() {
     }
   }, [store, finishRecording]);
 
-  return { start, answer, suggest, toggleRecording };
+  return { start, answer, suggest, generateRfp, toggleRecording };
 }

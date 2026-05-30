@@ -1,6 +1,7 @@
 import { useTurnstile } from '@/lib/use-turnstile';
 import { ChatPanel } from './components/ChatPanel';
 import { DiagramPreview } from './components/DiagramPreview';
+import { RfpPanel } from './components/RfpPanel';
 import { SuggestionsPanel } from './components/SuggestionsPanel';
 import { useFlowInterview } from './hooks/useFlowInterview';
 import { useFlowInterviewStore } from './store';
@@ -14,7 +15,7 @@ export function FlowInterview({ sitekey }: { sitekey: string }) {
   const started = useFlowInterviewStore((s) => s.started);
   const loading = useFlowInterviewStore((s) => s.loading);
   const error = useFlowInterviewStore((s) => s.error);
-  const { start, answer, suggest, toggleRecording } = useFlowInterview();
+  const { start, answer, suggest, generateRfp, toggleRecording } = useFlowInterview();
 
   if (!started) {
     return (
@@ -66,6 +67,7 @@ export function FlowInterview({ sitekey }: { sitekey: string }) {
           <DiagramPreview />
         </div>
         <SuggestionsPanel onSuggest={() => void suggest()} />
+        <RfpPanel onGenerate={() => void generateRfp()} />
       </div>
     </div>
   );

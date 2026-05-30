@@ -18,6 +18,9 @@ type FlowInterviewState = {
   suggesting: boolean;
   suggestSummary: string | null;
   suggestions: FlowSuggestion[] | null;
+  // ユーザーストーリ付き RFP
+  rfpLoading: boolean;
+  rfpMarkdown: string | null;
 };
 
 type Actions = {
@@ -40,6 +43,8 @@ const INITIAL: FlowInterviewState = {
   suggesting: false,
   suggestSummary: null,
   suggestions: null,
+  rfpLoading: false,
+  rfpMarkdown: null,
 };
 
 export const useFlowInterviewStore = create<FlowInterviewState & Actions>()((set) => ({
