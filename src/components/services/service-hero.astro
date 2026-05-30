@@ -2,6 +2,7 @@
 import type { ServiceDetail } from '@/types/service';
 
 type Metric = { label: string; value: string };
+type Illustration = { src: string; alt: string; stages: readonly string[] };
 
 interface Props {
   service: ServiceDetail;
@@ -13,6 +14,7 @@ interface Props {
     visualTitle: string;
     visualSubtitle: string;
     visualItems: readonly string[];
+    illustration?: Illustration;
     metrics: readonly Metric[];
   };
 }
@@ -73,17 +75,41 @@ const benefits = service.benefits.slice(0, 3);
             <span class="rounded-full bg-primary-50 px-3 py-1 text-xs font-bold text-primary-600">PoC ready</span>
           </div>
 
-          <div class="mt-5 grid gap-3">
-            {(config?.visualItems ?? benefits).map((item, index) => (
-              <div class="flex items-center gap-3 rounded-2xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-500 text-sm font-bold text-white">
-                  {index + 1}
-                </span>
-                <span class="font-bold text-neutral-800">{item}</span>
-                <span class="ml-auto h-2 w-10 rounded-full bg-primary-200"></span>
-              </div>
-            ))}
-          </div>
+          {config?.illustration ? (
+            <figure class="mt-5 overflow-hidden rounded-2xl border border-primary-100 bg-accent-950 shadow-soft">
+              <img
+                src={config.illustration.src}
+                alt={config.illustration.alt}
+                class="aspect-[1.9/1] w-full object-cover"
+                width="950"
+                height="500"
+                loading="eager"
+                decoding="async"
+              />
+              <figcaption class="grid grid-cols-2 gap-px bg-primary-100 sm:grid-cols-4">
+                {config.illustration.stages.map((stage, index) => (
+                  <div class="flex items-center gap-2 bg-white px-3 py-2.5">
+                    <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-500 text-[10px] font-bold text-white">
+                      {index + 1}
+                    </span>
+                    <span class="text-xs font-bold leading-snug text-neutral-800">{stage}</span>
+                  </div>
+                ))}
+              </figcaption>
+            </figure>
+          ) : (
+            <div class="mt-5 grid gap-3">
+              {(config?.visualItems ?? benefits).map((item, index) => (
+                <div class="flex items-center gap-3 rounded-2xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-500 text-sm font-bold text-white">
+                    {index + 1}
+                  </span>
+                  <span class="font-bold text-neutral-800">{item}</span>
+                  <span class="ml-auto h-2 w-10 rounded-full bg-primary-200"></span>
+                </div>
+              ))}
+            </div>
+          )}
 
           <div class="mt-5 grid grid-cols-3 gap-3">
             {(config?.metrics ?? []).map((metric) => (
