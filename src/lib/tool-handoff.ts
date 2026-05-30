@@ -6,7 +6,7 @@
 const HANDOFF_KEY = 'beekle-tool-handoff-v1';
 const TTL_MS = 5 * 60 * 1000; // 5 minutes
 
-export type ToolId = 'flow-mapper' | 'story-builder' | 'scope-manager';
+export type ToolId = 'flow-mapper' | 'story-builder' | 'scope-manager' | 'flow-interview';
 
 export type Handoff = {
   from: ToolId;
