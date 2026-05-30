@@ -81,36 +81,57 @@ export const POST: APIRoute = async ({ locals, request }) => {
   }
 };
 
+const AI_TIMEOUT_MS = 25000;
+
+function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    p,
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error(`timeout_${label}`)), ms)),
+  ]);
+}
+
+async function transcribeViaRest(account: string, token: string, base64: string): Promise<string> {
+  const res = await withTimeout(
+    fetch(`https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${WHISPER_MODEL}`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ audio: base64, language: 'ja', task: 'transcribe' }),
+    }),
+    AI_TIMEOUT_MS,
+    'rest'
+  );
+  if (!res.ok) throw new Error(`workers_ai_rest_${res.status}`);
+  const data = (await res.json()) as { result?: { text?: string }; text?: string };
+  return (data.result?.text ?? data.text ?? '').trim();
+}
+
 /**
  * Workers AI Whisper で文字起こし。
- * 1. env.AI バインディングがあれば優先（本番 / token付き dev）
- * 2. 無ければ CLOUDFLARE_API_TOKEN + ACCOUNT_ID で REST フォールバック（column-rag と同方針）
- * 3. どちらも無ければ null（呼び出し側が 503 を返す）
+ * - REST を優先する。CLOUDFLARE_API_TOKEN + ACCOUNT_ID があれば dev/本番とも安定して動くため
+ *   （`env.AI` バインディングは local dev の platformProxy 経由だと whisper でハングする実績あり。
+ *    2026-05-02 の音声断念と同根。.claude/rules/ai-demo-infrastructure.md 参照）。
+ * - REST 不可（token 無し本番等）のときだけ env.AI バインディングを使う。無限ハング防止に
+ *   タイムアウトを噛ませ、失敗時は呼び出し側が 502 を返す。
+ * - どちらも無ければ null（呼び出し側が 503）。
  */
 async function transcribe(
   env: { AI?: unknown; CLOUDFLARE_API_TOKEN?: string; CLOUDFLARE_ACCOUNT_ID?: string },
   base64: string
 ): Promise<string | null> {
-  const ai = env.AI as WhisperBinding | undefined;
-  if (ai && typeof ai.run === 'function') {
-    const res = await ai.run(WHISPER_MODEL, { audio: base64, language: 'ja', task: 'transcribe' });
-    return (res.text ?? '').trim();
-  }
-
   const token = env.CLOUDFLARE_API_TOKEN;
   const account = env.CLOUDFLARE_ACCOUNT_ID;
   if (token && account) {
-    const res = await fetch(
-      `https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${WHISPER_MODEL}`,
-      {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-        body: JSON.stringify({ audio: base64, language: 'ja', task: 'transcribe' }),
-      }
+    return transcribeViaRest(account, token, base64);
+  }
+
+  const ai = env.AI as WhisperBinding | undefined;
+  if (ai && typeof ai.run === 'function') {
+    const res = await withTimeout(
+      ai.run(WHISPER_MODEL, { audio: base64, language: 'ja', task: 'transcribe' }),
+      AI_TIMEOUT_MS,
+      'binding'
     );
-    if (!res.ok) throw new Error(`workers_ai_rest_${res.status}`);
-    const data = (await res.json()) as { result?: { text?: string }; text?: string };
-    return (data.result?.text ?? data.text ?? '').trim();
+    return (res.text ?? '').trim();
   }
 
   return null;

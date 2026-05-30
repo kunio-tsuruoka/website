@@ -111,11 +111,18 @@ export function useFlowInterview() {
       return;
     }
     store.setState({ recording: false, transcribing: true });
+    // サーバが詰まっても「変換中」が無限に残らないよう、クライアント側でも打ち切る。
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 30000);
     try {
       const form = new FormData();
       form.append('audio', blob, 'speech.webm');
       form.append('sessionId', sessionId);
-      const res = await fetch('/api/ai/transcribe', { method: 'POST', body: form });
+      const res = await fetch('/api/ai/transcribe', {
+        method: 'POST',
+        body: form,
+        signal: controller.signal,
+      });
       const data = (await res.json()) as { text?: string; error?: string };
       if (!res.ok || !data.text) {
         store.setState({
@@ -128,8 +135,16 @@ export function useFlowInterview() {
         transcribing: false,
         input: s.input ? `${s.input} ${data.text}` : (data.text ?? ''),
       }));
-    } catch {
-      store.setState({ transcribing: false, error: '音声処理に失敗しました。' });
+    } catch (err) {
+      store.setState({
+        transcribing: false,
+        error:
+          err instanceof Error && err.name === 'AbortError'
+            ? '音声の変換に時間がかかりすぎました。もう一度短めにお試しください。'
+            : '音声処理に失敗しました。テキストで入力してください。',
+      });
+    } finally {
+      clearTimeout(timer);
     }
   }, [store]);
 
