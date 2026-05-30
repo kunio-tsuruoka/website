@@ -9,13 +9,32 @@ const GA_MEASUREMENT_ID =
   runtime?.env?.PUBLIC_GA_MEASUREMENT_ID ??
   import.meta.env.PUBLIC_GA_MEASUREMENT_ID ??
   'G-R7BXGC7XN6';
+
+// content_group: ページ種別。GA4 標準ディメンション「コンテンツ グループ」に乗り、
+// 経路データ探索 / 目標到達プロセスでカスタマージャーニーを読みやすくする。
+const path = Astro.url.pathname;
+function resolveContentGroup(p: string): string {
+  if (p === '/') return 'home';
+  if (p.startsWith('/column')) return 'column';
+  if (p.startsWith('/tools')) return 'tool';
+  if (p.startsWith('/services')) return 'service';
+  if (p.startsWith('/downloads')) return 'download';
+  if (p.startsWith('/contact')) return 'contact';
+  if (p.startsWith('/thanks')) return 'thanks';
+  if (p.startsWith('/case-studies')) return 'lp';
+  if (p.startsWith('/prooffirst')) return 'lp';
+  if (p.startsWith('/strengths')) return 'lp';
+  if (p.startsWith('/materials')) return 'lp';
+  return 'other';
+}
+const CONTENT_GROUP = resolveContentGroup(path);
 ---
 
 <!-- Google tag (gtag.js) -->
 <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
-<script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
+<script is:inline define:vars={{ GA_MEASUREMENT_ID, CONTENT_GROUP }}>
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
   window.gtag('js', new Date());
-  window.gtag('config', GA_MEASUREMENT_ID);
+  window.gtag('config', GA_MEASUREMENT_ID, { content_group: CONTENT_GROUP });
 </script>
