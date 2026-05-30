@@ -11,7 +11,7 @@ import { GoogleAuth } from 'google-auth-library';
 
 const PROPERTY_ID = '355503040';
 const KEY_FILE = join(homedir(), '.gcp-keys', 'ga4-mcp-beekle.json');
-const TARGET_EVENTS = ['form_submit', 'generate_lead', 'contact_complete'];
+const TARGET_EVENTS = ['form_submit', 'generate_lead', 'contact_complete', 'download_request'];
 
 const auth = new GoogleAuth({
   keyFile: KEY_FILE,

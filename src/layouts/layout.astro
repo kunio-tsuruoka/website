@@ -44,7 +44,7 @@ const fullTitle = title.includes('Beekle') ? title : `${title} | Beekle`;
   <body class="font-sans">
     <slot />
     <script>
-      import { trackCtaClick } from '@/lib/analytics';
+      import { initEngagementTracking, trackCtaClick } from '@/lib/analytics';
       document.addEventListener('click', (event) => {
         const target = event.target;
         if (!(target instanceof Element)) return;
@@ -54,6 +54,7 @@ const fullTitle = title.includes('Beekle') ? title : `${title} | Beekle`;
         const cta = el.dataset.ctaId ?? 'unknown';
         trackCtaClick({ source, cta });
       });
+      initEngagementTracking();
     </script>
   </body>
 </html>
