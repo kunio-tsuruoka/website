@@ -1,0 +1,54 @@
+---
+interface Props {
+  serviceId: string;
+  placement: 'overview' | 'solutions' | 'cases';
+}
+
+const { serviceId, placement } = Astro.props;
+
+const content = {
+  overview: {
+    eyebrow: 'まずは相談から',
+    title: '自社の業務で使えるか、整理してみませんか？',
+    description:
+      'まだ要件が固まっていなくても問題ありません。課題を伺い、試す価値がある業務から整理します。',
+    label: '自社で使えるか相談する',
+  },
+  solutions: {
+    eyebrow: '具体的な進め方を確認',
+    title: 'どこから着手すべきか、無料相談で切り分けます',
+    description: '業務、データ、既存システムを確認し、小さく検証できる範囲をご提案します。',
+    label: '無料相談を予約する',
+  },
+  cases: {
+    eyebrow: '似た課題がある方へ',
+    title: '自社の場合の進め方を相談する',
+    description: '実現したいことを伺い、必要な機能、進め方、概算費用の考え方をご案内します。',
+    label: 'お問い合わせはこちら',
+  },
+} as const;
+
+const cta = content[placement];
+const source = `services-${serviceId}-${placement}`;
+---
+
+<aside class="bg-white px-6 py-4 lg:px-12">
+  <div class="mx-auto flex max-w-6xl flex-col gap-5 rounded-3xl border border-primary-200 bg-primary-50 p-5 shadow-soft md:flex-row md:items-center md:justify-between md:p-6">
+    <div class="max-w-3xl">
+      <p class="text-xs font-bold tracking-wide text-primary-500">{cta.eyebrow}</p>
+      <h2 class="mt-2 text-xl font-bold leading-snug text-accent-950 md:text-2xl">{cta.title}</h2>
+      <p class="mt-2 text-sm leading-relaxed text-neutral-700 md:text-base">{cta.description}</p>
+    </div>
+    <a
+      href={`/contact?source=${source}&intent=consult`}
+      data-cta-source={source}
+      data-cta-id="contact-consult"
+      class="inline-flex min-h-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium md:text-base"
+    >
+      {cta.label}
+      <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+      </svg>
+    </a>
+  </div>
+</aside>
