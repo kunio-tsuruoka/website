@@ -1,8 +1,6 @@
 import { useTurnstile } from '@/lib/use-turnstile';
 import { ChatPanel } from './components/ChatPanel';
-import { DiagramPreview } from './components/DiagramPreview';
-import { RfpPanel } from './components/RfpPanel';
-import { SuggestionsPanel } from './components/SuggestionsPanel';
+import { WorkspacePanel } from './components/WorkspacePanel';
 import { useFlowInterview } from './hooks/useFlowInterview';
 import { useFlowInterviewStore } from './store';
 
@@ -62,13 +60,11 @@ export function FlowInterview({ sitekey }: { sitekey: string }) {
           onToggleRecording={() => void toggleRecording()}
         />
       </div>
-      <div className="space-y-4">
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-soft p-4 sm:p-5">
-          <DiagramPreview onEdit={syncDiagram} />
-        </div>
-        <SuggestionsPanel onSuggest={() => void suggest()} />
-        <RfpPanel onGenerate={() => void generateRfp()} />
-      </div>
+      <WorkspacePanel
+        onEdit={syncDiagram}
+        onSuggest={() => void suggest()}
+        onGenerateRfp={() => void generateRfp()}
+      />
     </div>
   );
 }
