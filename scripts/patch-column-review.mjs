@@ -373,6 +373,23 @@ const PATCHES = {
       before: '生成AIで1〜2週間プロトタイプを作る4ステップ｜ストーリー→FM→Gherkin→Laravel Inertia',
       after: '生成AIで1〜2週間でプロトタイプを作る4ステップ｜発注前に知っておくべき開発の流れ',
     },
+    // E: 削除した重複slug への内部リンクを正規slugへ付け替え（301頼みにしない）
+    {
+      id: 'E-xref-pm01',
+      all: true,
+      before: '/column/project-management-01"',
+      after: '/column/requirements-definition-process"',
+    },
+  ],
+
+  // E: 02-06削除に伴う内部リンク付け替え
+  'communication-complete-guide': [
+    {
+      id: 'E-xref-7hhc',
+      all: true,
+      before: '/column/7hhc1tib7dft"',
+      after: '/column/ai-development-speed"',
+    },
   ],
 
   // 01-06
