@@ -146,6 +146,8 @@ const PATCHES = {
       before: '経済産業省の「DXレポート」や',
       after: '経済産業省の「DXレポート2.2」や',
     },
+    // 0037: 和語並列の順序統一（DX／AI → AI／DX）。全角／は規約どおり維持。
+    { id: '0037', all: true, before: 'DX／AI', after: 'AI／DX' },
   ],
 
   // 01-08
@@ -253,6 +255,13 @@ const PATCHES = {
     },
     // 0064 クロス参照: common-mistakes のタイトル 8選→5選 に合わせて本文の言及も更新
     { id: '0064-xref', all: true, before: '失敗事例8選', after: '失敗事例5選' },
+    // 0070 クロス参照: ai-development-speed のタイトル改変に合わせてアンカー文言も新タイトルへ再同期
+    {
+      id: '0070-xref',
+      all: true,
+      before: '生成AIで1〜2週間プロトタイプを作る4ステップ｜ストーリー→FM→Gherkin→Laravel Inertia',
+      after: '生成AIで1〜2週間でプロトタイプを作る4ステップ｜発注前に知っておくべき開発の流れ',
+    },
   ],
 
   // 01-06
@@ -279,6 +288,16 @@ const PATCHES = {
 const TITLE_PATCHES = {
   'how-to-write-rfp': { id: '0026', before: '7項目と9つの落とし穴', after: '10項目と9つの落とし穴' },
   'common-mistakes': { id: '0064', before: '失敗事例8選', after: '失敗事例5選' },
+  'silent-three-weeks': {
+    id: '0069',
+    before: '発注側の社内で起きている3つのこと',
+    after: '発注決済者が案件を滞らせないためにとるべき3つの介入手順',
+  },
+  'ai-development-speed': {
+    id: '0070',
+    before: '生成AIで1〜2週間プロトタイプを作る4ステップ｜ストーリー→FM→Gherkin→Laravel Inertia',
+    after: '生成AIで1〜2週間でプロトタイプを作る4ステップ｜発注前に知っておくべき開発の流れ',
+  },
 };
 
 async function processTitle(slug, patch) {
@@ -353,14 +372,15 @@ async function processSlug(slug, repls) {
   }
 
   await client.update({ endpoint: 'columns', contentId: slug, content: { content: out } });
-  // 検証
+  // 検証: before が消えていることを確認（after存在チェックだと、後続replの before に
+  // 使われる連鎖置換で誤検知するため。before===after はスキップ）。
   const after = await client.get({ endpoint: 'columns', contentId: slug, queries: { fields: 'content' } });
   let ok = true;
   for (const r of repls) {
-    const a = after.content.includes(r.after);
-    if (!a) {
+    if (r.before === r.after) continue;
+    if (after.content.includes(r.before)) {
       ok = false;
-      console.log(`  ❌ 検証失敗: ${r.id} の after が見つからない`);
+      console.log(`  ❌ 検証失敗: ${r.id} の before がまだ残っている`);
     }
   }
   console.log(ok ? `  ✅ PATCH + 検証OK（${changed}件）` : '  ❌ 検証に失敗（要確認）');
