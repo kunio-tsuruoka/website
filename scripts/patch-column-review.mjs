@@ -121,6 +121,81 @@ const PATCHES = {
     },
   ],
 
+  // 01-05
+  'ai-dx-introduction-process': [
+    {
+      id: '0038',
+      before: '「生成AIで業務効率化」「DXでDXを」',
+      after: '「生成AIで業務効率化」「生成AIでDXを」',
+    },
+    {
+      id: '0041',
+      all: true,
+      before: '>要件定義の完全ガイド</a>',
+      after: '>要件定義の書き方と実例</a>',
+    },
+    {
+      id: '0043',
+      before: 'この5パターンのいずれに該当するか',
+      after: 'この4パターンのいずれに該当するか',
+    },
+    {
+      id: '0051',
+      before: '経済産業省の「DXレポート」や',
+      after: '経済産業省の「DXレポート2.2」や',
+    },
+  ],
+
+  // 01-08
+  'requirements-definition-template': [
+    {
+      id: '0049',
+      before: 'MoSCoWとFMで要件を絞り込む方法',
+      after: '要件の優先順位付け: MoSCoW vs FM法 完全比較',
+    },
+    {
+      id: '0050',
+      before: 'ツール化したい方は',
+      after: 'ツールを利用したい方は',
+    },
+  ],
+
+  // 01-09
+  'requirements-definition-complete-guide': [
+    { id: '0052a', before: '業務フローの可視化（As-Is / To-Be）', after: '業務フローの可視化（As-Is/To-Be）' },
+    {
+      id: '0052b',
+      before: 'As-Is / To-Be を並べて可視化することを推奨しています。',
+      after: 'As-Is/To-Be を並べて可視化することを推奨しています。',
+    },
+    { id: '0052c', before: 'Beekle のツール', after: 'Beekleのツール', all: true },
+  ],
+
+  // 01-11
+  'requirements-prioritization-moscow-fm': [
+    {
+      id: '0054',
+      before: '書籍『システムを作らせる技術』（白川克著）',
+      after: '書籍『システムを作らせる技術』（白川克、日経BP、2021）',
+    },
+  ],
+
+  // 01-14
+  'ai-era-development-flow': [
+    {
+      id: '0056',
+      all: true,
+      before: '生成AI開発のスピード｜プロトタイプを1〜2週間で作る方法',
+      after:
+        '生成AIで1〜2週間プロトタイプを作る4ステップ｜ストーリー→FM→Gherkin→Laravel Inertia',
+    },
+    {
+      id: '0057',
+      before: '「作ったのに使われない」を防ぐ機能フィルタリング｜FM活用法',
+      after: '「作ったのに使われないシステム」を防ぐ要件絞り込み術｜FM法とユーザー視点',
+    },
+  ],
+
   // 01-06
   'requirements-vs-requests': [
     {
@@ -152,12 +227,13 @@ function applyReplacements(html, repls) {
       results.push({ id: r.id, status: afterAlready > 0 ? 'already' : 'not_found' });
       continue;
     }
-    if (beforeCount > 1) {
+    if (beforeCount > 1 && !r.all) {
       results.push({ id: r.id, status: 'ambiguous', count: beforeCount });
       continue;
     }
-    out = out.replace(r.before, r.after);
-    results.push({ id: r.id, status: 'replaced' });
+    // all=true は同一修正が複数箇所にある場合（表記統一・同一アンカー複数）に全置換する
+    out = r.all ? out.split(r.before).join(r.after) : out.replace(r.before, r.after);
+    results.push({ id: r.id, status: 'replaced', count: r.all ? beforeCount : 1 });
   }
   return { out, results };
 }
