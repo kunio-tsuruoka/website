@@ -27,12 +27,17 @@ type FlowInterviewState = {
   // ユーザーストーリ付き RFP
   rfpLoading: boolean;
   rfpMarkdown: string | null;
+  // 問い合わせモーダル（在席のまま氏名/会社/メール入力→Slack送信）
+  contactOpen: boolean;
+  contactIntent: string;
 };
 
 type Actions = {
   setInput: (v: string) => void;
   appendUser: (content: string) => void;
   reset: () => void;
+  openContact: (intent: string) => void;
+  closeContact: () => void;
   // 図のインライン編集（As-Is のみ）。RFP/改善案はサーバ同期後に最新図を使う。
   setDiagramTitle: (title: string) => void;
   updateStepLabel: (id: string, label: string) => void;
@@ -60,6 +65,8 @@ const INITIAL: FlowInterviewState = {
   suggestions: null,
   rfpLoading: false,
   rfpMarkdown: null,
+  contactOpen: false,
+  contactIntent: '',
 };
 
 export const useFlowInterviewStore = create<FlowInterviewState & Actions>()((set) => ({
@@ -67,6 +74,8 @@ export const useFlowInterviewStore = create<FlowInterviewState & Actions>()((set
   setInput: (v) => set({ input: v }),
   appendUser: (content) => set((s) => ({ messages: [...s.messages, { role: 'user', content }] })),
   reset: () => set({ ...INITIAL }),
+  openContact: (intent) => set({ contactOpen: true, contactIntent: intent }),
+  closeContact: () => set({ contactOpen: false }),
 
   setDiagramTitle: (title) => set((s) => ({ diagram: { ...s.diagram, title } })),
 

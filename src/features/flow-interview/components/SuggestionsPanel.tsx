@@ -1,8 +1,6 @@
 import { trackCtaClick } from '@/lib/analytics';
-import { writeContactPrefill } from '@/lib/contact-prefill';
 import type { FlowSuggestion } from '@/lib/flow-interview/suggest';
 import { useFlowInterviewStore } from '../store';
-import { buildContactMessage } from '../utils/contact-message';
 
 const KIND_LABEL: Record<FlowSuggestion['kind'], { label: string; cls: string }> = {
   automation: { label: '自動化', cls: 'bg-primary-50 text-primary-700 border-primary-200' },
@@ -18,6 +16,7 @@ export function SuggestionsPanel({ onSuggest }: { onSuggest: () => void }) {
   const summary = useFlowInterviewStore((s) => s.suggestSummary);
   const suggestions = useFlowInterviewStore((s) => s.suggestions);
   const hasSteps = useFlowInterviewStore((s) => s.diagram.steps.length > 0);
+  const openContact = useFlowInterviewStore((s) => s.openContact);
 
   if (!hasSteps) return null;
 
@@ -82,24 +81,16 @@ export function SuggestionsPanel({ onSuggest }: { onSuggest: () => void }) {
         <p className="text-sm text-white/80 leading-relaxed mb-4">
           上の改善案は、Beekleの生成AI開発で形にできます。現状フローはもう整理済みなので、最初の打ち合わせから具体的な進め方の相談に入れます。
         </p>
-        <a
-          href="/contact?source=flow-interview&intent=to-be"
+        <button
+          type="button"
           onClick={() => {
-            const st = useFlowInterviewStore.getState();
-            writeContactPrefill(
-              buildContactMessage({
-                diagram: st.diagram,
-                suggestions: st.suggestions,
-                suggestSummary: st.suggestSummary,
-                rfpMarkdown: st.rfpMarkdown,
-              })
-            );
             trackCtaClick({ source: 'flow-interview', cta: 'contact-from-suggestions' });
+            openContact('to-be');
           }}
           className="inline-flex justify-center items-center px-6 py-3 min-h-[48px] rounded-full bg-white text-navy-950 text-sm font-bold hover:bg-gray-100 transition"
         >
           この内容でBeekleに相談する
-        </a>
+        </button>
       </div>
     </div>
   );

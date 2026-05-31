@@ -1,14 +1,13 @@
 import { trackCtaClick } from '@/lib/analytics';
-import { writeContactPrefill } from '@/lib/contact-prefill';
 import { useState } from 'react';
 import { useFlowInterviewStore } from '../store';
-import { buildContactMessage } from '../utils/contact-message';
 
 export function RfpPanel({ onGenerate }: { onGenerate: () => void }) {
   const rfpLoading = useFlowInterviewStore((s) => s.rfpLoading);
   const rfpMarkdown = useFlowInterviewStore((s) => s.rfpMarkdown);
   const title = useFlowInterviewStore((s) => s.diagram.title);
   const hasSteps = useFlowInterviewStore((s) => s.diagram.steps.length > 0);
+  const openContact = useFlowInterviewStore((s) => s.openContact);
   const [copied, setCopied] = useState(false);
 
   if (!hasSteps) return null;
@@ -85,24 +84,16 @@ export function RfpPanel({ onGenerate }: { onGenerate: () => void }) {
         <p className="text-xs text-gray-500 flex-1">
           このRFPの精度を上げて開発まで進めるなら、Beekleが具体化をお手伝いします。
         </p>
-        <a
-          href="/contact?source=flow-interview&intent=rfp"
+        <button
+          type="button"
           onClick={() => {
-            const st = useFlowInterviewStore.getState();
-            writeContactPrefill(
-              buildContactMessage({
-                diagram: st.diagram,
-                suggestions: st.suggestions,
-                suggestSummary: st.suggestSummary,
-                rfpMarkdown: st.rfpMarkdown,
-              })
-            );
             trackCtaClick({ source: 'flow-interview', cta: 'contact-from-rfp' });
+            openContact('rfp');
           }}
           className="inline-flex justify-center items-center px-5 py-2.5 min-h-[44px] rounded-full bg-navy-950 hover:bg-navy-900 text-white text-sm font-semibold transition"
         >
           このRFPでBeekleに相談する
-        </a>
+        </button>
       </div>
     </div>
   );

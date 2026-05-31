@@ -1,27 +1,13 @@
 import { diagramToSvg } from '@/features/flow-mapper/utils/svg';
 import { trackCtaClick, trackToolEvent } from '@/lib/analytics';
-import { writeContactPrefill } from '@/lib/contact-prefill';
 import { writeHandoff } from '@/lib/tool-handoff';
 import { useMemo, useState } from 'react';
 import { useFlowInterviewStore } from '../store';
-import { buildContactMessage } from '../utils/contact-message';
 import { DiagramEditor } from './DiagramEditor';
-
-// 問い合わせCTAクリック時、作成した内容を /contact に引き継ぐ（Slackに届くようにする）
-function stashForContact() {
-  const s = useFlowInterviewStore.getState();
-  writeContactPrefill(
-    buildContactMessage({
-      diagram: s.diagram,
-      suggestions: s.suggestions,
-      suggestSummary: s.suggestSummary,
-      rfpMarkdown: s.rfpMarkdown,
-    })
-  );
-}
 
 export function DiagramPreview({ onEdit }: { onEdit: () => void }) {
   const diagram = useFlowInterviewStore((s) => s.diagram);
+  const openContact = useFlowInterviewStore((s) => s.openContact);
   const hasSteps = diagram.steps.length > 0;
   const [mode, setMode] = useState<'preview' | 'edit'>('preview');
 
@@ -91,16 +77,16 @@ export function DiagramPreview({ onEdit }: { onEdit: () => void }) {
 
       {hasSteps && (
         <div className="mt-4 flex flex-col sm:flex-row gap-2">
-          <a
-            href="/contact?source=flow-interview&intent=flow-improve"
+          <button
+            type="button"
             onClick={() => {
-              stashForContact();
               trackCtaClick({ source: 'flow-interview', cta: 'contact-from-preview' });
+              openContact('flow-improve');
             }}
             className="flex-1 inline-flex justify-center items-center px-5 py-3 min-h-[48px] rounded-full bg-primary-500 hover:bg-primary-600 text-white text-sm font-semibold transition"
           >
             この業務フローをBeekleに相談する
-          </a>
+          </button>
           <button
             type="button"
             onClick={openInFlowMapper}

@@ -1,5 +1,6 @@
 import { useTurnstile } from '@/lib/use-turnstile';
 import { ChatPanel } from './components/ChatPanel';
+import { ContactModal } from './components/ContactModal';
 import { WorkspacePanel } from './components/WorkspacePanel';
 import { useFlowInterview } from './hooks/useFlowInterview';
 import { useFlowInterviewStore } from './store';
@@ -65,6 +66,7 @@ export function FlowInterview({ sitekey }: { sitekey: string }) {
         onSuggest={() => void suggest()}
         onGenerateRfp={() => void generateRfp()}
       />
+      <ContactModal sitekey={sitekey} />
     </div>
   );
 }
