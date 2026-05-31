@@ -73,6 +73,32 @@ const PATCHES = {
     },
     // 0064 クロス参照: common-mistakes のタイトル 8選→5選 に合わせて本文の言及も更新
     { id: '0064-xref', all: true, before: '失敗事例8選', after: '失敗事例5選' },
+    // 0004: パイプライン見出しを非エンジニア向けの平易表現に（手法名は補足に残す）
+    {
+      id: '0004a',
+      before:
+        '<strong>ユーザーストーリー＋EARS</strong> — 「誰が・何を・なぜ」を書き、受入条件を EARS 5パターンで分解する',
+      after:
+        '<strong>利用シナリオと期待成果を具体化する</strong> — 「誰が・何のために使い・どう改善されるか」（ユーザーストーリー）を整理し、期待する動作や成果を具体化する',
+    },
+    {
+      id: '0004b',
+      before: '<strong>FM法でスコープを決める</strong>',
+      after: '<strong>開発範囲と優先順位を整理する</strong>',
+    },
+    {
+      id: '0004c',
+      before:
+        '<strong>Gherkin で機能要件＋非機能要件を仕様化</strong> — Given/When/Then で書き、デモ・受入テスト・自動テストを1本化する',
+      after:
+        '<strong>開発仕様と受入基準を整理する</strong> — Given/When/Then で書き、デモと受入テストを1本化する',
+    },
+    {
+      id: '0004d',
+      before:
+        '<strong>Laravel + Inertia でプロトタイプ実装</strong> — 1〜2週間で動くたたき台を作り、現場で触ってもらう',
+      after: '<strong>早期プロトタイプで検証する</strong> — 1〜2週間で試作し、現場の適合性を確認する',
+    },
   ],
 
   // 01-01（0012は現行本文が既に論理的に正しいためスキップ。0014aは編集パスへ）
@@ -263,6 +289,14 @@ const PATCHES = {
       id: '0035',
       before: '評価基準の作り方（落とし穴⑥の深掘り）',
       after: 'ベンダー選定の評価基準の作り方',
+    },
+    {
+      // 0036: 生URL表示のリンク段落 → 名前付きリンクの箇条書きに
+      id: '0036',
+      before:
+        '発注者の現場で使いやすいように、Beekleが提供している<a href="/tools/story-builder">/tools/story-builder</a>では、業務シナリオを発注者の言葉で構造化できます。<a href="/tools/flow-mapper">/tools/flow-mapper</a>ではAsIs/ToBeの業務フロー図を作成できます。<a href="/tools/scope-manager">/tools/scope-manager</a>では、評価軸の重み付けやテーマの優先順位整理に使えます。</p>',
+      after:
+        '発注者の現場で使いやすいよう、Beekleは以下のRFP作成支援ツールを提供しています。</p><ul><li><a href="/tools/story-builder">ユーザーストーリー作成ツール</a>：業務シナリオを発注者の言葉で構造化できます</li><li><a href="/tools/flow-mapper">業務フロー可視化ツール</a>：As-Is/To-Beの業務フロー図を作成できます</li><li><a href="/tools/scope-manager">スコープ管理ツール</a>：評価軸の重み付けやテーマの優先順位整理に使えます</li></ul>',
     },
   ],
 
