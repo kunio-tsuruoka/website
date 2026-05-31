@@ -1,6 +1,7 @@
 ---
 import { AiOcrDemo } from '@/features/ai-ocr-demo';
 import { Header } from '../../components/header';
+import JsonLd from '../../components/seo/json-ld.astro';
 import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import Layout from '../../layouts/layout.astro';
@@ -50,3 +51,24 @@ const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
     async
     defer></script>
 </Layout>
+
+<JsonLd
+  type="softwareApplication"
+  data={{
+    appName: 'AI領収書OCR',
+    appDescription:
+      '領収書の画像から店舗名・日付・合計・明細をAIが構造化データとして自動抽出する体験デモ。経費精算・帳票処理の自動化（OCR + LLM構造化）を試せます。',
+    url: 'https://beekle.jp/demos/ocr',
+    applicationCategory: 'FinanceApplication',
+  }}
+/>
+<JsonLd
+  type="breadcrumb"
+  data={{
+    items: [
+      { name: 'ホーム', url: '/' },
+      { name: 'AIデモ', url: '/demos' },
+      { name: 'AI領収書OCR', url: '/demos/ocr' },
+    ],
+  }}
+/>

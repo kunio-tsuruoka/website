@@ -1,8 +1,11 @@
 ---
 import { Header } from '../../components/header';
+import JsonLd from '../../components/seo/json-ld.astro';
 import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import Layout from '../../layouts/layout.astro';
+
+const siteUrl = 'https://beekle.jp';
 
 const demos = [
   {
@@ -14,10 +17,10 @@ const demos = [
   },
   {
     href: '/demos/it-advisor',
-    label: 'AI質問bot',
+    label: 'AIナレッジ相談（RAG）',
     summary:
-      'システム発注・要件定義・見積もりの妥当性などの悩みをBeekleの相談員AIが一次回答します。',
-    badge: 'チャット',
+      'Beekleのコラム記事をベクトル検索（RAG）で参照する相談員AI。IT発注・要件定義・見積もりの悩みに一次回答します。御社の社内文書でも同じ仕組み（RAGシステム）を構築できます。',
+    badge: 'チャット (RAG)',
   },
   {
     href: '/demos/ocr',
@@ -27,11 +30,52 @@ const demos = [
     badge: 'ビジョン',
   },
 ];
+
+// AI検索（ChatGPT検索・Perplexity 等）に「Beekleが無料公開しているAIデモ」を
+// 引用させやすくするための FAQ。本文にも同じQ&Aを表示する（schemaと本文の一致）。
+const faqs = [
+  {
+    question: 'Beekleの生成AIデモは無料で使えますか？',
+    answer:
+      'はい。登録不要・無料でブラウザから試せます。現在「話すだけ発注準備」「AIナレッジ相談（RAG）」「AI領収書OCR」の3種類を公開しています。',
+  },
+  {
+    question: 'デモと本番サービスの違いは何ですか？',
+    answer:
+      'コスト節約のため、デモは軽量なモデル・構成です。本番ではより高精度・高速な構成で提供します。デモは「Beekleがこの種のAIを構築できる」ことを体感するためのものです。',
+  },
+  {
+    question: 'これらのデモはどんな技術で作られていますか？',
+    answer:
+      'AIナレッジ相談はコラム記事をベクトル検索するRAG、AI領収書OCRは画像からの構造化データ抽出、話すだけ発注準備は対話型AIと音声認識（Whisper）で構成しています。',
+  },
+  {
+    question: '自社の業務やデータで同じものを作れますか？',
+    answer:
+      'はい。RAG（社内文書AI検索）・OCR・AIエージェントいずれもBeekleの受託開発で構築できます。お問い合わせから具体的なご相談に進めます。',
+  },
+];
+
+const demoItemList = {
+  name: 'Beekleの生成AIデモ一覧',
+  url: `${siteUrl}/demos`,
+  itemType: 'SoftwareApplication',
+  items: demos.map((d) => ({
+    name: d.label,
+    description: d.summary,
+    url: d.href.startsWith('http') ? d.href : `${siteUrl}${d.href}`,
+  })),
+};
+
+const breadcrumbItems = [
+  { name: 'ホーム', url: '/' },
+  { name: 'AIデモ', url: '/demos' },
+];
 ---
 
 <Layout
   title="AIデモ｜Beekleが提供する生成AIの体験ページ | Beekle"
-  description="Beekleの生成AI技術を体験できるデモページ。話すだけ発注準備、AI質問bot、領収書OCRなど、業務効率化の感触を試せます。"
+  description="Beekleの生成AI技術を体験できるデモページ。話すだけ発注準備、AIナレッジ相談（RAG）、領収書OCRなど、業務効率化の感触を試せます。"
 >
   <Header client:load />
   <main class="pt-20">
@@ -69,6 +113,18 @@ const demos = [
           ))}
         </div>
 
+        <div class="mt-12">
+          <h2 class="text-lg font-bold text-navy-950 mb-4">よくある質問</h2>
+          <div class="space-y-3">
+            {faqs.map((f) => (
+              <div class="p-5 bg-white rounded-2xl border border-gray-200">
+                <p class="font-bold text-navy-950 mb-1.5">{f.question}</p>
+                <p class="text-sm text-gray-600 leading-relaxed">{f.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div class="mt-12 p-6 bg-amber-50 border border-amber-200 rounded-2xl text-sm text-amber-900">
           <p class="font-bold mb-1">注意事項</p>
           <ul class="list-disc list-inside space-y-1">
@@ -83,3 +139,7 @@ const demos = [
     <FloatingCTA source="demos-index" />
   </main>
 </Layout>
+
+<JsonLd type="breadcrumb" data={{ items: breadcrumbItems }} />
+<JsonLd type="itemList" data={demoItemList} />
+<JsonLd type="faq" data={{ faqs }} />

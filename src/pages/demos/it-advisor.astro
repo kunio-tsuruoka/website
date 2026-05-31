@@ -1,6 +1,7 @@
 ---
 import { AiItAdvisor } from '@/features/ai-it-advisor';
 import { Header } from '../../components/header';
+import JsonLd from '../../components/seo/json-ld.astro';
 import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import Layout from '../../layouts/layout.astro';
@@ -10,13 +11,13 @@ const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
 ---
 
 <Layout
-  title="AI質問bot (デモ)｜Beekleの相談員AIに気軽に質問 | Beekle"
-  description="システム発注・要件定義・見積もり妥当性など、IT発注のお悩みをBeekleのAI相談員が一次回答。専門用語を避けて短く具体的にお答えします。本格的な発注支援は人間のコンサルタントへ。"
+  title="AIナレッジ相談（RAG・デモ）｜Beekleの相談員AIに気軽に質問 | Beekle"
+  description="Beekleのコラム記事をベクトル検索（RAG）で参照し、システム発注・要件定義・見積もり妥当性などのお悩みにAI相談員が一次回答。御社の社内文書でも同じRAGの仕組みを構築できます。本格的な発注支援は人間のコンサルタントへ。"
 >
   <Header client:load />
   <main class="pt-20">
     <PageHero
-      title="AI質問bot (デモ)"
+      title="AIナレッジ相談（RAG・デモ）"
       subtitle="Beekleが公開しているコラムのノウハウをデータソースにして、AIが一次回答します。コラムが増えるほど回答精度も上がっていきます。"
       badge="AI Demo"
     />
@@ -57,3 +58,24 @@ const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
     async
     defer></script>
 </Layout>
+
+<JsonLd
+  type="softwareApplication"
+  data={{
+    appName: 'AIナレッジ相談（RAG）',
+    appDescription:
+      'Beekleのコラム記事をベクトル検索（RAG）で参照し、IT発注・要件定義・見積もり妥当性などの悩みに一次回答する相談員AI。社内文書RAG構築の体験デモ。',
+    url: 'https://beekle.jp/demos/it-advisor',
+    applicationCategory: 'BusinessApplication',
+  }}
+/>
+<JsonLd
+  type="breadcrumb"
+  data={{
+    items: [
+      { name: 'ホーム', url: '/' },
+      { name: 'AIデモ', url: '/demos' },
+      { name: 'AIナレッジ相談（RAG）', url: '/demos/it-advisor' },
+    ],
+  }}
+/>
