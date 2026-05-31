@@ -1,6 +1,8 @@
 import { trackCtaClick } from '@/lib/analytics';
+import { writeContactPrefill } from '@/lib/contact-prefill';
 import { useState } from 'react';
 import { useFlowInterviewStore } from '../store';
+import { buildContactMessage } from '../utils/contact-message';
 
 export function RfpPanel({ onGenerate }: { onGenerate: () => void }) {
   const rfpLoading = useFlowInterviewStore((s) => s.rfpLoading);
@@ -85,7 +87,18 @@ export function RfpPanel({ onGenerate }: { onGenerate: () => void }) {
         </p>
         <a
           href="/contact?source=flow-interview&intent=rfp"
-          onClick={() => trackCtaClick({ source: 'flow-interview', cta: 'contact-from-rfp' })}
+          onClick={() => {
+            const st = useFlowInterviewStore.getState();
+            writeContactPrefill(
+              buildContactMessage({
+                diagram: st.diagram,
+                suggestions: st.suggestions,
+                suggestSummary: st.suggestSummary,
+                rfpMarkdown: st.rfpMarkdown,
+              })
+            );
+            trackCtaClick({ source: 'flow-interview', cta: 'contact-from-rfp' });
+          }}
           className="inline-flex justify-center items-center px-5 py-2.5 min-h-[44px] rounded-full bg-navy-950 hover:bg-navy-900 text-white text-sm font-semibold transition"
         >
           このRFPでBeekleに相談する

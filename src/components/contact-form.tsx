@@ -1,3 +1,4 @@
+import { consumeContactPrefill } from '@/lib/contact-prefill';
 import { useTurnstile } from '@/lib/use-turnstile';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -39,6 +40,8 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
   const [status, setStatus] = useState<SubmitStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [provenance, setProvenance] = useState<Provenance>({ source: '', intent: '', phase: '' });
+  // ツール（話すだけ発注準備 等）からの引き継ぎ内容を message に反映する
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -48,6 +51,8 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
       intent: sanitizeParam(sp.get('intent')),
       phase: sanitizeParam(sp.get('phase')),
     });
+    const prefill = consumeContactPrefill();
+    if (prefill) setMessage(prefill);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -185,6 +190,8 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
             name="message"
             rows={6}
             required
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="現状の課題や、検討中のサービス・規模感などを簡単にご記入ください。詳細はやりとりの中で詰めて参ります。"
           />

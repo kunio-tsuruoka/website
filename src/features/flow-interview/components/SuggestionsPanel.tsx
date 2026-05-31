@@ -1,6 +1,8 @@
 import { trackCtaClick } from '@/lib/analytics';
+import { writeContactPrefill } from '@/lib/contact-prefill';
 import type { FlowSuggestion } from '@/lib/flow-interview/suggest';
 import { useFlowInterviewStore } from '../store';
+import { buildContactMessage } from '../utils/contact-message';
 
 const KIND_LABEL: Record<FlowSuggestion['kind'], { label: string; cls: string }> = {
   automation: { label: '自動化', cls: 'bg-primary-50 text-primary-700 border-primary-200' },
@@ -82,9 +84,18 @@ export function SuggestionsPanel({ onSuggest }: { onSuggest: () => void }) {
         </p>
         <a
           href="/contact?source=flow-interview&intent=to-be"
-          onClick={() =>
-            trackCtaClick({ source: 'flow-interview', cta: 'contact-from-suggestions' })
-          }
+          onClick={() => {
+            const st = useFlowInterviewStore.getState();
+            writeContactPrefill(
+              buildContactMessage({
+                diagram: st.diagram,
+                suggestions: st.suggestions,
+                suggestSummary: st.suggestSummary,
+                rfpMarkdown: st.rfpMarkdown,
+              })
+            );
+            trackCtaClick({ source: 'flow-interview', cta: 'contact-from-suggestions' });
+          }}
           className="inline-flex justify-center items-center px-6 py-3 min-h-[48px] rounded-full bg-white text-navy-950 text-sm font-bold hover:bg-gray-100 transition"
         >
           この内容でBeekleに相談する

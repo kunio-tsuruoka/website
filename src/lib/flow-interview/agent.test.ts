@@ -63,10 +63,10 @@ describe('computeCoverage', () => {
     expect(c.nextAspect).toBeNull();
     expect(c.ready).toBe(true);
   });
-  test('開始/完了が無ければ完成しない', () => {
+  test('start/end type が無くても3ステップ以上あれば完成可能（LLMはtype付けを省きがちなため）', () => {
     const c = computeCoverage(diagram([step('task'), step('task'), step('task')], 1));
-    expect(c.ready).toBe(false);
-    expect(c.nextAspect).toContain('開始');
+    expect(c.ready).toBe(true);
+    expect(c.nextAspect).toBeNull();
   });
   test('ステップが少なければ手順を聞く', () => {
     const c = computeCoverage(diagram([step('start'), step('task')], 1));
