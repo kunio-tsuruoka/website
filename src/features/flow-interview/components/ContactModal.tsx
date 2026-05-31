@@ -1,7 +1,7 @@
 import { trackCtaClick } from '@/lib/analytics';
 import { useTurnstile } from '@/lib/use-turnstile';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useFlowInterviewStore } from '../store';
@@ -40,6 +40,16 @@ export function ContactModal({ sitekey }: { sitekey: string }) {
 
   const [done, setDone] = useState(false);
   const [serverError, setServerError] = useState('');
+
+  // ESC で閉じる（送信中は無効）
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isSubmitting) closeContact();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, isSubmitting, closeContact]);
 
   if (!open) return null;
 
@@ -96,19 +106,15 @@ export function ContactModal({ sitekey }: { sitekey: string }) {
     'w-full px-3 py-2 text-sm rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary';
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={() => !isSubmitting && closeContact()}
-      onKeyDown={(e) => e.key === 'Escape' && !isSubmitting && closeContact()}
-      // biome-ignore lint/a11y/noStaticElementInteractions: オーバーレイのクリック/ESCで閉じる補助操作
-      role="presentation"
-    >
-      {/* biome-ignore lint/a11y/noStaticElementInteractions: モーダル本体は内側クリックの伝播停止のみ */}
-      <div
-        className="w-full max-w-md bg-white rounded-2xl shadow-strong p-6 max-h-[90vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-        role="presentation"
-      >
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* 背景: クリックで閉じる（button なのでキーボード操作も可能） */}
+      <button
+        type="button"
+        aria-label="閉じる"
+        onClick={() => !isSubmitting && closeContact()}
+        className="absolute inset-0 bg-black/50 cursor-default"
+      />
+      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-strong p-6 max-h-[90vh] overflow-y-auto">
         {done ? (
           <div className="text-center py-4">
             <h3 className="text-lg font-bold text-navy-950 mb-2">送信しました</h3>
