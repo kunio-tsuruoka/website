@@ -24,6 +24,9 @@ const columnId = slug as string;
 // SEOカニバリ統合: 旧スラッグから統合先へ301リダイレクト
 const columnRedirects: Record<string, string> = {
   'project-management-01': '/column/requirements-definition-process',
+  'project-management-steps': '/column/ai-era-development-flow',
+  '7hhc1tib7dft': '/column/ai-development-speed',
+  oae_of8l_ij: '/column/failure-prevention-for-clients',
   'system-development-cost-market': '/column/web-system-cost-by-scale',
   'system-estimate-uncertainty': '/column/system-estimate-validity',
 };
@@ -131,9 +134,20 @@ htmlContent = htmlContent.replace(
     return `${open}${content}</div>`;
   }
 );
+// 日付が欠落・不正な場合に "Invalid Date" を出さない安全フォーマッタ。
+// publishedAt が無ければ updatedAt にフォールバックし、どちらも不正なら空文字を返す。
+function formatJaDate(...values: (string | undefined)[]): string {
+  for (const v of values) {
+    if (!v) continue;
+    const d = new Date(v);
+    if (!Number.isNaN(d.getTime())) return d.toLocaleDateString('ja-JP');
+  }
+  return '';
+}
+
 const frontmatter = {
   title: column.title,
-  publishedAt: new Date(column.publishedAt).toLocaleDateString('ja-JP'),
+  publishedAt: formatJaDate(column.publishedAt, column.updatedAt),
 };
 
 // ピラー記事判定
@@ -411,7 +425,7 @@ const reviewerId = column.category?.id ? categoryReviewerMap[column.category.id]
                 </h3>
                 <div class="flex items-center justify-between">
                   <span class="text-sm text-gray-500">
-                    {new Date(related.publishedAt).toLocaleDateString('ja-JP')}
+                    {formatJaDate(related.publishedAt, related.updatedAt)}
                   </span>
                   <div class="flex items-center text-primary-500 font-semibold text-sm group-hover:translate-x-1 transition-transform">
                     <span>読む</span>
