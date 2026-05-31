@@ -1,5 +1,21 @@
 # Cloudflare Pages + Astro SSR
 
+## CF Pages の本番ビルドは `npm ci`（package-lock.json が正）
+
+ローカル開発・GitHub Actions の "Astro build" は **bun**（`bun.lock`）だが、**Cloudflare Pages の git 連携ビルドは `npm ci` で `package-lock.json` を使う**（元々 npm 想定で組まれている）。
+
+罠: `bun add <pkg>` で依存を足すと **`bun.lock` しか更新されず `package-lock.json` が古いまま**になり、CF Pages のプレビュー/本番ビルドが `npm error Missing: <pkg> from lock file` で **即 fail（duration 0s）**する。ローカル `bun run build` も GitHub Actions の Biome/Vitest/Astro build も全部 pass するので気づきにくい（PR チェックで Cloudflare Pages だけ赤）。
+
+**ルール**: 依存を追加・更新したら **必ず両方の lockfile を同期**する。
+```bash
+bun add <pkg>                    # bun.lock 更新
+npm install --package-lock-only  # package-lock.json だけ再生成（node_modules は触らない）
+git add bun.lock package-lock.json
+```
+検証は `npm ci --dry-run`（CF と同じコマンド）で "Missing ... from lock file" が出ないこと。
+
+**事例 (2026-05-31)**: PR #38 で `@hookform/resolvers` `react-hook-form` `@standard-schema/utils` を bun で追加 → CF Pages が `Missing from lock file` で fail。`npm install --package-lock-only` で同期して解消。CF Pages の "fail / duration 0s" を見たら真っ先に lockfile 不整合を疑う（ビルドログは `wrangler pages deployment list` → API の `/history/logs` で取得）。
+
 ## Environment Variables at Runtime
 
 - `import.meta.env` only works at **build time**
