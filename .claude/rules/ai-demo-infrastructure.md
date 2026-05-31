@@ -17,7 +17,9 @@ Pages project: `website`
 - `TURNSTILE_SECRET_KEY` (secret) — Turnstile siverify endpoint
 - `TURNSTILE_SITE_KEY` (plain) — public sitekey to embed in HTML
 - `OPENROUTER_API_KEY` (secret) — チャット/OCR用LLM
-- `OPENROUTER_MODEL_CHAT` / `OPENROUTER_MODEL_OCR` (plain, optional override)
+- `OPENROUTER_MODEL_CHAT` / `OPENROUTER_MODEL_OCR` / `OPENROUTER_MODEL_HEARING` (plain, optional override)
+  - `OPENROUTER_MODEL_HEARING` は `/api/hearing/*` 専用。デフォルト `openai/gpt-4o-mini` (JSON 出力厳守と instruction-following が必要なため Gemini Flash Lite 不適。検証で fallback 3回→0回、同軸質問ループ解消)。chat/RAG とは別モデル指定可
+- `AI_TURNSTILE_BYPASS` (plain, **ローカル/CI限定**) — `'true'` の時のみ `aiGuards()` で Turnstile 検証 skip。**本番には絶対設定しない**。自動テスト (Playwright headless だと Cloudflare Turnstile が描画されない問題) を回避するため。`.dev.vars` で設定する運用
 - `AI_MONTHLY_BUDGET_USD` (plain, デフォルト10) — 月次予算上限
 - `SLACK_WEBHOOK_URL` (secret) — `/api/contact` と共用。**予算超過時に AI kill-switch がここへ通知** (1日1回まで KV `kill:alert:YYYY-MM` で重複防止)
 - KV binding name: `RATE_LIMIT`
@@ -42,9 +44,20 @@ Pages project: `website`
 - 罠2: `<div ref={turnstileContainerRef} className="hidden" />` のように `display: none` の親に置いても **Turnstile の iframe が 0×0 で生まれて死ぬ**。あとで `hidden` を外しても復帰しない。
 - 正解: **常時 visible の `<div ref={turnstileContainerRef} />` を最初から DOM に置く**。OCR / IT-advisor もこの pattern。ボタン側の `disabled` で UX を制御する。
 
+### AIセッション中の追加フォーム送信は2つ目のTurnstileを出さない (2026-05-31)
+flow-interview の「相談する」モーダルで `useTurnstile` をもう一度使ったら、`if (!open) return null` の後ろに container を置いたため mount 時に ref が null → widget が描画されず token が取れず、送信ボタンが永久 disabled になった（上の罠1の再発）。
+
+**正解**: 会話開始時 (`/api/flow/start` の `aiGuards`) で既に Turnstile を通しているので、**モーダルでは Turnstile を出さない**。代わりに `/api/contact` に `sessionId` を渡し、サーバ側で `source==='flow-interview'` かつ `readSession(env.RATE_LIMIT, sessionId)` が実在する時だけ Turnstile 再検証を免除する。偽 ID / セッション無しは従来どおり Turnstile にフォールバック（preview で偽 ID→403 を確認済み）。なりすまし防止は「KV にセッションが実在＝開始時に Turnstile 検証済み」で担保。
+
 ## 過去の試み: 音声デモ (2026-05-02 諦め)
 - `whisper-large-v3-turbo` を使った日英翻訳デモを試したが、ローカル開発で `env.AI` も REST フォールバックも安定せず断念。Cloudflare Workers AI の audio エンドポイントは binding/REST 両方とも検証コストが見合わなかった。
 - 音声系を再挑戦するなら、まず `wrangler pages dev` でリモート binding 経由の確認手順を確立してから取り組むこと。
+
+## dev server 起動時の Vite cache 504 対処
+
+`/src/features/<X>/index.tsx` を新規追加して `<X client:load />` ですぐ使うと、初回アクセス時に Vite dev サーバが古い optimize cache を引いて `504 (Outdated Optimize Dep)` + `Failed to fetch dynamically imported module` を出すことがある。コードは正しい (production build は通る) のに hydration が失敗してコンポーネント全体が立ち上がらない。
+
+**対処**: dev サーバを止めて `rm -rf node_modules/.vite` → `bun dev` で再起動。HMR では解決しない。
 
 ## Local credentials path
 - API token at `./.cloudflare/api-token` (gitignored, chmod 600)

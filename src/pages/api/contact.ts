@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
+import { readSession } from '../../lib/flow-interview/session';
 import { verifyTurnstile } from '../../lib/turnstile';
 
 export const prerender = false;
@@ -30,6 +31,8 @@ const ContactSchema = z.object({
   intent: z.string().optional().default(''),
   phase: z.string().optional().default(''),
   turnstileToken: z.string().optional().default(''),
+  // flow-interview など、開始時に既に Turnstile を通したセッション経由の送信
+  sessionId: z.string().optional().default(''),
 });
 
 const SLACK_TIMEOUT_MS = 8000;
@@ -63,12 +66,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const runtime = (
       locals as {
         runtime?: {
-          env?: { SLACK_WEBHOOK_URL?: string; TURNSTILE_SECRET_KEY?: string };
+          env?: {
+            SLACK_WEBHOOK_URL?: string;
+            TURNSTILE_SECRET_KEY?: string;
+            RATE_LIMIT?: { get(key: string): Promise<string | null> };
+          };
         };
       }
     ).runtime;
     const webhookUrl = runtime?.env?.SLACK_WEBHOOK_URL;
     const turnstileSecret = runtime?.env?.TURNSTILE_SECRET_KEY;
+    const rateLimitKv = runtime?.env?.RATE_LIMIT;
 
     if (!webhookUrl) {
       console.error('[contact] SLACK_WEBHOOK_URL is not configured');
@@ -89,10 +97,32 @@ export const POST: APIRoute = async ({ request, locals }) => {
         first?.path.join('.') ?? 'validation'
       );
     }
-    const { message, email, name, type, company, phone, source, intent, phase, turnstileToken } =
-      parsed.data;
+    const {
+      message,
+      email,
+      name,
+      type,
+      company,
+      phone,
+      source,
+      intent,
+      phase,
+      turnstileToken,
+      sessionId,
+    } = parsed.data;
 
-    if (turnstileSecret) {
+    // 既存の AI セッション（開始時に Turnstile 検証済み）からの送信は再検証を免除する。
+    // セッションが KV に実在し active であることを確認し、なりすましを防ぐ。
+    let sessionVerified = false;
+    if (source === 'flow-interview' && sessionId && rateLimitKv) {
+      const session = await readSession(rateLimitKv, sessionId);
+      sessionVerified = !!session;
+      if (!sessionVerified) {
+        console.warn('[contact] flow-interview session not found/expired', sessionId.slice(0, 8));
+      }
+    }
+
+    if (turnstileSecret && !sessionVerified) {
       const remoteIp =
         request.headers.get('cf-connecting-ip') ?? request.headers.get('x-forwarded-for') ?? '';
       const verify = await verifyTurnstile(turnstileSecret, turnstileToken, remoteIp);
@@ -104,7 +134,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
           `turnstile: ${verify.errorCodes.join(',')}`
         );
       }
-    } else {
+    } else if (!turnstileSecret) {
       console.warn('[contact] TURNSTILE_SECRET_KEY not configured; skipping verification');
     }
 

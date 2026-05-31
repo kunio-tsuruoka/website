@@ -35,6 +35,7 @@ const companyItems = [
 
 const toolsItems = [
   { label: '発注準備キット (全体像)', href: '/tools' },
+  { label: '話すだけ発注準備（AI・音声対応）', href: '/tools/flow-interview' },
   { label: '1. 業務フロー可視化ツール', href: '/tools/flow-mapper' },
   { label: '2. ユーザーストーリー作成ツール', href: '/tools/story-builder' },
   { label: '3. スコープ管理ツール', href: '/tools/scope-manager' },
