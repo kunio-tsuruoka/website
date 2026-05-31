@@ -175,6 +175,14 @@ const PATCHES = {
     // 0037: 和語並列の順序統一（DX／AI → AI／DX）。全角／は規約どおり維持。
     { id: '0037', all: true, before: 'DX／AI', after: 'AI／DX' },
     {
+      // 0040: 出典不明の「失敗の8割」を「多く」に緩和（fake metrics 回避）
+      id: '0040',
+      before:
+        'AI／DX導入の失敗の8割は、現状業務（As-Is）を見える化しないまま「ここをAI化しよう」と話し合った結果発生している。',
+      after:
+        'AI／DX導入の失敗の多くは、現状業務（As-Is）を見える化しないまま「ここをAI化しよう」と話し合った結果として起きています。',
+    },
+    {
       id: '0042',
       before: '業務可視化ツール（<a href="/tools/flow-mapper">/tools/flow-mapper</a>）',
       after: '<a href="/tools/flow-mapper">業務フロー可視化ツール</a>',
@@ -205,6 +213,34 @@ const PATCHES = {
         'Beekleでは、ユーザーストーリーを書く負担を減らすための作成ツールを公開しています。',
     },
     { id: '0055b', before: '>Story Builder を試す</a>', after: '>ユーザーストーリー作成ツール を試す</a>' },
+  ],
+
+  // 02-09（0078: ケースラベルを太字化して区別性を上げる）
+  'avoid-unused-system': [
+    {
+      id: '0078a',
+      before: '<p>失敗ケース（フィルタリング不足）</p>',
+      after: '<p><strong>失敗ケース（フィルタリング不足）</strong></p>',
+    },
+    {
+      id: '0078b',
+      before: '<p>成功ケース（適切なフィルタリング）</p>',
+      after: '<p><strong>成功ケース（適切なフィルタリング）</strong></p>',
+    },
+  ],
+
+  // 01-17（0060: ケースラベルを太字化）
+  'prevent-mismatch': [
+    {
+      id: '0060a',
+      before: '<p>失敗ケース：静止画のデザインで合意してしまった</p>',
+      after: '<p><strong>失敗ケース：静止画のデザインで合意してしまった</strong></p>',
+    },
+    {
+      id: '0060b',
+      before: '<p>成功ケース：プロトタイプで「動きの不自然さ」に気づいた</p>',
+      after: '<p><strong>成功ケース：プロトタイプで「動きの不自然さ」に気づいた</strong></p>',
+    },
   ],
 
   // 02-08
