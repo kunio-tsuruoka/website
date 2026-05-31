@@ -139,10 +139,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     const typeStr = type;
+    // ユーザー由来の値は Slack mrkdwn の制御文字 (& < >) を無害化してから埋め込む。
+    // これで <!channel>/<!here> の全員メンション、<url|偽装テキスト> のフィッシングリンク注入を防ぐ。
     const provenanceParts = [
-      source ? `source: ${source}` : '',
-      intent ? `intent: ${intent}` : '',
-      phase ? `phase: ${phase}` : '',
+      source ? `source: ${escapeSlack(source)}` : '',
+      intent ? `intent: ${escapeSlack(intent)}` : '',
+      phase ? `phase: ${escapeSlack(phase)}` : '',
     ].filter(Boolean);
     const provenanceText =
       provenanceParts.length > 0 ? provenanceParts.join(' / ') : '直接アクセス';
@@ -156,16 +158,19 @@ export const POST: APIRoute = async ({ request, locals }) => {
         {
           type: 'section',
           fields: [
-            { type: 'mrkdwn', text: `*種別:*\n${TYPE_LABELS[typeStr] || typeStr || '未選択'}` },
-            { type: 'mrkdwn', text: `*メール:*\n${email}` },
-            { type: 'mrkdwn', text: `*お名前:*\n${name || '未記入'}` },
-            { type: 'mrkdwn', text: `*会社名:*\n${company || '未記入'}` },
-            { type: 'mrkdwn', text: `*電話番号:*\n${phone || '未記入'}` },
+            {
+              type: 'mrkdwn',
+              text: `*種別:*\n${TYPE_LABELS[typeStr] || escapeSlack(typeStr) || '未選択'}`,
+            },
+            { type: 'mrkdwn', text: `*メール:*\n${escapeSlack(email)}` },
+            { type: 'mrkdwn', text: `*お名前:*\n${escapeSlack(name) || '未記入'}` },
+            { type: 'mrkdwn', text: `*会社名:*\n${escapeSlack(company) || '未記入'}` },
+            { type: 'mrkdwn', text: `*電話番号:*\n${escapeSlack(phone) || '未記入'}` },
           ],
         },
         {
           type: 'section',
-          text: { type: 'mrkdwn', text: `*お問い合わせ内容:*\n${message}` },
+          text: { type: 'mrkdwn', text: `*お問い合わせ内容:*\n${escapeSlack(message)}` },
         },
         {
           type: 'context',
@@ -193,4 +198,10 @@ function jsonError(status: number, error: string, details: string) {
     status,
     headers: { 'Content-Type': 'application/json' },
   });
+}
+
+// Slack mrkdwn のエスケープ（公式仕様: & < > のみ）。
+// <!channel> / <!here> の全員メンションや <https://evil|テキスト> のリンク偽装を無害化する。
+function escapeSlack(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
