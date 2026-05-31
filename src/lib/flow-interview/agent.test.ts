@@ -1,5 +1,5 @@
-import { describe, expect, test } from 'vitest';
 import type { FlowDiagram, FlowStep } from '@/features/flow-mapper/types';
+import { describe, expect, test } from 'vitest';
 import { computeCoverage, wantsToFinish } from './agent';
 
 function step(type: FlowStep['type'], label = 'x'): FlowStep {
@@ -27,7 +27,13 @@ function diagram(steps: FlowStep[], lanes = 1, title = '請求業務'): FlowDiag
 
 describe('wantsToFinish', () => {
   test('完了意図フレーズを検出する', () => {
-    for (const msg of ['順序はそちらで考えて', 'おまかせします', 'これで作って', 'もういいよ', '適当にお願い']) {
+    for (const msg of [
+      '順序はそちらで考えて',
+      'おまかせします',
+      'これで作って',
+      'もういいよ',
+      '適当にお願い',
+    ]) {
       expect(wantsToFinish([{ role: 'user', content: msg }]), msg).toBe(true);
     }
   });
