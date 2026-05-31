@@ -6,14 +6,15 @@ import Layout from '../../layouts/layout.astro';
 
 const demos = [
   {
-    href: '/demos/hearing',
-    label: 'AIヒアリング',
-    summary: 'Beekleの初回ヒアリング項目をAIが対話で代行。整理後、そのままBeekleに相談を送れます。',
+    href: '/tools/flow-interview',
+    label: '話すだけ発注準備',
+    summary:
+      'AIと会話するだけで現状業務フロー（As-Is）を可視化。改善案とユーザーストーリー付きRFPまで作成し、そのままBeekleに相談を送れます。テキスト・音声入力対応。',
     badge: 'エージェント',
   },
   {
     href: '/demos/it-advisor',
-    label: 'AI IT発注相談',
+    label: 'AI質問bot',
     summary:
       'システム発注・要件定義・見積もりの妥当性などの悩みをBeekleの相談員AIが一次回答します。',
     badge: 'チャット',
@@ -30,7 +31,7 @@ const demos = [
 
 <Layout
   title="AIデモ｜Beekleが提供する生成AIの体験ページ | Beekle"
-  description="Beekleの生成AI技術を体験できるデモページ。IT発注相談AI、領収書OCRなど、業務効率化の感触を試せます。"
+  description="Beekleの生成AI技術を体験できるデモページ。話すだけ発注準備、AI質問bot、領収書OCRなど、業務効率化の感触を試せます。"
 >
   <Header client:load />
   <main class="pt-20">
