@@ -54,6 +54,8 @@ export const SessionStateSchema = z.object({
   diagram: FlowDiagramSchema,
   turns: z.number().default(0),
   status: z.enum(['active', 'done']).default('active'),
+  // 会話ステートマシンの現在ノード（src/lib/flow-interview/graph.ts の FlowNode）
+  node: z.enum(['overview', 'steps', 'actors', 'duration', 'done']).default('overview'),
   suggestSummary: z.string().nullable().default(null),
   suggestions: z.array(SessionSuggestionSchema).default([]),
 });

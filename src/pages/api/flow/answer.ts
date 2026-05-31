@@ -59,11 +59,13 @@ export const POST: APIRoute = async ({ locals, request }) => {
       SLACK_WEBHOOK_URL: env.SLACK_WEBHOOK_URL,
     },
     session.messages,
-    session.diagram
+    session.diagram,
+    session.node
   );
 
   session.messages.push({ role: 'assistant', content: result.assistantMessage });
   session.diagram = result.diagram;
+  session.node = result.node;
   session.turns += 1;
   session.updatedAt = Date.now();
   if (result.isReady) session.status = 'done';
