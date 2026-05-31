@@ -1,6 +1,6 @@
 import { trackToolEvent } from '@/lib/analytics';
 import { clearShareHash, readSharedFromHash } from '@/lib/share-url';
-import { writeHandoff } from '@/lib/tool-handoff';
+import { consumeHandoff, writeHandoff } from '@/lib/tool-handoff';
 import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CompareView } from './components/CompareView';
@@ -13,6 +13,7 @@ import { StepEditorDrawer } from './components/StepEditorDrawer';
 import { SuggestionsPanel } from './components/SuggestionsPanel';
 import { SwimlaneCanvas } from './components/SwimlaneCanvas';
 import { TemplatePicker } from './components/TemplatePicker';
+import { EMPTY } from './constants';
 import { useFlowStore } from './store';
 import type { State as FlowState } from './types';
 import type { DiagramTarget } from './types';
@@ -85,6 +86,28 @@ export function FlowMapper() {
     hydrateOnboardingFromStorage();
     trackToolEvent('tool_start', { tool: 'flow-mapper' });
   }, [hydrateOnboardingFromStorage]);
+
+  // flow-interview（会話で現状フローを作るツール）からの受け渡しを取り込む。
+  // payload は As-Is の FlowDiagram(JSON)。既存データがあれば上書き確認する。
+  useEffect(() => {
+    const h = consumeHandoff('flow-mapper');
+    if (!h) return;
+    try {
+      const asIs = JSON.parse(h.payload) as FlowState['asIs'];
+      if (!asIs?.steps) return;
+      const hasExisting =
+        asIs.steps.length >= 0 && (state.asIs.steps.length > 0 || state.toBe.steps.length > 0);
+      if (hasExisting) {
+        const ok = confirm(
+          '会話で作成した現状フローを読み込みます。現在編集中のデータは上書きされます。続けますか？'
+        );
+        if (!ok) return;
+      }
+      importStateFromJson({ asIs, toBe: EMPTY.toBe });
+    } catch {
+      /* payload 不正は無視 */
+    }
+  }, [importStateFromJson, state.asIs.steps.length, state.toBe.steps.length]);
 
   // 完走判定: ステップ3個以上 + export 1回以上 (起動セッション中1回のみ発火)
   const completeFiredRef = useRef(false);
