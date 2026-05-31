@@ -44,8 +44,17 @@ function genId(prefix: string): string {
  * - step.next の index → 実 step ID に解決（範囲外は捨てる）
  * - next 省略かつ end でない step は「次の index へ直列接続」を補完
  * - 不正な lane/phase 参照は先頭にフォールバック
+ * - previous を渡すと、LLM が省略した durationMin/tool/pain/improvement を
+ *   前回図の同名ステップから引き継ぐ（毎ターン全図再生成での情報後退を防ぐ）
  */
-export function normalizeToFlowDiagram(llm: LlmDiagram): FlowDiagram {
+export function normalizeToFlowDiagram(llm: LlmDiagram, previous?: FlowDiagram): FlowDiagram {
+  // 前回図のステップを正規化ラベルで引けるようにする（duration 等の引き継ぎ用）
+  const prevByLabel = new Map<string, FlowStep>();
+  for (const p of previous?.steps ?? []) {
+    const key = p.label.trim().toLowerCase();
+    if (key && !prevByLabel.has(key)) prevByLabel.set(key, p);
+  }
+
   const laneNames = dedupeNonEmpty(llm.lanes);
   const phaseNames = dedupeNonEmpty(llm.phases);
 
@@ -80,16 +89,23 @@ export function normalizeToFlowDiagram(llm: LlmDiagram): FlowDiagram {
       next = [];
     }
 
+    // LLM が省略した値は前回図の同名ステップから引き継ぐ（情報後退防止）
+    const prev = prevByLabel.get(s.label.trim().toLowerCase());
+    const durationMin =
+      s.durationMin && s.durationMin > 0 ? s.durationMin : (prev?.durationMin ?? 0);
+    const tool = s.tool?.trim() || prev?.tool || '';
+    const pain = s.pain?.trim() || prev?.pain || '';
+
     return {
       id: stepIds[i],
       type: s.type as StepType,
       laneId,
       phaseId,
       label: s.label.trim(),
-      durationMin: s.durationMin ?? 0,
-      tool: s.tool?.trim() ?? '',
-      pain: s.pain?.trim() ?? '',
-      improvement: '',
+      durationMin,
+      tool,
+      pain,
+      improvement: prev?.improvement ?? '',
       next: dedupe(next),
     };
   });

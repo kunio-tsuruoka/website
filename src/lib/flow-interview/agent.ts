@@ -252,7 +252,7 @@ export async function runFlowAgentTurn(
 
   if (!validated) return fallback;
 
-  const diagram = normalizeToFlowDiagram(validated.diagram);
+  const diagram = normalizeToFlowDiagram(validated.diagram, currentDiagram);
   // LLM が空図を返したら前回の図を維持（情報の後退を防ぐ）
   const finalDiagram = diagram.steps.length === 0 ? currentDiagram : diagram;
 

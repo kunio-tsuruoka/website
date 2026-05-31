@@ -55,7 +55,7 @@ export const POST: APIRoute = async ({ locals, request }) => {
 
   if (!rfp) return jsonError(502, 'rfp_failed');
 
-  return new Response(JSON.stringify({ rfp, markdown: formatRfpMarkdown(rfp) }), {
+  return new Response(JSON.stringify({ rfp, markdown: formatRfpMarkdown(rfp, session.diagram) }), {
     status: 200,
     headers: { 'content-type': 'application/json' },
   });

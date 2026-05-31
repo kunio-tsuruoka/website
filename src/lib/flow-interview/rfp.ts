@@ -2,6 +2,7 @@ import type { FlowDiagram } from '@/features/flow-mapper/types';
 import { OpenRouterError, chatCompletionWithBudget } from '@/lib/openrouter';
 import { classifyUpstreamError, notifyOpsAlert } from '@/lib/ops-alert';
 import { z } from 'zod';
+import { formatDuration } from './format';
 import type { FlowSuggestion } from './suggest';
 
 type KVNamespaceLike = {
@@ -72,12 +73,18 @@ function buildUserContent(
   const steps = diagram.steps
     .map((s, i) => {
       const lane = laneName.get(s.laneId) ?? '担当';
-      const extra = [s.tool && `ツール:${s.tool}`, s.pain && `困りごと:${s.pain}`]
+      const extra = [
+        s.durationMin > 0 && `所要時間:${formatDuration(s.durationMin)}`,
+        s.tool && `ツール:${s.tool}`,
+        s.pain && `困りごと:${s.pain}`,
+      ]
         .filter(Boolean)
         .join(' / ');
       return `${i + 1}. [${lane}] ${s.label}${extra ? ` (${extra})` : ''}`;
     })
     .join('\n');
+  const totalMin = diagram.steps.reduce((sum, s) => sum + (s.durationMin || 0), 0);
+  const totalLine = totalMin > 0 ? `\n1サイクルの合計作業時間: 約${formatDuration(totalMin)}` : '';
 
   const sug =
     suggestions.length > 0
@@ -88,7 +95,9 @@ function buildUserContent(
 
   return `【現状業務フロー（As-Is）】\n業務名: ${diagram.title}\n登場人物: ${diagram.lanes
     .map((l) => l.name)
-    .join(', ')}\n手順:\n${steps}${sug}`;
+    .join(
+      ', '
+    )}\n手順:\n${steps}${totalLine}${sug}\n\n※所要時間が分かる作業は、改善後の削減効果（時間・コスト）に必ず言及すること。`;
 }
 
 function tryParseJson(text: string): unknown {
@@ -171,7 +180,7 @@ function validate(raw: string): FlowRfp | null {
 }
 
 /** 構造化された RFP を決定論的に Markdown へ整形する（LLM に markdown を書かせない＝崩れ防止）。 */
-export function formatRfpMarkdown(rfp: FlowRfp): string {
+export function formatRfpMarkdown(rfp: FlowRfp, diagram?: FlowDiagram): string {
   const lines: string[] = [];
   lines.push(`# ${rfp.title}`);
   lines.push('');
@@ -183,6 +192,28 @@ export function formatRfpMarkdown(rfp: FlowRfp): string {
   lines.push('');
   lines.push(rfp.asIsSummary);
   lines.push('');
+  // 会話で把握した現状フローを、担当・所要時間・ツール・困りごと付きで列挙する
+  if (diagram && diagram.steps.length > 0) {
+    const laneName = new Map(diagram.lanes.map((l) => [l.id, l.name]));
+    lines.push('### 現状フロー（ステップ詳細）');
+    lines.push('');
+    diagram.steps.forEach((s, i) => {
+      const lane = laneName.get(s.laneId) ?? '担当';
+      const meta = [
+        s.durationMin > 0 && `所要時間 ${formatDuration(s.durationMin)}`,
+        s.tool && `ツール: ${s.tool}`,
+        s.pain && `課題: ${s.pain}`,
+      ].filter(Boolean);
+      lines.push(`${i + 1}. **[${lane}]** ${s.label}`);
+      if (meta.length > 0) lines.push(`   - ${meta.join(' / ')}`);
+    });
+    const totalMin = diagram.steps.reduce((sum, s) => sum + (s.durationMin || 0), 0);
+    if (totalMin > 0) {
+      lines.push('');
+      lines.push(`> 1サイクルあたりの合計作業時間: 約${formatDuration(totalMin)}`);
+    }
+    lines.push('');
+  }
   lines.push('## 3. 目指す姿（To-Be）');
   lines.push('');
   lines.push(rfp.toBeSummary);

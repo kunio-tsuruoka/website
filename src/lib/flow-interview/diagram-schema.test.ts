@@ -92,4 +92,65 @@ describe('normalizeToFlowDiagram', () => {
     expect(parsed.lanes).toEqual([]);
     expect(parsed.steps[0].type).toBe('task'); // type 既定
   });
+
+  test('LLM が省略した durationMin/tool/pain を前回図の同名ステップから引き継ぐ', () => {
+    // 1ターン目: duration/tool/pain あり
+    const prev = normalizeToFlowDiagram({
+      title: '請求業務',
+      lanes: ['経理'],
+      phases: ['フロー'],
+      steps: [
+        {
+          label: '売上入力',
+          type: 'start',
+          lane: '経理',
+          durationMin: 30,
+          tool: 'Excel',
+          pain: '転記ミス',
+        },
+        { label: '請求書作成', type: 'task', lane: '経理', durationMin: 45, tool: 'Word' },
+      ],
+    });
+
+    // 2ターン目: LLM が同じステップを duration 等なしで再生成
+    const next = normalizeToFlowDiagram(
+      {
+        title: '請求業務',
+        lanes: ['経理'],
+        phases: ['フロー'],
+        steps: [
+          { label: '売上入力', type: 'start', lane: '経理' },
+          { label: '請求書作成', type: 'task', lane: '経理' },
+        ],
+      },
+      prev
+    );
+
+    // 前回値が維持される（情報後退しない）
+    expect(next.steps[0].durationMin).toBe(30);
+    expect(next.steps[0].tool).toBe('Excel');
+    expect(next.steps[0].pain).toBe('転記ミス');
+    expect(next.steps[1].durationMin).toBe(45);
+    expect(next.steps[1].tool).toBe('Word');
+  });
+
+  test('LLM が新しい値を出したら前回値を上書きする', () => {
+    const prev = normalizeToFlowDiagram({
+      title: 'x',
+      lanes: ['担当'],
+      phases: ['フロー'],
+      steps: [{ label: '作業', type: 'task', durationMin: 10, tool: '手作業' }],
+    });
+    const next = normalizeToFlowDiagram(
+      {
+        title: 'x',
+        lanes: ['担当'],
+        phases: ['フロー'],
+        steps: [{ label: '作業', type: 'task', durationMin: 60, tool: 'システム' }],
+      },
+      prev
+    );
+    expect(next.steps[0].durationMin).toBe(60);
+    expect(next.steps[0].tool).toBe('システム');
+  });
 });

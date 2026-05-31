@@ -13,8 +13,8 @@ const ContactFormSchema = z.object({
     .trim()
     .min(1, 'メールアドレスを入力してください')
     .email('メールアドレスの形式が正しくありません'),
-  name: z.string().trim().max(100, '長すぎます').optional(),
-  company: z.string().trim().max(100, '長すぎます').optional(),
+  name: z.string().trim().min(1, 'お名前を入力してください').max(100, '長すぎます'),
+  company: z.string().trim().min(1, '会社名を入力してください').max(100, '長すぎます'),
 });
 type ContactFormValues = z.infer<typeof ContactFormSchema>;
 
@@ -167,7 +167,7 @@ export function ContactModal() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1" htmlFor="fc-name">
-                  お名前
+                  お名前 <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="fc-name"
@@ -183,7 +183,7 @@ export function ContactModal() {
                   className="block text-xs font-medium text-gray-600 mb-1"
                   htmlFor="fc-company"
                 >
-                  会社名
+                  会社名 <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="fc-company"
