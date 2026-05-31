@@ -148,6 +148,42 @@ const PATCHES = {
     },
     // 0037: 和語並列の順序統一（DX／AI → AI／DX）。全角／は規約どおり維持。
     { id: '0037', all: true, before: 'DX／AI', after: 'AI／DX' },
+    {
+      id: '0042',
+      before: '業務可視化ツール（<a href="/tools/flow-mapper">/tools/flow-mapper</a>）',
+      after: '<a href="/tools/flow-mapper">業務フロー可視化ツール</a>',
+    },
+    {
+      id: '0044',
+      before: 'ワークショップが30分→2時間で済みます。',
+      after: 'ワークショップが2時間→30分で完了します。',
+    },
+  ],
+
+  // 01-10
+  'things-not-to-do-pm': [
+    {
+      id: '0053',
+      before: 'スコープ管理（何を作る/作らない）と意思決定',
+      after: 'スコープを絞り、仕様を決める',
+    },
+  ],
+
+  // 01-13
+  'user-story-template-examples': [
+    {
+      id: '0055a',
+      before:
+        'Beekleでは、ユーザーストーリーを書く負担を減らすために、ユーザーストーリー作成ツール という無料Webツールを公開しています。',
+      after:
+        'Beekleでは、ユーザーストーリーを書く負担を減らすための作成ツールを公開しています。',
+    },
+    { id: '0055b', before: '>Story Builder を試す</a>', after: '>ユーザーストーリー作成ツール を試す</a>' },
+  ],
+
+  // 02-08
+  'engineer-communication': [
+    { id: '0077', before: 'を推奨しています。本記事は、各ステップで', after: 'を推奨しています。本記事では、各ステップで' },
   ],
 
   // 01-08
