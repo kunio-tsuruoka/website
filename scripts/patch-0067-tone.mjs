@@ -123,7 +123,11 @@ function convert(html) {
     console.error('--slug を指定してください');
     process.exit(1);
   }
-  const cur = await client.get({ endpoint: 'columns', contentId: SLUG, queries: { fields: 'content' } });
+  const cur = await client.get({
+    endpoint: 'columns',
+    contentId: SLUG,
+    queries: { fields: 'content' },
+  });
   const next = convert(cur.content);
   // 残存する だ/である系語尾（手動対応が必要なもの）を検出
   const text = next.replace(/<[^>]+>/g, ' ');
@@ -132,7 +136,7 @@ function convert(html) {
   console.log(`=== ${SLUG} ===`);
   console.log(`変換: ${cur.content !== next ? 'あり' : 'なし'}`);
   console.log(`\n--- 残存（だ/である系語尾・要手動確認） ${remaining.length}件 ---`);
-  for (const r of remaining.slice(0, 40)) console.log('  ' + r.trim());
+  for (const r of remaining.slice(0, 40)) console.log(`  ${r.trim()}`);
 
   if (!APPLY) {
     console.log('\n[dry-run] --apply で本番適用');

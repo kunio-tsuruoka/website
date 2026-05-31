@@ -26,7 +26,7 @@ function splitBlock(html, label, outLabel) {
     const inner = m[1];
     const idx = inner.indexOf(`${label}:`);
     if (idx === -1) continue;
-    const flow = inner.slice(0, idx).replace(/\s+$/,'');
+    const flow = inner.slice(0, idx).replace(/\s+$/, '');
     const listPart = inner.slice(idx + label.length + 1); // ":" の後
     const items = listPart
       .split('\n')
@@ -42,7 +42,11 @@ function splitBlock(html, label, outLabel) {
 }
 
 (async () => {
-  const cur = await client.get({ endpoint: 'columns', contentId: SLUG, queries: { fields: 'content' } });
+  const cur = await client.get({
+    endpoint: 'columns',
+    contentId: SLUG,
+    queries: { fields: 'content' },
+  });
   let html = cur.content;
   const r1 = splitBlock(html, '問題点', 'As-Is の問題点');
   html = r1.changed;
@@ -57,15 +61,23 @@ function splitBlock(html, label, outLabel) {
   }
   // 変換後プレビュー
   const pi = html.indexOf('As-Is の問題点');
-  console.log('\n--- 変換後プレビュー ---\n' + (pi >= 0 ? html.slice(pi - 120, pi + 400) : '(プレビュー位置不明)'));
+  console.log(
+    `\n--- 変換後プレビュー ---\n${pi >= 0 ? html.slice(pi - 120, pi + 400) : '(プレビュー位置不明)'}`
+  );
 
   if (!APPLY) {
     console.log('\n[dry-run]（--apply で本番適用）');
     return;
   }
   await client.update({ endpoint: 'columns', contentId: SLUG, content: { content: html } });
-  const after = await client.get({ endpoint: 'columns', contentId: SLUG, queries: { fields: 'content' } });
-  const ok = after.content.includes('<strong>As-Is の問題点</strong>') && after.content.includes('<strong>To-Be の期待効果</strong>');
+  const after = await client.get({
+    endpoint: 'columns',
+    contentId: SLUG,
+    queries: { fields: 'content' },
+  });
+  const ok =
+    after.content.includes('<strong>As-Is の問題点</strong>') &&
+    after.content.includes('<strong>To-Be の期待効果</strong>');
   console.log(ok ? '\n✅ PATCH + 検証OK' : '\n❌ 検証失敗');
 })().catch((e) => {
   console.error(e);

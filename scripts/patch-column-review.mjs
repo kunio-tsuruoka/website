@@ -97,7 +97,8 @@ const PATCHES = {
       id: '0004d',
       before:
         '<strong>Laravel + Inertia でプロトタイプ実装</strong> — 1〜2週間で動くたたき台を作り、現場で触ってもらう',
-      after: '<strong>早期プロトタイプで検証する</strong> — 1〜2週間で試作し、現場の適合性を確認する',
+      after:
+        '<strong>早期プロトタイプで検証する</strong> — 1〜2週間で試作し、現場の適合性を確認する',
     },
   ],
 
@@ -209,10 +210,13 @@ const PATCHES = {
       id: '0055a',
       before:
         'Beekleでは、ユーザーストーリーを書く負担を減らすために、ユーザーストーリー作成ツール という無料Webツールを公開しています。',
-      after:
-        'Beekleでは、ユーザーストーリーを書く負担を減らすための作成ツールを公開しています。',
+      after: 'Beekleでは、ユーザーストーリーを書く負担を減らすための作成ツールを公開しています。',
     },
-    { id: '0055b', before: '>Story Builder を試す</a>', after: '>ユーザーストーリー作成ツール を試す</a>' },
+    {
+      id: '0055b',
+      before: '>Story Builder を試す</a>',
+      after: '>ユーザーストーリー作成ツール を試す</a>',
+    },
   ],
 
   // 02-09（0078: ケースラベルを太字化して区別性を上げる）
@@ -245,7 +249,11 @@ const PATCHES = {
 
   // 02-08
   'engineer-communication': [
-    { id: '0077', before: 'を推奨しています。本記事は、各ステップで', after: 'を推奨しています。本記事では、各ステップで' },
+    {
+      id: '0077',
+      before: 'を推奨しています。本記事は、各ステップで',
+      after: 'を推奨しています。本記事では、各ステップで',
+    },
   ],
 
   // 01-08
@@ -264,7 +272,11 @@ const PATCHES = {
 
   // 01-09
   'requirements-definition-complete-guide': [
-    { id: '0052a', before: '業務フローの可視化（As-Is / To-Be）', after: '業務フローの可視化（As-Is/To-Be）' },
+    {
+      id: '0052a',
+      before: '業務フローの可視化（As-Is / To-Be）',
+      after: '業務フローの可視化（As-Is/To-Be）',
+    },
     {
       id: '0052b',
       before: 'As-Is / To-Be を並べて可視化することを推奨しています。',
@@ -356,8 +368,7 @@ const PATCHES = {
       id: '0056',
       all: true,
       before: '生成AI開発のスピード｜プロトタイプを1〜2週間で作る方法',
-      after:
-        '生成AIで1〜2週間プロトタイプを作る4ステップ｜ストーリー→FM→Gherkin→Laravel Inertia',
+      after: '生成AIで1〜2週間プロトタイプを作る4ステップ｜ストーリー→FM→Gherkin→Laravel Inertia',
     },
     {
       id: '0057',
@@ -414,7 +425,11 @@ const PATCHES = {
 
 // タイトルフィールドの修正（content とは別フィールド・SEOのtitleタグに直結）。
 const TITLE_PATCHES = {
-  'how-to-write-rfp': { id: '0026', before: '7項目と9つの落とし穴', after: '10項目と9つの落とし穴' },
+  'how-to-write-rfp': {
+    id: '0026',
+    before: '7項目と9つの落とし穴',
+    after: '10項目と9つの落とし穴',
+  },
   'common-mistakes': { id: '0064', before: '失敗事例8選', after: '失敗事例5選' },
   'silent-three-weeks': {
     id: '0069',
@@ -429,12 +444,18 @@ const TITLE_PATCHES = {
 };
 
 async function processTitle(slug, patch) {
-  const cur = await client.get({ endpoint: 'columns', contentId: slug, queries: { fields: 'id,title' } });
+  const cur = await client.get({
+    endpoint: 'columns',
+    contentId: slug,
+    queries: { fields: 'id,title' },
+  });
   console.log(`\n=== [title] ${slug} ===`);
   const count = cur.title.split(patch.before).length - 1;
   if (count === 0) {
     const done = cur.title.includes(patch.after);
-    console.log(`  ${done ? '・(適用済)' : '❌ not_found'} ${patch.id}: 現タイトル「${cur.title}」`);
+    console.log(
+      `  ${done ? '・(適用済)' : '❌ not_found'} ${patch.id}: 現タイトル「${cur.title}」`
+    );
     return;
   }
   if (count > 1) {
@@ -448,7 +469,11 @@ async function processTitle(slug, patch) {
     return;
   }
   await client.update({ endpoint: 'columns', contentId: slug, content: { title: next } });
-  const after = await client.get({ endpoint: 'columns', contentId: slug, queries: { fields: 'title' } });
+  const after = await client.get({
+    endpoint: 'columns',
+    contentId: slug,
+    queries: { fields: 'title' },
+  });
   console.log(after.title === next ? '  ✅ タイトル更新 + 検証OK' : '  ❌ 検証失敗');
 }
 
@@ -475,13 +500,16 @@ function applyReplacements(html, repls) {
 }
 
 async function processSlug(slug, repls) {
-  const cur = await client.get({ endpoint: 'columns', contentId: slug, queries: { fields: 'id,content' } });
+  const cur = await client.get({
+    endpoint: 'columns',
+    contentId: slug,
+    queries: { fields: 'id,content' },
+  });
   const { out, results } = applyReplacements(cur.content, repls);
 
   console.log(`\n=== ${slug} ===`);
   for (const r of results) {
-    const mark =
-      r.status === 'replaced' ? '✓' : r.status === 'already' ? '・(適用済)' : '❌';
+    const mark = r.status === 'replaced' ? '✓' : r.status === 'already' ? '・(適用済)' : '❌';
     console.log(`  ${mark} ${r.id}: ${r.status}${r.count ? ` (${r.count}件)` : ''}`);
   }
 
@@ -502,7 +530,11 @@ async function processSlug(slug, repls) {
   await client.update({ endpoint: 'columns', contentId: slug, content: { content: out } });
   // 検証: before が消えていることを確認（after存在チェックだと、後続replの before に
   // 使われる連鎖置換で誤検知するため。before===after はスキップ）。
-  const after = await client.get({ endpoint: 'columns', contentId: slug, queries: { fields: 'content' } });
+  const after = await client.get({
+    endpoint: 'columns',
+    contentId: slug,
+    queries: { fields: 'content' },
+  });
   let ok = true;
   for (const r of repls) {
     if (r.before === r.after) continue;

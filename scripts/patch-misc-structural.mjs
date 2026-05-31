@@ -22,8 +22,7 @@ const JOBS = [
     slug: 'project-management-steps',
     id: '0062',
     // <p><strong>ステップN：…</strong></p> → <h3>ステップN：…</h3>
-    fn: (h) =>
-      h.replace(/<p><strong>(ステップ[0-9０-９][^<]*)<\/strong><\/p>/g, '<h3>$1</h3>'),
+    fn: (h) => h.replace(/<p><strong>(ステップ[0-9０-９][^<]*)<\/strong><\/p>/g, '<h3>$1</h3>'),
   },
   {
     slug: 'oae_of8l_ij',
@@ -35,7 +34,11 @@ const JOBS = [
 
 (async () => {
   for (const job of JOBS) {
-    const cur = await client.get({ endpoint: 'columns', contentId: job.slug, queries: { fields: 'content' } });
+    const cur = await client.get({
+      endpoint: 'columns',
+      contentId: job.slug,
+      queries: { fields: 'content' },
+    });
     const next = job.fn(cur.content);
     const changed = next !== cur.content;
     console.log(`\n=== ${job.slug} (${job.id}) ===`);
