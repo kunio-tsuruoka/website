@@ -1,5 +1,4 @@
 import { trackCtaClick } from '@/lib/analytics';
-import { useTurnstile } from '@/lib/use-turnstile';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,13 +20,10 @@ type ContactFormValues = z.infer<typeof ContactFormSchema>;
 
 // 在席のまま氏名/会社/メールを入力して /api/contact 経由で Slack 通知する。
 // 「話すだけ発注準備」で作成した As-Is/To-Be/RFP を message に同梱する。
-export function ContactModal({ sitekey }: { sitekey: string }) {
+export function ContactModal() {
   const open = useFlowInterviewStore((s) => s.contactOpen);
   const intent = useFlowInterviewStore((s) => s.contactIntent);
   const closeContact = useFlowInterviewStore((s) => s.closeContact);
-
-  const turnstileEnabled = !!sitekey;
-  const { containerRef, token, reset: resetTurnstile } = useTurnstile(sitekey ?? '');
 
   const {
     register,
@@ -55,10 +51,6 @@ export function ContactModal({ sitekey }: { sitekey: string }) {
 
   const onValid = async (values: ContactFormValues) => {
     setServerError('');
-    if (turnstileEnabled && !token) {
-      setServerError('セキュリティチェックの完了をお待ちください。');
-      return;
-    }
     const s = useFlowInterviewStore.getState();
     const message = buildContactMessage({
       diagram: s.diagram,
@@ -78,13 +70,13 @@ export function ContactModal({ sitekey }: { sitekey: string }) {
           type: 'consultation',
           source: 'flow-interview',
           intent,
-          turnstileToken: token ?? '',
+          // 会話開始時に Turnstile 検証済みのセッション。サーバーで KV 実在を確認して再検証を免除。
+          sessionId: s.sessionId ?? '',
         }),
       });
       const data = (await res.json().catch(() => ({}))) as { success?: boolean; error?: string };
       if (!res.ok || !data.success) {
         setServerError(data.error || `送信に失敗しました (${res.status})`);
-        resetTurnstile();
         return;
       }
       if (typeof window.gtag === 'function') {
@@ -205,13 +197,11 @@ export function ContactModal({ sitekey }: { sitekey: string }) {
                 )}
               </div>
 
-              {turnstileEnabled && <div ref={containerRef} className="min-h-[65px]" />}
-
               {serverError && <p className="text-sm text-red-600">{serverError}</p>}
 
               <button
                 type="submit"
-                disabled={isSubmitting || (turnstileEnabled && !token)}
+                disabled={isSubmitting}
                 className="w-full px-5 py-3 min-h-[48px] rounded-full bg-primary-500 hover:bg-primary-600 disabled:bg-gray-300 text-white text-sm font-semibold transition"
               >
                 {isSubmitting ? '送信中…' : 'この内容で送信する'}

@@ -66,7 +66,7 @@ export function FlowInterview({ sitekey }: { sitekey: string }) {
         onSuggest={() => void suggest()}
         onGenerateRfp={() => void generateRfp()}
       />
-      <ContactModal sitekey={sitekey} />
+      <ContactModal />
     </div>
   );
 }
