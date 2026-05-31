@@ -43,7 +43,11 @@ function insertIntro(html) {
 }
 
 (async () => {
-  const cur = await client.get({ endpoint: 'columns', contentId: SLUG, queries: { fields: 'content' } });
+  const cur = await client.get({
+    endpoint: 'columns',
+    contentId: SLUG,
+    queries: { fields: 'content' },
+  });
   let html = cur.content;
   const g = convertGherkin(html);
   html = g.html;
@@ -58,14 +62,18 @@ function insertIntro(html) {
   }
   if (!APPLY) {
     const pi = html.indexOf('この記事を読むと');
-    console.log('\n--- 導入挿入プレビュー ---\n' + (pi >= 0 ? html.slice(pi - 80, pi + 240) : ''));
+    console.log(`\n--- 導入挿入プレビュー ---\n${pi >= 0 ? html.slice(pi - 80, pi + 240) : ''}`);
     const gi = html.indexOf('<pre><code>Scenario');
-    console.log('\n--- Gherkin変換プレビュー ---\n' + (gi >= 0 ? html.slice(gi, gi + 200) : '(なし)'));
+    console.log(
+      `\n--- Gherkin変換プレビュー ---\n${gi >= 0 ? html.slice(gi, gi + 200) : '(なし)'}`
+    );
     console.log('\n[dry-run]（--apply で本番適用）');
     return;
   }
   await client.update({ endpoint: 'columns', contentId: SLUG, content: { content: html } });
-  const after = (await client.get({ endpoint: 'columns', contentId: SLUG, queries: { fields: 'content' } })).content;
+  const after = (
+    await client.get({ endpoint: 'columns', contentId: SLUG, queries: { fields: 'content' } })
+  ).content;
   const ok =
     after.includes('この記事を読むと、次のことが分かります') &&
     after.includes('<pre><code>Scenario');

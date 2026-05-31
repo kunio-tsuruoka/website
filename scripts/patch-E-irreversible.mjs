@@ -16,7 +16,12 @@ const client = createClient({
 
 const NEW_SLUG = 'failure-prevention-for-clients';
 const OLD_SLUG = 'oae_of8l_ij';
-const DELETE_SLUGS = ['project-management-01', 'project-management-steps', '7hhc1tib7dft', OLD_SLUG];
+const DELETE_SLUGS = [
+  'project-management-01',
+  'project-management-steps',
+  '7hhc1tib7dft',
+  OLD_SLUG,
+];
 
 // 0073: <h2 ...>N. 見出し</h2> の番号prefix除去
 function strip0073(html) {
@@ -40,13 +45,19 @@ async function create() {
     description: src.description,
   };
   console.log(`[create] ${NEW_SLUG} を作成 (title: ${body.title}, category: ${body.category})`);
-  console.log(`  h2番号prefix: ${(src.content.match(/<h2[^>]*>\s*[0-9]+\. /g) || []).length} → ${(body.content.match(/<h2[^>]*>\s*[0-9]+\. /g) || []).length}`);
+  console.log(
+    `  h2番号prefix: ${(src.content.match(/<h2[^>]*>\s*[0-9]+\. /g) || []).length} → ${(body.content.match(/<h2[^>]*>\s*[0-9]+\. /g) || []).length}`
+  );
   if (!APPLY) {
     console.log('  [dry-run]');
     return;
   }
   await client.create({ endpoint: 'columns', contentId: NEW_SLUG, content: body });
-  const chk = await client.get({ endpoint: 'columns', contentId: NEW_SLUG, queries: { fields: 'id,title' } });
+  const chk = await client.get({
+    endpoint: 'columns',
+    contentId: NEW_SLUG,
+    queries: { fields: 'id,title' },
+  });
   console.log(`  ✅ 作成OK: ${chk.id}`);
 }
 
@@ -74,7 +85,7 @@ async function del() {
     console.log(`[delete] ${slug} を削除${APPLY ? '' : '（dry-run）'}`);
     if (APPLY) {
       await client.delete({ endpoint: 'columns', contentId: slug });
-      console.log(`  ✅ 削除OK`);
+      console.log('  ✅ 削除OK');
     }
   }
 }
