@@ -1,6 +1,10 @@
 # 旧スラッグの正規化
 /column/7hhc1tib7dft  /column/ai-development-speed  301
 /column/nqu29zwuq6  /column/ai-era-development-flow  301
+# 監修2026-05-31: 重複記事の301統合（被リンク多い方へ寄せる）+ slug改名
+/column/project-management-01     /column/requirements-definition-process  301
+/column/project-management-steps  /column/ai-era-development-flow          301
+/column/oae_of8l_ij               /column/failure-prevention-for-clients   301
 
 # 旧 column 階層（/column/<category>/<slug>/）→ /column トップ
 /column/fast-development/*  /column  301
