@@ -71,6 +71,8 @@ const PATCHES = {
       before: 'Beekle推奨：発注側が回す6ステップパイプライン',
       after: '発注側が押さえるべき6つのステップ',
     },
+    // 0064 クロス参照: common-mistakes のタイトル 8選→5選 に合わせて本文の言及も更新
+    { id: '0064-xref', all: true, before: '失敗事例8選', after: '失敗事例5選' },
   ],
 
   // 01-01（0012は現行本文が既に論理的に正しいためスキップ。0014aは編集パスへ）
@@ -249,6 +251,8 @@ const PATCHES = {
       before: '「作ったのに使われない」を防ぐ機能フィルタリング｜FM活用法',
       after: '「作ったのに使われないシステム」を防ぐ要件絞り込み術｜FM法とユーザー視点',
     },
+    // 0064 クロス参照: common-mistakes のタイトル 8選→5選 に合わせて本文の言及も更新
+    { id: '0064-xref', all: true, before: '失敗事例8選', after: '失敗事例5選' },
   ],
 
   // 01-06
@@ -270,6 +274,36 @@ const PATCHES = {
     },
   ],
 };
+
+// タイトルフィールドの修正（content とは別フィールド・SEOのtitleタグに直結）。
+const TITLE_PATCHES = {
+  'how-to-write-rfp': { id: '0026', before: '7項目と9つの落とし穴', after: '10項目と9つの落とし穴' },
+  'common-mistakes': { id: '0064', before: '失敗事例8選', after: '失敗事例5選' },
+};
+
+async function processTitle(slug, patch) {
+  const cur = await client.get({ endpoint: 'columns', contentId: slug, queries: { fields: 'id,title' } });
+  console.log(`\n=== [title] ${slug} ===`);
+  const count = cur.title.split(patch.before).length - 1;
+  if (count === 0) {
+    const done = cur.title.includes(patch.after);
+    console.log(`  ${done ? '・(適用済)' : '❌ not_found'} ${patch.id}: 現タイトル「${cur.title}」`);
+    return;
+  }
+  if (count > 1) {
+    console.log(`  ❌ ambiguous (${count}件) ${patch.id}`);
+    return;
+  }
+  const next = cur.title.replace(patch.before, patch.after);
+  console.log(`  ${patch.id}: 「${cur.title}」\n         → 「${next}」`);
+  if (!APPLY) {
+    console.log('  [dry-run]（--apply で本番適用）');
+    return;
+  }
+  await client.update({ endpoint: 'columns', contentId: slug, content: { title: next } });
+  const after = await client.get({ endpoint: 'columns', contentId: slug, queries: { fields: 'title' } });
+  console.log(after.title === next ? '  ✅ タイトル更新 + 検証OK' : '  ❌ 検証失敗');
+}
 
 function applyReplacements(html, repls) {
   let out = html;
@@ -332,12 +366,21 @@ async function processSlug(slug, repls) {
   console.log(ok ? `  ✅ PATCH + 検証OK（${changed}件）` : '  ❌ 検証に失敗（要確認）');
 }
 
+const TITLE_ONLY = process.argv.includes('--titles');
+
 (async () => {
-  const slugs = slugArg ? [slugArg] : Object.keys(PATCHES);
   console.log(APPLY ? '【本番適用モード】' : '【dry-run（既定）】');
+  // タイトル修正
+  const titleSlugs = slugArg ? [slugArg] : Object.keys(TITLE_PATCHES);
+  for (const slug of titleSlugs) {
+    if (TITLE_PATCHES[slug]) await processTitle(slug, TITLE_PATCHES[slug]);
+  }
+  if (TITLE_ONLY) return;
+  // 本文修正
+  const slugs = slugArg ? [slugArg] : Object.keys(PATCHES);
   for (const slug of slugs) {
     if (!PATCHES[slug]) {
-      console.log(`(${slug} は PATCHES に未定義)`);
+      if (!TITLE_PATCHES[slug]) console.log(`(${slug} は PATCHES に未定義)`);
       continue;
     }
     await processSlug(slug, PATCHES[slug]);
