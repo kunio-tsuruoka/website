@@ -1,4 +1,5 @@
 import type { FlowDiagram } from '@/features/flow-mapper/types';
+import { formatDuration } from '@/lib/flow-interview/format';
 import type { FlowSuggestion } from '@/lib/flow-interview/suggest';
 
 type Args = {
@@ -23,12 +24,18 @@ export function buildContactMessage({
   let i = 1;
   for (const s of diagram.steps) {
     const lane = laneName.get(s.laneId) ?? '担当';
-    const extra = [s.tool && `ツール:${s.tool}`, s.pain && `課題:${s.pain}`]
+    const extra = [
+      s.durationMin > 0 && `所要:${formatDuration(s.durationMin)}`,
+      s.tool && `ツール:${s.tool}`,
+      s.pain && `課題:${s.pain}`,
+    ]
       .filter(Boolean)
       .join(' / ');
     lines.push(`${i}. [${lane}] ${s.label}${extra ? `（${extra}）` : ''}`);
     i += 1;
   }
+  const totalMin = diagram.steps.reduce((sum, s) => sum + (s.durationMin || 0), 0);
+  if (totalMin > 0) lines.push(`（1サイクルの合計作業時間: 約${formatDuration(totalMin)}）`);
 
   if (suggestions && suggestions.length > 0) {
     lines.push('', '■ AI改善案（To-Be）');
