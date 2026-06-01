@@ -17,6 +17,7 @@ const aiServiceItems = {
 };
 
 const serviceItems = [
+  { label: '要件定義から伴走するシステム開発', href: '/services/requirements-definition-support' },
   { label: 'WEBアプリ・モバイルアプリ開発', href: '/services/web-mobile-development' },
   { label: 'CDP構築・顧客データ基盤開発', href: '/services/cdp-development' },
 ];
