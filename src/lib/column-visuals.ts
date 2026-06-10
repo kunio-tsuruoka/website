@@ -549,7 +549,7 @@ function buildZeroStartConsultCta(source: string, intent: string): string {
   return `<figure class="cv-card">
   <figcaption class="cv-card-header cv-header-primary">まずは小さく始めてみませんか？</figcaption>
   <div class="cv-card-body">
-    <p>Beekleのゼロスタート（MVP開発・PoC開発・プロトタイプ開発）なら、1〜2週間で動くプロトタイプを作り、「本当に業務で使えるか」を実際に触って確認してから本格開発に進めます。AI導入の第一歩として、まずはお気軽にご相談ください。</p>
+    <p>Beekleのゼロスタート（MVP開発・PoC開発・プロトタイプ開発）なら、最短1〜2週間を目安に（規模により変動）動くプロトタイプを作り、「本当に業務で使えるか」を実際に触って確認してから本格開発に進めます。AI導入の第一歩として、まずはお気軽にご相談ください。</p>
     <p style="text-align:center;margin-top:1.25rem;"><a href="${href}" data-cta-source="${source}" data-cta-id="zero-start-${intent}">ゼロスタートについて相談する</a></p>
   </div>
 </figure>`;
