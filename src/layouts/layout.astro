@@ -45,6 +45,9 @@ const fullTitle = title.includes('Beekle') ? title : `${title} | Beekle`;
     <slot />
     <script>
       import { initEngagementTracking, trackCtaClick } from '@/lib/analytics';
+      import { captureFirstTouch } from '@/lib/attribution';
+      // セッション最初のページで入口・参照元・UTM を記録（フォーム送信時に問い合わせ通知へ載せる）
+      captureFirstTouch();
       document.addEventListener('click', (event) => {
         const target = event.target;
         if (!(target instanceof Element)) return;
