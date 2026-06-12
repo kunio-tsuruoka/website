@@ -1,3 +1,4 @@
+import { getAttribution } from '@/lib/attribution';
 import { consumeContactPrefill } from '@/lib/contact-prefill';
 import { useTurnstile } from '@/lib/use-turnstile';
 import type React from 'react';
@@ -83,6 +84,8 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
       intent: provenance.intent,
       phase: provenance.phase,
       turnstileToken: turnstileToken ?? '',
+      // 流入元（入口ページ・参照元・UTM・GA client_id）を問い合わせ通知へ同送
+      ...getAttribution(),
     };
 
     try {

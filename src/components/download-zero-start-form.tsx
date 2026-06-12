@@ -1,3 +1,4 @@
+import { getAttribution } from '@/lib/attribution';
 import { useTurnstile } from '@/lib/use-turnstile';
 import type React from 'react';
 import { useState } from 'react';
@@ -81,6 +82,8 @@ const DownloadZeroStartForm = ({ sitekey }: DownloadZeroStartFormProps) => {
       source,
       phase: phaseValue,
       turnstileToken: turnstileToken ?? '',
+      // 流入元（入口ページ・参照元・UTM・GA client_id）を問い合わせ通知へ同送
+      ...getAttribution(),
     };
 
     try {

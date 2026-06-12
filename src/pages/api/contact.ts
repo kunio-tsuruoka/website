@@ -33,6 +33,13 @@ const ContactSchema = z.object({
   turnstileToken: z.string().optional().default(''),
   // flow-interview など、開始時に既に Turnstile を通したセッション経由の送信
   sessionId: z.string().optional().default(''),
+  // 流入アトリビューション（src/lib/attribution.ts が付与）。クライアント由来なので長さ制限のみ。
+  clientId: z.string().trim().max(120).optional().default(''),
+  landingPage: z.string().trim().max(400).optional().default(''),
+  referrer: z.string().trim().max(400).optional().default(''),
+  utmSource: z.string().trim().max(120).optional().default(''),
+  utmMedium: z.string().trim().max(120).optional().default(''),
+  utmCampaign: z.string().trim().max(160).optional().default(''),
 });
 
 const SLACK_TIMEOUT_MS = 8000;
@@ -109,6 +116,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
       phase,
       turnstileToken,
       sessionId,
+      clientId,
+      landingPage,
+      referrer,
+      utmSource,
+      utmMedium,
+      utmCampaign,
     } = parsed.data;
 
     // 既存の AI セッション（開始時に Turnstile 検証済み）からの送信は再検証を免除する。
@@ -148,6 +161,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
     ].filter(Boolean);
     const provenanceText =
       provenanceParts.length > 0 ? provenanceParts.join(' / ') : '直接アクセス';
+
+    // 流入アトリビューション（入口ページ・外部参照元・UTM・GA client_id）。
+    // 参照元が空＝直接/ブックマーク/外部アプリ。client_id は GA4 探索での後追い照合用。
+    const utmText = [utmSource, utmMedium, utmCampaign].filter(Boolean).join(' / ');
+    const attributionLine = [
+      `着地: ${landingPage ? escapeSlack(landingPage) : '不明'}`,
+      `参照元: ${referrer ? escapeSlack(referrer) : '直接/なし'}`,
+      utmText ? `UTM: ${escapeSlack(utmText)}` : '',
+      clientId ? `GA cid: ${escapeSlack(clientId)}` : '',
+    ]
+      .filter(Boolean)
+      .join('\n');
     const slackMessage = {
       text: '新しいお問い合わせが届きました',
       blocks: [
@@ -175,6 +200,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
         {
           type: 'context',
           elements: [{ type: 'mrkdwn', text: `*経由元:* ${provenanceText}` }],
+        },
+        {
+          type: 'context',
+          elements: [{ type: 'mrkdwn', text: `*流入:*\n${attributionLine}` }],
         },
         { type: 'divider' },
       ],
