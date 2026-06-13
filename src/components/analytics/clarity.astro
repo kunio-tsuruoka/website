@@ -1,0 +1,20 @@
+---
+// Microsoft Clarity（ヒートマップ + セッション録画）。
+// CVR改善のトラックA（動線改善）で「なぜ発注者が離脱するか」を実観察するために導入。
+// 本番ドメイン (beekle.jp / www.beekle.jp) でのみ起動し、dev・preview(*.pages.dev) の
+// 録画でダッシュボードを汚さない。Project ID は公開クライアントID（GA測定IDと同様にハードコード可）。
+const CLARITY_PROJECT_ID = 'x69z1qvv1l';
+---
+
+<script is:inline define:vars={{ CLARITY_PROJECT_ID }}>
+  if (/(^|\.)beekle\.jp$/.test(location.hostname)) {
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+      t = l.createElement(r);
+      t.async = 1;
+      t.src = 'https://www.clarity.ms/tag/' + i;
+      y = l.getElementsByTagName(r)[0];
+      y.parentNode.insertBefore(t, y);
+    })(window, document, 'clarity', 'script', CLARITY_PROJECT_ID);
+  }
+</script>
