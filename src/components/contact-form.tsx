@@ -164,6 +164,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
             <option value="prototype">プロトタイプ・POC作成について</option>
             <option value="ai">AI/AIエージェント開発について</option>
             <option value="global">海外向けサービス開発について</option>
+            <option value="partner">開発パートナー・協業のご相談（開発会社・SIer様）</option>
             <option value="other">その他</option>
           </select>
         </div>
