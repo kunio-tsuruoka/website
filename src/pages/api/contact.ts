@@ -12,6 +12,7 @@ const TYPE_LABELS: Record<string, string> = {
   prototype: 'プロトタイプ・POC作成について',
   ai: 'AI/AIエージェント開発について',
   global: '海外向けサービス開発について',
+  partner: '開発パートナー・協業のご相談（開発会社・SIer様）',
   other: 'その他',
   download_zero_start: '【資料DL】ゼロスタート開発サービスデック',
 };
