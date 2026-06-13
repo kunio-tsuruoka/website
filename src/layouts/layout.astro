@@ -1,5 +1,6 @@
 ---
 // src/layouts/layout.astro
+import Clarity from '../components/analytics/clarity.astro';
 import GA4 from '../components/analytics/ga4.astro';
 import JsonLd from '../components/seo/json-ld.astro';
 import SeoHead from '../components/seo/seo-head.astro';
@@ -39,6 +40,7 @@ const fullTitle = title.includes('Beekle') ? title : `${title} | Beekle`;
     />
     <JsonLd type="organization" />
     <GA4 />
+    <Clarity />
     <slot name="head" />
   </head>
   <body class="font-sans">
