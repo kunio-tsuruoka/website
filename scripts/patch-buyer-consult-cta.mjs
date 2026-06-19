@@ -19,7 +19,12 @@ const DRY_RUN = !process.argv.includes('--apply');
 const PATCHES = [
   { slug: 'system-development-cost-breakdown', action: 'append', marker: 'ESTIMATE_CONSULT' },
   { slug: 'quote-comparison-checklist', action: 'append', marker: 'ESTIMATE_CONSULT' },
-  { slug: 'ai-development-cost-guide', action: 'replace', from: 'CONTACT_CTA', to: 'ESTIMATE_CONSULT' },
+  {
+    slug: 'ai-development-cost-guide',
+    action: 'replace',
+    from: 'CONTACT_CTA',
+    to: 'ESTIMATE_CONSULT',
+  },
   // 末尾のベタ書き汎用CTA（h3「Beekleにご相談ください」＋段落＋/contactリンク）を CDP特化に置換
   {
     slug: 'cdp-product-comparison',
@@ -43,13 +48,17 @@ for (const p of PATCHES) {
   console.log(`--- ${p.slug} (${p.action}: ${p.marker || `${p.from}→${p.to}`}) ---`);
   let cur;
   try {
-    cur = await client.get({ endpoint: 'columns', contentId: p.slug, queries: { fields: 'content' } });
+    cur = await client.get({
+      endpoint: 'columns',
+      contentId: p.slug,
+      queries: { fields: 'content' },
+    });
   } catch (e) {
     console.error(`  [NG] 取得失敗: ${e.message}`);
     errors.push(`${p.slug}: ${e.message}`);
     continue;
   }
-  let content = cur.content || '';
+  const content = cur.content || '';
   let next = content;
 
   if (p.action === 'append') {
@@ -94,9 +103,15 @@ for (const p of PATCHES) {
   if (!DRY_RUN) {
     try {
       await client.update({ endpoint: 'columns', contentId: p.slug, content: { content: next } });
-      const ver = await client.get({ endpoint: 'columns', contentId: p.slug, queries: { fields: 'content' } });
+      const ver = await client.get({
+        endpoint: 'columns',
+        contentId: p.slug,
+        queries: { fields: 'content' },
+      });
       const target = p.action === 'replace' ? p.to : p.marker;
-      console.log(`  [OK] PATCH完了 / 検証: {{${target}}} ${has(ver.content || '', target) ? '存在' : '★欠落'}`);
+      console.log(
+        `  [OK] PATCH完了 / 検証: {{${target}}} ${has(ver.content || '', target) ? '存在' : '★欠落'}`
+      );
     } catch (e) {
       console.error(`  [NG] PATCH失敗: ${e.message}`);
       errors.push(`${p.slug}: ${e.message}`);
