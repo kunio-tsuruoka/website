@@ -555,6 +555,48 @@ function buildZeroStartConsultCta(source: string, intent: string): string {
 </figure>`;
 }
 
+// AI検索が買い手を送り込む記事（見積・RFP・CDP比較・要件定義）向けの、意図別リード獲得CTA。
+// クエリ意図に文言を合わせ、ツールでなく相談（/contact）へ誘導する。
+type ConsultCta = { intent: string; title: string; body: string; label: string };
+
+const CONSULT_CTAS: Record<string, ConsultCta> = {
+  ESTIMATE_CONSULT: {
+    intent: 'estimate',
+    title: '開発費用の概算を無料で相談する',
+    body: '概算でも費用感を早く知りたい場合は、作りたいものの要件と規模感をお送りいただければ、費用レンジと内訳の考え方を無料でご返信します。見積書だけでは分かりにくい「どこにいくらかかるか」を、発注前に把握できます。',
+    label: '開発費用を相談する',
+  },
+  RFP_CONSULT: {
+    intent: 'rfp',
+    title: 'RFPの作成・見直しを相談する',
+    body: 'RFP（提案依頼書）の作成や見直しは、Beekleが代行した実績があります（製造業のDXプロジェクトで、補助金申請の要件としてRFP作成を代行）。RFPの書き方や外注先の選定でお困りなら、無料でご相談いただけます。',
+    label: 'RFP作成を相談する',
+  },
+  CDP_CONSULT: {
+    intent: 'cdp',
+    title: '自社に合うCDPを相談する',
+    body: 'どのCDPが自社に合うか、比較段階での疑問は無料でご相談いただけます。要件をお聞きしたうえで、既製CDP（Treasure Data・Salesforce CDP 等）と自社開発（BigQuery 等）の判断軸まで整理してお返しします。',
+    label: 'CDP選定を相談する',
+  },
+  REQ_CONSULT: {
+    intent: 'requirements',
+    title: '要件定義を一緒に詰める',
+    body: '要件定義の進め方やドキュメントの書き方で迷ったら、実際のプロジェクトに即して一緒に詰めるご相談も承っています。発注側の判断材料が揃うように伴走します。',
+    label: '要件定義を相談する',
+  },
+};
+
+function buildConsultCta(source: string, cta: ConsultCta): string {
+  const href = `/contact?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(cta.intent)}`;
+  return `<figure class="cv-card">
+  <figcaption class="cv-card-header cv-header-primary">${cta.title}</figcaption>
+  <div class="cv-card-body">
+    <p>${cta.body}</p>
+    <p style="text-align:center;margin-top:1.25rem;"><a href="${href}" data-cta-source="${source}" data-cta-id="contact-${cta.intent}">${cta.label}</a></p>
+  </div>
+</figure>`;
+}
+
 const EARS_GHERKIN_WORKFLOW = `<figure class="cv-whyhow">
   <figcaption class="cv-whyhow-title">ビジネスサイド → エンジニア → デモ／テストの流れ</figcaption>
   <div class="cv-whyhow-box cv-whyhow-why">
@@ -660,6 +702,14 @@ export function renderColumnVisuals(html: string, ctx?: ColumnVisualContext): st
     const bridgeMarkers: Array<[string, string]> = [['BRIDGE_CTA', 'bridge']];
     for (const [key, _intent] of bridgeMarkers) {
       const visual = buildBridgeCta(ctx.source);
+      const wrapped = new RegExp(`<p>\\s*\\{\\{${key}\\}\\}\\s*</p>`, 'g');
+      const bare = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+      result = result.replace(wrapped, visual).replace(bare, visual);
+    }
+
+    // 意図別の相談CTA（見積・RFP・CDP・要件定義）
+    for (const [key, cta] of Object.entries(CONSULT_CTAS)) {
+      const visual = buildConsultCta(ctx.source, cta);
       const wrapped = new RegExp(`<p>\\s*\\{\\{${key}\\}\\}\\s*</p>`, 'g');
       const bare = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
       result = result.replace(wrapped, visual).replace(bare, visual);
