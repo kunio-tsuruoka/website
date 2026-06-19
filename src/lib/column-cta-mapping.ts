@@ -44,6 +44,31 @@ const PROOFFIRST: CtaItem = {
   ctaId: 'prooffirst',
 };
 
+// 買い手意図カテゴリ向けのリード獲得CTA（ツールでなく相談・資料DLを主動線にする）
+const ESTIMATE_CONSULT: CtaItem = {
+  href: '/contact?intent=estimate',
+  label: '開発費用を相談する（無料）',
+  description:
+    '要件と規模感をお伝えいただければ、概算の費用レンジと内訳の考え方を無料でご返信します',
+  ctaId: 'consult-estimate',
+};
+
+const CDP_CONSULT: CtaItem = {
+  href: '/contact?intent=cdp',
+  label: 'CDP導入・選定を相談する',
+  description:
+    'Treasure Data・Salesforce CDP・BigQuery自社開発など、自社に合うCDPの選び方を無料でご相談いただけます',
+  ctaId: 'consult-cdp',
+};
+
+const DOWNLOAD_DECK: CtaItem = {
+  href: '/downloads/zero-start',
+  label: 'サービス資料を無料ダウンロード',
+  description:
+    'ゼロスタート開発（初期費用0円で動くプロトタイプ）のサービス資料を無料配布しています',
+  ctaId: 'download-zero-start',
+};
+
 function buildCta(primary: CtaItem, secondary?: CtaItem): CategoryCta {
   return {
     primary,
@@ -57,21 +82,22 @@ function buildCta(primary: CtaItem, secondary?: CtaItem): CategoryCta {
 
 const DEFAULT_CTA: CategoryCta = buildCta(PROOFFIRST);
 
+// キーは MicroCMS の実カテゴリ ID と一致させること。
+// 買い手意図が強いカテゴリ（estimate-concerns / cdp-development）は、AI検索が見積もり・
+// 費用・CDP比較の発注者を送り込む受け皿。主CTAをツールでなく相談・資料DL（リード獲得）にする。
 const MAPPING: Record<string, CategoryCta> = {
-  // プロジェクト管理: 業務洗い出し → スコープ整理の流れ
+  // プロジェクト管理: 業務洗い出し → スコープ整理（実務記事も混在するためツール主体のまま。
+  // 買い手ページは本文内の意図別相談CTAで個別対応する）
   'project-management': buildCta(FLOW_MAPPER, SCOPE_MANAGER),
-  // 見積もり懸念: スコープから概算 → ゼロスタート相談
-  'estimate-concerns': buildCta(SCOPE_MANAGER, STORY_BUILDER),
+  // 見積もりの不安: 純買い手カテゴリ。費用相談を主、資料DLを副に
+  'estimate-concerns': buildCta(ESTIMATE_CONSULT, DOWNLOAD_DECK),
   // コミュニケーション: ストーリー → スコープ整理
   communication: buildCta(STORY_BUILDER, SCOPE_MANAGER),
-  // 要件定義: ストーリー → スコープ
-  'requirements-definition': buildCta(STORY_BUILDER, SCOPE_MANAGER),
-  // 業務改善・DX: 業務フロー → ストーリー
-  'business-improvement': buildCta(FLOW_MAPPER, STORY_BUILDER),
   // AI受託: 業務フロー → スコープ
   'ai-development': buildCta(FLOW_MAPPER, SCOPE_MANAGER),
-  // CDP: 業務フロー → スコープ
-  cdp: buildCta(FLOW_MAPPER, SCOPE_MANAGER),
+  // CDP(顧客データ基盤): 買い手の比較・選定が中心。CDP相談を主、資料DLを副に
+  // （旧 'cdp' キーは実カテゴリ ID 'cdp-development' と不一致で死んでいた）
+  'cdp-development': buildCta(CDP_CONSULT, DOWNLOAD_DECK),
   // DX・AI導入: BPO見直し → 要件のたたき台
   dx: buildCta(FLOW_MAPPER, STORY_BUILDER),
 };
