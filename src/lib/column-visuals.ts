@@ -707,12 +707,22 @@ export function renderColumnVisuals(html: string, ctx?: ColumnVisualContext): st
       result = result.replace(wrapped, visual).replace(bare, visual);
     }
 
-    // 意図別の相談CTA（見積・RFP・CDP・要件定義）
+    // 意図別の相談CTA（見積・RFP・CDP・要件定義）。
+    // {{X_CONSULT}} は記事末用、{{X_CONSULT_MID}} は中盤用（計測用に intent へ -mid を付与）
     for (const [key, cta] of Object.entries(CONSULT_CTAS)) {
-      const visual = buildConsultCta(ctx.source, cta);
-      const wrapped = new RegExp(`<p>\\s*\\{\\{${key}\\}\\}\\s*</p>`, 'g');
-      const bare = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
-      result = result.replace(wrapped, visual).replace(bare, visual);
+      for (const [suffix, intentSuffix] of [
+        ['', ''],
+        ['_MID', '-mid'],
+      ]) {
+        const markerKey = `${key}${suffix}`;
+        const visual = buildConsultCta(ctx.source, {
+          ...cta,
+          intent: `${cta.intent}${intentSuffix}`,
+        });
+        const wrapped = new RegExp(`<p>\\s*\\{\\{${markerKey}\\}\\}\\s*</p>`, 'g');
+        const bare = new RegExp(`\\{\\{${markerKey}\\}\\}`, 'g');
+        result = result.replace(wrapped, visual).replace(bare, visual);
+      }
     }
   }
   return result;
