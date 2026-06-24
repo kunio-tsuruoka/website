@@ -10,7 +10,9 @@ const REQUEST_TIMEOUT_MS = 6000;
 
 export type HubSpotEnv = {
   HUBSPOT_ACCESS_TOKEN?: string;
-  // 既定の営業パイプライン / 初期ステージ。無料プランのデフォルトに合わせてある。
+  // 営業パイプライン / ステージ ID。未指定なら送らず、HubSpot のデフォルト
+  // パイプライン初期ステージに任せる（固定ラベルを送って 400 になるのを防ぐ）。
+  // 特定ステージに入れたい時だけ指定する。ID は GET /crm/v3/pipelines/deals で確認。
   HUBSPOT_DEAL_PIPELINE?: string;
   HUBSPOT_DEAL_STAGE?: string;
 };
@@ -117,10 +119,15 @@ async function createDeal(
 ): Promise<string> {
   const properties: Record<string, string> = {
     dealname: `Web問い合わせ: ${lead.name || lead.email}`,
-    pipeline: env.HUBSPOT_DEAL_PIPELINE || 'default',
-    dealstage: env.HUBSPOT_DEAL_STAGE || 'appointmentscheduled',
     description: buildDealDescription(lead),
   };
+  // pipeline / dealstage は env で明示された時だけ送る。
+  // 未指定で固定ラベル（旧: 'appointmentscheduled'）を送ると、ポータルが
+  // カスタムパイプライン（数値ステージID）の場合に存在しない値となり
+  // Deal 作成が 400 INVALID_OPTION になる。送らなければ HubSpot が
+  // デフォルトパイプラインの初期ステージへ自動配置する。
+  if (env.HUBSPOT_DEAL_PIPELINE) properties.pipeline = env.HUBSPOT_DEAL_PIPELINE;
+  if (env.HUBSPOT_DEAL_STAGE) properties.dealstage = env.HUBSPOT_DEAL_STAGE;
 
   const res = await hubspotFetch(token, '/crm/v3/objects/deals', 'POST', {
     properties,
