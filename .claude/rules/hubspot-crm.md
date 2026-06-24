@@ -2,6 +2,19 @@
 
 問い合わせ（`/api/contact`）を Slack 通知と並べて HubSpot CRM に自動登録する。営業の段階管理・履歴を HubSpot に寄せ、Slack は通知＋社内オペ（段階更新・タスク）に使う。後々の自作 ERP は HubSpot の CRM API / Webhook から経営数字を読む想定。
 
+## Slack 連携の重要な制約（2026-06-24 検証）
+
+- **「Slack から顧客に返信」はメール/フォームチャネルでは HubSpot 非対応**。Slack 返信が効くのは **ライブチャット / WhatsApp / Facebook Messenger** のみ（[HubSpot公式](https://knowledge.hubspot.com/integrations/how-do-i-use-the-slack-integration)）。Web フォーム経由のリードを Inbox に入れても Slack からは返信できない。
+- 今 Slack に届いている通知は **`/api/contact` の直 incoming webhook**（HubSpot 経由ではない）。HubSpot は CRM 登録のみで、Inbox 会話は作らないので HubSpot→Slack は流れない。
+- **決定: Slack双方向は「ライブチャット」で実現する**（ユーザー選択 2026-06-24）。サイトに HubSpot トラッキングコードを入れてチャットウィジェットを表示 → 会話が Inbox に入る → Inbox⇄Slack 連携 → Slack から返信が顧客に届く。フォーム + CRM 同期は並存。
+  - 実装: `src/components/analytics/hubspot-chat.astro`（Clarity と同じく本番ホスト `beekle.jp` のみ起動）。ローダーは **na2 リージョン**なので `https://js-na2.hs-scripts.com/246584394.js`（`js.hs-scripts.com` だと 307 で na2 へリダイレクト）。`layout.astro` head に組み込み済み。
+  - **コード設置だけではチャットは出ない**。HubSpot 側で chatflow を作成・公開し、対象URLにターゲティング＋Inbox接続が必要。さらに Inbox⇄Slack 連携（ユーザーマッピング、対象チャンネルに HubSpot アプリを招待）。
+  - 注: HubSpot トラッキングコードは Cookie を置く。`/privacy` に追記が必要（未対応）。
+
+## アカウント情報（2026-06-24 確認）
+
+- HubSpot ポータル **portalId 246584394**、リージョン **na2**（UI は `app-na2.hubspot.com`、トークンは `pat-na2-...`）。複数アカウントに所属していると `app.hubspot.com`(na1) を見て「レコードが無い」と誤認するので注意。Contact/Deal 直リンクは `https://app-na2.hubspot.com/contacts/246584394/record/0-1/<id>`（deal は `0-3`）。
+
 ## 実装
 
 - `src/lib/hubspot.ts`: `syncLeadToHubSpot(token, lead, env)`。raw fetch（依存ゼロ）、標準プロパティのみで HubSpot 側の事前カスタム設定不要。
