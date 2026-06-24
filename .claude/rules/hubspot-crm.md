@@ -18,19 +18,40 @@
 
 ## env（Cloudflare Pages secret / plain）
 
-- `HUBSPOT_ACCESS_TOKEN`（secret, 必須）— Private App トークン。未設定なら同期スキップ。
-- `HUBSPOT_DEAL_PIPELINE`（plain, optional）— 既定 `default`
-- `HUBSPOT_DEAL_STAGE`（plain, optional）— 既定 `appointmentscheduled`（無料プランのデフォルト営業パイプライン初期ステージ）
+- `HUBSPOT_ACCESS_TOKEN`（secret, 必須）— Service Key（または legacy Private App）トークン。未設定なら同期スキップ。
+- `HUBSPOT_DEAL_PIPELINE`（optional）— 既定 `default`
+- `HUBSPOT_DEAL_STAGE`（**実質必須**）— コード既定は `appointmentscheduled` だが、これは下記の本番ポータルには存在しない。
 
-`default` / `appointmentscheduled` は HubSpot 無料プランのデフォルト営業パイプラインの想定値。**実アカウントでパイプライン/ステージ ID が違うと Deal 作成が 400 になる**ので、トークン投入後に最初の1件で Deal が出来ているか確認し、違えば env で上書きする。ID は HubSpot の Settings → Objects → Deals → Pipelines、または `GET /crm/v3/pipelines/deals` で確認できる。
+### 本番ポータルの実測値（2026-06-24 検証済み, portalId=246584394）
+
+このアカウントの `default`（"Sales Pipeline"）はカスタム済みで、ステージが**数値ID**。`appointmentscheduled` というラベルIDは存在せず Deal 作成が 400（`INVALID_OPTION`）になる。実際のステージ:
+
+| order | stage ID | label |
+|---|---|---|
+| 0 | **3890223806** | Initial Consultation（= 新規問い合わせの入口。これを使う） |
+| 1 | 3890223807 | Prototype Creation |
+| 2 | 3890223808 | Prototype Review |
+| 3 | 3890223809 | Proposal & Negotiation |
+| 4 | closedwon | Closed Won |
+| 5 | closedlost | Closed Lost |
+
+→ `HUBSPOT_DEAL_PIPELINE=default` / `HUBSPOT_DEAL_STAGE=3890223806` を Cloudflare Pages（production + preview）と `.env` に設定済み。**コード既定のままだと Contact だけ作られ Deal は静かに 400 で落ちる**（`ok:true` なので気づきにくい）。
+
+ステージIDは `GET /crm/v3/pipelines/deals`（要 `crm.objects.deals.read` 等のスコープ。`bun run --env-file=.env` でトークンをロードして叩くのが手早い）か HubSpot の Settings → Objects → Deals → Pipelines で確認できる。パイプラインを編集すると ID が変わり得るので、400 が出たら再取得して env を更新する。
 
 ## セットアップ手順
 
 1. HubSpot **無料**アカウント作成（hubspot.com の「Get started free」。`Start free trial` の有料 Hub トライアルではない）
-2. Settings → Integrations → Private Apps → Create で Private App 作成。スコープ:
+2. **Service Key を発行する**（2026〜 推奨。旧「Private App」は legacy app 化し新規用途では非推奨）。
+   左サイドバー **Development → Keys → Service keys**（または Settings → Integrations → Service Keys）→ **Create service key** → 名前を付けて以下スコープを追加:
    - `crm.objects.contacts.read` / `crm.objects.contacts.write`
    - `crm.objects.deals.read` / `crm.objects.deals.write`
-3. 発行トークンを Cloudflare Pages に投入:
+
+   発行キーは `pat-na1-...` 形式で、Bearer トークンとしてそのまま `HUBSPOT_ACCESS_TOKEN` に入る（`src/lib/hubspot.ts` は `Authorization: Bearer ${token}` で叩くだけなのでコード変更不要）。Service Key の利点: 無停止ローテーション / 監査ログ / アカウントレベル（個人退職に影響されない）。
+   - **制約**: Service Key は **Webhook 非対応**。現状の push（Contact + Deal 作成）には影響しないが、下記「後々の ERP 連携」の Webhook 受信をやる時は project-based app（HubSpot CLI）か legacy private app が別途必要。
+   - 公式: https://developers.hubspot.com/blog/hubspot-service-keys-the-right-api-credential-for-data-integrations / https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/account-service-keys （2026-06 時点 public beta）
+   - 旧 Private App でも当面は動く（Settings → Integrations → Private Apps、legacy 表示）。既存トークンがあるならそのまま流用可。
+3. 発行トークン（Service Key）を Cloudflare Pages に投入:
    ```bash
    export CLOUDFLARE_API_TOKEN=$(cat .cloudflare/api-token)
    export CLOUDFLARE_ACCOUNT_ID=163fc8ca531cbe925ad7597ee0196f3a
