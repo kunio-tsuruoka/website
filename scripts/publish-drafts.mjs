@@ -76,7 +76,13 @@ function extractTitle(text) {
 
 /** カテゴリスラッグの正規化: '@/types/service' のテーブルから引く */
 const CATEGORY_FALLBACK = 'project-management';
-const VALID_CATEGORIES = ['estimate-concerns', 'project-management', 'communication'];
+const VALID_CATEGORIES = [
+  'estimate-concerns',
+  'project-management',
+  'communication',
+  'ai-development',
+  'cdp-development',
+];
 
 function resolveCategory(raw) {
   if (!raw) return CATEGORY_FALLBACK;
