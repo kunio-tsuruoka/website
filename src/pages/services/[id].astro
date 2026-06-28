@@ -6,6 +6,7 @@ import ServiceAdditionalSections from '@/components/services/service-additional-
 import ServiceBusinessFlow from '@/components/services/service-business-flow.astro';
 import ServiceCaseStudies from '@/components/services/service-case-studies.astro';
 import ServiceContactCta from '@/components/services/service-contact-cta.astro';
+import ServiceEngagementFlow from '@/components/services/service-engagement-flow.astro';
 import ServiceFaq from '@/components/services/service-faq.astro';
 import ServiceFeatures from '@/components/services/service-features.astro';
 import ServiceHero from '@/components/services/service-hero.astro';
@@ -89,6 +90,8 @@ const faqNumber =
     {service.additionalSections && service.additionalSections.length > 0 && (
       <ServiceAdditionalSections sections={service.additionalSections} />
     )}
+
+    {servicePageConfig && <ServiceEngagementFlow />}
 
     {service.id === 'ai-development' && (
       <Section variant="white" padding="lg" decoration="bars">
