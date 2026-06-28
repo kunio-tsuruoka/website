@@ -1,0 +1,90 @@
+---
+// AI受託開発の「発注の流れ」セクション（AI系サービスLP共通）
+// 不確実性の高いAI開発を、小さく検証してから実導入へ進める進め方を見せる。
+interface Step {
+  label: string;
+  title: string;
+  description: string;
+}
+
+const steps: Step[] = [
+  {
+    label: 'STEP 1',
+    title: 'ヒアリング',
+    description:
+      '解決したい業務課題と「何にAIを使いたいか」を整理します。効果が出そうか、どこから着手すべきかの当たりをここでつけます。費用はかからず、相談だけでも歓迎です。',
+  },
+  {
+    label: 'STEP 2',
+    title: 'NDAを結び、データで検証方針を決める',
+    description:
+      'AI開発は「やってみないと効果が読めない」不確実性の高い領域です。まずNDA（秘密保持契約）を締結して実データをお預かりし、本格的なPoCに進むか、簡易デモで素早く確かめるかを見極めます。',
+  },
+  {
+    label: 'STEP 3',
+    title: '準委任契約でPoC・開発・検証',
+    description:
+      '成果物を固定する請負ではなく、状況に合わせて柔軟に進められる準委任契約で契約します。PoCを実装し、評価設計で「現場で使えるか・効果が出るか」を測りながら、開発と検証を回します。',
+  },
+  {
+    label: 'STEP 4',
+    title: '効果が見込めれば実導入',
+    description:
+      'PoCで効果が確認できたら本番化し、現場で使われる状態まで伴走します。期待した効果が見込めなければ、ここで撤退も判断できます。PoC止まりや過剰投資を避けられるのが、この進め方の狙いです。',
+  },
+];
+
+const eyebrow = '発注の流れ';
+const title = '小さく試してから決める、AI開発の始め方';
+const lead =
+  'いきなり大きく作らず、検証で効果を見極めてから実装へ進みます。NDAを結んで実データで確かめ、準委任で柔軟にPoC・開発・検証を回し、効果が見込めた部分だけを実導入します。';
+const outcome =
+  '技術検証で終わらせず、効果が出る部分だけを実導入。失敗リスクを抑えて、AIを「使える業務改善」に変えます。';
+---
+
+<section class="relative overflow-hidden bg-gradient-to-br from-primary-50/40 to-white py-16 md:py-20">
+  <div class="absolute -right-20 top-10 h-56 w-56 rounded-full bg-primary-100/50 blur-3xl"></div>
+  <div class="absolute -left-16 bottom-10 h-48 w-48 rounded-full bg-primary-100/40 blur-3xl"></div>
+
+  <div class="container relative mx-auto px-6 lg:px-12">
+    <div class="mx-auto max-w-4xl">
+      <div class="max-w-3xl">
+        <p class="text-sm font-bold tracking-wide text-primary-500">{eyebrow}</p>
+        <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+          {title}
+        </h2>
+        <p class="mt-4 text-base leading-relaxed text-neutral-700 md:text-lg">{lead}</p>
+      </div>
+
+      <ol class="mt-10 space-y-4">
+        {steps.map((step, index) => (
+          <li class="relative flex gap-5">
+            <div class="flex flex-col items-center">
+              <span class:list={[
+                'flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-base font-bold text-white',
+                index === steps.length - 1 ? 'bg-primary-600' : 'bg-primary-500',
+              ]}>
+                {index + 1}
+              </span>
+              {index < steps.length - 1 && (
+                <span class="mt-1 w-px flex-1 bg-primary-200" aria-hidden="true"></span>
+              )}
+            </div>
+            <article class="mb-1 flex-1 rounded-3xl border border-primary-100 bg-white p-5 shadow-soft md:p-6">
+              <p class="text-xs font-bold tracking-wide text-primary-600">{step.label}</p>
+              <h3 class="mt-1 text-xl font-bold leading-snug text-accent-950">{step.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-neutral-700 md:text-base">{step.description}</p>
+            </article>
+          </li>
+        ))}
+      </ol>
+
+      <div class="mt-6 flex items-start gap-3 rounded-2xl bg-accent-950 p-4 text-white shadow-soft md:px-5">
+        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-300 text-sm font-bold text-accent-950">
+          ✓
+        </span>
+        <p class="text-sm font-bold leading-relaxed md:text-base">{outcome}</p>
+      </div>
+    </div>
+  </div>
+</section>
