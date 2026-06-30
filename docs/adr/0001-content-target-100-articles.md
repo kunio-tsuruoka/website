@@ -1,6 +1,6 @@
 # ADR 0001: コラム本数の目安を「100本」に置く
 
-- Status: Accepted
+- Status: Accepted（2026-07-01 に公開101本で本数目標は達成。以降の転換フェーズは ADR 0002 を参照）
 - Date: 2026-05-03
 - Deciders: kunio (Beekle)
 
