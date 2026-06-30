@@ -612,11 +612,9 @@ const reviewerId = column.category?.id ? categoryReviewerMap[column.category.id]
     margin-left: 0.375rem;
   }
 
-  /* 強調テキスト */
+  /* 強調テキスト: マーカー氾濫で強調が機能しなくなるため、太字＋濃色のみ（ハイライトは付けない） */
   .markdown-content :global(strong) {
-    @apply font-bold text-primary-700;
-    background: linear-gradient(180deg, transparent 60%, rgba(199, 210, 254, 0.4) 60%);
-    padding: 0 0.2em;
+    @apply font-bold text-gray-900;
   }
 
   .markdown-content :global(em) {
