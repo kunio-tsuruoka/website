@@ -1,5 +1,12 @@
 # HubSpot CRM 連携（問い合わせ → Contact + Deal 自動登録）
 
+> **【2026-07-01 撤去】HubSpot 連携はコードから外した（ユーザー判断「使っていない」）。**
+> - `src/lib/hubspot.ts`（`syncLeadToHubSpot`）を削除。`/api/contact` からも同期呼び出し・env 参照を除去。
+> - `layout.astro` から `hubspot-chat.astro`（トラッキング/チャットローダー）の読み込みを外した（本番で全訪問者に HubSpot Cookie を落としていたため）。**コンポーネントファイル自体は将来の再導入用に残置**。
+> - Cloudflare Pages の secret（`HUBSPOT_ACCESS_TOKEN` / `HUBSPOT_DEAL_*`）はコードが読まなくなったため無害だが、不要なら手動削除可。
+> - **プライバシーポリシー（`/privacy`）に HubSpot は記載しない**（読み込まない＝Cookie を落とさないため開示不要）。再導入するなら委託先テーブル＋Cookie 節への追記が必須。
+> 以下は再導入時の参照用に残す。
+
 問い合わせ（`/api/contact`）を Slack 通知と並べて HubSpot CRM に自動登録する。営業の段階管理・履歴を HubSpot に寄せ、Slack は通知＋社内オペ（段階更新・タスク）に使う。後々の自作 ERP は HubSpot の CRM API / Webhook から経営数字を読む想定。
 
 ## Slack 連携の重要な制約（2026-06-24 検証）

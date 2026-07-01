@@ -1,7 +1,6 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
 import { readSession } from '../../lib/flow-interview/session';
-import { syncLeadToHubSpot } from '../../lib/hubspot';
 import { verifyTurnstile } from '../../lib/turnstile';
 
 export const prerender = false;
@@ -79,11 +78,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             SLACK_WEBHOOK_URL?: string;
             TURNSTILE_SECRET_KEY?: string;
             RATE_LIMIT?: { get(key: string): Promise<string | null> };
-            HUBSPOT_ACCESS_TOKEN?: string;
-            HUBSPOT_DEAL_PIPELINE?: string;
-            HUBSPOT_DEAL_STAGE?: string;
           };
-          ctx?: { waitUntil?: (promise: Promise<unknown>) => void };
         };
       }
     ).runtime;
@@ -216,43 +211,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     };
 
     await postToSlack(webhookUrl, slackMessage);
-
-    // HubSpot CRM へベストエフォートで同期する。トークン未設定ならスキップ。
-    // HubSpot 側が落ちても問い合わせ（= Slack 通知）は成功させる。過去の
-    // SLACK_WEBHOOK_URL 単一障害点インシデントと同様、通知系を CRM に依存させない。
-    const hubspotToken = runtime?.env?.HUBSPOT_ACCESS_TOKEN;
-    if (hubspotToken) {
-      const syncTask = syncLeadToHubSpot(
-        hubspotToken,
-        {
-          email,
-          name,
-          company,
-          phone,
-          message,
-          typeLabel: TYPE_LABELS[typeStr] || typeStr,
-          source,
-          intent,
-          phase,
-          landingPage,
-          referrer,
-          utm: utmText,
-          clientId,
-        },
-        {
-          HUBSPOT_DEAL_PIPELINE: runtime?.env?.HUBSPOT_DEAL_PIPELINE,
-          HUBSPOT_DEAL_STAGE: runtime?.env?.HUBSPOT_DEAL_STAGE,
-        }
-      ).catch((err) => {
-        console.error('[contact] hubspot sync threw:', err instanceof Error ? err.message : err);
-      });
-
-      // レスポンスを遅らせないよう waitUntil でバックグラウンド実行。
-      // 無ければ（ローカル dev 等）応答前に await する。
-      const waitUntil = runtime?.ctx?.waitUntil;
-      if (waitUntil) waitUntil(syncTask);
-      else await syncTask;
-    }
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
