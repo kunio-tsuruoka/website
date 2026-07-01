@@ -31,6 +31,7 @@ const companyItems = [
   { label: '一問一答（よくある質問）', href: '/qa' },
   { label: 'ゼロスタート開発 資料DL', href: '/downloads/zero-start' },
   { label: '関連資料・資料ダウンロード', href: '/materials' },
+  { label: '開発会社・SIer様へ（協業）', href: '/partner' },
 ];
 
 const toolsItems = [

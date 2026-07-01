@@ -1,0 +1,401 @@
+---
+import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
+import Layout from '../layouts/layout.astro';
+
+const faqs = [
+  {
+    question: '協業の契約形態はどうなりますか。',
+    answer:
+      'ご要望に応じて、成果物ベースの請負と、月単位でチームが参画する準委任のどちらでも対応します。難航案件の火消しやスコープが動きやすいフェーズでは準委任、仕様が固まった実装フェーズでは請負、といった使い分けもできます。まずは範囲と体制のすり合わせから始めます。',
+  },
+  {
+    question: '秘密保持や再委託先への情報開示は問題ありませんか。',
+    answer:
+      'NDA（秘密保持契約）を締結したうえでプロジェクトを進めます。元請けの先にいるエンドクライアントの情報も、開示範囲を事前に取り決めて扱います。実績を対外的に紹介する際も、社名・製品名を出さない匿名化を前提としています。',
+  },
+  {
+    question: 'どこまでの技術領域を任せられますか。',
+    answer:
+      'フロントエンド・バックエンド・インフラまで一貫して対応できます。生成AI・RAG・GraphRAG の実装、マイクロサービス構成、仕様駆動開発（EARS・Gherkin）まで社内で手がけており、実装リソースの補完だけでなく設計から任せることも可能です。',
+  },
+  {
+    question: '短期での立ち上げや、停滞した案件の引き継ぎもできますか。',
+    answer:
+      '対応した実績があります。先行ベンダーが数ヶ月かけて完成に至らなかった案件を引き継ぎ、フロント・バック・インフラまで一貫で再構築して短期間で完成させたケースや、新規事業のプラットフォームを一貫体制で短期立ち上げしたケースがあります。前段の停滞理由まで断定はしませんが、一貫体制だからこそ速く立て直せる強みがあります。',
+  },
+  {
+    question: '最初の相談では何を伝えればよいですか。',
+    answer:
+      '案件の概要、逼迫している領域（実装リソース・特定技術の知見・立て直しなど）、想定スケジュール感をお送りいただければ、参画の形と進め方をご提案します。要件が固まっていない段階でも問題ありません。',
+  },
+];
+---
+
+<Layout
+  title="AI受託開発・RAGの開発パートナー ｜ 開発会社・SIer向け | Beekle"
+  description="開発会社・SIer・コンサルのテック側向けの協業窓口。フロント・バック・インフラまで一貫、生成AI・RAG・GraphRAG の実装力と、難航案件の火消しスピードで開発リソースを補完します。協業・再委託のご相談を無料で承ります。"
+>
+  <JsonLd
+    slot="head"
+    type="service"
+    data={{
+      serviceName: '開発パートナー・協業（開発会社・SIer向け）',
+      serviceDescription:
+        'フロントエンド・バックエンド・インフラまで一貫した開発支援。生成AI・RAG・GraphRAG の実装、難航案件の引き継ぎ、短期立ち上げに対応し、開発会社・SIer・コンサルの実装リソースを補完します。',
+      url: 'https://beekle.jp/partner',
+      serviceType: 'システム開発・生成AI開発の協業・再委託',
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '開発パートナー（開発会社・SIer向け）', url: '/partner' },
+      ],
+    }}
+  />
+  <JsonLd slot="head" type="faq" data={{ faqs }} />
+  <Header client:load />
+
+  <main class="bg-white">
+    {/* ============ HERO ============ */}
+    <section class="relative pt-24 md:pt-28 pb-14 md:pb-20 overflow-hidden">
+      <div class="absolute inset-0 -z-10 pointer-events-none">
+        <div class="absolute top-8 right-0 w-[55%] h-[420px] bg-gradient-to-br from-primary-500/15 via-primary-400/10 to-transparent rounded-[60%] blur-2xl"></div>
+        <div class="absolute -bottom-10 left-16 w-32 h-32 bg-secondary-500/10 rounded-full"></div>
+        <svg class="absolute top-32 left-4 w-20 h-20 text-primary-500/20" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
+          <circle cx="10" cy="10" r="2"/><circle cx="30" cy="10" r="2"/><circle cx="50" cy="10" r="2"/>
+          <circle cx="10" cy="30" r="2"/><circle cx="30" cy="30" r="2"/><circle cx="50" cy="30" r="2"/>
+          <circle cx="10" cy="50" r="2"/><circle cx="30" cy="50" r="2"/><circle cx="50" cy="50" r="2"/>
+        </svg>
+      </div>
+
+      <div class="container mx-auto px-6 lg:px-12">
+        <div class="max-w-3xl">
+          <span class="inline-block px-4 py-1.5 bg-primary-500/10 text-primary-500 rounded-full text-xs md:text-sm font-medium mb-5">
+            開発会社・SIer・コンサルの皆さまへ
+          </span>
+
+          <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold leading-[1.25] text-accent-950 mb-5 tracking-tight">
+            実装まで一貫で任せられる<br class="hidden md:block"/>
+            <span class="text-primary-500">開発パートナー</span>
+          </h1>
+
+          <p class="text-sm md:text-lg text-neutral-700 leading-relaxed mb-8 max-w-2xl">
+            フロントエンド・バックエンド・インフラまで一気通貫。生成AI・RAG・GraphRAG の実装力と、難航案件の火消しスピードで、貴社の開発リソースを補完します。元請けの先にいるエンドクライアントまで見据えた、匿名前提の協業窓口です。
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a
+              href="/contact?source=partner-hero&intent=partner"
+              data-cta-source="partner-hero"
+              data-cta-id="contact-partner"
+              class="inline-flex items-center justify-center gap-2 px-6 py-3.5 min-h-[44px] bg-primary-500 hover:bg-primary-600 text-white rounded-full text-sm md:text-base font-semibold shadow-soft hover:shadow-medium transition-all"
+            >
+              開発パートナーとして相談する
+              <span class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+              </span>
+            </a>
+            <a
+              href="#works"
+              class="inline-flex items-center justify-center gap-2 px-6 py-3.5 min-h-[44px] bg-white border border-primary-500/30 text-primary-500 hover:bg-primary-50 rounded-full text-sm md:text-base font-semibold transition-colors"
+            >
+              協業事例を見る
+            </a>
+          </div>
+
+          <ul class="flex flex-wrap gap-x-5 gap-y-2 mt-8 text-xs md:text-sm text-neutral-600">
+            {['フロント〜インフラ一貫', '生成AI・RAG・GraphRAG', '難航案件の火消し', 'NDA・匿名前提'].map((t) => (
+              <li class="inline-flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-secondary-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+                </svg>
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    {/* ============ 01 こんな時に ============ */}
+    <section class="relative bg-gradient-to-br from-primary-50/40 via-white to-primary-50/20 py-16 md:py-20 overflow-hidden">
+      <div class="absolute top-10 right-10 w-32 h-32 bg-primary-100/30 rounded-full blur-3xl"></div>
+      <div class="container mx-auto px-6 lg:px-12 relative">
+        <div class="flex items-baseline gap-4 mb-3 flex-wrap">
+          <span class="font-Poppins text-3xl md:text-4xl font-bold text-primary-500">01</span>
+          <span class="text-xs md:text-sm font-semibold tracking-wider uppercase text-primary-500">When</span>
+          <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-accent-950 md:ml-4">こんな時に、お声がけください</h2>
+        </div>
+        <p class="text-sm text-neutral-600 mb-10 md:mb-12 md:ml-24">元請け・プライムとして案件を持つ皆さまの、実装フェーズを支えます。</p>
+
+        <div class="grid md:grid-cols-2 gap-4 md:gap-5 max-w-5xl mx-auto">
+          {[
+            {
+              title: '生成AI・RAG案件を受注したが、実装リソースが足りない',
+              desc: '生成AI・RAG・GraphRAG の案件を受注したものの、社内に実装できる体制が薄い。要件は取れているのに手が回らない、という状況を実装側から補完します。',
+            },
+            {
+              title: '先行ベンダーが停滞し、火消しが必要',
+              desc: '進行中の案件が完成に至らず止まっている。引き継いでフロント・バック・インフラまで一貫で立て直した実績があります。',
+            },
+            {
+              title: 'フロントからインフラまで一括で任せたい',
+              desc: '領域ごとに別々の会社に振ると調整コストが膨らみます。設計から実装・インフラまで一貫で任せられる相手を探している場合に向きます。',
+            },
+            {
+              title: 'PoCから本番化まで通せるパートナーが欲しい',
+              desc: 'PoCで止まらず本番運用まで見据えた設計・実装ができる。仕様駆動開発でエンドクライアントの認識合わせまで支援します。',
+            },
+          ].map((c) => (
+            <div class="bg-white rounded-2xl p-5 md:p-6 shadow-soft hover:shadow-medium transition-shadow border border-neutral-100">
+              <div class="flex items-start gap-3">
+                <span class="w-9 h-9 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 flex-shrink-0 mt-0.5">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+                  </svg>
+                </span>
+                <div>
+                  <h3 class="text-sm md:text-base font-bold text-accent-950 mb-1.5 leading-snug">{c.title}</h3>
+                  <p class="text-xs md:text-sm text-neutral-700 leading-relaxed">{c.desc}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* ============ 02 Beekleが組める理由 ============ */}
+    <section class="relative bg-white py-16 md:py-20 overflow-hidden">
+      <div class="absolute top-10 left-10 w-40 h-40 bg-primary-100/30 rounded-full blur-3xl"></div>
+      <div class="container mx-auto px-6 lg:px-12 relative">
+        <div class="flex items-baseline gap-4 mb-10 md:mb-14 flex-wrap">
+          <span class="font-Poppins text-3xl md:text-4xl font-bold text-primary-500">02</span>
+          <span class="text-xs md:text-sm font-semibold tracking-wider uppercase text-primary-500">Why Beekle</span>
+          <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-accent-950 md:ml-4">Beekleと組める理由</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 md:gap-6 max-w-5xl mx-auto">
+          {[
+            {
+              title: 'フルスタック一貫',
+              desc: 'フロントエンド・バックエンド・インフラを分断せず一貫で対応します。領域間の調整ロスや責任の押し付け合いが起きにくく、貴社の窓口を1本化できます。',
+              iconBg: 'bg-primary-100', iconColor: 'text-primary-500',
+              icon: 'M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3',
+            },
+            {
+              title: 'スピード',
+              desc: '停滞した案件を引き継ぎ、フロント・バック・インフラまで再構築して短期間で完成させた実績があります。新規事業のプラットフォームを一貫体制で短期立ち上げしたケースもあります。',
+              iconBg: 'bg-secondary-100', iconColor: 'text-secondary-600',
+              icon: 'M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z',
+            },
+            {
+              title: '生成AI・RAG・GraphRAGの実装力',
+              desc: 'ベクトルRAGだけでなく、複数経路検索とRRF統合、回答後のEvidence Verification、Neo4jによるナレッジグラフを用いたGraphRAGまで実装します。実データ量で通常のRAGに精度・スケールの限界が出る領域に対応します。',
+              iconBg: 'bg-primary-100', iconColor: 'text-primary-500',
+              icon: 'M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.091 3.091ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z',
+            },
+            {
+              title: '仕様駆動開発',
+              desc: 'EARS・Gherkin を用いた仕様駆動開発で、要件を曖昧さなく言語化します。エンドクライアントとの認識合わせや、リグレッションを継続検出するテスト資産づくりまで支援できます。',
+              iconBg: 'bg-highlight-100', iconColor: 'text-highlight-600',
+              icon: 'M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25Z',
+            },
+          ].map((c) => (
+            <div class="bg-white rounded-2xl p-5 md:p-6 shadow-soft hover:shadow-medium transition-all hover:-translate-y-1 border border-neutral-100">
+              <div class={`w-12 h-12 md:w-14 md:h-14 rounded-xl ${c.iconBg} flex items-center justify-center ${c.iconColor} mb-4`}>
+                <svg class="w-6 h-6 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d={c.icon}/>
+                </svg>
+              </div>
+              <h3 class="text-base md:text-lg font-bold text-primary-500 mb-2">{c.title}</h3>
+              <p class="text-xs md:text-sm text-neutral-700 leading-relaxed">{c.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* ============ 03 実績（RTB） ============ */}
+    <section id="works" class="relative bg-gradient-to-br from-secondary-50/30 via-white to-primary-50/20 py-16 md:py-20 overflow-hidden scroll-mt-24">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-secondary-100/20 rounded-full blur-3xl"></div>
+      <div class="container mx-auto px-6 lg:px-12 relative">
+        <div class="flex items-baseline gap-4 mb-3 flex-wrap">
+          <span class="font-Poppins text-3xl md:text-4xl font-bold text-primary-500">03</span>
+          <span class="text-xs md:text-sm font-semibold tracking-wider uppercase text-primary-500">Works</span>
+          <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-accent-950 md:ml-4">協業・再委託の実績</h2>
+        </div>
+        <p class="text-sm text-neutral-600 mb-10 md:mb-12 md:ml-24">守秘の都合上、社名・製品名は伏せています。検証可能な事実（期間・対応範囲）のみを記載しています。</p>
+
+        <div class="grid md:grid-cols-2 gap-4 md:gap-6 max-w-5xl mx-auto">
+          {[
+            {
+              tag: '大手企業のDXプロジェクト',
+              sub: 'メンタルヘルス記録アプリ',
+              tagColor: 'bg-primary-500',
+              points: [
+                '先行他社ベンダーが約3ヶ月かけて完成に至らず停滞',
+                'Beekleが引き継ぎ、約3週間で完成',
+                'バックエンド・フロントエンド・インフラまで一貫で再構築',
+              ],
+              note: '前段の停滞理由は不明のため断定しません。一貫体制だからこそ速く立て直せた、という点が私たちの提供価値です。',
+            },
+            {
+              tag: '大手商社の新規事業',
+              sub: 'インフルエンサーマッチングプラットフォーム',
+              tagColor: 'bg-secondary-500',
+              points: [
+                '約1週間でフロント・バック・インフラまで一貫して立ち上げ',
+                '新規事業の初速を出すスピード重視の構築',
+              ],
+              note: '期間は当社での実測に基づく申告値です。',
+            },
+            {
+              tag: 'カスタマーサポートのAIナレッジ検索',
+              sub: 'Hybrid GraphRAG',
+              tagColor: 'bg-primary-500',
+              points: [
+                '複数経路検索とRRF統合、回答後のEvidence Verification',
+                'Neo4jによるナレッジグラフ、マイクロサービス構成',
+                '実データ量では通常のベクトルRAGに精度・スケールの限界があり、GraphRAGを採用',
+              ],
+              note: 'デモ開発（PoC）フェーズの取り組みです。確定した開発期間の数値は出していません。',
+            },
+            {
+              tag: '製造業のDXプロジェクト',
+              sub: 'RFP代行から開発・SEOまで一貫',
+              tagColor: 'bg-secondary-500',
+              points: [
+                '補助金申請要件のRFP代行から着手',
+                '要件定義・デザイン・業務（BPO）整理・バックエンド・フロントエンド・SEOまで一貫',
+                '約1年にわたり伴走',
+              ],
+              note: '期間は当社での申告値です。補助金の採択可否など未確認の成果は記載していません。',
+            },
+          ].map((c) => (
+            <div class="bg-white rounded-2xl p-5 md:p-6 shadow-soft hover:shadow-medium transition-shadow border border-neutral-100 flex flex-col">
+              <div class="mb-4">
+                <span class={`inline-block ${c.tagColor} text-white text-xs font-bold rounded-full px-3 py-1`}>{c.tag}</span>
+                <p class="text-sm md:text-base font-bold text-accent-950 mt-2">{c.sub}</p>
+              </div>
+              <ul class="space-y-2 mb-4">
+                {c.points.map((p) => (
+                  <li class="flex items-start gap-2 text-xs md:text-sm text-neutral-700 leading-relaxed">
+                    <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary-500 flex-shrink-0"></span>
+                    {p}
+                  </li>
+                ))}
+              </ul>
+              <p class="mt-auto text-[11px] md:text-xs text-neutral-500 leading-relaxed border-t border-neutral-100 pt-3">{c.note}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* ============ 04 協業の進め方 ============ */}
+    <section class="relative bg-white py-16 md:py-20 overflow-hidden">
+      <div class="container mx-auto px-6 lg:px-12 relative">
+        <div class="flex items-baseline gap-4 mb-10 md:mb-14 flex-wrap">
+          <span class="font-Poppins text-3xl md:text-4xl font-bold text-primary-500">04</span>
+          <span class="text-xs md:text-sm font-semibold tracking-wider uppercase text-primary-500">Flow</span>
+          <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-accent-950 md:ml-4">協業の進め方</h2>
+        </div>
+
+        <div class="relative max-w-5xl mx-auto">
+          <div class="hidden md:block absolute top-10 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-primary-500/30 via-primary-500/40 to-primary-500/30"></div>
+          <div class="grid md:grid-cols-3 gap-4 md:gap-6 relative">
+            {[
+              {
+                n: 1, title: 'ご相談・ヒアリング',
+                desc: '案件の概要、逼迫している領域、スケジュール感をお聞きします。要件が固まっていない段階でも問題ありません。',
+              },
+              {
+                n: 2, title: 'NDA・範囲のすり合わせ',
+                desc: 'NDAを締結し、対応範囲・体制・エンドクライアントへの情報開示の取り決めを行います。',
+              },
+              {
+                n: 3, title: '準委任などで参画',
+                desc: '準委任または請負で開発に参画します。火消しやスコープが動くフェーズは準委任、仕様が固まった実装は請負など柔軟に選べます。',
+              },
+            ].map((s) => (
+              <div class="bg-white rounded-2xl p-5 md:p-6 shadow-soft border border-primary-500/10 text-center relative">
+                <div class="relative w-16 h-16 md:w-20 md:h-20 mx-auto mb-4">
+                  <div class="absolute inset-0 bg-primary-500 rounded-full"></div>
+                  <div class="absolute inset-0 flex items-center justify-center text-white font-Poppins text-2xl md:text-3xl font-bold">{s.n}</div>
+                </div>
+                <h3 class="text-base md:text-lg font-bold text-accent-950 mb-2">{s.title}</h3>
+                <p class="text-xs md:text-sm text-neutral-700 leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ============ 05 FAQ ============ */}
+    <section class="relative bg-gradient-to-br from-white via-primary-50/20 to-white py-16 md:py-20">
+      <div class="container mx-auto px-6 lg:px-12 relative max-w-4xl">
+        <div class="flex items-baseline gap-4 mb-8 flex-wrap">
+          <span class="font-Poppins text-3xl md:text-4xl font-bold text-primary-500">05</span>
+          <span class="text-xs md:text-sm font-semibold tracking-wider uppercase text-primary-500">FAQ</span>
+          <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-accent-950 md:ml-2">よくあるご質問</h2>
+        </div>
+
+        <div class="space-y-3">
+          {faqs.map((f) => (
+            <details class="group bg-primary-50/60 rounded-xl px-5 py-4 hover:bg-primary-50 transition-colors">
+              <summary class="flex items-center justify-between gap-4 cursor-pointer list-none min-h-[44px]">
+                <span class="flex items-center gap-3 text-sm md:text-base font-semibold text-accent-950">
+                  <span class="w-2 h-2 rounded-full bg-primary-500 flex-shrink-0"></span>
+                  {f.question}
+                </span>
+                <span class="flex-shrink-0 w-7 h-7 bg-white rounded-full flex items-center justify-center text-primary-500 font-bold text-base group-open:rotate-45 transition-transform">+</span>
+              </summary>
+              <p class="text-xs md:text-sm text-neutral-700 leading-relaxed mt-3 pl-5">{f.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* ============ 末尾CTA ============ */}
+    <section class="relative bg-accent-950 py-16 md:py-24 overflow-hidden">
+      <div class="absolute -top-16 -right-16 w-64 h-64 bg-primary-500/20 rounded-full blur-3xl" aria-hidden="true"></div>
+      <div class="absolute -bottom-20 -left-16 w-72 h-72 bg-secondary-500/15 rounded-full blur-3xl" aria-hidden="true"></div>
+      <div class="container mx-auto px-6 lg:px-12 relative text-center">
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 leading-snug">
+          実装リソースの補完も、難航案件の立て直しも。
+        </h2>
+        <p class="text-sm md:text-base text-white/80 max-w-2xl mx-auto mb-9 leading-relaxed">
+          開発会社・SIer・コンサルの皆さまからの協業・再委託のご相談を無料で承ります。案件の概要と逼迫している領域をお送りいただければ、参画の形と進め方をご提案します。
+        </p>
+        <a
+          href="/contact?source=partner-footer&intent=partner"
+          data-cta-source="partner-footer"
+          data-cta-id="contact-partner"
+          class="inline-flex items-center justify-center gap-2 px-8 py-4 min-h-[44px] bg-primary-500 hover:bg-primary-400 text-white rounded-full text-sm md:text-base font-bold shadow-strong transition-colors"
+        >
+          開発パートナーとして相談する
+          <span class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </span>
+        </a>
+        <p class="text-white/50 mt-5 text-[11px] md:text-xs">お問い合わせ後、1〜2営業日以内にご連絡いたします。</p>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  details > summary::-webkit-details-marker { display: none; }
+</style>
