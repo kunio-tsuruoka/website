@@ -31,6 +31,14 @@ function sanitizeParam(raw: string | null): string {
   return PROVENANCE_PATTERN.test(raw) ? raw : '';
 }
 
+// 流入 intent → 相談種別 select の初期値。該当なしは空（既定 consultation のまま）。
+function intentToType(intent: string): string {
+  if (intent.startsWith('partner')) return 'partner';
+  if (intent.startsWith('ai-development')) return 'ai';
+  if (intent.startsWith('cdp')) return 'ai';
+  return '';
+}
+
 const ContactForm = ({ sitekey }: ContactFormProps) => {
   const turnstileEnabled = !!sitekey;
   const {
@@ -43,15 +51,20 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
   const [provenance, setProvenance] = useState<Provenance>({ source: '', intent: '', phase: '' });
   // ツール（話すだけ発注準備 等）からの引き継ぎ内容を message に反映する
   const [message, setMessage] = useState('');
+  // 流入元の intent から相談種別を初期選択し、入力の手間を減らす（Slack 通知の分類精度も上がる）
+  const [inquiryType, setInquiryType] = useState('consultation');
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const sp = new URLSearchParams(window.location.search);
+    const intent = sanitizeParam(sp.get('intent'));
     setProvenance({
       source: sanitizeParam(sp.get('source')),
-      intent: sanitizeParam(sp.get('intent')),
+      intent,
       phase: sanitizeParam(sp.get('phase')),
     });
+    const mappedType = intentToType(intent);
+    if (mappedType) setInquiryType(mappedType);
     const prefill = consumeContactPrefill();
     if (prefill) setMessage(prefill);
   }, []);
@@ -155,7 +168,8 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
             id="type"
             name="type"
             required
-            defaultValue="consultation"
+            value={inquiryType}
+            onChange={(e) => setInquiryType(e.target.value)}
             className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
           >
             <option value="consultation">まずは相談したい</option>
