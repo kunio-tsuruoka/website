@@ -165,7 +165,7 @@ function deriveHighlights(parsed) {
     sessionsTotal: total,
     botSessions,
     botPct: total && botSessions != null ? +((botSessions / total) * 100).toFixed(1) : null,
-    scrollDepthAvg: sectionMap(s['Scroll depth'])['Average'] ?? null,
+    scrollDepthAvg: sectionMap(s['Scroll depth']).Average ?? null,
     deadClicks: insights['Dead click'] ?? null,
     rageClicks: insights['Rage clicks'] ?? null,
     quickBackClicks: insights['Quick back click'] ?? null,
