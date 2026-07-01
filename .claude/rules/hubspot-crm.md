@@ -3,7 +3,15 @@
 > **【2026-07-01 撤去】HubSpot 連携はコードから外した（ユーザー判断「使っていない」）。**
 > - `src/lib/hubspot.ts`（`syncLeadToHubSpot`）を削除。`/api/contact` からも同期呼び出し・env 参照を除去。
 > - `layout.astro` から `hubspot-chat.astro`（トラッキング/チャットローダー）の読み込みを外した（本番で全訪問者に HubSpot Cookie を落としていたため）。**コンポーネントファイル自体は将来の再導入用に残置**。
-> - Cloudflare Pages の secret（`HUBSPOT_ACCESS_TOKEN` / `HUBSPOT_DEAL_*`）はコードが読まなくなったため無害だが、不要なら手動削除可。
+> - Cloudflare Pages の secret（`HUBSPOT_ACCESS_TOKEN` / `HUBSPOT_DEAL_PIPELINE` / `HUBSPOT_DEAL_STAGE`）は **production・preview の計6件を削除済み（2026-07-01）**。
+>   - production: `bunx wrangler pages secret delete <KEY> --project-name website`（wrangler 4.41、非対話環境ではフォールバックで自動 yes。確認パイプ不要）。
+>   - **preview: `wrangler pages secret delete` は `--env` 非対応**（`Unknown arguments: env` になる）。Cloudflare API を直叩きして env var を null 化して消す:
+>     ```bash
+>     curl -X PATCH "https://api.cloudflare.com/client/v4/accounts/163fc8ca531cbe925ad7597ee0196f3a/pages/projects/website" \
+>       -H "Authorization: Bearer $(cat .cloudflare/api-token)" -H "Content-Type: application/json" \
+>       --data '{"deployment_configs":{"preview":{"env_vars":{"HUBSPOT_ACCESS_TOKEN":null,"HUBSPOT_DEAL_PIPELINE":null,"HUBSPOT_DEAL_STAGE":null}}}}'
+>     ```
+>   - 確認は `wrangler pages secret list --project-name website [--env preview]`（list は `--env` を受ける）。
 > - **プライバシーポリシー（`/privacy`）に HubSpot は記載しない**（読み込まない＝Cookie を落とさないため開示不要）。再導入するなら委託先テーブル＋Cookie 節への追記が必須。
 > 以下は再導入時の参照用に残す。
 
