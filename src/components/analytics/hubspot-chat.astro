@@ -1,0 +1,24 @@
+---
+// HubSpot トラッキングコード（ライブチャット ウィジェット）。
+// 訪問者のチャットを HubSpot Conversations Inbox に会話スレッドとして取り込み、
+// Inbox⇄Slack 連携で「Slack から顧客返信」を成立させるための土台。
+// （Web フォーム経由のリードは Slack からの返信が HubSpot 非対応のため、双方向に
+//  したい接点はチャットに寄せる。フォーム + /api/contact の CRM 同期はそのまま並存。）
+//
+// 本番ドメイン (beekle.jp / www.beekle.jp) でのみ起動し、dev・preview(*.pages.dev) では
+// チャットも HubSpot Cookie も出さない（Clarity と同じ方針）。
+// Portal 246584394 / リージョン na2 → ローダーは js-na2.hs-scripts.com。
+const HUBSPOT_PORTAL_ID = '246584394';
+---
+
+<script is:inline define:vars={{ HUBSPOT_PORTAL_ID }}>
+  if (/(^|\.)beekle\.jp$/.test(location.hostname)) {
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.id = 'hs-script-loader';
+    s.async = true;
+    s.defer = true;
+    s.src = 'https://js-na2.hs-scripts.com/' + HUBSPOT_PORTAL_ID + '.js';
+    document.head.appendChild(s);
+  }
+</script>
