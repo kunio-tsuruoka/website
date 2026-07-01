@@ -21,7 +21,12 @@
     "test:ci": "vitest run",
     "test:ui": "vitest --ui",
     "embed:columns": "node scripts/build-column-embeddings.mjs",
-    "embed:columns:dry": "node scripts/build-column-embeddings.mjs --dry"
+    "embed:columns:dry": "node scripts/build-column-embeddings.mjs --dry",
+    "data:refresh": "node scripts/data/snapshot-all.mjs",
+    "data:gsc": "node scripts/data/snapshot-gsc.mjs",
+    "data:ga4": "node scripts/data/snapshot-ga4.mjs",
+    "data:clarity": "node scripts/data/import-clarity-citations.mjs",
+    "data:clarity-dash": "node scripts/data/import-clarity-dashboard.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",
