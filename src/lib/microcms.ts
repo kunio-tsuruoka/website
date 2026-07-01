@@ -80,20 +80,34 @@ export async function getCategories(env?: MicroCMSEnv) {
 // コラム一覧を取得（カテゴリーでフィルタリング可能）
 export async function getColumns(categoryId?: string, env?: MicroCMSEnv) {
   try {
-    const queries: { orders: string; filters?: string; limit: number } = {
-      orders: '-publishedAt',
-      limit: 100,
-    };
+    // MicroCMS は 1 リクエスト最大 100 件。総件数が 100 を超えると取りこぼすため、
+    // totalCount に達するまで offset でページネーションして全件取得する。
+    const limit = 100;
+    const client = getClient(env);
+    const filters = categoryId ? `category[equals]${categoryId}` : undefined;
+    const all: Column[] = [];
+    let offset = 0;
 
-    if (categoryId) {
-      queries.filters = `category[equals]${categoryId}`;
+    while (true) {
+      const queries: { orders: string; limit: number; offset: number; filters?: string } = {
+        orders: '-publishedAt',
+        limit,
+        offset,
+      };
+      if (filters) {
+        queries.filters = filters;
+      }
+
+      const data = await client.get({ endpoint: 'columns', queries });
+      all.push(...(data.contents as Column[]));
+
+      if (all.length >= data.totalCount || data.contents.length === 0) {
+        break;
+      }
+      offset += limit;
     }
 
-    const data = await getClient(env).get({
-      endpoint: 'columns',
-      queries,
-    });
-    return data.contents as Column[];
+    return all;
   } catch (error) {
     console.error('Failed to fetch columns:', error);
     return [];

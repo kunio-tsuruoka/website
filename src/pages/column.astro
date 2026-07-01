@@ -30,7 +30,9 @@ try {
 }
 
 // カテゴリーごとに記事を収集
+// knowledge カテゴリは専用の /knowledge ページで扱うため、この一覧には出さない
 const columnCategories = categories
+  .filter((category) => category.id !== 'knowledge')
   .map((category) => {
     const categoryColumns = allColumns.filter((column) => column.category?.id === category.id);
 
