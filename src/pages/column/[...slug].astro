@@ -116,6 +116,19 @@ htmlContent = htmlContent.replace(
   }
 );
 
+// リード見出しラベルのチップ化: <p>/<li> 冒頭の短い <strong>ラベル</strong>：（例「質問」「ふつうのAI」
+// 「つないだAI」「得すること」）を検出し、色付きチップにして対比を一目で読めるようにする。
+// class は post-process で付与するため MicroCMS サニタイザの影響を受けない（本文に class を書く必要なし）。
+htmlContent = htmlContent.replace(
+  /(<(?:p|li)[^>]*>)\s*<strong>([^<]{1,16})<\/strong>(：|:)/g,
+  (_m, open, label, colon) => {
+    let cls = 'lead-label';
+    if (/ふつう/.test(label)) cls += ' lead-label-muted';
+    else if (/つないだ|得すること/.test(label)) cls += ' lead-label-good';
+    return `${open}<strong class="${cls}">${label}</strong><span class="lead-colon">${colon}</span>`;
+  }
+);
+
 // HTML直書きの<h2>/<h3>にもidを付与し目次データを収集（リッチエディタHTML対応）
 htmlContent = htmlContent.replace(/<h([23])>([^<]+)<\/h[23]>/g, (_match, level, text) => {
   const depth = Number(level);
@@ -612,11 +625,35 @@ const reviewerId = column.category?.id ? categoryReviewerMap[column.category.id]
     margin-left: 0.375rem;
   }
 
-  /* 強調テキスト */
+  /* 強調テキスト: マーカー氾濫で強調が機能しなくなるため、太字＋濃色のみ（ハイライトは付けない） */
   .markdown-content :global(strong) {
-    @apply font-bold text-primary-700;
-    background: linear-gradient(180deg, transparent 60%, rgba(199, 210, 254, 0.4) 60%);
-    padding: 0 0.2em;
+    @apply font-bold text-gray-900;
+  }
+
+  /* リード見出しラベル（質問／ふつうのAI／つないだAI／得すること 等）を色付きチップ化して対比を明確にする。
+     class は [...slug].astro の post-process で付与される（本文HTMLには存在しない）。 */
+  .markdown-content :global(strong.lead-label) {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 0.8em;
+    line-height: 1.4;
+    padding: 0.05em 0.6em;
+    border-radius: 9999px;
+    background: #EEF1FF;
+    color: #3D4DB7;
+    vertical-align: 0.08em;
+  }
+  .markdown-content :global(strong.lead-label.lead-label-muted) {
+    background: #F1F3F5;
+    color: #6B7280;
+  }
+  .markdown-content :global(strong.lead-label.lead-label-good) {
+    background: #E7F6EE;
+    color: #047857;
+  }
+  .markdown-content :global(span.lead-colon) {
+    color: #9CA3AF;
+    margin: 0 0.15em;
   }
 
   .markdown-content :global(em) {

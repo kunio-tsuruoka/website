@@ -16,6 +16,8 @@ interface CaseStudy {
   challenge: string;
   solution: string;
   results: string[];
+  /** 技術スタック・インフラ構成（任意）。`ラベル: 内容` 形式の文字列を推奨 */
+  techStack?: string[];
 }
 
 interface Feature {
