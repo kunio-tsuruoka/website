@@ -28,6 +28,7 @@ notebooklm-490304-57f96072832e.json
 .cloudflare/
 *.api-token
 .dev.vars
+.mcp.json
 
 # local marketing research / drafts
 docs/marketing/
