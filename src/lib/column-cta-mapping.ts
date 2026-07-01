@@ -6,8 +6,11 @@ export type CtaItem = {
 };
 
 export type CategoryCta = {
+  /** 記事末セクションの見出し（相談喚起） */
+  heading: string;
+  /** 主動線: 常に問い合わせ（/contact）などリード獲得アクションにする */
   primary: CtaItem;
-  /** primary とは別の関連ツール (記事末で並べて出すかどうかは描画側の判断) */
+  /** 副動線: 資料DL／ゼロスタートLP のみ（任意）。ツールは使わない */
   secondary?: CtaItem;
   /** 後方互換: 古いコードが直接 primaryHref などを参照していた場合のフォールバック */
   primaryHref: string;
@@ -16,35 +19,52 @@ export type CategoryCta = {
   primaryCtaId: string;
 };
 
-const FLOW_MAPPER: CtaItem = {
-  href: '/tools/flow-mapper',
-  label: '業務フローを描いてみる',
-  description: '現状（As-Is）と改善後（To-Be）を可視化して改善点を発見できます',
-  ctaId: 'tool-flow-mapper',
-};
-
-const SCOPE_MANAGER: CtaItem = {
-  href: '/tools/scope-manager',
-  label: 'スコープから概算してみる',
-  description: '要件を3軸で評価して「作る／後回し／作らない」を整理できます',
-  ctaId: 'tool-scope-manager',
-};
-
-const STORY_BUILDER: CtaItem = {
-  href: '/tools/story-builder',
-  label: 'ユーザーストーリーを整理する',
-  description: '誰が・何を・なぜ使うかを構造化して認識ズレを防げます',
-  ctaId: 'tool-story-builder',
-};
-
+// ---- 副動線（LP・資料DL のみ。ツールは問い合わせに繋がらないため使わない） ----
 const PROOFFIRST: CtaItem = {
   href: '/prooffirst',
   label: 'ゼロスタートを詳しく見る',
-  description: '初期費用0円で動くプロトタイプを体験できます',
+  description: '初期費用0円で動くプロトタイプから試せる「ゼロスタート開発」の詳細も見られます',
   ctaId: 'prooffirst',
 };
 
-// 買い手意図カテゴリ向けのリード獲得CTA（ツールでなく相談・資料DLを主動線にする）
+const DOWNLOAD_DECK: CtaItem = {
+  href: '/downloads/zero-start',
+  label: 'サービス資料を無料ダウンロード',
+  description:
+    'ゼロスタート開発（初期費用0円で動くプロトタイプ）のサービス資料も無料配布しています',
+  ctaId: 'download-zero-start',
+};
+
+// ---- 主動線（すべて /contact へのリード獲得）。intent はカテゴリ別に計測用で分ける ----
+const AI_DEV_CONSULT: CtaItem = {
+  href: '/contact?intent=ai-development',
+  label: 'AI・RAG開発を相談する（無料）',
+  description:
+    '生成AI・RAG・ナレッジグラフの構築を、要件整理から本番化の判断まで無料でご相談いただけます',
+  ctaId: 'consult-ai-development',
+};
+
+const PROJECT_CONSULT: CtaItem = {
+  href: '/contact?intent=project',
+  label: 'プロジェクトの進め方を相談する（無料）',
+  description: '要件定義から開発・運用まで、進め方や体制のご相談を無料で承ります',
+  ctaId: 'consult-project',
+};
+
+const COMM_CONSULT: CtaItem = {
+  href: '/contact?intent=communication',
+  label: '要件・認識合わせを相談する（無料）',
+  description: '「何を作れば成功か」の整理や、発注側と開発側の認識合わせを無料でご相談いただけます',
+  ctaId: 'consult-communication',
+};
+
+const DX_CONSULT: CtaItem = {
+  href: '/contact?intent=dx',
+  label: 'DX・AI導入を相談する（無料）',
+  description: '業務の棚卸しからAI・システム導入の進め方まで、発注前のご相談を無料で承ります',
+  ctaId: 'consult-dx',
+};
+
 const ESTIMATE_CONSULT: CtaItem = {
   href: '/contact?intent=estimate',
   label: '開発費用を相談する（無料）',
@@ -55,22 +75,47 @@ const ESTIMATE_CONSULT: CtaItem = {
 
 const CDP_CONSULT: CtaItem = {
   href: '/contact?intent=cdp',
-  label: 'CDP導入・選定を相談する',
+  label: 'CDP導入・選定を相談する（無料）',
   description:
     'Treasure Data・Salesforce CDP・BigQuery自社開発など、自社に合うCDPの選び方を無料でご相談いただけます',
   ctaId: 'consult-cdp',
 };
 
-const DOWNLOAD_DECK: CtaItem = {
-  href: '/downloads/zero-start',
-  label: 'サービス資料を無料ダウンロード',
-  description:
-    'ゼロスタート開発（初期費用0円で動くプロトタイプ）のサービス資料を無料配布しています',
-  ctaId: 'download-zero-start',
+const GENERAL_CONSULT: CtaItem = {
+  href: '/contact?intent=general',
+  label: 'Beekleに相談する（無料）',
+  description: '企画・要件定義・開発・運用まで、発注側の判断材料が揃うように無料で伴走します',
+  ctaId: 'consult-general',
 };
 
-function buildCta(primary: CtaItem, secondary?: CtaItem): CategoryCta {
+const REQ_CONSULT: CtaItem = {
+  href: '/contact?intent=requirements',
+  label: '要件定義を相談する（無料）',
+  description:
+    '要件定義の進め方やドキュメントの書き方を、実際のプロジェクトに即して一緒に整理します',
+  ctaId: 'consult-requirements',
+};
+
+const RFP_CONSULT: CtaItem = {
+  href: '/contact?intent=rfp',
+  label: 'RFP作成・見直しを相談する（無料）',
+  description:
+    'RFP（提案依頼書）の作成・見直しは代行実績があります。書き方や発注先の選定を無料でご相談いただけます',
+  ctaId: 'consult-rfp',
+};
+
+// 同業（開発会社・SIer・コンサルのテック側）向け。技術記事を「実装力の見極め」で読むB層の受け皿。
+const PARTNER_CONSULT: CtaItem = {
+  href: '/contact?intent=partner',
+  label: '開発会社・SIer様の協業相談',
+  description:
+    '開発リソースの逼迫・難航案件の立て直し・AI活用開発の知見をお探しの開発会社／SIer様のご相談も承ります',
+  ctaId: 'consult-partner',
+};
+
+function buildCta(heading: string, primary: CtaItem, secondary?: CtaItem): CategoryCta {
   return {
+    heading,
     primary,
     secondary,
     primaryHref: primary.href,
@@ -80,29 +125,73 @@ function buildCta(primary: CtaItem, secondary?: CtaItem): CategoryCta {
   };
 }
 
-const DEFAULT_CTA: CategoryCta = buildCta(PROOFFIRST);
+const DEFAULT_CTA: CategoryCta = buildCta(
+  'この内容について、Beekleに相談してみませんか？',
+  GENERAL_CONSULT,
+  PROOFFIRST
+);
 
 // キーは MicroCMS の実カテゴリ ID と一致させること。
-// 買い手意図が強いカテゴリ（estimate-concerns / cdp-development）は、AI検索が見積もり・
-// 費用・CDP比較の発注者を送り込む受け皿。主CTAをツールでなく相談・資料DL（リード獲得）にする。
+// 方針（2026-07-01）: 記事末の主CTAは常に「相談」= リード獲得。
+// 副動線は資料DL／ゼロスタートLP のみ。ツール（flow-mapper 等）は問い合わせに繋がらないため出さない
+// （ユーザー指摘 2026-07-01 / content-strategy-goals）。
 const MAPPING: Record<string, CategoryCta> = {
-  // プロジェクト管理: 業務洗い出し → スコープ整理（実務記事も混在するためツール主体のまま。
-  // 買い手ページは本文内の意図別相談CTAで個別対応する）
-  'project-management': buildCta(FLOW_MAPPER, SCOPE_MANAGER),
-  // 見積もりの不安: 純買い手カテゴリ。費用相談を主、資料DLを副に
-  'estimate-concerns': buildCta(ESTIMATE_CONSULT, DOWNLOAD_DECK),
-  // コミュニケーション: ストーリー → スコープ整理
-  communication: buildCta(STORY_BUILDER, SCOPE_MANAGER),
-  // AI受託: 業務フロー → スコープ
-  'ai-development': buildCta(FLOW_MAPPER, SCOPE_MANAGER),
-  // CDP(顧客データ基盤): 買い手の比較・選定が中心。CDP相談を主、資料DLを副に
-  // （旧 'cdp' キーは実カテゴリ ID 'cdp-development' と不一致で死んでいた）
-  'cdp-development': buildCta(CDP_CONSULT, DOWNLOAD_DECK),
-  // DX・AI導入: BPO見直し → 要件のたたき台
-  dx: buildCta(FLOW_MAPPER, STORY_BUILDER),
+  'project-management': buildCta('プロジェクトの進め方、Beekleに相談しませんか？', PROJECT_CONSULT),
+  'estimate-concerns': buildCta(
+    '開発費用のこと、Beekleに相談しませんか？',
+    ESTIMATE_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  communication: buildCta('要件・認識合わせ、Beekleに相談しませんか？', COMM_CONSULT),
+  // 技術記事は買い手(A)＋同業(B)が読む。主=発注者向け相談、副=同業向け協業相談で両方を拾う。
+  'ai-development': buildCta(
+    'AI・RAG開発、Beekleに相談しませんか？',
+    AI_DEV_CONSULT,
+    PARTNER_CONSULT
+  ),
+  knowledge: buildCta('この技術、Beekleに相談しませんか？', GENERAL_CONSULT, PARTNER_CONSULT),
+  'cdp-development': buildCta(
+    'CDP導入・選定、Beekleに相談しませんか？',
+    CDP_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  dx: buildCta('DX・AI導入、Beekleに相談しませんか？', DX_CONSULT),
 };
 
-export function getCategoryCta(categoryId: string | undefined): CategoryCta {
+// 記事スラッグ単位の上書き。カテゴリより優先。
+// AI検索が買い手を送り込む高インテント記事（Clarity AI Citations 上位）は、カテゴリの汎用CTAでなく
+// クエリ意図に合った相談＋資料DLにする。project-management に入っている要件定義/RFP系が主対象。
+const SLUG_CTA: Record<string, CategoryCta> = {
+  'requirements-definition-template': buildCta(
+    'この要件定義、Beekleと一緒に詰めませんか？',
+    REQ_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'requirements-definition-complete-guide': buildCta(
+    '要件定義、Beekleに相談しませんか？',
+    REQ_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'requirements-definition-process': buildCta(
+    '要件定義の進め方、Beekleに相談しませんか？',
+    REQ_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'requirements-vs-requests': buildCta(
+    '要件定義、Beekleに相談しませんか？',
+    REQ_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'how-to-write-rfp': buildCta('RFP作成、Beekleに相談しませんか？', RFP_CONSULT, DOWNLOAD_DECK),
+  'ai-development-cost-guide': buildCta(
+    '開発費用のこと、Beekleに相談しませんか？',
+    ESTIMATE_CONSULT,
+    PARTNER_CONSULT
+  ),
+};
+
+export function getCategoryCta(categoryId: string | undefined, slug?: string): CategoryCta {
+  if (slug && SLUG_CTA[slug]) return SLUG_CTA[slug];
   if (!categoryId) return DEFAULT_CTA;
   return MAPPING[categoryId] ?? DEFAULT_CTA;
 }

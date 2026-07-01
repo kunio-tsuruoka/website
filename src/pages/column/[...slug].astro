@@ -231,10 +231,14 @@ const siteUrl = 'https://beekle.jp';
 const sectionPath = isKnowledge ? 'knowledge' : 'column';
 const articleUrl = `${siteUrl}/${sectionPath}/${columnId}`;
 
-// CV: カテゴリ別の主CTA + 共通の副CTA(/contact)
-const categoryCta = getCategoryCta(column.category?.id);
+// CV: カテゴリ別の主CTA（相談／資料DL）+ 副CTA（ツール等の自己解決導線）
+const categoryCta = getCategoryCta(column.category?.id, columnId);
 const ctaSource = `column-${columnId}`;
-const subContactHref = `/contact?source=${encodeURIComponent(ctaSource)}&intent=pre-tool`;
+// 計測・アトリビューション用に source を各CTAのhrefに付与する
+const withSource = (href: string) =>
+  `${href}${href.includes('?') ? '&' : '?'}source=${encodeURIComponent(ctaSource)}`;
+const primaryCtaHref = withSource(categoryCta.primary.href);
+const secondaryCtaHref = categoryCta.secondary ? withSource(categoryCta.secondary.href) : undefined;
 const reviewerId = column.category?.id ? categoryReviewerMap[column.category.id] : undefined;
 ---
 
@@ -484,18 +488,18 @@ const reviewerId = column.category?.id ? categoryReviewerMap[column.category.id]
       </div>
     </section>
 
-    {/* CTA Section: 主動線(関連ツール体験) + 副動線(相談) */}
+    {/* CTA Section: 主動線(相談) + 副動線(資料DL・ゼロスタートLP)。ツールは出さない */}
     <section class="py-20 bg-primary-500">
       <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center">
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
-          この知識を実践してみませんか？
+          {categoryCta.heading}
         </h2>
         <p class="text-xl text-white/90 mb-10">
           {categoryCta.primaryDescription}。
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a
-            href={categoryCta.primary.href}
+            href={primaryCtaHref}
             data-cta-source={ctaSource}
             data-cta-id={categoryCta.primary.ctaId}
             class="column-cta-primary inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl"
@@ -505,9 +509,9 @@ const reviewerId = column.category?.id ? categoryReviewerMap[column.category.id]
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </a>
-          {categoryCta.secondary && (
+          {categoryCta.secondary && secondaryCtaHref && (
             <a
-              href={categoryCta.secondary.href}
+              href={secondaryCtaHref}
               data-cta-source={ctaSource}
               data-cta-id={categoryCta.secondary.ctaId}
               class="column-cta-secondary inline-flex items-center justify-center px-8 py-5 text-lg font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
@@ -518,21 +522,9 @@ const reviewerId = column.category?.id ? categoryReviewerMap[column.category.id]
         </div>
         {categoryCta.secondary && (
           <p class="text-sm text-white/70 mt-3">
-            次の工程で使うツール: {categoryCta.secondary.description}
+            {categoryCta.secondary.description}
           </p>
         )}
-        <p class="text-sm text-white/80 mt-8">
-          いきなり試すのが不安な方は
-          <a
-            href={subContactHref}
-            data-cta-source={ctaSource}
-            data-cta-id="contact-pre-tool"
-            class="column-cta-sub underline decoration-white/60 hover:decoration-white font-medium ml-1 inline-block py-2"
-          >
-            先に相談する
-          </a>
-          こともできます。
-        </p>
       </div>
     </section>
 
@@ -916,6 +908,42 @@ const reviewerId = column.category?.id ? categoryReviewerMap[column.category.id]
   .markdown-content :global(a.cv-cta-button:hover) {
     @apply shadow-xl;
     transform: translateY(-2px);
+  }
+
+  /* CTAカード全体をクリック可能にする（Dead click 対策 2026-07-01）。
+     カード全体が <a class="cv-card cv-card-cta">。見出し・本文どこを押してもCTAへ飛ぶ。
+     内側の label は <span class="cv-cta-button"> の疑似ボタン（ネストアンカー回避）。 */
+  .markdown-content :global(a.cv-card-cta) {
+    @apply block no-underline;
+    color: inherit;
+    cursor: pointer;
+    border-bottom: none;
+    transition: all 0.3s ease;
+  }
+  .markdown-content :global(a.cv-card-cta)::after {
+    content: none;
+  }
+  .markdown-content :global(a.cv-card-cta:hover) {
+    @apply shadow-xl;
+    transform: translateY(-2px);
+  }
+  .markdown-content :global(a.cv-card-cta .cv-card-header) {
+    @apply block;
+  }
+  .markdown-content :global(a.cv-card-cta .cv-card-body) {
+    @apply block p-5;
+  }
+  .markdown-content :global(a.cv-card-cta .cv-cta-lead) {
+    @apply block text-gray-700;
+  }
+  .markdown-content :global(a.cv-card-cta .cv-cta-button) {
+    @apply inline-flex items-center bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-full no-underline;
+    margin-top: 1.25rem;
+    padding: 12px 24px;
+  }
+  .markdown-content :global(a.cv-card-cta .cv-cta-button)::after {
+    content: '→';
+    margin-left: 0.5rem;
   }
 
   /* ====================================================================== */

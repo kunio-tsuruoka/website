@@ -522,37 +522,59 @@ function buildBridgeCta(source: string): string {
 </figure>`;
 }
 
+// 単一リンクのCTAカード。カード全体を <a> にして「箱のどこを押してもCTAに飛ぶ」ようにする。
+// 従来は色付きカードの中の小さなテキストリンクだけがクリック可能で、見出し・本文を押しても
+// 無反応（Clarity計測で Dead click 20% の主因）だった。内側リンクは <span> ボタンにして
+// ネストアンカーを避ける（2026-07-01, CVR改善 P1）。
+function buildCtaCard(opts: {
+  href: string;
+  source: string;
+  ctaId: string;
+  title: string;
+  body: string;
+  label: string;
+}): string {
+  const { href, source, ctaId, title, body, label } = opts;
+  return `<a class="cv-card cv-card-cta" href="${href}" data-cta-source="${source}" data-cta-id="${ctaId}">
+  <span class="cv-card-header cv-header-primary">${title}</span>
+  <span class="cv-card-body">
+    <span class="cv-cta-lead">${body}</span>
+    <span class="cv-cta-button">${label}</span>
+  </span>
+</a>`;
+}
+
 function buildContactCta(source: string, intent: string): string {
-  const href = `/contact?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(intent)}`;
-  return `<figure class="cv-card">
-  <figcaption class="cv-card-header cv-header-primary">Beekleにご相談ください</figcaption>
-  <div class="cv-card-body">
-    <p>Beekleでは、生成AI／CDP／業務システムの企画・要件定義・開発・運用までワンストップで支援しています。「何を作れば成功か」の整理、検証フェーズの設計、本番化判断まで、発注側の判断材料が揃うように伴走します。費用感の概算だけでも歓迎です。</p>
-    <p style="text-align:center;margin-top:1.25rem;"><a href="${href}" data-cta-source="${source}" data-cta-id="contact-${intent}">お問い合わせはこちら</a></p>
-  </div>
-</figure>`;
+  return buildCtaCard({
+    href: `/contact?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(intent)}`,
+    source,
+    ctaId: `contact-${intent}`,
+    title: 'Beekleにご相談ください',
+    body: 'Beekleでは、生成AI／CDP／業務システムの企画・要件定義・開発・運用までワンストップで支援しています。「何を作れば成功か」の整理、検証フェーズの設計、本番化判断まで、発注側の判断材料が揃うように伴走します。費用感の概算だけでも歓迎です。',
+    label: 'お問い合わせはこちら',
+  });
 }
 
 function buildZeroStartCta(source: string, intent: string): string {
-  const href = `/downloads/zero-start?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(intent)}`;
-  return `<figure class="cv-card">
-  <figcaption class="cv-card-header cv-header-primary">初期費用0円のMVP開発・PoC開発・プロトタイプ開発を発注前に試せる</figcaption>
-  <div class="cv-card-body">
-    <p>Beekleの「ゼロスタート開発」は、初期費用0円で動くプロトタイプを体験してから本契約を判断できるMVP開発・PoC開発・プロトタイプ開発のサービスです。見積書とPowerPointの提案だけで判断するのではなく、実際に動くものを触って「現場で使えるか」「投資に見合うか」を確認したうえで契約に進めます。仕組み・対象企業・進行プロセス・実例ベースの導入ステップをまとめたサービス資料を無料配布しています。</p>
-    <p style="text-align:center;margin-top:1.25rem;"><a href="${href}" data-cta-source="${source}" data-cta-id="zero-start-${intent}">サービス資料を無料ダウンロード</a></p>
-  </div>
-</figure>`;
+  return buildCtaCard({
+    href: `/downloads/zero-start?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(intent)}`,
+    source,
+    ctaId: `zero-start-${intent}`,
+    title: '初期費用0円のMVP開発・PoC開発・プロトタイプ開発を発注前に試せる',
+    body: 'Beekleの「ゼロスタート開発」は、初期費用0円で動くプロトタイプを体験してから本契約を判断できるMVP開発・PoC開発・プロトタイプ開発のサービスです。見積書とPowerPointの提案だけで判断するのではなく、実際に動くものを触って「現場で使えるか」「投資に見合うか」を確認したうえで契約に進めます。仕組み・対象企業・進行プロセス・実例ベースの導入ステップをまとめたサービス資料を無料配布しています。',
+    label: 'サービス資料を無料ダウンロード',
+  });
 }
 
 function buildZeroStartConsultCta(source: string, intent: string): string {
-  const href = `/contact?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(intent)}`;
-  return `<figure class="cv-card">
-  <figcaption class="cv-card-header cv-header-primary">まずは小さく始めてみませんか？</figcaption>
-  <div class="cv-card-body">
-    <p>Beekleのゼロスタート（MVP開発・PoC開発・プロトタイプ開発）なら、最短1〜2週間を目安に（規模により変動）動くプロトタイプを作り、「本当に業務で使えるか」を実際に触って確認してから本格開発に進めます。AI導入の第一歩として、まずはお気軽にご相談ください。</p>
-    <p style="text-align:center;margin-top:1.25rem;"><a href="${href}" data-cta-source="${source}" data-cta-id="zero-start-${intent}">ゼロスタートについて相談する</a></p>
-  </div>
-</figure>`;
+  return buildCtaCard({
+    href: `/contact?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(intent)}`,
+    source,
+    ctaId: `zero-start-${intent}`,
+    title: 'まずは小さく始めてみませんか？',
+    body: 'Beekleのゼロスタート（MVP開発・PoC開発・プロトタイプ開発）なら、最短1〜2週間を目安に（規模により変動）動くプロトタイプを作り、「本当に業務で使えるか」を実際に触って確認してから本格開発に進めます。AI導入の第一歩として、まずはお気軽にご相談ください。',
+    label: 'ゼロスタートについて相談する',
+  });
 }
 
 // AI検索が買い手を送り込む記事（見積・RFP・CDP比較・要件定義）向けの、意図別リード獲得CTA。
@@ -594,14 +616,14 @@ const CONSULT_CTAS: Record<string, ConsultCta> = {
 };
 
 function buildConsultCta(source: string, cta: ConsultCta): string {
-  const href = `/contact?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(cta.intent)}`;
-  return `<figure class="cv-card">
-  <figcaption class="cv-card-header cv-header-primary">${cta.title}</figcaption>
-  <div class="cv-card-body">
-    <p>${cta.body}</p>
-    <p style="text-align:center;margin-top:1.25rem;"><a href="${href}" data-cta-source="${source}" data-cta-id="contact-${cta.intent}">${cta.label}</a></p>
-  </div>
-</figure>`;
+  return buildCtaCard({
+    href: `/contact?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(cta.intent)}`,
+    source,
+    ctaId: `contact-${cta.intent}`,
+    title: cta.title,
+    body: cta.body,
+    label: cta.label,
+  });
 }
 
 const EARS_GHERKIN_WORKFLOW = `<figure class="cv-whyhow">
