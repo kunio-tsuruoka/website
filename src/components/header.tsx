@@ -179,7 +179,7 @@ export function Header() {
       className={`fixed w-full bg-white/90 backdrop-blur-sm shadow-sm z-50 ${isOpen ? 'min-h-screen' : 'h-auto'}`}
     >
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" className="flex-shrink-0 flex items-center space-x-2">
+        <a href="/" className="flex-shrink-0 flex items-center space-x-2 min-h-[44px]">
           <img src="/logo.png" alt="logo" className="h-9 w-auto" />
         </a>
 
