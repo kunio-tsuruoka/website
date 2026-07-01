@@ -3,6 +3,7 @@
 import Clarity from '../components/analytics/clarity.astro';
 import GA4 from '../components/analytics/ga4.astro';
 import HubSpotChat from '../components/analytics/hubspot-chat.astro';
+import Footer from '../components/footer.astro';
 import JsonLd from '../components/seo/json-ld.astro';
 import SeoHead from '../components/seo/seo-head.astro';
 
@@ -47,6 +48,7 @@ const fullTitle = title.includes('Beekle') ? title : `${title} | Beekle`;
   </head>
   <body class="font-sans">
     <slot />
+    <Footer />
     <script>
       import { initEngagementTracking, trackCtaClick } from '@/lib/analytics';
       import { captureFirstTouch } from '@/lib/attribution';
