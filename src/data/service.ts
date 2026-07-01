@@ -683,6 +683,12 @@ export const services: ServiceDetail[] = [
         title: '業務システムに生成AIを組み込むときの設計上の勘所｜情シス・発注担当者の視点',
         description: '本番システムにLLMを組み込む際のアーキテクチャ・運用設計の論点。',
       },
+      {
+        slug: 'knowledge-graph-rag-business',
+        title: 'ナレッジグラフは発注者に何の得があるか｜RAGだけのAIが答えられない問いと、その解決',
+        description:
+          'RAG単体では答えられない「つなぐ・数える・抜けを探す・根拠を示す」問いと、Beekleの進め方を発注者目線で解説。',
+      },
     ],
   },
   {
@@ -861,6 +867,12 @@ export const services: ServiceDetail[] = [
         slug: 'ai-development-cost-guide',
         title: '生成AI受託開発の費用相場｜PoCから本番運用までの内訳と見積もりの読み方',
         description: 'PoC・本番化・運用フェーズごとの費用内訳と、見積もり比較で見るべきポイント。',
+      },
+      {
+        slug: 'knowledge-graph-rag-business',
+        title: 'ナレッジグラフは発注者に何の得があるか｜RAGだけのAIが答えられない問いと、その解決',
+        description:
+          'RAG単体では答えられない「つなぐ・数える・抜けを探す・根拠を示す」問いと、Beekleの進め方を発注者目線で解説。',
       },
     ],
   },
@@ -1073,6 +1085,12 @@ export const services: ServiceDetail[] = [
         slug: 'llm-api-system-design',
         title: '業務システムに生成AIを組み込むときの設計上の勘所｜情シス・発注担当者の視点',
         description: '本番システムにLLMを組み込む際のアーキテクチャ・運用設計の論点。',
+      },
+      {
+        slug: 'knowledge-graph-rag-business',
+        title: 'ナレッジグラフは発注者に何の得があるか｜RAGだけのAIが答えられない問いと、その解決',
+        description:
+          'RAG単体では答えられない「つなぐ・数える・抜けを探す・根拠を示す」問いと、Beekleの進め方を発注者目線で解説。',
       },
     ],
   },
