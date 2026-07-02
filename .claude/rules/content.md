@@ -28,3 +28,31 @@
 - scan-ai-tells.mjs は `fields: 'id,content,description'` で両方を連結して点検する（修正済み）。
 - 是正PATCHも content と description の両方に適用する。
 検証は本番HTMLを `curl | grep -o '——' | wc -l` で0を確認（source PATCH後、Cloudflareキャッシュで数分ラグあり得る）。
+
+# コラムのカテゴリ精査基準: 技術語だけで判定せず「想定読者＋実装主題」で分ける
+
+/column（発注者向け）と /knowledge（実装者向け技術）の振り分けは、タイトルの技術語(RAG/GraphRAG/BigQuery/EARS等)だけで機械判定しない。中身で判定する。
+
+## knowledge（実装者/エンジニア向け）に置く条件
+- 技術語密度が高い（本文に Neo4j/Cypher/embedding/チャンク/RRF/実装 等が多数）
+- 「〜とは/仕組み/実装/落とし穴」が主題
+- 発注者向けの判断材料（発注時チェックリスト・費用の見方・体制）が無い
+- 例（2026-07現在の knowledge）: ears-requirements-syntax-guide, gherkin-bdd-introduction, ears-gherkin-workflow, bigquery-mcp-integration, graphrag-knowledge-search（2026-07-01移動）, graphrag-data-extraction（2026-07-02ユーザー移動）, **ai-knowledge-chatbot-accuracy（2026-07-02移動。見出しがチャンク分割/リランキング/クエリ拡張/評価データセットと実装主題そのもの、技術語:発注者語=8:2）**
+
+## 買い手カテゴリ(ai-development/cdp-development等)に残す条件
+- 「発注検討者/情シス・経営層の視点」「発注前に押さえる」「発注時に確認すべきN点」等のフレーム
+- 事例・費用感・判断軸が中心（技術語が出ても発注者教育が主目的）
+- 例: knowledge-graph-rag-business(発注者に何の得), ai-rag-accuracy-graphrag(発注時5チェック有), llm-api-system-design(情シス視点), mcp-business-data-integration(発注前に押さえる), bigquery-explained/pricing(発注検討)
+
+## 実務
+- カテゴリ変更は `client.update({endpoint:'columns',contentId,content:{category:'knowledge'}})`（単数文字列、microcms.md準拠）。URL(/column/<slug>)は不変、内部リンクも維持。MicroCMS変更なので本番SSRに即反映（デプロイ不要）。
+- 移動すると column.astro からは外れ /knowledge に出る（getColumns('knowledge')）。
+- 2026-07-01: ユーザー指摘「graphragとか精査いる」でgraphrag-knowledge-searchを移動。ai-rag-accuracy-graphragは発注チェック有で保留（次点候補）。関連: [[project_azone_separation_idea]]。
+- 判定に迷ったら「技術語(Neo4j/チャンク/RRF等) vs 発注者語(発注/ベンダー/見積/経営等)」の出現数比＋h2見出しの主題で機械的に判定する（2026-07-02、emotion-commonsense=0:3でstay / enterprise-kg-design-patterns=見出しが平易語・マネージドvsVPS等の判断FAQでstay / ai-knowledge-chatbot-accuracy=8:2でknowledge行き）。
+
+## 新カテゴリ genai-adoption（生成AI導入, 2026-07-02新設, order 3=/column先頭）
+
+- **genai-adoption = 導入を進める側の課題・進め方**（何から始める/ROI/セキュリティ/組織/経営説得/PoC本番化/データ準備/ガイドライン）。ピラーは genai-introduction-complete-guide（PILLAR_SLUGS登録済み）。専用一覧 `/column/genai-adoption`（ヘッダーのコラムドロップダウンから導線）。
+- **ai-development に残す = 発注ノウハウ・技術の発注者向け解説**（ベンダー選定/費用相場/契約/AIエージェント/KG・GraphRAG解説/LLM選定/MCP/プロンプトエンジニアリング）。
+- 記事末CTA: genai-adoption は consult-genai-adoption（intent=genai-adoption）＋ゼロスタート資料DL（column-cta-mapping.ts）。
+- 新規の生成AI系ドラフトは「導入の進め方・社内課題」なら 推奨カテゴリ: `genai-adoption`、「発注・技術解説」なら `ai-development` をメタに書く。
