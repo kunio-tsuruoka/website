@@ -135,3 +135,29 @@ Clarity(project x69z1qvv1l) と GA4(property 355503040) を連携。データ反
 - Beekle は Cloudflare Pages。Bot Activity は Cloudflare CDN 連携で取得可能。
 
 関連: [[content-strategy-goals]]、[[reference_dataforseo]]（DataForSEO LLM Mentions は別経路・7/1〜要サブスク）。
+
+# 発注クエリのGSCベースライン(2026-07-01, 直近90日)＋生成AI/RAG発注リード戦略
+
+生成AI/DX/RAGの発注リード増を狙ってラッコKW→受け皿棚卸し→GSC実績で検証した結論。
+
+## キーワード需要(ラッコ/Googleプランナー月間)
+- 発注ど真ん中(高CPC): ai受託開発260/CPC$13.8, ai開発受託260/$14.2, ai開発会社260/$10.8, 生成ai導入支援110/$14.3(難易度31で妙味), 生成ai導入コンサル30/$22.6(最高CPC), aiエージェント開発会社50/$13.1, 社内aiチャットボット30/$16.1。
+- 費用インテントが最頻: PAA「AI開発費用」51件中ほぼ全部「〜の開発費用はいくらですか」(チャットボット/RAG/需要予測/画像認識/モデル/生成AIアプリと種別ごとに個別質問)。
+- 巨大だがCV遠い(情報/エンジニア寄り): rag33100, ragとは14800, ai駆動開発5400。RAGはGSCオーガニックでは需要・順位とも弱く、AI検索(Clarity AI Citations)で回収する領域。
+- 伸長: aiエージェント開発720(新興)。
+
+## GSC実績(sc-domain:beekle.jp, 90日): 総imp21,026/click233/CTR1.11%。発注クラスタはほぼclick0=「表示されてるが取れてない」。
+- **重要発見: 生成AI/費用系コラムのtitleは概ねクエリ一致済み。CTR0%の主因はtitle文言ミスマッチでなく順位埋没(10〜28)+AI Overview。→ title書換の即効余地は小さい(seo.md鉄則で触らない)。**
+- ai-development-cost-guide: title「生成AI開発の費用相場｜PoC50万〜」既一致、本文に費用内訳h2あり。順位24〜28の本体費用クエリ(ai開発費用 imp97等)は本文/内部リンクでの順位押し上げが本丸。titleは動かさない。
+- web-system-cost-by-scale(順位10〜14,imp480+,CTR0%)/cdp-cost-and-period(順位6〜12)も title既一致。書換効果限定的。
+  - 副産物バグ: web-system-cost-by-scale は title/本文h2の金額(小規模300〜800万)とdescの金額(小規模100〜300万)が不整合。要本文一次確認して是正(捏造でなく既存不整合)。
+
+## 構造的空白(=本丸)
+1. **AI受託の商用意図の受け皿ズレ**: 「ai受託開発」系(合算imp400+,順位11〜18,CTR0%)を情報記事 ai-era-development-flow(開発フロー解説)が誤catch。受託先を探す検索者に工程解説を出し直帰。title を受託に寄せると意図がさらにズレて逆効果→**titleは据え置き、露出を vendor-selection/services へ内部リンクで引き寄せる**。
+2. **B-zone受け皿不在**: PARTNER_CONSULT CTA(SIer/開発会社向け協業)は存在するが着地する専用ページが無い。「ai受託開発 外注」「RAG開発会社」= 元請けテック側が実装力を見極めるクエリ。/partner LP新設で技術記事末尾のPARTNER_CONSULTが機能する。田中さん(シフト)型=実証済み収益チャネル。
+
+## 実行済み(2026-07-01)
+- ai-development-vendor-selection の title/desc を「AI受託開発会社」語補強にPATCH(順位27.8→1-2ページ目狙い)。title旧「生成AI開発会社の選び方｜失敗しない発注先比較7つのポイント」→新「AI受託開発会社の選び方｜生成AI開発の発注先を比較する7つのチェックポイント」。本文は既に7ポイントで意図カバー済み＝title補強だけで効く典型。
+
+## やらない(正直な線引き)
+費用系titleの一斉書換(既一致・鉄則違反)、RAG直球の新規記事量産(GSC需要弱・AI検索で回収)、DX新規ページ(需要薄)。関連: [[content-strategy-goals]](CVR改善/3セグメント), seo.md(CTR診断), analytics.md(AI Overviewでpos1でもCTR0)。
