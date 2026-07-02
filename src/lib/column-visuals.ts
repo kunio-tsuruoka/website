@@ -579,7 +579,14 @@ function buildZeroStartConsultCta(source: string, intent: string): string {
 
 // AI検索が買い手を送り込む記事（見積・RFP・CDP比較・要件定義）向けの、意図別リード獲得CTA。
 // クエリ意図に文言を合わせ、ツールでなく相談（/contact）へ誘導する。
-type ConsultCta = { intent: string; title: string; body: string; label: string };
+type ConsultCta = {
+  intent: string;
+  title: string;
+  body: string;
+  label: string;
+  /** 遷移先のベースパス。省略時は /contact。LPで説得してから受けたいCTAは専用LPを指定する */
+  hrefBase?: string;
+};
 
 const CONSULT_CTAS: Record<string, ConsultCta> = {
   ESTIMATE_CONSULT: {
@@ -607,8 +614,11 @@ const CONSULT_CTAS: Record<string, ConsultCta> = {
     label: '要件定義を相談する',
   },
   // 同業（Web制作会社・SIer・コンサルのテック側）向け。買い手向けCTAと別系統で、協業・開発リソース提供へ誘導する。
+  // 遷移先は /contact 直行ではなく協業LP (/partner)。冷たい読者にRTB（実績・体制）を見せてからLP内CTAでフォームに落とす2段構え。
+  // /partner 側のCTA (partner-hero / partner-footer) が intent=partner を持つため計測は維持される。
   PARTNER_CONSULT: {
     intent: 'partner',
+    hrefBase: '/partner',
     title: '開発パートナー・開発リソースをお探しの開発会社・SIer様へ',
     body: '「自社の開発リソースが逼迫している」「難航しているプロジェクトを立て直したい」「AI活用開発の知見を借りたい」開発会社・SIer・コンサルの皆様へ。Beekleはフロントエンド・バックエンド・インフラまで一貫した開発支援を提供しており、他社が難航した案件の引き継ぎや短期での立ち上げを手がけた実績があります。協業・開発リソースのご相談を無料で承ります。',
     label: '開発パートナーとして相談する',
@@ -617,7 +627,7 @@ const CONSULT_CTAS: Record<string, ConsultCta> = {
 
 function buildConsultCta(source: string, cta: ConsultCta): string {
   return buildCtaCard({
-    href: `/contact?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(cta.intent)}`,
+    href: `${cta.hrefBase ?? '/contact'}?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(cta.intent)}`,
     source,
     ctaId: `contact-${cta.intent}`,
     title: cta.title,
