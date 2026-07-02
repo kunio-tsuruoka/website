@@ -9,8 +9,11 @@ interface Props {
 const { features } = Astro.props;
 ---
 
-<section class="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-primary-50/30 py-20 md:py-28">
-  <div class="container mx-auto px-6 lg:px-12">
+<section class="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-secondary-50/40 py-20 md:py-28">
+  <div class="decoration-bar-cyan absolute -right-20 top-24 hidden h-2.5 w-56 opacity-25 lg:block" aria-hidden="true"></div>
+  <div class="decoration-dot dot-purple absolute left-[7%] top-32 hidden h-2.5 w-2.5 lg:block" aria-hidden="true"></div>
+  <div class="decoration-dot dot-yellow absolute right-[9%] bottom-28 hidden h-2 w-2 lg:block" aria-hidden="true"></div>
+  <div class="container relative mx-auto px-6 lg:px-12">
     <SectionHeader
       client:load
       title="サービス内容"
@@ -19,9 +22,18 @@ const { features } = Astro.props;
       label="FEATURES"
     />
     <div class="grid gap-4 md:grid-cols-2">
-      {features.map((feature) => (
-        <article class="rounded-2xl border border-white bg-white/85 p-6 shadow-soft backdrop-blur transition hover:-translate-y-1 hover:shadow-medium">
-          <h3 class="text-lg font-bold leading-snug text-navy-950">{feature.title}</h3>
+      {features.map((feature, index) => (
+        <article class="group rounded-2xl border border-white bg-white/85 p-6 shadow-soft backdrop-blur transition hover:-translate-y-1 hover:border-primary-200 hover:shadow-medium">
+          <div class="flex items-center gap-3">
+            <span
+              class:list={[
+                'h-2.5 w-2.5 shrink-0 rounded-full',
+                index % 3 === 0 ? 'bg-primary-500' : index % 3 === 1 ? 'bg-secondary-500' : 'bg-highlight-500',
+              ]}
+              aria-hidden="true"
+            ></span>
+            <h3 class="text-lg font-bold leading-snug text-navy-950 group-hover:text-primary-600">{feature.title}</h3>
+          </div>
           <p class="mt-3 text-sm leading-relaxed text-neutral-600 md:text-base">{feature.description}</p>
         </article>
       ))}

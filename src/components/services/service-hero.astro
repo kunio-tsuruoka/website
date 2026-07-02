@@ -25,12 +25,16 @@ const benefits = service.benefits.slice(0, 3);
 
 <section class="relative overflow-hidden bg-accent-950 pt-28 pb-16 md:pt-32 md:pb-20">
   <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-  <div class="absolute left-0 top-0 h-full w-full bg-[radial-gradient(circle_at_20%_10%,rgba(61,77,183,0.28),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_24%)]"></div>
+  <div class="absolute left-0 top-0 h-full w-full bg-[radial-gradient(circle_at_20%_10%,rgba(61,77,183,0.28),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_10%_90%,rgba(0,196,204,0.12),transparent_28%)]"></div>
+  <div class="decoration-bar-cyan absolute -left-24 bottom-16 hidden h-3 w-64 opacity-30 lg:block" aria-hidden="true"></div>
+  <div class="decoration-dot dot-cyan absolute left-[8%] top-24 hidden h-2.5 w-2.5 opacity-60 lg:block" aria-hidden="true"></div>
+  <div class="decoration-dot dot-yellow absolute left-[16%] bottom-24 hidden h-2 w-2 opacity-50 lg:block" aria-hidden="true"></div>
 
   <div class="container mx-auto px-6 lg:px-12 relative">
     <div class="grid gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
       <div>
-        <span class="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-primary-100">
+        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-primary-100">
+          <span class="h-2 w-2 rounded-full bg-secondary-400" aria-hidden="true"></span>
           {config?.eyebrow ?? 'Beekle のサービス'}
         </span>
         <h1 class="mt-6 max-w-4xl text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
@@ -40,7 +44,7 @@ const benefits = service.benefits.slice(0, 3);
           {config?.heroLead ?? service.description}
         </p>
         {config?.primaryOutcome && (
-          <p class="mt-4 max-w-2xl border-l-4 border-primary-300 pl-4 text-base font-semibold leading-relaxed text-white">
+          <p class="mt-4 max-w-2xl border-l-4 border-secondary-400 pl-4 text-base font-semibold leading-relaxed text-white">
             {config.primaryOutcome}
           </p>
         )}
