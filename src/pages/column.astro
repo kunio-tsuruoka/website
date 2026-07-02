@@ -43,7 +43,9 @@ const columnCategories = categories
     const filteredColumns = pillarSlug
       ? categoryColumns.filter((c) => c.id !== pillarSlug)
       : categoryColumns;
-    const filteredArticles = filteredColumns.map((column, index) => ({
+    // セクションは最新6本のみ表示し、残りは専用カテゴリページ（/column/<id>）に誘導する
+    const totalArticleCount = filteredColumns.length;
+    const filteredArticles = filteredColumns.slice(0, 6).map((column, index) => ({
       number: String(index + 1).padStart(2, '0'),
       title: column.title,
       slug: column.id,
@@ -58,6 +60,7 @@ const columnCategories = categories
       pillarSlug,
       pillarTitle: pillarArticle?.title,
       articles: filteredArticles,
+      totalArticleCount,
     };
   })
   .sort((a, b) => a.order - b.order);
@@ -218,6 +221,20 @@ const columnCategories = categories
             ) : (
               <div class="text-center py-12 bg-gray-50 rounded-xl">
                 <p class="text-gray-500">このカテゴリーの記事はまだありません</p>
+              </div>
+            )}
+
+            {category.totalArticleCount > 0 && (
+              <div class="mt-8 text-center">
+                <a
+                  href={`/column/${category.id}`}
+                  class="inline-flex items-center text-primary-500 hover:text-primary-600 font-semibold transition-colors group py-3"
+                >
+                  <span>「{category.title}」の記事をすべて見る（全{category.totalArticleCount}本）</span>
+                  <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </a>
               </div>
             )}
           </div>
