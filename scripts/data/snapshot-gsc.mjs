@@ -109,21 +109,53 @@ async function queryGsc(token, dimensions, startDate, endDate) {
 }
 
 /**
+ * 買い手インテント判定 (content-strategy-goals.md の3セグメント方針をスコアに反映)。
+ * インプレッションだけでスコアリングすると定義系 (要求とは / gherkin等 = C-zone) が
+ * 上位を占拠し、CV価値の低いクエリに時間が流れるため、発注に近い語を含むクエリを
+ * 優先し、定義・構文系を減衰させる。
+ * buyer 判定が definitional より先に勝つ (例: 「cdp 比較」は比較=buyer)。
+ */
+const BUYER_PATTERNS = [
+  /費用|料金|価格|相場|見積/,
+  /受託|外注|委託|依頼|発注/,
+  /会社|ベンダー|パートナー|業者/,
+  /比較|選び方|選定/,
+  /導入|支援|代行|相談/,
+  /rfp|poc|mvp|cdp/i,
+];
+const DEFINITIONAL_PATTERNS = [
+  /とは|意味|読み方|一覧|サンプル|テンプレート|書き方|例$/,
+  /違い/,
+  /gherkin|ears|ガーキン|記法|構文|when then/i,
+];
+function classifyIntent(query) {
+  if (BUYER_PATTERNS.some((p) => p.test(query))) return { intent: 'buyer', weight: 3 };
+  if (DEFINITIONAL_PATTERNS.some((p) => p.test(query)))
+    return { intent: 'definitional', weight: 0.3 };
+  return { intent: 'neutral', weight: 1 };
+}
+
+/**
  * CTR改善余地の派生分析 (seo.md の CTR診断ループを機械化)。
  * 順位5-20 かつ imp>=閾値 かつ CTR が期待値を大きく下回るクエリ = title/desc 見直し候補。
+ * opportunityScore = imp × 低CTR × インテント重み (buyer 3x / definitional 0.3x)。
  */
 function ctrOpportunities(queryRows, minImpressions = 30) {
   return queryRows
     .filter((r) => r.position >= 5 && r.position <= 20 && r.impressions >= minImpressions)
-    .map((r) => ({
-      query: r.query,
-      impressions: r.impressions,
-      clicks: r.clicks,
-      ctrPct: +(r.ctr * 100).toFixed(2),
-      position: +r.position.toFixed(1),
-      // imp × 低CTR の掛け算で「取りこぼしの大きさ」をスコア化
-      opportunityScore: +(r.impressions * Math.max(0, 0.03 - r.ctr)).toFixed(1),
-    }))
+    .map((r) => {
+      const { intent, weight } = classifyIntent(r.query);
+      return {
+        query: r.query,
+        intent,
+        impressions: r.impressions,
+        clicks: r.clicks,
+        ctrPct: +(r.ctr * 100).toFixed(2),
+        position: +r.position.toFixed(1),
+        // imp × 低CTR × インテント重み で「取りこぼしの大きさ × 買い手価値」をスコア化
+        opportunityScore: +(r.impressions * Math.max(0, 0.03 - r.ctr) * weight).toFixed(1),
+      };
+    })
     .sort((a, b) => b.opportunityScore - a.opportunityScore);
 }
 
@@ -167,7 +199,7 @@ async function main() {
       ctrPct: totals.ctrPct,
       ctrOpportunities: opportunities.length,
     },
-    note: 'query/page別 + CTR改善余地(pos5-20/imp>=30)',
+    note: 'query/page別 + CTR改善余地(pos5-20/imp>=30, 買い手インテント重み付き)',
   });
 
   log(
