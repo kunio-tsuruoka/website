@@ -26,7 +26,8 @@
     "data:gsc": "node scripts/data/snapshot-gsc.mjs",
     "data:ga4": "node scripts/data/snapshot-ga4.mjs",
     "data:clarity": "node scripts/data/import-clarity-citations.mjs",
-    "data:clarity-dash": "node scripts/data/import-clarity-dashboard.mjs"
+    "data:clarity-dash": "node scripts/data/import-clarity-dashboard.mjs",
+    "data:leads": "node scripts/data/leads.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",
