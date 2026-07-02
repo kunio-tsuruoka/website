@@ -1,0 +1,179 @@
+---
+import Layout from '../../layouts/layout.astro';
+import { getCategoryCta } from '../../lib/column-cta-mapping';
+import { type MicroCMSEnv, PILLAR_SLUGS, getColumns } from '../../lib/microcms';
+import { Header } from '../header';
+import JsonLd from '../seo/json-ld.astro';
+import { PageHero } from '../ui/page-hero';
+
+export interface Props {
+  /** MicroCMS のカテゴリID（例: 'ai-development'） */
+  categoryId: string;
+  /** PageHero のバッジ文言（英語表記） */
+  badge: string;
+  /** カテゴリ名（見出し・パンくず・JSON-LDに使用） */
+  title: string;
+  /** PageHero のサブタイトル */
+  subtitle: string;
+  /** <title> タグ用 */
+  metaTitle: string;
+  /** meta description */
+  metaDescription: string;
+}
+
+const { categoryId, badge, title, subtitle, metaTitle, metaDescription } = Astro.props;
+
+const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
+const env = runtime?.env;
+
+const pillarSlug = PILLAR_SLUGS[categoryId];
+const allColumns = await getColumns(categoryId, env);
+const pillar = pillarSlug ? allColumns.find((c) => c.id === pillarSlug) : undefined;
+const articles = allColumns
+  .filter((c) => c.id !== pillarSlug)
+  .map((c) => ({
+    id: c.id,
+    title: c.title,
+    description: c.description,
+    publishedAt: c.publishedAt,
+  }));
+
+const categoryCta = getCategoryCta(categoryId);
+const ctaSource = `column-category-${categoryId}`;
+const withSource = (href: string) =>
+  `${href}${href.includes('?') ? '&' : '?'}source=${encodeURIComponent(ctaSource)}`;
+const primaryCtaHref = withSource(categoryCta.primary.href);
+const secondaryCtaHref = categoryCta.secondary ? withSource(categoryCta.secondary.href) : undefined;
+---
+
+<Layout title={metaTitle} description={metaDescription}>
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: 'コラム', url: '/column' },
+        { name: title, url: `/column/${categoryId}` },
+      ],
+    }}
+  />
+  {allColumns.length > 0 && (
+    <JsonLd
+      slot="head"
+      type="itemList"
+      data={{
+        name: `${title} コラム一覧`,
+        url: `https://beekle.jp/column/${categoryId}`,
+        itemType: 'Article',
+        items: allColumns.map((a) => ({
+          name: a.title,
+          ...(a.description ? { description: a.description } : {}),
+          url: `https://beekle.jp/column/${a.id}`,
+        })),
+      }}
+    />
+  )}
+  <Header client:load />
+  <main class="pt-20">
+    <PageHero title={title} subtitle={subtitle} badge={badge} />
+
+    <section class="py-16 md:py-24">
+      <div class="container mx-auto px-6 md:px-8 max-w-3xl">
+        {pillar && (
+          <a
+            href={`/column/${pillar.id}`}
+            class="block p-6 md:p-8 mb-12 rounded-2xl border-2 border-primary-200 bg-primary-50/50 hover:border-primary-400 hover:shadow-medium transition-all group"
+          >
+            <p class="text-xs font-semibold text-primary-500 tracking-wide mb-2">
+              まず読む完全ガイド
+            </p>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-primary-500 transition-colors leading-tight mb-3">
+              {pillar.title}
+            </h2>
+            {pillar.description && (
+              <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                {pillar.description}
+              </p>
+            )}
+          </a>
+        )}
+
+        <div class="divide-y divide-gray-200">
+          {articles.map((article) => (
+            <a href={`/column/${article.id}`} class="block py-8 first:pt-0 last:pb-0 group">
+              <time class="text-sm text-gray-500">
+                {new Date(article.publishedAt).toLocaleDateString('ja-JP')}
+              </time>
+              <h2 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-500 transition-colors mt-1 mb-2 leading-tight">
+                {article.title}
+              </h2>
+              {article.description && (
+                <p class="text-gray-600 text-sm leading-relaxed line-clamp-2">
+                  {article.description}
+                </p>
+              )}
+            </a>
+          ))}
+        </div>
+
+        {allColumns.length === 0 && (
+          <div class="text-center py-16 bg-gray-50 rounded-xl">
+            <p class="text-gray-500">
+              記事を読み込めませんでした。しばらくしてから再度お試しください。
+            </p>
+          </div>
+        )}
+
+        <div class="mt-16 p-6 md:p-8 rounded-2xl bg-accent-950 text-white text-center">
+          <h2 class="text-lg md:text-xl font-bold mb-3">{categoryCta.heading}</h2>
+          <p class="text-white/80 text-sm leading-relaxed mb-6">
+            {categoryCta.primaryDescription}。
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a
+              href={primaryCtaHref}
+              data-cta-source={ctaSource}
+              data-cta-id={categoryCta.primary.ctaId}
+              class="inline-flex items-center justify-center px-6 py-3 min-h-[44px] bg-primary-500 text-white rounded-full text-sm font-semibold hover:bg-primary-600 transition-colors"
+            >
+              {categoryCta.primary.label}
+            </a>
+            {categoryCta.secondary && secondaryCtaHref && (
+              <a
+                href={secondaryCtaHref}
+                data-cta-source={ctaSource}
+                data-cta-id={categoryCta.secondary.ctaId}
+                class="inline-flex items-center justify-center px-6 py-3 min-h-[44px] bg-white/10 border border-white/30 text-white rounded-full text-sm font-semibold hover:bg-white/20 transition-colors"
+              >
+                {categoryCta.secondary.label}
+              </a>
+            )}
+          </div>
+          {categoryCta.secondary && (
+            <p class="text-xs text-white/60 mt-4">
+              {categoryCta.secondary.description}
+            </p>
+          )}
+        </div>
+
+        <div class="mt-12 text-center">
+          <a
+            href="/column"
+            class="inline-flex items-center text-primary-500 hover:text-primary-600 font-semibold transition-colors group py-3"
+          >
+            <svg
+              class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>コラム一覧を見る</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
