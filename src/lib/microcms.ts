@@ -156,6 +156,7 @@ export const PILLAR_SLUGS: Record<string, string> = {
   'estimate-concerns': 'estimate-complete-guide',
   'project-management': 'project-management-complete-guide',
   communication: 'communication-complete-guide',
+  'genai-adoption': 'genai-introduction-complete-guide',
 };
 
 // slugがピラー記事かどうか判定

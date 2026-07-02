@@ -16,6 +16,7 @@ const staticPages = [
   { url: '/testimonial', priority: '0.7', changefreq: 'monthly' },
   { url: '/case-studies', priority: '0.7', changefreq: 'monthly' },
   { url: '/column', priority: '0.8', changefreq: 'daily' },
+  { url: '/column/genai-adoption', priority: '0.8', changefreq: 'weekly' },
   { url: '/qa', priority: '0.7', changefreq: 'monthly' },
   { url: '/tools', priority: '0.8', changefreq: 'monthly' },
   { url: '/tools/flow-mapper', priority: '0.8', changefreq: 'monthly' },
