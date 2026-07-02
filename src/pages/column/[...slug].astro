@@ -278,7 +278,7 @@ const reviewerId = column.category?.id ? categoryReviewerMap[column.category.id]
         isKnowledge
           ? { name: 'ナレッジ', url: '/knowledge' }
           : { name: 'コラム', url: '/column' },
-        ...(!isKnowledge && column.category ? [{ name: column.category.title, url: `/column#${column.category.id}` }] : []),
+        ...(!isKnowledge && column.category ? [{ name: column.category.title, url: `/column/${column.category.id}` }] : []),
         { name: column.title, url: `/${sectionPath}/${columnId}` },
       ],
     }}
@@ -459,10 +459,10 @@ const reviewerId = column.category?.id ? categoryReviewerMap[column.category.id]
           {column.category && !isPillar && (
             <div class="mt-8 text-center">
               <a
-                href={`/column#${column.category.id}`}
+                href={isKnowledge ? '/knowledge' : `/column/${column.category.id}`}
                 class="inline-flex items-center text-primary-500 hover:text-primary-600 font-semibold transition-colors group py-3"
               >
-                <span>「{column.category.title}」の記事をすべて見る</span>
+                <span>{isKnowledge ? 'ナレッジ記事をすべて見る' : `「${column.category.title}」の記事をすべて見る`}</span>
                 <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
