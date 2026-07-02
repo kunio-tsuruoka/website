@@ -82,6 +82,9 @@ const VALID_CATEGORIES = [
   'communication',
   'ai-development',
   'cdp-development',
+  'genai-adoption',
+  'dx',
+  'knowledge',
 ];
 
 function resolveCategory(raw) {

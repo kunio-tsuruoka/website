@@ -23,7 +23,7 @@ const serviceItems = [
 
 const columnItems = [
   { label: 'コラム一覧（発注者向け）', href: '/column' },
-  { label: '生成AI導入 完全ガイド', href: '/column/genai-introduction-complete-guide' },
+  { label: '生成AI導入', href: '/column/genai-adoption' },
   { label: 'Beekleのナレッジ', href: '/knowledge' },
 ];
 
@@ -385,11 +385,11 @@ export function Header() {
               </li>
               <li>
                 <a
-                  href="/column/genai-introduction-complete-guide"
+                  href="/column/genai-adoption"
                   className="hover:text-accent-300 transition-colors text-lg"
                   onClick={() => setIsOpen(false)}
                 >
-                  生成AI導入 完全ガイド
+                  生成AI導入
                 </a>
               </li>
               <li>
