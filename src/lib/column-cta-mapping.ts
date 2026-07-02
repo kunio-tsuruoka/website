@@ -81,6 +81,14 @@ const CDP_CONSULT: CtaItem = {
   ctaId: 'consult-cdp',
 };
 
+const GENAI_ADOPTION_CONSULT: CtaItem = {
+  href: '/contact?intent=genai-adoption',
+  label: '生成AI導入を相談する（無料）',
+  description:
+    'どの業務から始めるか・費用・セキュリティまで、生成AI導入の進め方を無料でご相談いただけます',
+  ctaId: 'consult-genai-adoption',
+};
+
 const GENERAL_CONSULT: CtaItem = {
   href: '/contact?intent=general',
   label: 'Beekleに相談する（無料）',
@@ -150,6 +158,12 @@ const MAPPING: Record<string, CategoryCta> = {
     PARTNER_CONSULT
   ),
   knowledge: buildCta('この技術、Beekleに相談しませんか？', GENERAL_CONSULT, PARTNER_CONSULT),
+  // 生成AI導入カテゴリ（導入の進め方・社内課題）。主=導入相談、副=ゼロスタート資料DL（担当者が上を説得する材料）。
+  'genai-adoption': buildCta(
+    '生成AI導入、Beekleに相談しませんか？',
+    GENAI_ADOPTION_CONSULT,
+    DOWNLOAD_DECK
+  ),
   'cdp-development': buildCta(
     'CDP導入・選定、Beekleに相談しませんか？',
     CDP_CONSULT,

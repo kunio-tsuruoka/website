@@ -80,4 +80,5 @@ export const defaultReviewer = authors.nakamura;
 export const categoryReviewerMap: Record<string, string> = {
   'ai-development': 'sato',
   'cdp-development': 'sato',
+  'genai-adoption': 'sato',
 };
