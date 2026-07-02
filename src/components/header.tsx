@@ -21,12 +21,17 @@ const serviceItems = [
   { label: 'CDP構築・顧客データ基盤開発', href: '/services/cdp-development' },
 ];
 
+const columnItems = [
+  { label: 'コラム一覧（発注者向け）', href: '/column' },
+  { label: '生成AI導入 完全ガイド', href: '/column/genai-introduction-complete-guide' },
+  { label: 'Beekleのナレッジ', href: '/knowledge' },
+];
+
 const companyItems = [
   { label: '会社概要', href: '/company' },
   { label: 'Beekleの強み', href: '/strengths' },
   { label: 'メンバー紹介', href: '/members' },
   { label: 'お客様の声', href: '/testimonial' },
-  { label: 'ナレッジ', href: '/knowledge' },
   { label: '採用情報', href: '/careers' },
   { label: '一問一答（よくある質問）', href: '/qa' },
   { label: 'ゼロスタート開発 資料DL', href: '/downloads/zero-start' },
@@ -245,14 +250,7 @@ export function Header() {
               導入事例
             </a>
           </li>
-          <li>
-            <a
-              href="/column"
-              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
-            >
-              発注者向けコラム
-            </a>
-          </li>
+          <Dropdown label="コラム" items={columnItems} />
           <Dropdown label="発注準備キット" items={toolsItems} />
           <Dropdown label="会社情報" items={companyItems} />
           <li>
@@ -383,6 +381,15 @@ export function Header() {
                   onClick={() => setIsOpen(false)}
                 >
                   発注者向けコラム
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/column/genai-introduction-complete-guide"
+                  className="hover:text-accent-300 transition-colors text-lg"
+                  onClick={() => setIsOpen(false)}
+                >
+                  生成AI導入 完全ガイド
                 </a>
               </li>
               <li>
