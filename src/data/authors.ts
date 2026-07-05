@@ -85,3 +85,12 @@ export const categoryReviewerMap: Record<string, string> = {
   'genai-adoption': 'sato',
   knowledge: 'sato',
 };
+
+// スラッグ単位の監修者上書き（カテゴリより優先）。
+// knowledge カテゴリのうち要件エンジニアリング(EARS/Gherkin)系はPM・システム開発領域のため
+// データサイエンティストの佐藤でなく中村(既定の技術監修)に据え置く。
+export const slugReviewerMap: Record<string, string> = {
+  'ears-gherkin-workflow': 'nakamura',
+  'gherkin-bdd-introduction': 'nakamura',
+  'ears-requirements-syntax-guide': 'nakamura',
+};
