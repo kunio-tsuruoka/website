@@ -78,54 +78,80 @@ const secondaryCtaHref = categoryCta.secondary ? withSource(categoryCta.secondar
   <main class="pt-20">
     <PageHero title={title} subtitle={subtitle} badge={badge} />
 
-    <section class="py-16 md:py-24">
-      <div class="container mx-auto px-6 md:px-8 max-w-3xl">
+    <section class="relative overflow-hidden py-16 md:py-24">
+      <div class="absolute -left-24 top-24 h-72 w-72 rounded-full bg-primary-100/40 blur-3xl" aria-hidden="true"></div>
+      <div class="absolute -right-20 bottom-40 h-64 w-64 rounded-full bg-secondary-100/40 blur-3xl" aria-hidden="true"></div>
+      <div class="decoration-dot dot-cyan absolute right-[10%] top-32 hidden h-2.5 w-2.5 lg:block" aria-hidden="true"></div>
+      <div class="decoration-dot dot-yellow absolute left-[8%] bottom-48 hidden h-2 w-2 lg:block" aria-hidden="true"></div>
+      <div class="container relative mx-auto px-6 md:px-8 max-w-5xl">
         {pillar && (
           <a
             href={`/column/${pillar.id}`}
-            class="block p-6 md:p-8 mb-12 rounded-2xl border-2 border-primary-200 bg-primary-50/50 hover:border-primary-400 hover:shadow-medium transition-all group"
+            class="group relative mb-12 block overflow-hidden rounded-3xl border-2 border-primary-200 bg-gradient-to-br from-primary-50 to-white p-6 shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary-400 hover:shadow-medium md:p-8"
           >
-            <p class="text-xs font-semibold text-primary-500 tracking-wide mb-2">
-              まず読む完全ガイド
-            </p>
-            <h2 class="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-primary-500 transition-colors leading-tight mb-3">
-              {pillar.title}
-            </h2>
-            {pillar.description && (
-              <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                {pillar.description}
+            <div class="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-primary-100/70 blur-2xl" aria-hidden="true"></div>
+            <div class="relative">
+              <p class="mb-3 flex items-center gap-2 text-xs font-bold tracking-wide text-primary-500">
+                <span class="inline-flex items-center rounded-full bg-primary-500 px-3 py-1 text-white">完全ガイド</span>
+                まず読む1本
               </p>
-            )}
+              <h2 class="text-xl font-bold leading-tight text-gray-900 transition-colors group-hover:text-primary-500 md:text-2xl">
+                {pillar.title}
+              </h2>
+              {pillar.description && (
+                <p class="mt-3 text-sm leading-relaxed text-gray-600 line-clamp-3">
+                  {pillar.description}
+                </p>
+              )}
+              <span class="mt-4 inline-flex items-center gap-1 text-sm font-bold text-primary-500">
+                ガイドを読む
+                <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </span>
+            </div>
           </a>
         )}
 
-        <div class="divide-y divide-gray-200">
+        <div class="grid gap-5 md:grid-cols-2">
           {articles.map((article) => (
-            <a href={`/column/${article.id}`} class="block py-8 first:pt-0 last:pb-0 group">
+            <a
+              href={`/column/${article.id}`}
+              class="group flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary-200 hover:shadow-medium"
+            >
               <time class="text-sm text-gray-500">
                 {new Date(article.publishedAt).toLocaleDateString('ja-JP')}
               </time>
-              <h2 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-500 transition-colors mt-1 mb-2 leading-tight">
+              <h2 class="mt-2 text-lg font-bold leading-tight text-gray-900 transition-colors group-hover:text-primary-500">
                 {article.title}
               </h2>
               {article.description && (
-                <p class="text-gray-600 text-sm leading-relaxed line-clamp-2">
+                <p class="mt-2 text-sm leading-relaxed text-gray-600 line-clamp-3">
                   {article.description}
                 </p>
               )}
+              <span class="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-medium text-primary-500">
+                記事を読む
+                <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </span>
             </a>
           ))}
         </div>
 
         {allColumns.length === 0 && (
-          <div class="text-center py-16 bg-gray-50 rounded-xl">
+          <div class="text-center py-16 bg-gray-50 rounded-2xl">
             <p class="text-gray-500">
               記事を読み込めませんでした。しばらくしてから再度お試しください。
             </p>
           </div>
         )}
 
-        <div class="mt-16 p-6 md:p-8 rounded-2xl bg-accent-950 text-white text-center">
+        <div class="relative mt-16 overflow-hidden rounded-3xl bg-accent-950 p-6 text-center text-white shadow-strong md:p-8">
+          <div class="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-primary-500/25 blur-3xl" aria-hidden="true"></div>
+          <div class="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-secondary-500/15 blur-3xl" aria-hidden="true"></div>
+          <div class="relative">
           <h2 class="text-lg md:text-xl font-bold mb-3">{categoryCta.heading}</h2>
           <p class="text-white/80 text-sm leading-relaxed mb-6">
             {categoryCta.primaryDescription}。
@@ -155,6 +181,7 @@ const secondaryCtaHref = categoryCta.secondary ? withSource(categoryCta.secondar
               {categoryCta.secondary.description}
             </p>
           )}
+          </div>
         </div>
 
         <div class="mt-12 text-center">

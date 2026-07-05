@@ -33,8 +33,9 @@ const source = `services-${serviceId}-${placement}`;
 ---
 
 <aside class="bg-white px-6 py-4 lg:px-12">
-  <div class="mx-auto flex max-w-6xl flex-col gap-5 rounded-3xl border border-primary-200 bg-primary-50 p-5 shadow-soft md:flex-row md:items-center md:justify-between md:p-6">
-    <div class="max-w-3xl">
+  <div class="relative mx-auto flex max-w-6xl flex-col gap-5 overflow-hidden rounded-3xl border border-primary-200 bg-gradient-to-r from-primary-50 via-primary-50 to-secondary-50 p-5 shadow-soft md:flex-row md:items-center md:justify-between md:p-6">
+    <div class="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-secondary-100/60 blur-2xl" aria-hidden="true"></div>
+    <div class="relative max-w-3xl">
       <p class="text-xs font-bold tracking-wide text-primary-500">{cta.eyebrow}</p>
       <h2 class="mt-2 text-xl font-bold leading-snug text-accent-950 md:text-2xl">{cta.title}</h2>
       <p class="mt-2 text-sm leading-relaxed text-neutral-700 md:text-base">{cta.description}</p>
@@ -43,7 +44,7 @@ const source = `services-${serviceId}-${placement}`;
       href={`/contact?source=${source}&intent=consult`}
       data-cta-source={source}
       data-cta-id="contact-consult"
-      class="inline-flex min-h-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium md:text-base"
+      class="relative inline-flex min-h-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium md:text-base"
     >
       {cta.label}
       <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
