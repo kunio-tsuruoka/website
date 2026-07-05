@@ -208,18 +208,28 @@ export async function getQACategories(env?: MicroCMSEnv) {
 // 一問一答一覧（カテゴリーでフィルタリング可）
 export async function getQAs(categoryId?: string, env?: MicroCMSEnv) {
   try {
-    const queries: { orders: string; filters?: string; limit: number } = {
+    const client = getClient(env);
+    const baseQueries: { orders: string; filters?: string } = {
       orders: 'order,publishedAt',
-      limit: 100,
     };
     if (categoryId) {
-      queries.filters = `category[equals]${categoryId}`;
+      baseQueries.filters = `category[equals]${categoryId}`;
     }
-    const data = await getClient(env).get({
-      endpoint: 'qas',
-      queries,
-    });
-    return data.contents as QA[];
+    // MicroCMS の上限は 100 件/リクエスト。全件をページネーションで取得する
+    // （qas が 100 件を超えると limit 固定では末尾が黙って脱落するため）。
+    const all: QA[] = [];
+    const limit = 100;
+    let offset = 0;
+    while (true) {
+      const data = await client.get({
+        endpoint: 'qas',
+        queries: { ...baseQueries, limit, offset },
+      });
+      all.push(...(data.contents as QA[]));
+      offset += limit;
+      if (offset >= data.totalCount) break;
+    }
+    return all;
   } catch (error) {
     console.error('Failed to fetch qas:', error);
     return [];
