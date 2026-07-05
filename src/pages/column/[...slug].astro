@@ -269,6 +269,7 @@ const reviewerId =
       publishedTime: column.publishedAt,
       modifiedTime: column.updatedAt,
       url: articleUrl,
+      reviewerId,
       articleSection: column.category?.title,
       keywords: column.category?.title
         ? `${column.category.title},Beekle,システム開発,発注`
