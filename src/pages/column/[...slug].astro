@@ -3,7 +3,7 @@ import { Renderer, marked } from 'marked';
 import { Header } from '../../components/header';
 import AuthorByline from '../../components/seo/author-byline.astro';
 import JsonLd from '../../components/seo/json-ld.astro';
-import { categoryReviewerMap } from '../../data/authors';
+import { categoryReviewerMap, slugReviewerMap } from '../../data/authors';
 import Layout from '../../layouts/layout.astro';
 import { getCategoryCta } from '../../lib/column-cta-mapping';
 import { renderColumnVisuals } from '../../lib/column-visuals';
@@ -247,7 +247,9 @@ const withSource = (href: string) =>
   `${href}${href.includes('?') ? '&' : '?'}source=${encodeURIComponent(ctaSource)}`;
 const primaryCtaHref = withSource(categoryCta.primary.href);
 const secondaryCtaHref = categoryCta.secondary ? withSource(categoryCta.secondary.href) : undefined;
-const reviewerId = column.category?.id ? categoryReviewerMap[column.category.id] : undefined;
+const reviewerId =
+  slugReviewerMap[column.id] ??
+  (column.category?.id ? categoryReviewerMap[column.category.id] : undefined);
 ---
 
 <Layout

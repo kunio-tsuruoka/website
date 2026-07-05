@@ -60,7 +60,7 @@ export const authors: Record<string, Author> = {
     name: '佐藤 瑛隆',
     jobTitle: 'データサイエンティスト',
     description:
-      '京都大学理学研究科数学・数理解析専攻修了。株式会社RUTILEAにてAIソリューション開発のチーフエンジニアを経験後、アクセンチュア株式会社でデータサイエンティストとして統計モデル・機械学習を用いたSCM領域のDX支援に従事。現在はフリーランスとしてデータ分析、企業向け研修、教材制作支援を行う。Beekleでは生成AI・CDP関連コラムの技術監修を担当。',
+      '京都大学理学研究科数学・数理解析専攻修了。株式会社RUTILEAにてAIソリューション開発のチーフエンジニアを経験後、アクセンチュア株式会社でデータサイエンティストとして統計モデル・機械学習を用いたSCM領域のDX支援に従事。現在はフリーランスとしてデータ分析、企業向け研修、教材制作支援を行う。Beekleでは生成AI・ナレッジグラフ・CDP関連コラムの技術監修を担当。',
     url: 'https://beekle.jp/members',
     knowsAbout: [
       'データサイエンス',
@@ -68,6 +68,8 @@ export const authors: Record<string, Author> = {
       '機械学習',
       'Python',
       'AI開発',
+      'RAG',
+      'ナレッジグラフ',
       'SCM最適化',
       '確率解析',
     ],
@@ -81,4 +83,14 @@ export const categoryReviewerMap: Record<string, string> = {
   'ai-development': 'sato',
   'cdp-development': 'sato',
   'genai-adoption': 'sato',
+  knowledge: 'sato',
+};
+
+// スラッグ単位の監修者上書き（カテゴリより優先）。
+// knowledge カテゴリのうち要件エンジニアリング(EARS/Gherkin)系はPM・システム開発領域のため
+// データサイエンティストの佐藤でなく中村(既定の技術監修)に据え置く。
+export const slugReviewerMap: Record<string, string> = {
+  'ears-gherkin-workflow': 'nakamura',
+  'gherkin-bdd-introduction': 'nakamura',
+  'ears-requirements-syntax-guide': 'nakamura',
 };
