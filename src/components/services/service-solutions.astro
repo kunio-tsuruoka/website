@@ -28,6 +28,14 @@ function getSolutionIcon(title: string) {
   if (/OCR|帳票|レビュー|データ/.test(title)) return iconPaths.file;
   return iconPaths.compass;
 }
+
+// ブランド3色ローテーション（design.md §2）
+const accentBars = ['bg-primary-500', 'bg-secondary-500', 'bg-highlight-500'];
+const iconTones = [
+  'bg-primary-100 text-primary-600',
+  'bg-secondary-50 text-secondary-600',
+  'bg-highlight-100 text-accent-950',
+];
 ---
 
 <section id="solutions" class="relative overflow-hidden bg-neutral-50 py-20 md:py-28">
@@ -44,16 +52,16 @@ function getSolutionIcon(title: string) {
     />
     <div class="grid gap-5 lg:grid-cols-2">
       {solutions.map((solution, index) => (
-        <article class="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-white p-6 shadow-soft transition hover:-translate-y-0.5 hover:border-primary-200 hover:shadow-medium">
-          <div class:list={['absolute inset-x-0 top-0 h-1', index % 2 === 0 ? 'bg-primary-500' : 'bg-secondary-500']}></div>
+        <article class="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-medium md:p-7">
+          <div class:list={['absolute inset-x-0 top-0 h-1.5', accentBars[index % accentBars.length]]}></div>
           <div class="flex items-start gap-4">
-            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent-950 text-white">
+            <div class:list={['flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl', iconTones[index % iconTones.length]]}>
               <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d={getSolutionIcon(solution.title)}></path>
               </svg>
             </div>
             <div class="min-w-0">
-              <p class="text-xs font-bold tracking-wide text-primary-500">
+              <p class="font-Poppins text-xs font-bold tracking-wide text-primary-500">
                 SOLUTION {String(index + 1).padStart(2, '0')}
               </p>
               <h3 class="mt-2 text-xl font-bold leading-snug text-navy-950 group-hover:text-primary-600">
