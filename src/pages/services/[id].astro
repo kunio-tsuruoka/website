@@ -72,7 +72,7 @@ const faqNumber =
       }}
     />
   )}
-  <Header client:load />
+  <Header client:idle />
   <main class="pt-20">
     <ServiceHero service={service} config={servicePageConfig} />
     <ServiceScanSummary service={service} />
@@ -97,7 +97,6 @@ const faqNumber =
       <Section variant="white" padding="lg" decoration="bars">
         <div class="max-w-5xl mx-auto relative z-10">
           <SectionHeader
-            client:load
             title="ブラウザで触れるAIデモ"
             subtitle="導入前に「実際の挙動」を5分で体感できます"
             number="05"
@@ -157,7 +156,6 @@ const faqNumber =
       <Section variant="lightPurple" padding="lg" decoration="blursPurple">
         <div class="max-w-5xl mx-auto relative z-10">
           <SectionHeader
-            client:load
             title="関連コラム"
             subtitle="このサービスの背景にあるデータ活用の考え方"
             number={service.id === 'ai-development' ? '06' : '05'}

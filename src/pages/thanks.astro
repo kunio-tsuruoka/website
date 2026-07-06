@@ -20,7 +20,7 @@ const FROM_CONFIGS: Record<
   description="Beekleへのお問い合わせを受け付けました。担当者より1〜2営業日以内にご返信いたします。"
   noindex={true}
 >
-  <Header client:load />
+  <Header client:idle />
   <script is:inline define:vars={{ FROM_CONFIGS }}>
     (function () {
       var fired = false;
