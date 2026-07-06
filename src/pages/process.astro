@@ -23,14 +23,14 @@ import Layout from '../layouts/layout.astro';
       ],
     }}
   />
-  <Header client:load />
+  <Header client:idle />
   <main class="pt-20">
     <PageHero
       title="導入の流れ"
       subtitle="お問い合わせから運用開始まで、段階的に進めていきます"
     />
-    <ProcessSteps client:load />
-    <ProcessFAQ client:load />
-    <CTASection client:load source="process-final" />
+    <ProcessSteps client:visible />
+    <ProcessFAQ client:visible />
+    <CTASection client:visible source="process-final" />
   </main>
 </Layout>

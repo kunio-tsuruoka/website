@@ -48,7 +48,7 @@ import Layout from '../../layouts/layout.astro';
       ],
     }}
   />
-  <Header client:load />
+  <Header client:idle />
   <main class="pt-20">
     <PageHero
       title="発注準備キット"
@@ -214,7 +214,7 @@ import Layout from '../../layouts/layout.astro';
 
         {/* 保存データ管理 */}
         <div class="mb-12">
-          <DataHousekeeping client:load />
+          <DataHousekeeping client:visible />
         </div>
 
         {/* 使い方の補足 */}

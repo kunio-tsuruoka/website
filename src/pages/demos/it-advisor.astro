@@ -14,7 +14,7 @@ const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
   title="AIナレッジ相談（RAG・デモ）｜Beekleの相談員AIに気軽に質問 | Beekle"
   description="Beekleのコラム記事をベクトル検索（RAG）で参照し、システム発注・要件定義・見積もり妥当性などのお悩みにAI相談員が一次回答。御社の社内文書でも同じRAGの仕組みを構築できます。本格的な発注支援は人間のコンサルタントへ。"
 >
-  <Header client:load />
+  <Header client:idle />
   <main class="pt-20">
     <PageHero
       title="AIナレッジ相談（RAG・デモ）"
