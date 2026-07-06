@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-
+/* フォントは layout.astro の <head> で <link> 読込（CSS @import はウォーターフォールになるため禁止） */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -21,14 +20,16 @@
     @apply bg-background text-foreground;
   }
 
-  /* 見出しのデフォルトスタイル */
+  /* 見出しのデフォルトスタイル。
+     色は指定しない: 紺背景セクション内の色未指定見出しが黒化するのを防ぐため、
+     色は各コンポーネント側で明示する */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    @apply font-bold text-gray-900;
+    @apply font-bold;
   }
 }
 

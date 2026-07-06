@@ -11,7 +11,9 @@ export default defineConfig({
   adapter: cloudflare({
     platformProxy: { enabled: true },
   }),
-  integrations: [react(), tailwind()],
+  // applyBaseStyles: false — Tailwind の @tailwind 指令は src/styles/global.css 側で
+  // 管理する（二重注入防止）。global.css は layout.astro で import される。
+  integrations: [react(), tailwind({ applyBaseStyles: false })],
   vite: {
     resolve: {
       alias: {
