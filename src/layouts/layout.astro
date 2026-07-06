@@ -32,9 +32,12 @@ const fullTitle = title.includes('Beekle') ? title : `${title} | Beekle`;
     <title>{fullTitle}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Poppins のみ読込（欧文見出し・数字用、約40KB）。Noto Sans JP は日本語グリフの
+         サブセット群で約800KBあり、LCPを589ms→1941msに悪化させたため読み込まない
+         （日本語は従来どおりシステムフォント）。復活させる場合はLCP実測とセットで判断する -->
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400..800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
     />
     <SeoHead
       title={title}
