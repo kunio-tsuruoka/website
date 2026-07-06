@@ -9,14 +9,10 @@ interface Props {
 const { features } = Astro.props;
 
 // ブランド3色の番号チップローテーション（design.md §2）
-const chipTones = [
-  'bg-primary-100 text-primary-600',
-  'bg-secondary-50 text-secondary-600',
-  'bg-highlight-100 text-accent-950',
-];
+const chipTones = ['bg-primary-100 text-primary-600'];
 ---
 
-<section class="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-secondary-50/40 py-20 md:py-28">
+<section class="relative overflow-hidden bg-neutral-50 py-20 md:py-28">
   <div class="decoration-bar-cyan absolute -right-20 top-24 hidden h-2.5 w-56 opacity-25 lg:block" aria-hidden="true"></div>
   <div class="decoration-dot dot-purple absolute left-[7%] top-32 hidden h-2.5 w-2.5 lg:block" aria-hidden="true"></div>
   <div class="decoration-dot dot-yellow absolute right-[9%] bottom-28 hidden h-2 w-2 lg:block" aria-hidden="true"></div>

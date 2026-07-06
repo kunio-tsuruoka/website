@@ -42,14 +42,10 @@ function getPainIcon(title: string) {
 }
 
 // ブランド3色のアイコンローテーション（design.md §2）
-const iconTones = [
-  'bg-primary-100 text-primary-600',
-  'bg-secondary-50 text-secondary-600',
-  'bg-highlight-100 text-accent-950',
-];
+const iconTones = ['bg-primary-100 text-primary-600'];
 ---
 
-<section id="pain-points" class="relative overflow-hidden bg-gradient-to-br from-secondary-50 via-white to-secondary-50/30 py-20 md:py-28">
+<section id="pain-points" class="relative overflow-hidden bg-neutral-50 py-20 md:py-28">
   <div class="absolute -left-24 top-20 h-72 w-72 rounded-full bg-primary-100/40 blur-3xl" aria-hidden="true"></div>
   <div class="absolute -right-20 bottom-16 h-64 w-64 rounded-full bg-secondary-100/40 blur-3xl" aria-hidden="true"></div>
   <div class="decoration-dot dot-cyan absolute right-[12%] top-24 hidden h-2.5 w-2.5 lg:block" aria-hidden="true"></div>
