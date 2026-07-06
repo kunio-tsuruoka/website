@@ -40,9 +40,16 @@ function getPainIcon(title: string) {
   if (/精度|品質|評価|効果/.test(title)) return iconPaths.chart;
   return iconPaths.alert;
 }
+
+// ブランド3色のアイコンローテーション（design.md §2）
+const iconTones = [
+  'bg-primary-100 text-primary-600',
+  'bg-secondary-50 text-secondary-600',
+  'bg-highlight-100 text-accent-950',
+];
 ---
 
-<section id="pain-points" class="relative overflow-hidden bg-white py-20 md:py-28">
+<section id="pain-points" class="relative overflow-hidden bg-gradient-to-br from-secondary-50 via-white to-secondary-50/30 py-20 md:py-28">
   <div class="absolute -left-24 top-20 h-72 w-72 rounded-full bg-primary-100/40 blur-3xl" aria-hidden="true"></div>
   <div class="absolute -right-20 bottom-16 h-64 w-64 rounded-full bg-secondary-100/40 blur-3xl" aria-hidden="true"></div>
   <div class="decoration-dot dot-cyan absolute right-[12%] top-24 hidden h-2.5 w-2.5 lg:block" aria-hidden="true"></div>
@@ -57,15 +64,15 @@ function getPainIcon(title: string) {
     />
     <div class="grid gap-4 md:grid-cols-2">
       {painPoints.map((point, index) => (
-        <article class="group rounded-2xl border border-neutral-200 bg-neutral-50 p-6 transition hover:-translate-y-0.5 hover:border-primary-200 hover:bg-white hover:shadow-soft">
+        <article class="group rounded-2xl bg-white p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-medium md:p-7">
           <div class="flex gap-5">
             <div class="flex shrink-0 flex-col items-center gap-2">
-              <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-950 text-white shadow-soft">
+              <span class:list={['flex h-14 w-14 items-center justify-center rounded-2xl', iconTones[index % iconTones.length]]}>
                 <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d={getPainIcon(point.title)}></path>
                 </svg>
               </span>
-              <span class="rounded-full bg-white px-2.5 py-1 text-xs font-bold text-primary-500 ring-1 ring-neutral-200">
+              <span class="font-Poppins text-sm font-bold text-primary-500">
                 {String(index + 1).padStart(2, '0')}
               </span>
             </div>

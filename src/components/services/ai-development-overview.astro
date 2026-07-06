@@ -26,6 +26,13 @@ const useCases = [
   },
 ];
 
+// ブランド3色のアイコン・番号チップローテーション（design.md §2）
+const iconTones = [
+  'bg-primary-100 text-primary-600',
+  'bg-secondary-50 text-secondary-600',
+  'bg-highlight-100 text-accent-950',
+];
+
 const steps = [
   {
     number: '01',
@@ -69,10 +76,10 @@ const steps = [
       </div>
 
       <div class="mt-9 grid gap-4 md:grid-cols-2">
-        {useCases.map((useCase) => (
-          <article class="rounded-3xl border border-neutral-200 bg-white p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-primary-200 hover:shadow-medium md:p-6">
+        {useCases.map((useCase, index) => (
+          <article class="rounded-3xl bg-white p-5 shadow-soft transition-all hover:-translate-y-1 hover:shadow-medium md:p-6">
             <div class="flex items-start gap-4">
-              <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-950 text-white">
+              <span class:list={['flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl', iconTones[index % iconTones.length]]}>
                 <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d={useCase.icon}></path>
                 </svg>
@@ -107,9 +114,11 @@ const steps = [
 
         <div class="relative mt-7 grid gap-3 md:grid-cols-4">
           {steps.map((step, index) => (
-            <article class="relative rounded-2xl bg-white p-4 md:p-5">
+            <article class="relative rounded-2xl bg-white p-4 shadow-soft md:p-5">
               <div class="flex items-center justify-between gap-3">
-                <span class="text-sm font-bold text-primary-500">{step.number}</span>
+                <span class:list={['flex h-9 w-9 items-center justify-center rounded-full font-Poppins text-sm font-bold', iconTones[index % iconTones.length]]}>
+                  {step.number}
+                </span>
                 {index < steps.length - 1 && (
                   <span class="hidden text-primary-300 md:block" aria-hidden="true">→</span>
                 )}

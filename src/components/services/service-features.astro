@@ -7,6 +7,13 @@ interface Props {
 }
 
 const { features } = Astro.props;
+
+// ブランド3色の番号チップローテーション（design.md §2）
+const chipTones = [
+  'bg-primary-100 text-primary-600',
+  'bg-secondary-50 text-secondary-600',
+  'bg-highlight-100 text-accent-950',
+];
 ---
 
 <section class="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-secondary-50/40 py-20 md:py-28">
@@ -23,18 +30,20 @@ const { features } = Astro.props;
     />
     <div class="grid gap-4 md:grid-cols-2">
       {features.map((feature, index) => (
-        <article class="group rounded-2xl border border-white bg-white/85 p-6 shadow-soft backdrop-blur transition hover:-translate-y-1 hover:border-primary-200 hover:shadow-medium">
-          <div class="flex items-center gap-3">
+        <article class="group rounded-2xl bg-white p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-medium md:p-7">
+          <div class="flex items-center gap-4">
             <span
               class:list={[
-                'h-2.5 w-2.5 shrink-0 rounded-full',
-                index % 3 === 0 ? 'bg-primary-500' : index % 3 === 1 ? 'bg-secondary-500' : 'bg-highlight-500',
+                'flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-Poppins text-sm font-bold',
+                chipTones[index % chipTones.length],
               ]}
               aria-hidden="true"
-            ></span>
+            >
+              {String(index + 1).padStart(2, '0')}
+            </span>
             <h3 class="text-lg font-bold leading-snug text-navy-950 group-hover:text-primary-600">{feature.title}</h3>
           </div>
-          <p class="mt-3 text-sm leading-relaxed text-neutral-600 md:text-base">{feature.description}</p>
+          <p class="mt-4 text-sm leading-relaxed text-neutral-600 md:text-base">{feature.description}</p>
         </article>
       ))}
     </div>
