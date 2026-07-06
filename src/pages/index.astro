@@ -90,7 +90,7 @@ const featuredTools = [
   description="Beekle株式会社は、AI・Webアプリ・モバイルアプリ開発を手がけるシステム開発会社です。初期費用0円のゼロスタートで、動くプロトタイプを見てから判断できる新しい開発体験を提供します。"
 >
   <JsonLd slot="head" type="website" />
-  <Header client:load />
+  <Header client:idle />
   <main class="">
     {/* メインビジュアル */}
     <HeroSection client:load />
@@ -314,9 +314,9 @@ const featuredTools = [
           </div>
         </div>
 
-        <ProcessHero client:load />
+        <ProcessHero client:visible />
         <div class="container mx-auto">
-          <ProcessSteps client:load />
+          <ProcessSteps client:visible />
         </div>
 
         {/* CTA for Zero Start - Pop Style */}
@@ -616,7 +616,7 @@ const featuredTools = [
           <span class="section-label ml-4">FAQ</span>
         </div>
       </div>
-      <ProcessFAQ client:load />
+      <ProcessFAQ client:visible />
     </section>
 
     {/* お問い合わせフォーム - Pop Style */}
@@ -643,7 +643,7 @@ const featuredTools = [
         </div>
         <div class="max-w-2xl mx-auto">
           <div class="card-base p-8">
-            <ContactForm client:load />
+            <ContactForm client:visible={{ rootMargin: '600px' }} />
           </div>
         </div>
       </div>

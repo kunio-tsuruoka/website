@@ -14,7 +14,7 @@ const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
   title="AI領収書OCR (デモ)｜画像から店舗名・金額・明細を自動抽出 | Beekle"
   description="領収書の画像をアップロードすると、AIが店舗名・日付・合計・明細を自動抽出します。経費精算の効率化を体感できるデモ。業務での精度検証はBeekleが支援します。"
 >
-  <Header client:load />
+  <Header client:idle />
   <main class="pt-20">
     <PageHero
       title="AI領収書OCR (デモ)"

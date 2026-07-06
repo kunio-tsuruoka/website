@@ -185,7 +185,7 @@ export function Header() {
     >
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         <a href="/" className="flex-shrink-0 flex items-center space-x-2 min-h-[44px]">
-          <img src="/logo.png" alt="logo" className="h-9 w-auto" />
+          <img src="/logo.png" alt="logo" width={640} height={166} className="h-9 w-auto" />
         </a>
 
         <div className="lg:hidden">

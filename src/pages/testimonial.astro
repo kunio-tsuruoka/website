@@ -22,7 +22,7 @@ import Layout from '../layouts/layout.astro';
       ],
     }}
   />
-  <Header client:load />
+  <Header client:idle />
   <main class="pt-20">
     <!-- Hero Section -->
     <PageHero
@@ -38,7 +38,7 @@ import Layout from '../layouts/layout.astro';
         title="実際にご利用いただいた感想"
         subtitle="様々な業界のお客様から頂いたご意見・ご感想"
       />
-      <TestimonialSection client:load />
+      <TestimonialSection client:visible />
     </Section>
 
     <!-- CTA Section: Primary背景でブランドカラーを強調 -->
