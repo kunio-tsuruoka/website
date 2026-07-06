@@ -188,10 +188,10 @@ const faqNumber =
     <ServiceFaq faq={service.faq} number={faqNumber} />
 
     <!-- CTA -->
-    <section class="relative py-20 md:py-32 overflow-hidden bg-gradient-to-br from-primary-500 to-primary-600">
-      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      <div class="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-white/10 blur-3xl" aria-hidden="true"></div>
-      <div class="pointer-events-none absolute -right-20 bottom-8 h-64 w-64 rounded-full bg-secondary-500/20 blur-3xl" aria-hidden="true"></div>
+    <section class="relative py-20 md:py-32 overflow-hidden bg-navy-950">
+      <div class="absolute inset-0 bg-grid-pattern-light opacity-30"></div>
+      <div class="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary-500/25 blur-3xl" aria-hidden="true"></div>
+      <div class="pointer-events-none absolute -right-20 bottom-8 h-64 w-64 rounded-full bg-secondary-500/15 blur-3xl" aria-hidden="true"></div>
       <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center relative z-10">
         <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 font-Montserrat">
           お気軽にご相談ください
@@ -204,7 +204,7 @@ const faqNumber =
             href={`/contact?source=services-${service.id}-final`}
             data-cta-source={`services-${service.id}-final`}
             data-cta-id="contact"
-            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
+            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-accent-950 bg-white rounded-full hover:bg-gray-100 transition-all shadow-strong hover:scale-105 transform"
           >
             無料相談を予約する
             <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -215,7 +215,7 @@ const faqNumber =
             href={`/downloads/zero-start?ref=services-${service.id}`}
             data-cta-source={`services-${service.id}-final`}
             data-cta-id="download-zero-start"
-            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-accent-950 bg-highlight-300 rounded-full hover:bg-highlight-200 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
+            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-accent-950 bg-highlight-500 rounded-full hover:bg-highlight-400 transition-all shadow-strong hover:scale-105 transform"
           >
             サービス資料をダウンロード
             <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -224,7 +224,7 @@ const faqNumber =
           </a>
           <a
             href="/company"
-            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
+            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-accent-950 transition-all"
           >
             会社概要を見る
           </a>
