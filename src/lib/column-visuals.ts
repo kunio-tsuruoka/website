@@ -613,6 +613,14 @@ const CONSULT_CTAS: Record<string, ConsultCta> = {
     body: '要件定義の進め方やドキュメントの書き方で迷ったら、実際のプロジェクトに即して一緒に詰めるご相談も承っています。発注側の判断材料が揃うように伴走します。',
     label: '要件定義を相談する',
   },
+  // 情シス/技術部門（購買委員会のゲートキーパー）向け。セキュリティ・構成の技術評価の段階を相談に変える。
+  // 「自社環境・VPSで閉じる構成」はBeekleの実スタンス（marketing.md VPS方針）に基づく記述。
+  TECH_REVIEW_CONSULT: {
+    intent: 'tech-review',
+    title: 'セキュリティ・システム構成の技術相談',
+    body: '「社外にデータを出せない」「既存システムと連携できるか」「導入後の運用が回るか」といった情報システム部門の技術的な懸念に、無料でお答えします。自社環境・VPSで閉じる構成、アクセス制御や監査ログの設計まで、構成レビューの壁打ち相手としてご利用ください。',
+    label: '技術構成を相談する',
+  },
   // 同業（Web制作会社・SIer・コンサルのテック側）向け。買い手向けCTAと別系統で、協業・開発リソース提供へ誘導する。
   // 遷移先は /contact 直行ではなく協業LP (/partner)。冷たい読者にRTB（実績・体制）を見せてからLP内CTAでフォームに落とす2段構え。
   // /partner 側のCTA (partner-hero / partner-footer) が intent=partner を持つため計測は維持される。
@@ -624,6 +632,54 @@ const CONSULT_CTAS: Record<string, ConsultCta> = {
     label: '開発パートナーとして相談する',
   },
 };
+
+// コラム → サービスLP へのブリッジカード。記事末CTA（/contact直行）より手前の温度感の読者を、
+// 磨いた受け皿（サービスLP）に送る中間導線。genai系47記事中39記事にサービスLPリンクが
+// 皆無だった監査（2026-07-07）に基づく。マーカーは {{X_SERVICE_BRIDGE}}。
+type ServiceBridge = {
+  href: string;
+  title: string;
+  body: string;
+  label: string;
+};
+
+const SERVICE_BRIDGES: Record<string, ServiceBridge> = {
+  AI_DEV_SERVICE_BRIDGE: {
+    href: '/services/ai-development',
+    title: 'Beekleの生成AI受託開発',
+    body: '「何にAIを使うべきか」の整理から、動くプロトタイプでの検証、現場で使われる本番運用まで。初期費用0円で試せるゼロスタート開発にも対応しています。',
+    label: 'サービス内容を見る',
+  },
+  RAG_SERVICE_BRIDGE: {
+    href: '/services/rag-system-development',
+    title: 'BeekleのRAGシステム構築',
+    body: '社内資料から根拠付きで答えるAIを構築します。通常のRAGで精度が出ない場合のGraphRAG構成、回答の根拠提示、資料更新への追従まで設計します。',
+    label: 'サービス内容を見る',
+  },
+  CHATBOT_SERVICE_BRIDGE: {
+    href: '/services/ai-chatbot-development',
+    title: 'BeekleのAIチャットボット開発',
+    body: '問い合わせ対応をAIで自動化します。社内資料に基づく根拠付き回答、答えられない質問を人につなぐ設計、導入後の精度改善まで伴走します。',
+    label: 'サービス内容を見る',
+  },
+  DOC_SEARCH_SERVICE_BRIDGE: {
+    href: '/services/internal-document-ai-search',
+    title: 'Beekleの社内文書AI検索',
+    body: '規程・マニュアル・過去対応が散らばって探せない状態を、根拠と一緒に答えるAI検索に変えます。属人化した知識の引き継ぎにも有効です。',
+    label: 'サービス内容を見る',
+  },
+};
+
+function buildServiceBridge(source: string, key: string, bridge: ServiceBridge): string {
+  return buildCtaCard({
+    href: `${bridge.href}?source=${encodeURIComponent(source)}&intent=service-bridge`,
+    source,
+    ctaId: `bridge-${key.toLowerCase().replaceAll('_', '-')}`,
+    title: bridge.title,
+    body: bridge.body,
+    label: bridge.label,
+  });
+}
 
 function buildConsultCta(source: string, cta: ConsultCta): string {
   return buildCtaCard({
@@ -741,6 +797,14 @@ export function renderColumnVisuals(html: string, ctx?: ColumnVisualContext): st
     const bridgeMarkers: Array<[string, string]> = [['BRIDGE_CTA', 'bridge']];
     for (const [key, _intent] of bridgeMarkers) {
       const visual = buildBridgeCta(ctx.source);
+      const wrapped = new RegExp(`<p>\\s*\\{\\{${key}\\}\\}\\s*</p>`, 'g');
+      const bare = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+      result = result.replace(wrapped, visual).replace(bare, visual);
+    }
+
+    // コラム → サービスLP ブリッジ（{{AI_DEV_SERVICE_BRIDGE}} 等）
+    for (const [key, bridge] of Object.entries(SERVICE_BRIDGES)) {
+      const visual = buildServiceBridge(ctx.source, key, bridge);
       const wrapped = new RegExp(`<p>\\s*\\{\\{${key}\\}\\}\\s*</p>`, 'g');
       const bare = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
       result = result.replace(wrapped, visual).replace(bare, visual);

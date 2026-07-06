@@ -112,6 +112,15 @@ const RFP_CONSULT: CtaItem = {
   ctaId: 'consult-rfp',
 };
 
+// 情シス/技術部門（購買委員会のゲートキーパー）向け。セキュリティ・構成記事の読者を技術相談に変える。
+const TECH_REVIEW_CONSULT: CtaItem = {
+  href: '/contact?intent=tech-review',
+  label: 'セキュリティ・構成の技術相談（無料）',
+  description:
+    '情報漏洩対策・自社環境で閉じる構成・既存システム連携・運用設計など、情報システム部門の技術的な懸念に無料でお答えします',
+  ctaId: 'consult-tech-review',
+};
+
 // 同業（開発会社・SIer・コンサルのテック側）向け。技術記事を「実装力の見極め」で読むB層の受け皿。
 const PARTNER_CONSULT: CtaItem = {
   href: '/contact?intent=partner',
@@ -200,6 +209,28 @@ const SLUG_CTA: Record<string, CategoryCta> = {
   'ai-development-cost-guide': buildCta(
     '開発費用のこと、Beekleに相談しませんか？',
     ESTIMATE_CONSULT,
+    PARTNER_CONSULT
+  ),
+  // 情シスCEP記事（セキュリティ/インフラ/API構成）: 主=技術相談。副はB層も読む構成系はPARTNER、
+  // セキュリティ系は資料DL（購買委員会の担当者が社内共有する材料）。
+  'genai-security-governance': buildCta(
+    'セキュリティの懸念、技術相談で解消しませんか？',
+    TECH_REVIEW_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'ai-security-privacy-guide': buildCta(
+    'セキュリティの懸念、技術相談で解消しませんか？',
+    TECH_REVIEW_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'genai-system-infrastructure': buildCta(
+    'インフラ構成、技術相談で壁打ちしませんか？',
+    TECH_REVIEW_CONSULT,
+    PARTNER_CONSULT
+  ),
+  'llm-api-system-design': buildCta(
+    'LLM連携の構成、技術相談で壁打ちしませんか？',
+    TECH_REVIEW_CONSULT,
     PARTNER_CONSULT
   ),
 };
