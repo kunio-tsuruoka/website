@@ -23,120 +23,96 @@ const { service, config } = Astro.props;
 const benefits = service.benefits.slice(0, 3);
 ---
 
-<section class="relative overflow-hidden bg-accent-950 pt-28 pb-16 md:pt-32 md:pb-20">
-  <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-  <div class="absolute left-0 top-0 h-full w-full bg-[radial-gradient(circle_at_20%_10%,rgba(61,77,183,0.28),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_10%_90%,rgba(0,196,204,0.12),transparent_28%)]"></div>
-  <div class="decoration-bar-cyan absolute -left-24 bottom-16 hidden h-3 w-64 opacity-30 lg:block" aria-hidden="true"></div>
-  <div class="decoration-dot dot-cyan absolute left-[8%] top-24 hidden h-2.5 w-2.5 opacity-60 lg:block" aria-hidden="true"></div>
-  <div class="decoration-dot dot-yellow absolute left-[16%] bottom-24 hidden h-2 w-2 opacity-50 lg:block" aria-hidden="true"></div>
+<!-- ライト基調ヒーロー（2026-07-07 ユーザー指定）。
+     ワーキングメモリ配慮: 左=バッジ/見出し/リード/CTAの4要素、右=ビジュアル1点のみ。
+     旧: 紺背景+右パネル11要素（チップ・メトリクス・紺ボックス）は情報過多のため撤去 -->
+<section class="relative overflow-hidden bg-white pt-28 pb-16 md:pt-32 md:pb-20">
+  <div
+    class="pointer-events-none absolute -right-32 -top-24 h-96 w-96 rounded-full bg-primary-100/60 blur-3xl"
+    aria-hidden="true"
+  >
+  </div>
+  <div
+    class="pointer-events-none absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-primary-50 blur-3xl"
+    aria-hidden="true"
+  >
+  </div>
 
-  <div class="container mx-auto px-6 lg:px-12 relative">
-    <div class="grid gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
+  <div class="container relative mx-auto px-6 lg:px-12">
+    <div class="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
       <div>
-        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-primary-100">
-          <span class="h-2 w-2 rounded-full bg-secondary-400" aria-hidden="true"></span>
+        <span
+          class="inline-flex items-center gap-2 rounded-full bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-700"
+        >
+          <span class="h-2 w-2 rounded-full bg-primary-500" aria-hidden="true"></span>
           {config?.eyebrow ?? 'Beekle のサービス'}
         </span>
-        <h1 class="mt-6 max-w-4xl text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
+        <h1
+          class="mt-6 max-w-4xl text-4xl font-bold leading-tight text-navy-950 md:text-5xl lg:text-6xl"
+        >
           {config?.headline ?? service.title}
         </h1>
-        <p class="mt-6 max-w-3xl text-lg leading-relaxed text-white/85 md:text-xl">
+        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-600 md:text-xl">
           {config?.heroLead ?? service.description}
         </p>
-        {config?.primaryOutcome && (
-          <p class="mt-4 max-w-2xl border-l-4 border-secondary-400 pl-4 text-base font-semibold leading-relaxed text-white">
-            {config.primaryOutcome}
-          </p>
-        )}
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        {
+          config?.primaryOutcome && (
+            <p class="mt-5 max-w-2xl border-l-4 border-primary-500 pl-4 text-base font-semibold leading-relaxed text-navy-950">
+              {config.primaryOutcome}
+            </p>
+          )
+        }
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row">
           <a
             href={`/contact?source=services-${service.id}-hero`}
             data-cta-source={`services-${service.id}-hero`}
             data-cta-id="contact"
-            class="inline-flex min-h-[52px] items-center justify-center rounded-full bg-white px-7 py-3 text-base font-bold text-accent-950 shadow-lg transition hover:bg-neutral-100"
+            class="inline-flex min-h-[52px] items-center justify-center rounded-full bg-primary-500 px-8 py-3 text-base font-bold text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium"
           >
             無料相談する
             <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
           </a>
           <a
             href="/prooffirst"
-            class="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/30 bg-white/10 px-7 py-3 text-base font-bold text-white backdrop-blur transition hover:bg-white/20"
+            class="inline-flex min-h-[52px] items-center justify-center rounded-full border-2 border-primary-200 px-8 py-3 text-base font-bold text-primary-700 transition hover:border-primary-400 hover:bg-primary-50"
           >
             初期費用0円で始める
           </a>
         </div>
       </div>
 
-      <div class="rounded-[28px] border border-white/10 bg-white/[0.08] p-4 shadow-strong backdrop-blur md:p-5">
-        <div class="rounded-[22px] bg-white p-5 shadow-2xl md:p-6">
-          <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-5">
-            <div>
-              <p class="text-sm font-bold text-primary-500">{config?.visualSubtitle ?? 'Service overview'}</p>
-              <h2 class="mt-1 text-2xl font-bold text-navy-950">{config?.visualTitle ?? service.title}</h2>
-            </div>
-            <span class="rounded-full bg-primary-50 px-3 py-1 text-xs font-bold text-primary-600">PoC ready</span>
-          </div>
-
-          {config?.illustration ? (
-            <figure class="mt-5 overflow-hidden rounded-2xl border border-primary-100 bg-accent-950 shadow-soft">
-              <img
-                src={config.illustration.src}
-                alt={config.illustration.alt}
-                class="aspect-[1.9/1] w-full object-cover"
-                width="950"
-                height="500"
-                loading="eager"
-                decoding="async"
-              />
-              <figcaption class="grid grid-cols-2 gap-px bg-primary-100 sm:grid-cols-4">
-                {config.illustration.stages.map((stage, index) => (
-                  <div class="flex items-center gap-2 bg-white px-3 py-2.5">
-                    <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-500 text-[10px] font-bold text-white">
-                      {index + 1}
-                    </span>
-                    <span class="text-xs font-bold leading-snug text-neutral-800">{stage}</span>
-                  </div>
-                ))}
-              </figcaption>
-            </figure>
-          ) : (
-            <div class="mt-5 grid gap-3">
-              {(config?.visualItems ?? benefits).map((item, index) => (
-                <div class="flex items-center gap-3 rounded-2xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-500 text-sm font-bold text-white">
-                    {index + 1}
-                  </span>
-                  <span class="font-bold text-neutral-800">{item}</span>
-                  <span class="ml-auto h-2 w-10 rounded-full bg-primary-200"></span>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div class="mt-5 grid grid-cols-3 gap-3">
-            {(config?.metrics ?? []).map((metric) => (
-              <div class="rounded-2xl bg-primary-50 p-3">
-                <p class="text-xs font-bold text-primary-500">{metric.label}</p>
-                <p class="mt-1 text-sm font-bold leading-snug text-navy-950">{metric.value}</p>
+      {
+        config?.illustration ? (
+          <figure class="overflow-hidden rounded-3xl shadow-strong">
+            <img
+              src={config.illustration.src}
+              alt={config.illustration.alt}
+              class="aspect-[1.9/1] w-full object-cover"
+              width="950"
+              height="500"
+              loading="eager"
+              decoding="async"
+            />
+          </figure>
+        ) : (
+          <div class="grid gap-3">
+            {(config?.visualItems ?? benefits).map((item, index) => (
+              <div class="flex items-center gap-3 rounded-2xl border border-neutral-100 bg-white px-5 py-4 shadow-soft">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-500 font-Poppins text-sm font-bold text-white">
+                  {index + 1}
+                </span>
+                <span class="font-bold text-navy-950">{item}</span>
               </div>
             ))}
           </div>
-
-          <div class="mt-5 rounded-2xl bg-accent-950 p-4 text-white">
-            <p class="text-xs font-bold text-primary-200">このページでわかること</p>
-            <div class="mt-3 grid gap-2">
-              {benefits.map((benefit) => (
-                <div class="flex gap-2 text-sm leading-relaxed text-white/90">
-                  <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary-300"></span>
-                  <span>{benefit}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+        )
+      }
     </div>
   </div>
 </section>
