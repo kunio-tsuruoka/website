@@ -388,7 +388,7 @@ export function StoryBuilder() {
               loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary-500 hover:bg-primary-600'
             )}
           >
-            {loading ? 'AIが整理中…（30〜60秒）' : 'AIで仕様書を生成'}
+            {loading ? 'AIが整理中…（1〜2分）' : 'AIで仕様書を生成'}
           </button>
         </div>
 
