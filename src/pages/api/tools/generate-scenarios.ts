@@ -48,7 +48,7 @@ type ApiResult = {
   usecase: UseCase;
 };
 
-const MODEL = 'anthropic/claude-3.5-haiku';
+const DEFAULT_MODEL = 'deepseek/deepseek-v4-flash';
 const DEFAULTS = { happy: 5, unwanted: 4, boundary: 2 };
 
 function buildPrompt(body: RequestBody): string {
@@ -177,8 +177,16 @@ function normalizeReqs(reqs: Requirement[] | undefined, defaultType: EarsType): 
 
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
-    const runtime = (locals as { runtime?: { env?: { OPENROUTER_API_KEY?: string } } }).runtime;
+    const runtime = (
+      locals as {
+        runtime?: { env?: { OPENROUTER_API_KEY?: string; OPENROUTER_MODEL_TOOLS?: string } };
+      }
+    ).runtime;
     const apiKey = runtime?.env?.OPENROUTER_API_KEY ?? import.meta.env.OPENROUTER_API_KEY;
+    const model =
+      runtime?.env?.OPENROUTER_MODEL_TOOLS ??
+      import.meta.env.OPENROUTER_MODEL_TOOLS ??
+      DEFAULT_MODEL;
 
     if (!apiKey) {
       return json(500, { success: false, error: 'OPENROUTER_API_KEY is not configured' });
@@ -196,8 +204,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 4000,
+        model,
+        max_tokens: 8000,
         temperature: 0.3,
         response_format: { type: 'json_object' },
         messages: [{ role: 'user', content: buildPrompt(body) }],
