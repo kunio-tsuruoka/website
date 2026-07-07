@@ -18,6 +18,7 @@ type Requirement = {
   priority: Priority;
   origin: string;
   text: string;
+  plain?: string;
   category?: string;
 };
 
@@ -73,6 +74,7 @@ ${description}
   - 境界値: 201〜
 - ユースケースID は「業務ドメイン2〜3文字-連番」の形式（例: SA-1, OR-1, EX-1）
 - 由来は「元仕様」「ヒアリング議事録」「運用要望」「AI推測」などから選択
+- 各要求には "plain" を必ず付ける: 専門用語を使わない日本語1文で、その要求が実現することを言い換える（発注者がそのまま読める文。例:「申請ボタンを押すと、上長に通知が届く」「金額に数字以外を入れると、エラーが表示されて申請できない」）
 - 業務上ありえないSF的シナリオは避け、現実的なケースに絞る
 
 # 件数
@@ -98,13 +100,13 @@ ${description}
     "businessValue": ["価値1（業務観点）", "価値2", "価値3"],
     "preconditions": ["前提1", "前提2"],
     "happy": [
-      { "id": "REQ-SA-1-001", "type": "イベント駆動", "priority": "必須", "origin": "AI推測", "text": "EARS要求文" }
+      { "id": "REQ-SA-1-001", "type": "イベント駆動", "priority": "必須", "origin": "AI推測", "text": "EARS要求文", "plain": "発注者向けの平易な言い換え1文" }
     ],
     "unwanted": [
-      { "id": "REQ-SA-1-101", "type": "異常系", "priority": "必須", "origin": "AI推測", "category": "通信障害", "text": "もし<条件>の場合、<システム>は、<挙動>すること。" }
+      { "id": "REQ-SA-1-101", "type": "異常系", "priority": "必須", "origin": "AI推測", "category": "通信障害", "text": "もし<条件>の場合、<システム>は、<挙動>すること。", "plain": "発注者向けの平易な言い換え1文" }
     ],
     "boundary": [
-      { "id": "REQ-SA-1-201", "type": "イベント駆動", "priority": "必須", "origin": "AI推測", "text": "EARS要求文" }
+      { "id": "REQ-SA-1-201", "type": "イベント駆動", "priority": "必須", "origin": "AI推測", "text": "EARS要求文", "plain": "発注者向けの平易な言い換え1文" }
     ],
     "ui": [
       { "element": "ページタイトル", "content": "..." },
@@ -171,6 +173,7 @@ function normalizeReqs(reqs: Requirement[] | undefined, defaultType: EarsType): 
     priority: (['必須', '推奨', '任意'] as Priority[]).includes(r.priority) ? r.priority : '推奨',
     origin: r.origin?.trim() || 'AI推測',
     text: r.text?.trim() || '',
+    plain: r.plain?.trim() || undefined,
     category: r.category?.trim(),
   }));
 }

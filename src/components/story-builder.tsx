@@ -18,8 +18,11 @@ type Requirement = {
   priority: Priority;
   origin: string;
   text: string;
+  plain?: string;
   category?: string;
 };
+
+type ReqView = 'plain' | 'ears';
 
 type UseCase = {
   id: string;
@@ -68,6 +71,7 @@ export function StoryBuilder() {
   const [unwantedCount, setUnwantedCount] = useState(4);
   const [boundaryCount, setBoundaryCount] = useState(2);
   const [result, setResult] = useState<ApiResult | null>(null);
+  const [reqView, setReqView] = useState<ReqView>('plain');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -451,14 +455,59 @@ export function StoryBuilder() {
             )}
 
             <Section heading="シナリオ">
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <div className="inline-flex rounded-lg border border-gray-300 overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setReqView('plain')}
+                    className={cn(
+                      'px-3 py-1.5 text-xs font-semibold transition-colors',
+                      reqView === 'plain'
+                        ? 'bg-primary-500 text-white'
+                        : 'bg-white text-gray-600 hover:bg-gray-50'
+                    )}
+                  >
+                    ふつうの言葉で表示
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setReqView('ears')}
+                    className={cn(
+                      'px-3 py-1.5 text-xs font-semibold transition-colors',
+                      reqView === 'ears'
+                        ? 'bg-primary-500 text-white'
+                        : 'bg-white text-gray-600 hover:bg-gray-50'
+                    )}
+                  >
+                    開発会社向け表記（EARS）
+                  </button>
+                </div>
+                <span className="text-xs text-gray-400">
+                  {reqView === 'plain'
+                    ? 'ダウンロード（Markdown）は開発会社向け表記で出力されます'
+                    : '世界標準の要件記法（EARS）での表記です'}
+                </span>
+              </div>
               {result.usecase.happy.length > 0 && (
-                <ReqGroup label="正常系" reqs={result.usecase.happy} />
+                <ReqGroup
+                  label={reqView === 'plain' ? 'うまくいく流れ' : '正常系'}
+                  reqs={result.usecase.happy}
+                  view={reqView}
+                />
               )}
               {result.usecase.unwanted.length > 0 && (
-                <ReqGroup label="異常系" reqs={result.usecase.unwanted} />
+                <ReqGroup
+                  label={reqView === 'plain' ? 'うまくいかないときの備え' : '異常系'}
+                  reqs={result.usecase.unwanted}
+                  view={reqView}
+                />
               )}
               {result.usecase.boundary.length > 0 && (
-                <ReqGroup label="境界値" reqs={result.usecase.boundary} />
+                <ReqGroup
+                  label={reqView === 'plain' ? '限界ぎりぎりの確認' : '境界値'}
+                  reqs={result.usecase.boundary}
+                  view={reqView}
+                />
               )}
             </Section>
 
@@ -620,31 +669,49 @@ function BulletList({ items }: { items: string[] }) {
   );
 }
 
-function ReqGroup({ label, reqs }: { label: string; reqs: Requirement[] }) {
+function ReqGroup({ label, reqs, view }: { label: string; reqs: Requirement[]; view: ReqView }) {
   return (
     <div className="mb-4 last:mb-0">
       <h4 className="text-xs font-bold text-gray-600 mb-2">{label}</h4>
       <ul className="space-y-2">
-        {reqs.map((r) => (
-          <li key={r.id} className="border border-gray-200 rounded-md p-3 bg-gray-50">
-            <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <span className="font-mono text-xs text-gray-700">{r.id}</span>
-              <span className={cn('px-2 py-0.5 text-xs rounded-full', TYPE_STYLE[r.type])}>
-                {r.type}
-              </span>
-              <span className={cn('px-2 py-0.5 text-xs rounded-full', PRIORITY_STYLE[r.priority])}>
-                {r.priority}
-              </span>
-              {r.category && (
-                <span className="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">
-                  {r.category}
+        {reqs.map((r) =>
+          view === 'plain' ? (
+            <li key={r.id} className="border border-gray-200 rounded-md p-3 bg-gray-50">
+              <div className="flex items-start gap-2">
+                <span
+                  className={cn(
+                    'px-2 py-0.5 text-xs rounded-full flex-shrink-0 mt-0.5',
+                    PRIORITY_STYLE[r.priority]
+                  )}
+                >
+                  {r.priority}
                 </span>
-              )}
-              <span className="text-xs text-gray-400">由来: {r.origin}</span>
-            </div>
-            <p className="text-sm text-gray-800 leading-relaxed">{r.text}</p>
-          </li>
-        ))}
+                <p className="text-sm text-gray-800 leading-relaxed">{r.plain || r.text}</p>
+              </div>
+            </li>
+          ) : (
+            <li key={r.id} className="border border-gray-200 rounded-md p-3 bg-gray-50">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <span className="font-mono text-xs text-gray-700">{r.id}</span>
+                <span className={cn('px-2 py-0.5 text-xs rounded-full', TYPE_STYLE[r.type])}>
+                  {r.type}
+                </span>
+                <span
+                  className={cn('px-2 py-0.5 text-xs rounded-full', PRIORITY_STYLE[r.priority])}
+                >
+                  {r.priority}
+                </span>
+                {r.category && (
+                  <span className="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">
+                    {r.category}
+                  </span>
+                )}
+                <span className="text-xs text-gray-400">由来: {r.origin}</span>
+              </div>
+              <p className="text-sm text-gray-800 leading-relaxed">{r.text}</p>
+            </li>
+          )
+        )}
       </ul>
     </div>
   );
