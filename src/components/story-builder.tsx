@@ -558,8 +558,7 @@ export function StoryBuilder() {
 
           <Card title="4. エクスポート">
             <p className="text-sm text-gray-600 mb-3">
-              スコープ管理ツールに取り込める Markdown
-              形式で出力します。「作る／後回し／作らない」の判定は{' '}
+              開発会社にそのまま渡せる形式（Markdown）で出力します。「作る／後回し／作らない」の判定は{' '}
               <a href="/tools/scope-manager" className="text-primary-500 hover:underline">
                 スコープ管理ツール
               </a>
