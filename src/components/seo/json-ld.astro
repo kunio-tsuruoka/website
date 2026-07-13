@@ -14,7 +14,8 @@ export interface Props {
     | 'person'
     | 'softwareApplication'
     | 'itemList'
-    | 'website';
+    | 'website'
+    | 'webPage';
   data?: Record<string, unknown>;
 }
 
@@ -249,6 +250,28 @@ const itemListSchema = data.items
     }
   : null;
 
+// WebPage（役割型を持たない汎用ページ用。data.pageType で schema.org sub-type を指定）
+const webPageSchema = data.name
+  ? {
+      '@context': 'https://schema.org',
+      '@type': data.pageType || 'WebPage',
+      name: data.name,
+      description: data.description || '',
+      url: data.url || siteUrl,
+      inLanguage: 'ja',
+      isPartOf: {
+        '@type': 'WebSite',
+        name: 'Beekle',
+        url: siteUrl,
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Beekle株式会社',
+        url: siteUrl,
+      },
+    }
+  : null;
+
 // Person 単体（members ページ等で個人を独立して出力する用途）
 const personSchema = data.authorId
   ? (() => {
@@ -279,6 +302,8 @@ const getSchema = () => {
       return itemListSchema;
     case 'website':
       return websiteSchema;
+    case 'webPage':
+      return webPageSchema;
     default:
       return null;
   }

@@ -2,6 +2,7 @@
 import Layout from '@/layouts/layout.astro';
 import { Header } from '../components/header';
 import MemberCard from '../components/member-card';
+import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
 import { authors } from '../data/authors';
 
@@ -89,6 +90,26 @@ const members: Member[] = [
   description="Beekleのチームメンバー紹介。デザイナー、エンジニア、マーケターなど多様なスキルを持つプロフェッショナルが在籍し、幅広い開発案件に対応します。"
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(membersJsonLd)} />
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: 'メンバー紹介', url: '/members' },
+      ],
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="webPage"
+    data={{
+      pageType: 'CollectionPage',
+      name: 'メンバー紹介 | Beekle',
+      description: 'Beekleのチームメンバー紹介。デザイナー、エンジニア、マーケターなど多様なスキルを持つプロフェッショナルが在籍し、幅広い開発案件に対応します。',
+      url: 'https://beekle.jp/members',
+    }}
+  />
   <Header client:idle />
   <main class="pt-20">
     <PageHero
