@@ -11,6 +11,7 @@ import ServiceFaq from '@/components/services/service-faq.astro';
 import ServiceFeatures from '@/components/services/service-features.astro';
 import ServiceHero from '@/components/services/service-hero.astro';
 import ServicePainPoints from '@/components/services/service-pain-points.astro';
+import ServiceRootCause from '@/components/services/service-root-cause.astro';
 import ServiceSolutions from '@/components/services/service-solutions.astro';
 import { Section, SectionHeader } from '@/components/ui';
 import { getAiServicePageConfig } from '@/data/ai-service-page-config';
@@ -77,6 +78,7 @@ const faqNumber =
     <ServiceBusinessFlow flow={servicePageConfig?.flow} />
     {service.id === 'ai-development' && <AiDevelopmentOverview />}
     <ServicePainPoints painPoints={service.painPoints} />
+    <ServiceRootCause rootCause={servicePageConfig?.rootCause} />
     <ServiceSolutions solutions={service.solutions} />
 
     <ServiceCaseStudies caseStudies={service.caseStudies} />
