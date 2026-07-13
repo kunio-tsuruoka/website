@@ -25,3 +25,11 @@
 ## Story Builder との連携
 
 `/tools/story-builder` の Markdown 出力は `- **REQ-XXX-NNN**（種別・優先度・由来:XX）` 形式に揃えてあり、scope-manager の `parseMarkdown` 正規表現にそのままマッチする。
+
+## パイプライン順序との整合（2026-07-14 反転後）
+
+正規のパイプラインは **要求 → FM → ユーザーストーリー → Gherkin → 実装**（[[requirements-pipeline-order]]）。この文脈で両ツールの位置づけ:
+
+- **scope-manager（FM）は「要求（やりたいこと）の一覧」を入力に取り、3軸で絞る**工程。入力は story-builder が出す1行の要求候補でよい（=要求の洗い出し）。「詳細なユーザーストーリー化」ではなく「粗い要求候補の優先順位付け」がFMの役割。
+- **詳細なユーザーストーリー＋EARSは、FMで「作る」と決めた要求だけを後工程で書く**。story-builder はこの詳細化にも使えるが、記事コピーで「ストーリーを全部書いてからFM」と書かない（反パターン）。
+- ツールのデータフロー（story-builder出力→scope-manager取り込み）は**コード変更不要**。story-builder の1行出力＝要求候補と解釈すれば「要求→FM」に合致する。tool code の反転（story-builderをFM後に強制する等）はしない。
