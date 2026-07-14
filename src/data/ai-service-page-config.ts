@@ -108,10 +108,10 @@ export const aiServicePageConfig = {
     ],
   },
   'rag-system-development': {
-    eyebrow: '自社データを業務判断に使いたい企業へ',
-    headline: '社内データから根拠ある回答を出し、判断スピードを上げる',
+    eyebrow: '社内文書検索AI・RAG／GraphRAG開発',
+    headline: '「社内の情報が探せない」を解決する、社内文書検索AI（RAG／GraphRAG）開発',
     heroLead:
-      '製品仕様、社内規程、過去対応履歴などを活用し、担当者が根拠を確認しながら判断できるAI基盤を作ります。',
+      '製品仕様・社内規程・過去対応・議事録が散らばり、担当者しか答えられない状態を、誰もが根拠付きで引ける社内ナレッジ検索に変えます。GraphRAGで複数資料をまたぐ質問にも対応します。',
     primaryOutcome: '汎用AIでは答えられない自社固有の質問に、根拠付きで対応できます。',
     visualTitle: '判断スピードを上げる',
     visualSubtitle: 'お客さま側のメリット',
