@@ -369,7 +369,7 @@ export const services: ServiceDetail[] = [
     description:
       'ChatGPT・Claude・Gemini等のLLM、AIエージェント、RAG構築まで。生成AIを業務に組み込む受託開発サービス。',
     longDescription:
-      'OpenAI（ChatGPT/GPT-4o）、Anthropic Claude、Google Gemini等のLLM API活用から、社内文書を活用するRAG（検索拡張生成）、業務を自律実行するAIエージェント、Stable Diffusionによる画像生成まで、生成AIを業務システムに組み込む受託開発を提供します。技術選定・PoC・本番化・運用まで一気通貫でサポートします。',
+      'OpenAI（ChatGPT）、Anthropic Claude、Google Gemini等のLLM API活用から、社内文書を活用するRAG（検索拡張生成）、業務を自律実行するAIエージェント、Stable Diffusionによる画像生成まで、生成AIを業務システムに組み込む受託開発を提供します。技術選定・PoC・本番化・運用まで一気通貫でサポートします。',
     seoTitle: 'AI受託開発・生成AI受託開発｜ChatGPT・Claude・RAG活用、PoCから本番化まで | Beekle',
     seoDescription:
       'AI受託開発・生成AI受託開発の専門チームが、ChatGPT・Claude・Gemini・RAG・AIエージェント構築まで対応。「AI受託開発会社の選び方が分からない」「PoC止まりにしたくない」というお悩みに、動くデモで判断材料を提供します。初期費用0円のゼロスタートで無料相談から開始可能。',
@@ -517,7 +517,7 @@ export const services: ServiceDetail[] = [
       {
         question: '対応している生成AI（LLM）は何ですか？',
         answer:
-          'OpenAI GPT-4o / GPT-4 / o1、Anthropic Claude（Opus / Sonnet / Haiku）、Google Gemini、Meta Llama、Stable Diffusion、Midjourney等、主要な生成AIに対応しています。Azure OpenAI、AWS Bedrock経由のエンタープライズ利用にも対応します。',
+          'OpenAI GPT系、Anthropic Claude系、Google Gemini、Meta Llama、Stable Diffusion（画像生成）等、主要な生成AIに対応しています。Azure OpenAI、AWS Bedrock経由のエンタープライズ利用にも対応します。',
       },
       {
         question: 'ChatGPTとClaudeはどちらを選ぶべきですか？',
@@ -537,7 +537,7 @@ export const services: ServiceDetail[] = [
       {
         question: 'AI開発の費用感を教えてください',
         answer:
-          '費用は「何を作るか」で大きく変わります。動作を試す検証用プロトタイプは初期費用0円のゼロスタートから始められます（範囲は限定）。実データ・複数ケースで本格的に検証するPoCで200〜500万円、本格的なRAGシステム構築で800〜2,000万円、AIエージェント本番化で1,500万円〜が目安です（対象業務・データ規模により変動）。初回ヒアリング後に内訳付きの見積もりをお出しします。',
+          '費用は「何を作るか」で大きく変わります。動作を試す検証用プロトタイプは初期費用0円のゼロスタートから始められます（範囲は限定）。実データ・複数ケースで本格的に検証するPoCで200〜500万円、本格的なRAGシステム構築やAIエージェント本番化で800〜2,000万円が目安です（対象業務・データ規模により変動）。初回ヒアリング後に内訳付きの見積もりをお出しします。',
       },
       {
         question: 'PoCから本番化までの期間はどれくらいですか？',
@@ -547,7 +547,7 @@ export const services: ServiceDetail[] = [
       {
         question: 'APIコストはどのように最適化されますか？',
         answer:
-          'モデル使い分け（簡単な処理はHaiku/Mini系、複雑な処理はOpus/GPT-4等）、プロンプトキャッシュ、Embeddingキャッシュ、バッチ処理活用等の手法でコストを最小化します。月次のコストモニタリングと予算アラートも構築します。',
+          'モデル使い分け（簡単な処理は軽量モデル、複雑な処理は高性能モデル）、プロンプトキャッシュ、Embeddingキャッシュ、バッチ処理活用等の手法でコストを最小化します。月次のコストモニタリングと予算アラートも構築します。',
       },
       {
         question: 'セキュリティ・社外秘データの扱いは？',
@@ -605,7 +605,7 @@ export const services: ServiceDetail[] = [
         title: 'AI受託開発でPoC止まりにしないための判断軸',
         subtitle: '「動いた」と「業務で使える」の間を埋める',
         paragraphs: [
-          'Gartnerによれば、生成AIプロジェクトの半数超がPoC後に放棄されています（2024年の「30%が放棄」予測に対し、実績は50%超）。原因は技術力ではなく、評価設計の不在と業務への統合不足です。BeekleはPoC段階から「業務で使える」の定義を依頼者と合意し、評価基準を業務KPIの数値で持ちます。',
+          'Gartnerは2024年、生成AIプロジェクトの30%が2025年末までにPoC後に放棄されると予測しました。原因は技術力ではなく、評価設計の不在と業務への統合不足です。BeekleはPoC段階から「業務で使える」の定義を依頼者と合意し、評価基準を業務KPIの数値で持ちます。',
           '業務担当者と一緒に正解例・NG例・境界事例を集め、処理時間・対応件数・エラー率など業務KPIに紐づくメトリクスを設計します。「精度80%のAI＋残り2割は人がレビュー」のほうが現場で立ち上がりやすいケースも多く、ハイブリッド運用を前提に設計します。',
         ],
         cards: [
@@ -627,7 +627,7 @@ export const services: ServiceDetail[] = [
           {
             title: '出典：Gartner（2024）',
             description:
-              '「30% of Generative AI Projects Will Be Abandoned After Proof of Concept By End of 2025」（2024年7月、Gartner）。その後の実績では、生成AIプロジェクトの50%超がPoC後に放棄されたと報告されています。',
+              '「30% of Generative AI Projects Will Be Abandoned After Proof of Concept By End of 2025」（2024年7月、Gartner）。',
             link: {
               href: 'https://www.gartner.com/en/newsroom/press-releases/2024-07-29-gartner-predicts-30-percent-of-generative-ai-projects-will-be-abandoned-after-proof-of-concept-by-end-of-2025',
               label: 'Gartnerの発表を見る',
@@ -1415,7 +1415,7 @@ export const services: ServiceDetail[] = [
       {
         question: '手書き文字の読み取りはどの程度の精度ですか？',
         answer:
-          '手書き文字の認識精度は字の丁寧さによって変動しますが、数字（金額・日付・電話番号等）は90%以上、漢字を含む氏名・住所は80〜90%が目安です。確信度の低い文字はレビュー画面でハイライトされるため、人間が確認して補正できます。運用を重ねるほどフィードバックデータが蓄積され、精度は向上します。',
+          '手書き文字の認識精度は字の丁寧さや解像度によって変動します。数字（金額・日付・電話番号等）は比較的安定して読み取れますが、漢字を含む氏名・住所は変動が大きくなる傾向です。確信度の低い文字はレビュー画面でハイライトされるため、人間が確認して補正できます。運用を重ねるほどフィードバックデータが蓄積され、精度は向上します。',
       },
       {
         question: '既存のOCRツールとの違いは何ですか？',
