@@ -81,3 +81,49 @@ marketing.md の実績（NTT系メンタルヘルスアプリ火消し=他社が
 - 例外: 過去実績としての事実は可(minami製造業=補助金申請要件のRFP代行。[[project_rfp_case_minami]])。ただし「補助金で安くなる」を売りにはしない。
 - 経営者向けは補助金でなく「費用対効果/ROIの考え方＋段階導入で投資リスクを小さくする」で訴求する。
 - 関連: [[feedback_kintone_vs_genai_stance]](安い・早い・VPSで十分の断定スタンス)、[[project_genai_engagement_flow]]。
+
+# pm-on-rails の実体は FastAPI+Neo4j+Milvus+Next.js（Railsではない）
+
+github.com/beekle-team/pm-on-rails（製品名 "SpecGraph / PM on Rails" = 要件＝正のSDLCメタシステム）は**名前が比喩でRuby on Railsではない**。ローカルクローン `/Users/kunio/dev/pm-on-rails`（+多数のworktree）。2026-07-05に実コード確認。
+
+## 実アーキテクチャ（記事/RTBで使える一次情報。公開時は製品名・リポジトリ名を出さず「自社の要件トレーサビリティ／PMシステム」と匿名化＝marketing.md準拠）
+- Stack: Python3.11/FastAPI0.110（Clean/Hexagonal: domain/application/infrastructure/presentation）、Next.js14/React18、arq(Redis)ジョブ。
+- グラフDB: **Neo4j 5.19 が system of record**。typed-edge の SDLCトレーサビリティ: DemandDeep-[REFINES]->Requirement-[HAS_SCENARIO/HAS_AC/HAS_STORY]->...-[HAS_TASK]->KanbanTask-[VERIFIED_BY]->TestResult。Bug学習ループ: AFFECTS/HAS_RESOLUTION/PROPOSES/VALIDATES。NodeLabel/RelType を enum でホワイトリスト化＋識別子regex＝Cypherインジェクション防御。スキーマは migrations/neo4j/*.cypher。
+- ベクトル: **Milvus**（OpenAI text-embedding-3-small 1536次元, COSINE, project_idスコープ, content-hash Redisキャッシュ）。※rag-demoは別物で qwen3-embedding-8b 4096次元。
+- 検索: retrieval_orchestrator が**4戦略並列**（A:Cypher / B:Hybrid=vector+fulltext / C:Graph Expansion / D:GraphRAG=Louvainコミュニティ要約）。Intent Router(Haiku,7分類)、Cross-Encoder rerank(bge-reranker-v2-m3)。類似は**3層スコア**（Milvus cosine + フィードバックバイアス±0.15 + Neo4jグラフ構造ブースト tag Jaccard/actor/共通祖先 +0.30、閾値 dup≥0.85 / suggest≥0.65）。
+- AI: **MCPサーバ**（FastMCP, POST /mcp, ~158ツール, PAT Bearer認証, 全CypherにworkspaceをWHEREで二重防御, OAuth風スコープ, ACLエッジ CAN_VIEW/EDIT/ADMIN）。LLMはOpenRouter経由 Claude Sonnet4.5/Haiku4.5、prompt caching。
+- 学習ループ: **bug→requirement 書き戻し**（ADR-043、closed BugをSonnetで改善提案化→新Demand/Requirement化）。DoR/DoD自動検証。
+- 運用: arq cron（detect_backlog_rot日次/task遅延/burndownスナップショット/embed・concept抽出ジョブ）、GitHub/Slack同期、多テナント Workspace>Project。
+
+## 未確認/訂正（記事で断定しない）
+- EARSは未確認（Gherkinは `SDLCScenario.gherkin` で実在）。ADR類似検索は現状**ベクトルでなくNeo4j部分文字列**（未配線）。埋め込みはOpenAI（Qwenではない、それはrag-demo側）。
+- 関連: [[kg_agent_core_knowledge_content]]、marketing.md（rag-demo/自社業務システム匿名化）。
+
+# 生成AIコラムの技術主張ファクトチェック済み事実（2026-07-05、公式ソース確認）
+
+生成AI系コラムで再利用してよい、一次ソースで裏取り済みの技術事実。PM/システム開発系は別途監修ダブルチェックが入るため対象外（生成AI系のみ機械監査＋出典照合した）。
+
+- **Neo4j Community Editionには RBAC・サブグラフアクセス制御（ラベル/関係/プロパティ単位の権限）が無い＝Enterprise専用**。Communityは限定的なユーザー管理のみ。出典: Neo4j公式 operations-manual authentication-authorization（「本機能はEnterprise Editionに適用」）。→ neo4j-multitenant-security の中核主張は正確。マルチテナントはアプリ層で強制＋越境CIテスト、が正しい設計。
+- **RAGASの中核指標＝Faithfulness(忠実性)/Response Relevancy/Context Precision(文脈適合率)/Context Recall(文脈再現率)**。※旧称 Answer Relevancy は現行版で **Response Relevancy** に改称（指す内容は同一）。出典: RAGAS公式 metrics。→ rag-evaluation に注記済み。
+- 定説として正確（再確認不要）: RAG=Retrieval-Augmented Generation／RAGとファインチューニングの違い（RAGは再学習せず外部資料を渡す）／ベクトル=意味類似・全文=キーワード・ハイブリッド・RRF・クロスエンコーダ再ランク／SECIモデル(野中郁次郎・竹内弘高、共同化/表出化/連結化/内面化、暗黙知↔形式知)／LLMの知識カットオフ・ハルシネーション自己判定不可・RAGで抑制可だがゼロ不可。
+- TDB統計(活用34.5%/情報の正確性50.4%/専門人材41.3%/活用業務40.0%/情報漏洩33.5%/ルール整備25.5%、2026-03・1万312社)は出典ページと完全一致（[[column-writing-style]]既載の数値が正）。
+- 是正済: ai-knowledge-chatbot-accuracy の「200-800万円」を定性化（外部出典なき具体額のため）。
+- 関連: 内部リンクはサイトが /column と /knowledge の両prefixで同一記事を配信するため取り違えでも404にならない（55本全200確認）。
+
+# 生成AI記事の「固有名詞・モデル・クラウド機能」主張は陳腐化する。定期再検証が必要
+
+2026-07-05の全生成AI記事ファクトチェックで、明確な事実誤りは5件。うち最大は「AWS BedrockはOpenAI非対応/対象外」(llm-selection-strategy)＝執筆時は正しかったが2025年にBedrockがOpenAIモデル対応で陳腐化し、比較表・判断フロー・FAQの3箇所が誤りに。この種の「特定ベンダーの対応状況・モデル型番(GPT-4系等)・第三者製品名(Copilot for Microsoft 365→Microsoft 365 Copilot、kintone AI、Einstein/Agentforce)・政府ガイドライン帰属(AI事業者ガイドラインは総務省・経産省共同、旧経産省GLは2024統合)」は時間で誤りになる。
+
+## 是正済(2026-07-05)
+- llm-selection-strategy: BedrockのOpenAI対応を反映、GPT-4系→GPT系
+- llm-api-system-design: 「1回数円〜数十円」→「0.1円未満〜数円(長文/高性能で数十円)」(下限を10-100倍過大表示していた)
+- genai-security-governance: 「学習に使わない設定を有効にすれば」→「APIは既定で学習に使わない」
+- ai-guideline-template: AI事業者ガイドラインを総務省・経産省共同に、統合済みの旧GL重複を解消
+- it-admin-ai-first-week: 第三者製品名を現行名/汎用表現に
+
+## 運用ルール
+- 生成AI記事は**モデル型番を世代非依存表記(GPT系/Claude系)**にし、特定ベンダーの「対応/非対応」を断定しすぎない(将来対応で誤りになる)。
+- API利用料は「0.1円未満〜数円/回、長文・高性能で数十円」が実勢(安価モデルは1円未満)。「数円〜数十円」は下限過大。
+- 各社APIのデータ学習: OpenAI API/Anthropic Claude APIは**既定で学習に使わない**。無料消費者版(ChatGPT無料等)は使われる場合あり。
+- 検証で正確だったもの(再利用可): TDB統計(全記事一致)、Meta5%→100%/LinkedIn28.6%短縮/NTTデータ73%、Neo4j AuraDB 99.95%SLA・Community非RBAC、RAGAS4指標、MCP=Anthropic2024。
+- 半年〜1年ごとに固有名詞・モデル主張を再検証する。関連: [[project_llmo_content_map]], column-writing-style。
