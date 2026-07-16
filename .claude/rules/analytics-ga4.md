@@ -131,7 +131,9 @@ Clarity(project x69z1qvv1l) と GA4(property 355503040) を連携。データ反
 
 ## 注意・線引き
 - Clarity Data Export API（`MICROSODT_CLARITY_API_KEY` ※env のキー名はこのtypoのまま）のディメンションは Browser/Device/Country/OS/Source/Medium/Campaign/Channel/URL、メトリクスは Scroll/Engagement/Traffic/Rage・Dead Click 等。**これはトラフィック/挙動の export で、AI Citations(クエリ)とは別系統**。numOfDays=1-3(直近72h)、10req/日、1000行上限。エンドポイント: `GET https://www.clarity.ms/export-data/api/v1/project-live-insights?numOfDays=3&dimension1=Source&dimension2=URL`、`Authorization: Bearer <token>`。
-- AI Citations をAPI/exportで引けるかは未確認（ダッシュボード機能）。
+- **AI Citations はAPI/MCPとも非対応（2026-07-07 公式docで検証済み）**。Data Export API のディメンション/メトリクスに citations/SoA/grounding queries は無く、公式 Clarity MCP サーバ（learn.microsoft.com/en-us/clarity/third-party-integrations/clarity-mcp-server）も同APIのラッパーで同じ制約。**ダッシュボードからの手動CSVエクスポート（AI Visibility → Citation → Export）が唯一の取得経路**。取込は `bun run data:clarity`（~/Downloads の最新 Clarity_*.csv を自動選択、誤形式は拒否）。API対応されたら再評価。
+- Clarity は 2026-07 から AI Citations CSV の SoA ブロックを表形式（`"","You","145","21.67%"` 行）に変更。import-clarity-citations.mjs は新旧両形式対応済み（2026-07-07修正）。
+- Clarity は Query テーブルの列順も変える。従来 `"Query","SoA","Citations"` → 2026-07-13 の export では `"Query","Citations","SoA"`（SoA/Citations 入れ替え）。旧 importer はヘッダ列順を固定一致で見ていたため、この CSV で **queries=0（全クエリ黙って脱落）／pages だけ取込** になった。列名でマッピングするよう修正済み（2026-07-13）。**症状の見分け方**: `bun run data:clarity` の出力が `0 queries / N pages` なら列順変更を疑う（CSV に Query テーブルがあるのに 0 なら parser 側）。
 - Beekle は Cloudflare Pages。Bot Activity は Cloudflare CDN 連携で取得可能。
 
 関連: [[content-strategy-goals]]、[[reference_dataforseo]]（DataForSEO LLM Mentions は別経路・7/1〜要サブスク）。
@@ -161,3 +163,9 @@ Clarity(project x69z1qvv1l) と GA4(property 355503040) を連携。データ反
 
 ## やらない(正直な線引き)
 費用系titleの一斉書換(既一致・鉄則違反)、RAG直球の新規記事量産(GSC需要弱・AI検索で回収)、DX新規ページ(需要薄)。関連: [[content-strategy-goals]](CVR改善/3セグメント), seo.md(CTR診断), analytics.md(AI Overviewでpos1でもCTR0)。
+
+# /contactアクセスとform_submitはフォーム営業ツール流入が支配的（2026-07-06 GA4実測）
+
+- 2026年6月の/contact PV急増（5月15→6月59）の実態は見込み客ではなくフォーム営業。リファラ実名: `sales-crowd.jp`（form_submit/generate_lead/contact_completeまで発火）、`biz-maps.com`。(direct)の/contact直行集中（6/3-6/4に14セッション等）も同種の可能性が高い（確証なし）。
+- /contactのPV・form_submit・contact_completeをCVR判断に使うときは sales-crowd.jp / biz-maps.com リファラを必ず除外する。実問い合わせの正は leads台帳（`bun run data:leads`）のまま。
+- AI経由（chatgpt.com等）は2026-06-08〜07-05で33セッション（前期13）だが、着地は全て情報系コラムで/contact到達0・form_submit 0。AIチャネルのKPIはセッション数でなくClarity AI Citationsの買い手クエリSoAで見る。
