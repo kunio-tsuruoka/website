@@ -1,4 +1,5 @@
-import { defineMiddleware } from 'astro:middleware';
+import { defineMiddleware, sequence } from 'astro:middleware';
+import { type ErrorNotifyLocals, notifyServerError, safeBodyExcerpt } from '@/lib/error-notify';
 
 // SSR HTML をエッジ（Cloudflare PoP 単位）でキャッシュする。
 // cf-cache-status: DYNAMIC で毎リクエスト MicroCMS を叩いていた TTFB 対策。
@@ -25,7 +26,27 @@ function resolveCache(locals: RuntimeLocals): Cache | undefined {
   return globalCaches?.default;
 }
 
-export const onRequest = defineMiddleware(async (context, next) => {
+// グローバルエラーハンドラー: 未捕捉例外と5xxレスポンスをSlackへ通知する（通知は本処理を止めない）
+const errorNotifier = defineMiddleware(async (context, next) => {
+  const locals = context.locals as ErrorNotifyLocals;
+  try {
+    const response = await next();
+    if (response.status >= 500) {
+      const detail = await safeBodyExcerpt(response);
+      notifyServerError(locals, context.request, { status: response.status, detail });
+    }
+    return response;
+  } catch (error) {
+    const detail =
+      error instanceof Error
+        ? `${error.message}\n${(error.stack ?? '').slice(0, 400)}`
+        : String(error);
+    notifyServerError(locals, context.request, { status: 500, detail });
+    throw error;
+  }
+});
+
+const edgeCache = defineMiddleware(async (context, next) => {
   const { request } = context;
   const url = new URL(request.url);
 
@@ -82,3 +103,5 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   return outgoing;
 });
+
+export const onRequest = sequence(errorNotifier, edgeCache);

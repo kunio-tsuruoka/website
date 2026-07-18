@@ -53,7 +53,7 @@ async function generateDescription(title, content) {
       Authorization: `Bearer ${OPENROUTER_API_KEY}`,
     },
     body: JSON.stringify({
-      model: 'anthropic/claude-3.5-haiku',
+      model: process.env.OPENROUTER_MODEL_TOOLS ?? 'deepseek/deepseek-v4-flash',
       max_tokens: 256,
       messages: [
         {
