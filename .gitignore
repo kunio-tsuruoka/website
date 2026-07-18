@@ -36,3 +36,6 @@ tasks.md
 
 # wrangler local state
 .wrangler/
+
+# 内部の匿名化マッピング（実クライアント名を含む。公開リポにコミットしない）
+.claude/rules/marketing.md
