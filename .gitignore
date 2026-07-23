@@ -39,3 +39,7 @@ tasks.md
 
 # 内部の匿名化マッピング（実クライアント名を含む。公開リポにコミットしない）
 .claude/rules/marketing.md
+
+# python bytecode (vendored skill scripts)
+__pycache__/
+*.pyc
