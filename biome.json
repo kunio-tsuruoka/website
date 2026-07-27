@@ -8,7 +8,8 @@
       ".vscode/**",
       ".wrangler/**",
       "*.generated.*",
-      "src/data/column-embeddings.json"
+      "src/data/column-embeddings.json",
+      "docs/marketing/data/**"
     ]
   },
   "organizeImports": {

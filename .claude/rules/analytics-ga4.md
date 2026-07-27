@@ -169,3 +169,25 @@ Clarity(project x69z1qvv1l) と GA4(property 355503040) を連携。データ反
 - 2026年6月の/contact PV急増（5月15→6月59）の実態は見込み客ではなくフォーム営業。リファラ実名: `sales-crowd.jp`（form_submit/generate_lead/contact_completeまで発火）、`biz-maps.com`。(direct)の/contact直行集中（6/3-6/4に14セッション等）も同種の可能性が高い（確証なし）。
 - /contactのPV・form_submit・contact_completeをCVR判断に使うときは sales-crowd.jp / biz-maps.com リファラを必ず除外する。実問い合わせの正は leads台帳（`bun run data:leads`）のまま。
 - AI経由（chatgpt.com等）は2026-06-08〜07-05で33セッション（前期13）だが、着地は全て情報系コラムで/contact到達0・form_submit 0。AIチャネルのKPIはセッション数でなくClarity AI Citationsの買い手クエリSoAで見る。
+
+# Clarity AI Citations CSV は「列順」も「テーブル構成」も予告なく変わる。列名→indexで解決する
+
+Clarity の AI Citations export は形式が世代ごとに変わる。importer (`scripts/data/import-clarity-citations.mjs`) をヘッダの**固定順一致**で書くと、表が丸ごと黙って0件になる（エラーにならないので気づかない）。
+
+## 実際に遭遇した3世代（すべて `Clarity_*.csv` で同名）
+- 2026-06-19 頃: `"Metric","Share of authority (SoA)","20.55"`（スカラー）+ `"Query","SoA","Citations"`
+- 2026-07-13: `"Metric","Share of authority (SoA)","Citations","Percentage"` の**表形式**（次行 `"","You","528","23.78%"`）+ `"Query","Citations","SoA"`（SoAとCitationsが反転）
+- 2026-07-22: スカラーSoA に戻る + `"Query","Citations","SoA"` + **`"Topic","Citations","SoA"` テーブルが新登場**（テーマ単位の引用量とSoA）
+
+## ルール
+- ヘッダは `列名 → index` の Map で解決する（`Query`/`Topic`/`Page URL` が0列目、`Citations`/`SoA` は位置を問わない）。順序前提のif文を書かない。
+- SoA は**スカラー形式と表形式の両対応**が要る。`Number(c2)` が NaN なら表形式とみなし、続く `"","You",...,"23.78%"` の最終列から拾う。
+- **ヘッダ判定を SoA 表の行スキップより先に**実行する。逆順にすると SoA 表モードが後続の Query 表ヘッダを食い潰して 0 件になる（2026-07-22 に自分で作り込んで回帰させた）。
+- 1つの CSV に Queries / Pages / Topics が同居しうる。それぞれ `ai-citations.json` / `ai-citation-pages.json` / `ai-citation-topics.json` に書き分ける。
+
+## 症状の見分け方と検証
+`bun run data:clarity` の出力が `0 queries / N pages` のように**どれかが0**なら、CSV に該当テーブルがあるか `grep -n '^"[A-Za-z][^"]*","[A-Za-z]' <csv>` でセクション見出しを確認する。テーブルがあるのに0ならパーサ側のバグ。
+importer を触ったら**過去3世代のCSVすべてで再インポートして件数とSoAを確認**し、最後に最新CSVをもう一度流して `latest/` を正しい窓に確定させる（日付dirはインポート日で切られるため、古いCSVを流すと latest が古い窓で上書きされる）。メインダッシュボードCSVを渡したら exit 1 で拒否されることも併せて確認する。
+
+## 付随: biome の対象外にする
+`docs/marketing/data/**` は gitignore 済の生成スナップショット。biome.json の `files.ignore` に追加済み（`src/data/column-embeddings.json` と同じ扱い）。入れないと `bun check:ci` が生成JSONの整形差分で落ちて、CIのシグナルが死ぬ。
