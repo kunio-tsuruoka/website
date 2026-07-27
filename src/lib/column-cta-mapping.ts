@@ -228,12 +228,6 @@ const SLUG_CTA: Record<string, CategoryCta> = {
     TECH_REVIEW_CONSULT,
     PARTNER_CONSULT
   ),
-  // 閉域・オンプレCEP（ローカルllm 18,100/月・競合LOW）。読者は情シス＝購買委員会のゲートキーパー。
-  'closed-network-ai-onpremise': buildCta(
-    '閉域の要件、技術相談で詰めませんか？',
-    TECH_REVIEW_CONSULT,
-    DOWNLOAD_DECK
-  ),
   'llm-api-system-design': buildCta(
     'LLM連携の構成、技術相談で壁打ちしませんか？',
     TECH_REVIEW_CONSULT,

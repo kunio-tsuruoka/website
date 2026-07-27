@@ -43,3 +43,6 @@ tasks.md
 # python bytecode (vendored skill scripts)
 __pycache__/
 *.pyc
+
+# コラムの原稿は MicroCMS が正。drafts はローカル作業用でコミットしない
+claudedocs/drafts/
