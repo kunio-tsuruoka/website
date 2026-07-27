@@ -41,3 +41,40 @@ PATCH後は `client.get()` で fetched.content に対して以下を正規表現
 - 未公開ドラフト B4電話/B5FAQ/B6時間外/B7適合表=狙いクエリ0需要。**公開保留**。retarget or shelve。
 - 次に書くべき(データ順): 属人化解消の広いピラー(880)、カスタマーサポートAI とは/メリット/事例(390)、aiチャットボット比較(140,CV)、製造業はai活用(170)にretarget。
 - 関連: [[project_llmo_content_map]], marketing-data-hub, seo.md(頭クエリ/意図), analytics-ga4。
+
+# サービスLP同士のカニバリと「LLMのfan-outクエリ≠実需要」（2026-07-27 実測）
+
+LLM推奨プローブ(kb01)で不在だった `/services/rag-system-development` を「1ページ目に上げる」ために診断したら、前提が2つ崩れた。着手前に必ず同じ確認をする。
+
+## 1. ChatGPTのfan-outクエリを実需要と取り違えない
+
+`ai_optimization_llm_response` のレスポンスに出る `fan_out_queries`（例「社内文書 AI 横断検索 RAG 開発 会社 日本」）は**LLMが合成した検索文字列**であって、Googleの実検索需要ではない。DataForSEO で当たると `社内文書検索 ai` / `生成ai 社内文書検索` / `社内 ai 検索` / `rag 構築支援` などは**DBにデータ無し（≒0）**。GSCでも60日24impしかなかった。
+
+実需要はこちら（ja/Japan, 2026-07-27実測）:
+
+| クエリ | 月間 | intent | 競合 |
+|---|---|---|---|
+| graphrag | **1,600** | informational | LOW (KD23) |
+| rag構築（スペース無し） | **720** | informational | MEDIUM |
+| rag 開発 | 260 | **transactional** | MEDIUM |
+| graphrag とは | 170 | informational | LOW |
+| 社内ai 構築 | 110 | navigational | HIGH |
+| ナレッジグラフ rag | 90 | navigational | LOW |
+
+→ LLMO目的でも、狙う語は**実需要のある語**に置く。fan-out文字列そのものを狙わない。
+
+## 2. サービスLP同士のキーワードカニバリを疑う
+
+`生成ai 社内文書検索` という1クエリに対し、`/services/internal-document-ai-search`(24imp/pos20.5) と `/services/rag-system-development`(7imp/pos21.6) の**両方がインプレを取り、どちらも20位台で止まっていた**。seoTitle が両方とも「社内文書(AI)検索」で始まっていたのが原因。
+
+サービスLPを増やしたら **`seoTitle` の主語が既存LPと被っていないか**を必ず確認する。診断は GSC の query×page で、同一クエリに複数の自社URLが出ていないかを見る。
+
+是正: rag-system-development を `RAG構築・GraphRAG開発｜社内AI検索システムをPoCから本番運用まで` に変更（需要ゼロ語→720+1,600の語へ）。internal-document-ai-search は社内文書検索の面として据え置き。
+
+## 3. ブリッジCTAはLLMの到達経路になる
+
+kb02 で初めてサービスLPが引用されたとき、引用URLは
+`/services/rag-system-development?intent=service-bridge&source=column-what-is-rag` だった。
+**コラムに置いた `{{*_SERVICE_BRIDGE}}` 経由でクローラが到達している**ことがクエリパラメータから確認できる。
+
+→ 高順位のコラムにブリッジが張られていないと、その資産がサービスLPに繋がらない。`graphrag`(1,600/月) で pos 9.6 を取っていた `/knowledge/graphrag-knowledge-search` にブリッジが無かったのが最大の穴だった（`scripts/insert-service-bridge.mjs` で是正）。**新しいサービスLPを作ったら、そのテーマで最上位のコラムにブリッジがあるかを必ず確認する。**
