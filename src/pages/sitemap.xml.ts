@@ -23,6 +23,10 @@ const staticPages = [
   { url: '/column/ai-development', priority: '0.8', changefreq: 'weekly' },
   { url: '/column/cdp-development', priority: '0.8', changefreq: 'weekly' },
   { url: '/column/dx', priority: '0.8', changefreq: 'weekly' },
+  { url: '/knowledge', priority: '0.8', changefreq: 'weekly' },
+  { url: '/partner', priority: '0.8', changefreq: 'monthly' },
+  { url: '/materials', priority: '0.6', changefreq: 'monthly' },
+  { url: '/careers', priority: '0.6', changefreq: 'monthly' },
   { url: '/qa', priority: '0.7', changefreq: 'monthly' },
   { url: '/tools', priority: '0.8', changefreq: 'monthly' },
   { url: '/tools/flow-mapper', priority: '0.8', changefreq: 'monthly' },
@@ -55,8 +59,11 @@ export const GET: APIRoute = async ({ locals }) => {
   let columnPages: { url: string; priority: string; changefreq: string; lastmod?: string }[] = [];
   try {
     const columns = await getColumns(undefined, env);
+    // knowledge カテゴリの記事は /knowledge/<id> で配信され、canonical もそちらを指す
+    // （src/pages/column/[...slug].astro の sectionPath）。sitemap が /column/ を
+    // 主張すると canonical と食い違い、同一記事の2URLが別々にインデックスされる。
     columnPages = columns.map((column) => ({
-      url: `/column/${column.id}`,
+      url: column.category?.id === 'knowledge' ? `/knowledge/${column.id}` : `/column/${column.id}`,
       priority: isPillarArticle(column.id) ? '0.9' : '0.7',
       changefreq: 'weekly',
       lastmod: column.updatedAt ? new Date(column.updatedAt).toISOString().split('T')[0] : now,
