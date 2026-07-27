@@ -147,3 +147,11 @@ MicroCMS の PATCH は **即・本番反映**される（プレビュー段階�
 - **反映にはデプロイが必要**(Cloudflare Pages SSRはgitビルド)。MicroCMSに投入しただけでは/qaは100件のまま。
 - 教訓: MicroCMS取得関数(getColumns/getQAs/その他一覧系)は最初から全件ページネーションで書く。「今は100未満だから」でlimit固定にしない。件数が上限を超えた瞬間に一覧・sitemap・構造化データから静かに脱落する。
 - qas schema: question / answer(HTML) / category(参照, create時は 'poc-ai-dx' 等のid文字列) / order。カテゴリは6種(estimate/requirements/vendor-contract/project-management/poc-ai-dx/data-platform)。/qa は order,publishedAt 昇順。AIサポート系は poc-ai-dx に投入(ai-support-01..24, order 301-324)。
+
+# コラム原稿は MicroCMS が正。claudedocs/drafts/ はコミットしない（2026-07-28 ユーザー指示）
+
+`claudedocs/drafts/` は publish-drafts.mjs に食わせるローカル作業用の置き場であって、原稿の正本ではない。**正本は MicroCMS 側のデータ**。リポジトリに原稿を二重に持つと、本番を直したときに drafts が stale になり（[[gotcha_drafts_folder_is_published]]）、どちらが正か分からなくなる。
+
+- `.gitignore` に `claudedocs/drafts/` を追加済み。既存の追跡分も `git rm --cached` で追跡解除した（ローカルのファイルは残る）。
+- 新しい原稿を書いたら publish-drafts で投入し、**リポジトリにはコミットしない**。
+- 記事の内容をレビューに載せたいときは、PR本文に要点を書くか本番URLを貼る。原稿ファイルをコミットして代用しない。
