@@ -42,15 +42,6 @@ const companyItems = [
   { label: '開発会社・SIer様へ（協業）', href: '/partner' },
 ];
 
-const toolsItems = [
-  { label: '発注準備キット (全体像)', href: '/tools' },
-  { label: '話すだけ発注準備（AI・音声対応）', href: '/tools/flow-interview' },
-  { label: '1. 業務フロー可視化ツール', href: '/tools/flow-mapper' },
-  { label: '2. ユーザーストーリー作成ツール', href: '/tools/story-builder' },
-  { label: '3. スコープ管理ツール', href: '/tools/scope-manager' },
-  { label: '4. RFPドラフト自動生成', href: '/tools/rfp-builder' },
-];
-
 function Dropdown({
   label,
   items,
@@ -254,7 +245,6 @@ export function Header() {
             </a>
           </li>
           <Dropdown label="コラム" items={columnItems} />
-          <Dropdown label="発注準備キット" items={toolsItems} />
           <Dropdown label="会社情報" items={companyItems} />
           <li>
             <a
@@ -412,22 +402,6 @@ export function Header() {
                 >
                   お客様の声
                 </a>
-              </li>
-              <li className="border-t border-white/20 pt-4 w-full text-center">
-                <p className="text-white/60 text-sm mb-2">発注準備キット</p>
-                <ul className="space-y-2">
-                  {toolsItems.map((item) => (
-                    <li key={item.href}>
-                      <a
-                        href={item.href}
-                        className="hover:text-accent-300 transition-colors text-base"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        {item.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
               </li>
               <li className="border-t border-white/20 pt-4 w-full text-center">
                 <p className="text-white/60 text-sm mb-2">会社情報</p>
