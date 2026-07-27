@@ -900,9 +900,12 @@ export const services: ServiceDetail[] = [
   {
     id: 'rag-system-development',
     title: 'RAGシステム構築',
-    seoTitle: '社内文書検索AI・RAGシステム開発｜GraphRAG対応、PoCから本番運用まで',
+    // 2026-07-27: 「社内文書検索」主語は /services/internal-document-ai-search と共食いしていた
+    // （同一クエリで両ページが pos 20-22）。かつ当該語はGoogle需要が実測でほぼゼロ。
+    // 実需要のある「rag構築」(720/月) と「graphrag」(1,600/月・競合LOW) を主語に変更。
+    seoTitle: 'RAG構築・GraphRAG開発｜社内AI検索システムをPoCから本番運用まで',
     seoDescription:
-      '散らばった社内文書・マニュアル・議事録をAIで横断検索する社内ナレッジ検索AI（RAG／GraphRAG）を開発。技術選定・PoC・評価設計・本番化・運用まで一気通貫で構築します。ChatGPTでは答えられない自社固有の質問に、根拠付きで回答するAIを実現。',
+      'RAG構築・GraphRAG開発で、自社データに基づいて根拠付きで回答する社内AI検索システムを作ります。技術選定・PoC・評価設計・本番化・運用まで一気通貫。通常のベクトルRAGで精度が出ないケースは、ナレッジグラフを組み合わせたGraphRAG構成で設計します。',
     description: '自社データを活用したRAGシステムを、PoCから本番運用まで一気通貫で構築します。',
     longDescription:
       '御社の業務に合わせてデータベースをオーダーメイドで設計し、パッケージ型では届かない検索精度を実現します。文書間の関連性をグラフ構造で保持するGraphRAGにも対応し、文脈をたどった検索が可能です。PoCから本番運用まで、評価設計を初期フェーズから組み込んで一気通貫で構築します。',
