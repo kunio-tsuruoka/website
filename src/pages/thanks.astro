@@ -26,6 +26,9 @@ const FROM_CONFIGS: Record<
       var fired = false;
       var sp = new URLSearchParams(window.location.search);
       var from = sp.get('from') || '';
+      var source = sp.get('source') || '';
+      var intent = sp.get('intent') || '';
+      var phase = sp.get('phase') || '';
       var cfg = FROM_CONFIGS[from] || null;
 
       function fire() {
@@ -35,6 +38,9 @@ const FROM_CONFIGS: Record<
         window.gtag('event', 'contact_complete', {
           method: 'form',
           from: from || 'contact',
+          source: source || 'direct-thanks',
+          intent: intent || undefined,
+          phase: phase || undefined,
           transport_type: 'beacon',
         });
         if (cfg && cfg.downloadFileName) {

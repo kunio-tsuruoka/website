@@ -9,8 +9,13 @@ const TYPE_LABELS: Record<string, string> = {
   consultation: 'まずは相談したい',
   web: 'Webアプリ開発について',
   mobile: 'モバイルアプリ開発について',
-  prototype: 'プロトタイプ・POC作成について',
-  ai: 'AI/AIエージェント開発について',
+  prototype: '15分で開発方針を整理したい',
+  estimate: '見積もり妥当性・概算費用を聞きたい',
+  requirements: '作りたいもの・依頼内容を整理したい',
+  ai: '社内資料や業務データをAIで使いたい',
+  cdp: '顧客データを整理・活用したい',
+  dx: '業務改善・AI導入について',
+  tech_review: '社内データ・既存システムの不安を相談したい',
   global: '海外向けサービス開発について',
   partner: '開発パートナー・協業のご相談（開発会社・SIer様）',
   other: 'その他',
@@ -19,13 +24,9 @@ const TYPE_LABELS: Record<string, string> = {
 
 const ContactSchema = z.object({
   email: z.string().trim().email('メールアドレスを正しく入力してください'),
-  message: z
-    .string()
-    .trim()
-    .min(1, 'お問い合わせ内容を入力してください')
-    .max(5000, 'お問い合わせ内容が長すぎます'),
+  message: z.string().trim().max(5000, 'お問い合わせ内容が長すぎます').optional().default(''),
   type: z.string().optional().default(''),
-  name: z.string().optional().default(''),
+  name: z.string().trim().min(1, 'お名前を入力してください').max(255, 'お名前が長すぎます'),
   company: z.string().optional().default(''),
   phone: z.string().optional().default(''),
   source: z.string().optional().default(''),
@@ -43,30 +44,57 @@ const ContactSchema = z.object({
   utmCampaign: z.string().trim().max(160).optional().default(''),
 });
 
-const SLACK_TIMEOUT_MS = 8000;
+const WEBHOOK_TIMEOUT_MS = 8000;
 const MAX_RETRIES = 2;
 
-async function postToSlack(webhookUrl: string, payload: unknown): Promise<void> {
+async function postJsonWithRetry(
+  url: string,
+  payload: unknown,
+  headers: Record<string, string>,
+  serviceName: string
+): Promise<void> {
   let lastError: unknown = null;
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), WEBHOOK_TIMEOUT_MS);
     try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), SLACK_TIMEOUT_MS);
-      const response = await fetch(webhookUrl, {
+      const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(payload),
         signal: controller.signal,
       });
-      clearTimeout(timeout);
       if (response.ok) return;
       const text = await response.text().catch(() => '');
-      lastError = new Error(`Slack ${response.status}: ${text || 'no body'}`);
+      lastError = new Error(`${serviceName} ${response.status}: ${text || 'no body'}`);
     } catch (err) {
       lastError = err;
+    } finally {
+      clearTimeout(timeout);
     }
   }
   throw lastError instanceof Error ? lastError : new Error(String(lastError));
+}
+
+function postToSlack(webhookUrl: string, payload: unknown): Promise<void> {
+  return postJsonWithRetry(webhookUrl, payload, { 'Content-Type': 'application/json' }, 'Slack');
+}
+
+function postToCrm(
+  webhookUrl: string,
+  token: string,
+  authHeaderName: string,
+  payload: unknown
+): Promise<void> {
+  return postJsonWithRetry(
+    webhookUrl,
+    payload,
+    {
+      'Content-Type': 'application/json',
+      [authHeaderName]: token,
+    },
+    'CRM'
+  );
 }
 
 export const POST: APIRoute = async ({ request, locals }) => {
@@ -76,6 +104,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
         runtime?: {
           env?: {
             SLACK_WEBHOOK_URL?: string;
+            CRM_INQUIRY_WEBHOOK_URL?: string;
+            CRM_INQUIRY_WEBHOOK_TOKEN?: string;
+            CRM_INQUIRY_WEBHOOK_AUTH_HEADER?: string;
             TURNSTILE_SECRET_KEY?: string;
             RATE_LIMIT?: { get(key: string): Promise<string | null> };
           };
@@ -83,6 +114,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
       }
     ).runtime;
     const webhookUrl = runtime?.env?.SLACK_WEBHOOK_URL;
+    const crmWebhookUrl = runtime?.env?.CRM_INQUIRY_WEBHOOK_URL;
+    const crmWebhookToken = runtime?.env?.CRM_INQUIRY_WEBHOOK_TOKEN;
+    const crmWebhookAuthHeader = runtime?.env?.CRM_INQUIRY_WEBHOOK_AUTH_HEADER || 'X-Webhook-Token';
     const turnstileSecret = runtime?.env?.TURNSTILE_SECRET_KEY;
     const rateLimitKv = runtime?.env?.RATE_LIMIT;
 
@@ -153,6 +187,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     const typeStr = type;
+    const typeLabel = TYPE_LABELS[typeStr] || typeStr || '未選択';
+    const displayMessage = message || '未記入';
     // ユーザー由来の値は Slack mrkdwn の制御文字 (& < >) を無害化してから埋め込む。
     // これで <!channel>/<!here> の全員メンション、<url|偽装テキスト> のフィッシングリンク注入を防ぐ。
     const provenanceParts = [
@@ -186,7 +222,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
           fields: [
             {
               type: 'mrkdwn',
-              text: `*種別:*\n${TYPE_LABELS[typeStr] || escapeSlack(typeStr) || '未選択'}`,
+              text: `*種別:*\n${escapeSlack(typeLabel)}`,
             },
             { type: 'mrkdwn', text: `*メール:*\n${escapeSlack(email)}` },
             { type: 'mrkdwn', text: `*お名前:*\n${escapeSlack(name) || '未記入'}` },
@@ -196,7 +232,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         },
         {
           type: 'section',
-          text: { type: 'mrkdwn', text: `*お問い合わせ内容:*\n${escapeSlack(message)}` },
+          text: { type: 'mrkdwn', text: `*お問い合わせ内容:*\n${escapeSlack(displayMessage)}` },
         },
         {
           type: 'context',
@@ -210,7 +246,41 @@ export const POST: APIRoute = async ({ request, locals }) => {
       ],
     };
 
-    await postToSlack(webhookUrl, slackMessage);
+    const crmPayload = {
+      name,
+      company: company || null,
+      email,
+      phone: phone || null,
+      type: typeLabel,
+      body: displayMessage,
+      meta: {
+        source: source || null,
+        intent: intent || null,
+        phase: phase || null,
+        landing_page: landingPage || null,
+        referrer: referrer || null,
+        ga_cid: clientId || null,
+        utm_source: utmSource || null,
+        utm_medium: utmMedium || null,
+        utm_campaign: utmCampaign || null,
+        utm: [utmSource, utmMedium, utmCampaign].filter(Boolean).join(' / ') || null,
+      },
+    };
+
+    const deliveries: Promise<void>[] = [postToSlack(webhookUrl, slackMessage)];
+    if (crmWebhookUrl && crmWebhookToken) {
+      deliveries.push(postToCrm(crmWebhookUrl, crmWebhookToken, crmWebhookAuthHeader, crmPayload));
+    } else if (crmWebhookUrl || crmWebhookToken) {
+      console.warn('[contact] CRM webhook is partially configured; skipping CRM sync');
+    }
+
+    const [slackResult, crmResult] = await Promise.allSettled(deliveries);
+    if (slackResult.status === 'rejected') throw slackResult.reason;
+    if (crmResult?.status === 'rejected') {
+      const detail =
+        crmResult.reason instanceof Error ? crmResult.reason.message : crmResult.reason;
+      console.error('[contact] CRM sync failed:', detail);
+    }
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,

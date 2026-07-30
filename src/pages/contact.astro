@@ -18,8 +18,8 @@ const trustPoints = [
     body: 'ご検討段階のご相談歓迎。「合わなさそう」と感じた場合の連絡停止もメール1通で完了します。',
   },
   {
-    title: '初期費用0円のゼロスタート開発',
-    body: '見積書ではなく動くプロトタイプから判断できる仕組みもご用意しています。',
+    title: '最初の返信で判断材料を返します',
+    body: '想定構成、概算レンジ、進め方の候補を、わかる範囲で整理して返信します。',
   },
 ];
 ---
@@ -52,7 +52,7 @@ const trustPoints = [
   <main class="pt-20">
     <PageHero
       title="お問い合わせ"
-      subtitle="プロジェクトのご相談・お見積もり・資料請求など、お気軽にご連絡ください。通常1〜2営業日以内にご返信します。"
+      subtitle="お名前・メールアドレス・相談種別だけで送れます。通常1〜2営業日以内に、想定構成・概算レンジ・進め方の候補を返信します。"
     />
 
     <section class="py-20 md:py-28">
@@ -68,8 +68,14 @@ const trustPoints = [
           </div>
 
           <div class="mb-8 rounded-2xl bg-primary-50 border border-primary-100 p-5">
-            <p class="text-sm text-foreground/85 leading-relaxed">
-              事前に資料で全体像を把握したい方は
+            <p class="text-sm font-semibold text-primary-700 mb-2">相談すると返ってくるもの</p>
+            <ul class="space-y-2 text-sm text-foreground/85 leading-relaxed">
+              <li>・御社の状況で最初に切り出すべき検証範囲</li>
+              <li>・AI/RAG/業務システム化に必要なデータ・権限・体制の確認点</li>
+              <li>・概算費用レンジと、PoCから本番化までの進め方</li>
+            </ul>
+            <p class="mt-4 text-sm text-foreground/75 leading-relaxed">
+              事前に資料で全体像を把握したい場合は
               <a href="/downloads/zero-start?source=contact-trust" class="text-primary-600 font-medium underline hover:no-underline">ゼロスタート開発サービス資料(無料)</a>
               もご利用ください。実例や対象企業がまとまっています。
             </p>

@@ -35,7 +35,13 @@ function sanitizeParam(raw: string | null): string {
 function intentToType(intent: string): string {
   if (intent.startsWith('partner')) return 'partner';
   if (intent.startsWith('ai-development')) return 'ai';
+  if (intent.startsWith('genai-adoption')) return 'ai';
   if (intent.startsWith('cdp')) return 'ai';
+  if (intent.startsWith('dx')) return 'dx';
+  if (intent.startsWith('estimate')) return 'estimate';
+  if (intent.startsWith('requirements')) return 'requirements';
+  if (intent.startsWith('rfp')) return 'requirements';
+  if (intent.startsWith('tech-review')) return 'tech_review';
   return '';
 }
 
@@ -86,11 +92,13 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
+    const selectedType = String(formData.get('type') || 'consultation');
+    const rawMessage = String(formData.get('message') || '').trim();
     const data = {
       name: formData.get('from_name') || '',
       email: formData.get('reply_to'),
-      message: formData.get('message'),
-      type: formData.get('type'),
+      message: rawMessage || `相談内容は未記入です。種別: ${selectedType}`,
+      type: selectedType,
       company: formData.get('company_name') || '',
       phone: formData.get('phone') || '',
       source: provenance.source,
@@ -128,7 +136,12 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
       const navigate = () => {
         if (navigated) return;
         navigated = true;
-        window.location.href = '/thanks';
+        const thanksParams = new URLSearchParams();
+        if (provenance.source) thanksParams.set('source', provenance.source);
+        if (provenance.intent) thanksParams.set('intent', provenance.intent);
+        if (provenance.phase) thanksParams.set('phase', provenance.phase);
+        const query = thanksParams.toString();
+        window.location.href = query ? `/thanks?${query}` : '/thanks';
       };
       const fallback = window.setTimeout(navigate, 1500);
 
@@ -173,14 +186,34 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
             className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
           >
             <option value="consultation">まずは相談したい</option>
+            <option value="estimate">見積もり妥当性・概算費用を聞きたい</option>
+            <option value="requirements">作りたいもの・依頼内容を整理したい</option>
             <option value="web">Webアプリ開発について</option>
             <option value="mobile">モバイルアプリ開発について</option>
-            <option value="prototype">プロトタイプ・POC作成について</option>
-            <option value="ai">AI/AIエージェント開発について</option>
+            <option value="prototype">15分で開発方針を整理したい</option>
+            <option value="ai">社内資料や業務データをAIで使いたい</option>
+            <option value="cdp">顧客データを整理・活用したい</option>
+            <option value="dx">業務改善・AI導入について</option>
+            <option value="tech_review">社内データ・既存システムの不安を相談したい</option>
             <option value="global">海外向けサービス開発について</option>
             <option value="partner">開発パートナー・協業のご相談（開発会社・SIer様）</option>
             <option value="other">その他</option>
           </select>
+        </div>
+
+        <div>
+          <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="name">
+            お名前 <span className="text-destructive">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="from_name"
+            required
+            autoComplete="name"
+            className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
+            placeholder="山田 太郎"
+          />
         </div>
 
         <div>
@@ -201,27 +234,26 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
 
         <div>
           <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="message">
-            ご相談内容 <span className="text-destructive">*</span>
+            ご相談内容・補足（任意）
           </label>
           <textarea
             id="message"
             name="message"
             rows={6}
-            required
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
-            placeholder="現状の課題や、検討中のサービス・規模感などを簡単にご記入ください。詳細はやりとりの中で詰めて参ります。"
+            placeholder="空欄でも送信できます。現状の課題、使いたいデータ、検討中のサービス、概算を知りたい内容などがあればご記入ください。"
           />
           <p className="text-sm text-muted-foreground mt-2">
-            ざっくりで構いません。返信時にこちらから具体的に質問させていただきます。
+            まとまっていなくて構いません。返信時にこちらから具体的に質問します。
           </p>
         </div>
 
         <details className="group">
           <summary className="cursor-pointer text-base font-medium text-foreground/70 hover:text-primary-500 select-none list-none flex items-center gap-2">
             <span className="text-primary-500 group-open:rotate-90 transition-transform">▶</span>
-            会社名・お名前・電話番号も記入する（任意）
+            会社名・電話番号も記入する（任意）
           </summary>
           <div className="space-y-6 mt-4 pl-4 border-l-2 border-primary-100">
             <div>
@@ -238,19 +270,6 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
                 autoComplete="organization"
                 className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
                 placeholder="株式会社○○"
-              />
-            </div>
-            <div>
-              <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="name">
-                お名前
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="from_name"
-                autoComplete="name"
-                className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
-                placeholder="山田 太郎"
               />
             </div>
             <div>
@@ -338,7 +357,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
                 送信中...
               </>
             ) : (
-              '無料で相談する'
+              'この内容で送る'
             )}
           </button>
           <p className="text-sm text-muted-foreground mt-4">

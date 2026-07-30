@@ -57,8 +57,9 @@ const DownloadZeroStartForm = ({ sitekey }: DownloadZeroStartFormProps) => {
       PHASE_OPTIONS.find((o) => o.value === phaseValue)?.label || phaseValue || '未選択';
     const note = String(formData.get('note') || '').trim();
 
-    // 流入元ページ（CTAの ?ref=... ）をリード通知とGA4に反映する
-    const rawRef = new URLSearchParams(window.location.search).get('ref') || '';
+    // 流入元ページ（CTAの ?source=... / 旧 ?ref=... ）をリード通知とGA4に反映する
+    const sp = new URLSearchParams(window.location.search);
+    const rawRef = sp.get('source') || sp.get('ref') || '';
     const ref = rawRef.replace(/[^a-zA-Z0-9-]/g, '').slice(0, 40);
     const refLabel = ref
       ? ref === 'case-studies'
@@ -110,7 +111,9 @@ const DownloadZeroStartForm = ({ sitekey }: DownloadZeroStartFormProps) => {
       const navigate = () => {
         if (navigated) return;
         navigated = true;
-        window.location.href = '/thanks?from=zero-start';
+        const thanksParams = new URLSearchParams({ from: 'zero-start', source });
+        if (phaseValue) thanksParams.set('phase', phaseValue);
+        window.location.href = `/thanks?${thanksParams.toString()}`;
       };
       const fallback = window.setTimeout(navigate, 1500);
 
@@ -193,12 +196,13 @@ const DownloadZeroStartForm = ({ sitekey }: DownloadZeroStartFormProps) => {
 
         <div>
           <label className="block text-sm font-medium text-foreground/80 mb-2" htmlFor="dl-name">
-            お名前（任意）
+            お名前 <span className="text-destructive">*</span>
           </label>
           <input
             type="text"
             id="dl-name"
             name="from_name"
+            required
             autoComplete="name"
             className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="山田 太郎"
