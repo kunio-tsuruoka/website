@@ -163,13 +163,13 @@ const faqNumber =
               class="group block p-6 bg-white rounded-2xl border border-gray-200 shadow-soft hover:shadow-medium hover:border-primary-300 transition"
             >
               <span class="inline-block px-2 py-1 text-xs font-bold bg-primary-50 text-primary-700 rounded-md mb-3">
-                チャット (RAG)
+                社内資料検索
               </span>
               <h3 class="text-xl font-bold mb-2 group-hover:text-primary-600 transition">
-                AIナレッジ相談（RAG）
+                AIナレッジ相談
               </h3>
               <p class="text-sm text-gray-600 leading-relaxed">
-                Beekleのコラム記事を Embedding 検索でRAG参照する相談員AI。社内文書RAG構築の感触を体感できます。
+                Beekleのコラム記事をもとに回答する相談員AI。社内資料を探して答える仕組みの感触を体感できます。
               </p>
               <span class="mt-4 inline-flex items-center text-sm font-medium text-primary-600">
                 試してみる →
@@ -180,13 +180,13 @@ const faqNumber =
               class="group block p-6 bg-white rounded-2xl border border-gray-200 shadow-soft hover:shadow-medium hover:border-primary-300 transition"
             >
               <span class="inline-block px-2 py-1 text-xs font-bold bg-secondary-50 text-secondary-600 rounded-md mb-3">
-                ビジョン (LLM)
+                書類読み取り
               </span>
               <h3 class="text-xl font-bold mb-2 group-hover:text-primary-600 transition">
                 AI領収書OCR
               </h3>
               <p class="text-sm text-gray-600 leading-relaxed">
-                画像から店舗名・日付・合計・明細を構造化JSONで抽出。帳票OCR + LLM構造化のPoC感触に。
+                画像から店舗名・日付・合計・明細を読み取り、確認しやすい形に整理します。書類処理をAIで軽くする感触を体感できます。
               </p>
               <span class="mt-4 inline-flex items-center text-sm font-medium text-primary-600">
                 試してみる →
@@ -256,12 +256,12 @@ const faqNumber =
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a
-            href={`/contact?source=services-${service.id}-final`}
+            href={`/contact?source=services-${service.id}-final&intent=${service.id === 'ai-development' ? 'genai-adoption' : 'consult'}`}
             data-cta-source={`services-${service.id}-final`}
             data-cta-id="contact"
             class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-accent-950 bg-white rounded-full hover:bg-gray-100 transition-all shadow-strong hover:scale-105 transform"
           >
-            無料相談を予約する
+            {service.id === 'ai-development' ? 'AI導入の進め方を相談する' : '無料相談を予約する'}
             <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>

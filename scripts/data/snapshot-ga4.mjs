@@ -10,6 +10,8 @@
  *   channels          流入チャネル別 セッション/CV
  *   top-pages         pagePath別 PV/セッション
  *   key-events        リード系キーイベントのカウント
+ *   cta-clicks        CTAクリックの source/cta 別内訳
+ *   form-sources      フォーム送信・リード系イベントの source/phase 別内訳
  *   sc-landing        Search Console連携メトリクス (landingPage別) ※SC系は単独リクエスト必須
  *
  * 使い方:
@@ -141,6 +143,34 @@ async function main() {
         },
         orderBys: [{ metric: { metricName: 'eventCount' }, desc: true }],
         limit: 50,
+      }),
+    },
+    {
+      name: 'cta-clicks',
+      body: report(dr, ['eventName', 'customEvent:source', 'customEvent:cta'], ['eventCount'], {
+        dimensionFilter: {
+          filter: {
+            fieldName: 'eventName',
+            stringFilter: { matchType: 'EXACT', value: 'cta_click' },
+          },
+        },
+        orderBys: [{ metric: { metricName: 'eventCount' }, desc: true }],
+        limit: 100,
+      }),
+    },
+    {
+      name: 'form-sources',
+      body: report(dr, ['eventName', 'customEvent:source', 'customEvent:phase'], ['eventCount'], {
+        dimensionFilter: {
+          filter: {
+            fieldName: 'eventName',
+            inListFilter: {
+              values: ['form_submit', 'generate_lead', 'contact_complete', 'download_request'],
+            },
+          },
+        },
+        orderBys: [{ metric: { metricName: 'eventCount' }, desc: true }],
+        limit: 100,
       }),
     },
     {

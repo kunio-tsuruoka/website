@@ -38,29 +38,30 @@ const DOWNLOAD_DECK: CtaItem = {
 // ---- 主動線（すべて /contact へのリード獲得）。intent はカテゴリ別に計測用で分ける ----
 const AI_DEV_CONSULT: CtaItem = {
   href: '/contact?intent=ai-development',
-  label: 'AI・RAG開発を相談する（無料）',
+  label: '社内資料を使ったAI開発を相談する（無料）',
   description:
-    '生成AI・RAG・ナレッジグラフの構築を、要件整理から本番化の判断まで無料でご相談いただけます',
+    '社内資料や業務データを使ったAI開発について、何から始めるか、社内で使える形にできるかを無料でご相談いただけます',
   ctaId: 'consult-ai-development',
 };
 
 const PROJECT_CONSULT: CtaItem = {
   href: '/contact?intent=project',
   label: 'プロジェクトの進め方を相談する（無料）',
-  description: '要件定義から開発・運用まで、進め方や体制のご相談を無料で承ります',
+  description: '作るものの整理から開発後の運用まで、進め方や体制のご相談を無料で承ります',
   ctaId: 'consult-project',
 };
 
 const COMM_CONSULT: CtaItem = {
   href: '/contact?intent=communication',
-  label: '要件・認識合わせを相談する（無料）',
-  description: '「何を作れば成功か」の整理や、発注側と開発側の認識合わせを無料でご相談いただけます',
+  label: '作りたいものの整理を相談する（無料）',
+  description:
+    '現場の要望が多くてまとまらない、開発会社にうまく伝わらない状態から無料でご相談いただけます',
   ctaId: 'consult-communication',
 };
 
 const DX_CONSULT: CtaItem = {
   href: '/contact?intent=dx',
-  label: 'DX・AI導入を相談する（無料）',
+  label: '業務改善・AI導入を相談する（無料）',
   description: '業務の棚卸しからAI・システム導入の進め方まで、発注前のご相談を無料で承ります',
   ctaId: 'consult-dx',
 };
@@ -69,15 +70,15 @@ const ESTIMATE_CONSULT: CtaItem = {
   href: '/contact?intent=estimate',
   label: '開発費用を相談する（無料）',
   description:
-    '要件と規模感をお伝えいただければ、概算の費用レンジと内訳の考え方を無料でご返信します',
+    '作りたい内容と規模感をお伝えいただければ、概算の費用レンジと内訳の考え方を無料でご返信します',
   ctaId: 'consult-estimate',
 };
 
 const CDP_CONSULT: CtaItem = {
   href: '/contact?intent=cdp',
-  label: 'CDP導入・選定を相談する（無料）',
+  label: '顧客データの整理・活用を相談する（無料）',
   description:
-    'Treasure Data・Salesforce CDP・BigQuery自社開発など、自社に合うCDPの選び方を無料でご相談いただけます',
+    '顧客情報や購買履歴が散らばっている状態から、何をまとめ、どう活用するかを無料でご相談いただけます',
   ctaId: 'consult-cdp',
 };
 
@@ -92,32 +93,31 @@ const GENAI_ADOPTION_CONSULT: CtaItem = {
 const GENERAL_CONSULT: CtaItem = {
   href: '/contact?intent=general',
   label: 'Beekleに相談する（無料）',
-  description: '企画・要件定義・開発・運用まで、発注側の判断材料が揃うように無料で伴走します',
+  description: '何を作るべきか、どこまで費用をかけるべきか、発注前の不安を無料で整理します',
   ctaId: 'consult-general',
 };
 
 const REQ_CONSULT: CtaItem = {
   href: '/contact?intent=requirements',
-  label: '要件定義を相談する（無料）',
-  description:
-    '要件定義の進め方やドキュメントの書き方を、実際のプロジェクトに即して一緒に整理します',
+  label: '作るものの整理を相談する（無料）',
+  description: '要望メモや既存資料をもとに、開発会社へ伝えられる形まで一緒に整理します',
   ctaId: 'consult-requirements',
 };
 
 const RFP_CONSULT: CtaItem = {
   href: '/contact?intent=rfp',
-  label: 'RFP作成・見直しを相談する（無料）',
+  label: '提案依頼書の作成・見直しを相談する（無料）',
   description:
-    'RFP（提案依頼書）の作成・見直しは代行実績があります。書き方や発注先の選定を無料でご相談いただけます',
+    '開発会社に何を依頼すればよいか、比較しやすい依頼書になっているかを無料でご相談いただけます',
   ctaId: 'consult-rfp',
 };
 
-// 情シス/技術部門（購買委員会のゲートキーパー）向け。セキュリティ・構成記事の読者を技術相談に変える。
+// 情シス/技術部門向け。セキュリティ記事の読者を技術相談に変える。
 const TECH_REVIEW_CONSULT: CtaItem = {
   href: '/contact?intent=tech-review',
-  label: 'セキュリティ・構成の技術相談（無料）',
+  label: '社内データや既存システムの不安を相談する（無料）',
   description:
-    '情報漏洩対策・自社環境で閉じる構成・既存システム連携・運用設計など、情報システム部門の技術的な懸念に無料でお答えします',
+    '社外にデータを出せない、既存システムとつながるか不安、運用できるか心配といった点を無料で確認します',
   ctaId: 'consult-tech-review',
 };
 
@@ -128,6 +128,122 @@ const PARTNER_CONSULT: CtaItem = {
   description:
     '開発リソースの逼迫・難航案件の立て直し・AI活用開発の知見をお探しの開発会社／SIer様のご相談も承ります',
   ctaId: 'consult-partner',
+};
+
+const REQ_TEMPLATE_CONSULT: CtaItem = {
+  href: '/contact?intent=requirements-template',
+  label: 'このテンプレを自社向けに埋める',
+  description:
+    '空欄のまま止まりやすい目的、作る範囲、必要な機能、運用条件を、自社の状況に合わせて整理します',
+  ctaId: 'consult-requirements-template',
+};
+
+const REQ_GUIDE_CONSULT: CtaItem = {
+  href: '/contact?intent=requirements-guide',
+  label: '作るものを一緒に整理する',
+  description:
+    '現場から要望は出ているが何から作るべきか決めきれない段階で、最初に決めることを整理します',
+  ctaId: 'consult-requirements-guide',
+};
+
+const REQ_PROCESS_CONSULT: CtaItem = {
+  href: '/contact?intent=requirements-process',
+  label: '誰に何を聞くべきか整理する',
+  description:
+    '現場、決裁者、開発会社に何を確認すればよいか、打ち合わせ前に質問リストと進め方を整理します',
+  ctaId: 'consult-requirements-process',
+};
+
+const REQ_CONVERSION_CONSULT: CtaItem = {
+  href: '/contact?intent=requirements-conversion',
+  label: '現場の要望を発注できる形にする',
+  description: '「こうしたい」という要望メモを、開発会社に伝わり、見積もりしやすい形に整理します',
+  ctaId: 'consult-requirements-conversion',
+};
+
+const RFP_REVIEW_CONSULT: CtaItem = {
+  href: '/contact?intent=rfp-review',
+  label: '提案依頼書の抜け漏れを見直す',
+  description:
+    '依頼書を出す前に、目的、前提条件、予算感、比較ポイント、質問ルールの抜け漏れを確認します',
+  ctaId: 'consult-rfp-review',
+};
+
+const COST_BREAKDOWN_CONSULT: CtaItem = {
+  href: '/contact?intent=cost-breakdown',
+  label: '見積もりの高い・安いを確認する',
+  description: '見積書の金額が妥当か、足りない項目や後から増えそうな費用がないかを一緒に確認します',
+  ctaId: 'consult-cost-breakdown',
+};
+
+const QUOTE_COMPARISON_CONSULT: CtaItem = {
+  href: '/contact?intent=quote-comparison',
+  label: '複数社の見積もりを比べる',
+  description:
+    '総額だけで選んでよいか不安なときに、前提条件、体制、テスト、保守、追加費用の違いを整理します',
+  ctaId: 'consult-quote-comparison',
+};
+
+const AI_COST_CONSULT: CtaItem = {
+  href: '/contact?intent=ai-cost',
+  label: 'AI開発の見積もりを確認する',
+  description:
+    '試作だけの費用なのか、実際に社内で使うところまで含むのか。AI開発の見積もりで見落としやすい費用を確認します',
+  ctaId: 'consult-ai-cost',
+};
+
+const GENAI_START_CONSULT: CtaItem = {
+  href: '/contact?intent=genai-adoption',
+  label: 'AI導入の進め方を相談する',
+  description:
+    '資料探し、問い合わせ対応、書類の転記、確認作業など、どの業務から始めると効果を見込みやすいかを整理します',
+  ctaId: 'consult-genai-adoption',
+};
+
+const GENAI_ROI_CONSULT: CtaItem = {
+  href: '/contact?intent=genai-roi',
+  label: '費用対効果を相談する',
+  description: '導入費だけでなく、運用費、削減できる作業時間、社内承認に必要な説明まで整理します',
+  ctaId: 'consult-genai-roi',
+};
+
+const CDP_SELECTION_CONSULT: CtaItem = {
+  href: '/contact?intent=cdp-selection',
+  label: '顧客データをどうまとめるか相談する',
+  description:
+    '顧客情報、購買履歴、広告やサイトのデータが散らばっている状態から、何を一つにまとめるべきか整理します',
+  ctaId: 'consult-cdp-selection',
+};
+
+const RAG_FIT_CONSULT: CtaItem = {
+  href: '/contact?intent=rag-fit',
+  label: '社内資料をAIで探せるか相談する',
+  description:
+    'PDF、マニュアル、規程、FAQなどをもとに、社員が質問して答えを探せる仕組みにできるか確認します',
+  ctaId: 'consult-rag-fit',
+};
+
+const RAG_ACCURACY_CONSULT: CtaItem = {
+  href: '/contact?intent=rag-accuracy',
+  label: 'AIの回答が信用できない問題を相談する',
+  description:
+    'AIがそれっぽく間違える、根拠が出ない、部署ごとの閲覧権限が不安。業務で使う前に潰すべき点を整理します',
+  ctaId: 'consult-rag-accuracy',
+};
+
+const DX_WORKFLOW_CONSULT: CtaItem = {
+  href: '/contact?intent=dx-workflow',
+  label: '業務改善をどこから始めるか相談する',
+  description:
+    '紙、Excel、二重入力、担当者しか分からない業務を洗い出し、AIやシステムで軽くできる範囲を整理します',
+  ctaId: 'consult-dx-workflow',
+};
+
+const AI_REQ_CONSULT: CtaItem = {
+  href: '/contact?intent=ai-requirements',
+  label: 'AIに何を任せるか整理する',
+  description: 'どの業務をAIに任せ、どこから人に引き継ぐべきか。発注前に決めておくことを整理します',
+  ctaId: 'consult-ai-requirements',
 };
 
 function buildCta(heading: string, primary: CtaItem, secondary?: CtaItem): CategoryCta {
@@ -159,10 +275,10 @@ const MAPPING: Record<string, CategoryCta> = {
     ESTIMATE_CONSULT,
     DOWNLOAD_DECK
   ),
-  communication: buildCta('要件・認識合わせ、Beekleに相談しませんか？', COMM_CONSULT),
+  communication: buildCta('作りたいものの整理、Beekleに相談しませんか？', COMM_CONSULT),
   // 技術記事は買い手(A)＋同業(B)が読む。主=発注者向け相談、副=同業向け協業相談で両方を拾う。
   'ai-development': buildCta(
-    'AI・RAG開発、Beekleに相談しませんか？',
+    '社内資料を使ったAI開発、Beekleに相談しませんか？',
     AI_DEV_CONSULT,
     PARTNER_CONSULT
   ),
@@ -174,64 +290,143 @@ const MAPPING: Record<string, CategoryCta> = {
     DOWNLOAD_DECK
   ),
   'cdp-development': buildCta(
-    'CDP導入・選定、Beekleに相談しませんか？',
+    '顧客データの整理・活用、Beekleに相談しませんか？',
     CDP_CONSULT,
     DOWNLOAD_DECK
   ),
-  dx: buildCta('DX・AI導入、Beekleに相談しませんか？', DX_CONSULT),
+  dx: buildCta('業務改善・AI導入、Beekleに相談しませんか？', DX_CONSULT),
 };
 
 // 記事スラッグ単位の上書き。カテゴリより優先。
 // AI検索が買い手を送り込む高インテント記事（Clarity AI Citations 上位）は、カテゴリの汎用CTAでなく
-// クエリ意図に合った相談＋資料DLにする。project-management に入っている要件定義/RFP系が主対象。
+// クエリ意図に合った相談＋資料DLにする。project-management に入っている発注準備系が主対象。
 const SLUG_CTA: Record<string, CategoryCta> = {
   'requirements-definition-template': buildCta(
-    'この要件定義、Beekleと一緒に詰めませんか？',
-    REQ_CONSULT,
+    'テンプレートはある。でも、自社向けにどう埋めるかで止まっていませんか？',
+    REQ_TEMPLATE_CONSULT,
     DOWNLOAD_DECK
   ),
   'requirements-definition-complete-guide': buildCta(
-    '要件定義、Beekleに相談しませんか？',
-    REQ_CONSULT,
+    '何から決めればいいか、最初の整理から手伝います',
+    REQ_GUIDE_CONSULT,
     DOWNLOAD_DECK
   ),
   'requirements-definition-process': buildCta(
-    '要件定義の進め方、Beekleに相談しませんか？',
-    REQ_CONSULT,
+    '打ち合わせ前に、誰へ何を聞くべきか整理しませんか？',
+    REQ_PROCESS_CONSULT,
     DOWNLOAD_DECK
   ),
   'requirements-vs-requests': buildCta(
-    '要件定義、Beekleに相談しませんか？',
-    REQ_CONSULT,
+    '現場の要望が多すぎて、発注内容に落とせず止まっていませんか？',
+    REQ_CONVERSION_CONSULT,
     DOWNLOAD_DECK
   ),
-  'how-to-write-rfp': buildCta('RFP作成、Beekleに相談しませんか？', RFP_CONSULT, DOWNLOAD_DECK),
+  'how-to-write-rfp': buildCta(
+    '提案依頼書を出す前に、抜け漏れを確認しませんか？',
+    RFP_REVIEW_CONSULT,
+    DOWNLOAD_DECK
+  ),
   'ai-development-cost-guide': buildCta(
-    '開発費用のこと、Beekleに相談しませんか？',
-    ESTIMATE_CONSULT,
+    'AI開発の見積もり、試作だけの金額になっていませんか？',
+    AI_COST_CONSULT,
     PARTNER_CONSULT
   ),
-  // 情シスCEP記事（セキュリティ/インフラ/API構成）: 主=技術相談。副はB層も読む構成系はPARTNER、
+  'genai-roi-investment': buildCta(
+    'AI導入が費用に見合うか、社内で説明できますか？',
+    GENAI_ROI_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'ai-era-development-flow': buildCta(
+    'AI導入を試しただけで終わらせない進め方を整理しませんか？',
+    GENAI_START_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'ai-factcheck': buildCta(
+    'AIの回答を社内で信用して使えるか、確認しませんか？',
+    RAG_ACCURACY_CONSULT,
+    PARTNER_CONSULT
+  ),
+  'rag-evaluation': buildCta(
+    'AIの回答ミスを減らせるか、業務利用の前に確認しませんか？',
+    RAG_ACCURACY_CONSULT,
+    PARTNER_CONSULT
+  ),
+  'ai-knowledge-chatbot-accuracy': buildCta(
+    '社内資料をもとに、信用できる回答を返せるか相談しませんか？',
+    RAG_ACCURACY_CONSULT,
+    PARTNER_CONSULT
+  ),
+  'system-development-cost-breakdown': buildCta(
+    'その見積もり、あとから費用が増えそうではありませんか？',
+    COST_BREAKDOWN_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'system-estimate-validity': buildCta(
+    'この見積もりで進めて大丈夫か、不安が残っていませんか？',
+    COST_BREAKDOWN_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'quote-comparison-checklist': buildCta(
+    '安い見積もりを選んでよいか、迷っていませんか？',
+    QUOTE_COMPARISON_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'cdp-product-comparison': buildCta(
+    '顧客データが散らばって、何を選べばよいか迷っていませんか？',
+    CDP_SELECTION_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'what-is-rag': buildCta(
+    '社内資料をAIで探せるようにできるか、確認しませんか？',
+    RAG_FIT_CONSULT,
+    PARTNER_CONSULT
+  ),
+  'ai-rag-accuracy-graphrag': buildCta(
+    'AIの回答が信用できず、社内利用に踏み切れずにいませんか？',
+    RAG_ACCURACY_CONSULT,
+    PARTNER_CONSULT
+  ),
+  'ai-requirements-definition': buildCta(
+    'AIに何を任せるか決めきれず、発注前で止まっていませんか？',
+    AI_REQ_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  // 情シス向け記事（セキュリティ/インフラ/連携）: 主=技術相談。副はB層も読む技術系はPARTNER、
   // セキュリティ系は資料DL（購買委員会の担当者が社内共有する材料）。
   'genai-security-governance': buildCta(
-    'セキュリティの懸念、技術相談で解消しませんか？',
+    '社内データをAIに使って大丈夫か、不安を整理しませんか？',
     TECH_REVIEW_CONSULT,
     DOWNLOAD_DECK
   ),
   'ai-security-privacy-guide': buildCta(
-    'セキュリティの懸念、技術相談で解消しませんか？',
+    '社内データをAIに使って大丈夫か、不安を整理しませんか？',
     TECH_REVIEW_CONSULT,
     DOWNLOAD_DECK
   ),
   'genai-system-infrastructure': buildCta(
-    'インフラ構成、技術相談で壁打ちしませんか？',
+    '既存システムとAIをつなげられるか、確認しませんか？',
     TECH_REVIEW_CONSULT,
     PARTNER_CONSULT
   ),
   'llm-api-system-design': buildCta(
-    'LLM連携の構成、技術相談で壁打ちしませんか？',
+    'AI連携で失敗しそうな点を、先に確認しませんか？',
     TECH_REVIEW_CONSULT,
     PARTNER_CONSULT
+  ),
+  'dx-josys-ai-era-requirements': buildCta(
+    '紙・Excel・属人作業を、どこから見直すか整理しませんか？',
+    DX_WORKFLOW_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'dx-josys-as-is-bpo-guide': buildCta(
+    '今の業務を見える化して、改善できる範囲を整理しませんか？',
+    DX_WORKFLOW_CONSULT,
+    DOWNLOAD_DECK
+  ),
+  'dx-josys-tobe-redesign': buildCta(
+    '作る前に、業務改善案が本当に現場で使えるか確認しませんか？',
+    DX_WORKFLOW_CONSULT,
+    DOWNLOAD_DECK
   ),
 };
 

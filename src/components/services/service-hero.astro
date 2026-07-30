@@ -64,12 +64,12 @@ const benefits = service.benefits.slice(0, 3);
         }
         <div class="mt-9 flex flex-col gap-3 sm:flex-row">
           <a
-            href={`/contact?source=services-${service.id}-hero`}
+            href={`/contact?source=services-${service.id}-hero&intent=${service.id === 'ai-development' ? 'genai-adoption' : 'consult'}`}
             data-cta-source={`services-${service.id}-hero`}
             data-cta-id="contact"
             class="inline-flex min-h-[52px] items-center justify-center rounded-full bg-primary-500 px-8 py-3 text-base font-bold text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium"
           >
-            無料相談する
+            {service.id === 'ai-development' ? 'AI導入の進め方を相談する' : '無料相談する'}
             <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
