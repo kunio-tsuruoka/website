@@ -53,7 +53,7 @@ export class OpenRouterError extends Error {
 export async function chatCompletion(
   apiKey: string,
   req: ChatCompletionRequest,
-  opts?: { referer?: string; title?: string }
+  opts?: { referer?: string; title?: string; signal?: AbortSignal }
 ): Promise<ChatCompletionResult> {
   const res = await fetch(ENDPOINT, {
     method: 'POST',
@@ -64,6 +64,7 @@ export async function chatCompletion(
       ...(opts?.title ? { 'x-title': opts.title } : {}),
     },
     body: JSON.stringify(req),
+    ...(opts?.signal ? { signal: opts.signal } : {}),
   });
 
   const data = (await res.json().catch(() => ({}))) as OpenRouterResponse;
@@ -95,7 +96,7 @@ export async function chatCompletionWithBudget(
   },
   apiKey: string,
   req: ChatCompletionRequest,
-  opts?: { referer?: string; title?: string }
+  opts?: { referer?: string; title?: string; signal?: AbortSignal }
 ): Promise<ChatCompletionResult> {
   const result = await chatCompletion(apiKey, req, opts);
   if (result.costUsd > 0) {
