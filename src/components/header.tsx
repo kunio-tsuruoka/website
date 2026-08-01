@@ -8,6 +8,7 @@ const aiServiceItems = {
     href: '/services/internal-document-ai-search',
   },
   services: [
+    { label: 'AI導入支援3プラン（提案・助言・伴走）', href: '/services/ai-adoption' },
     { label: '生成AI受託開発', href: '/services/ai-development' },
     { label: 'RAGシステム構築', href: '/services/rag-system-development' },
     { label: 'AIチャットボット開発', href: '/services/ai-chatbot-development' },
