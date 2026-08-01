@@ -8,6 +8,7 @@ const SITE_URL = 'https://beekle.jp';
 const staticPages = [
   { url: '/', priority: '1.0', changefreq: 'weekly' },
   { url: '/prooffirst', priority: '0.9', changefreq: 'weekly' },
+  { url: '/services/ai-adoption', priority: '0.9', changefreq: 'monthly' },
   { url: '/contact', priority: '0.9', changefreq: 'monthly' },
   { url: '/company', priority: '0.8', changefreq: 'monthly' },
   { url: '/members', priority: '0.7', changefreq: 'monthly' },

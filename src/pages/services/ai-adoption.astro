@@ -1,0 +1,717 @@
+---
+import { Header } from '@/components/header';
+import JsonLd from '@/components/seo/json-ld.astro';
+import { Section, SectionHeader } from '@/components/ui';
+import Layout from '../../layouts/layout.astro';
+
+const siteUrl = 'https://beekle.jp';
+const pageUrl = `${siteUrl}/services/ai-adoption`;
+const seoTitle = 'AI導入支援3プラン｜提案のみ・実装アドバイス・導入伴走を時間単価1万円で';
+const seoDescription =
+  'AI活用提案・AI実装アドバイス・AI導入伴走支援の3プラン。すべて時間単価10,000円（税別）で、想定時間の違いをそのまま価格にしています。提案だけの受け取りも、実装まで含む伴走も選べます。';
+
+const HOURLY_RATE = '10,000';
+
+type Plan = {
+  no: string;
+  code: string;
+  name: string;
+  tagline: string;
+  target: string;
+  scope: string;
+  deliverable: string;
+  meetings: string;
+  hours: string;
+  implementation: string;
+  contract: string;
+  price: string;
+  priceUnit: string;
+  featured: boolean;
+};
+
+const plans: Plan[] = [
+  {
+    no: '01',
+    code: 'ADVISE',
+    name: 'AI活用提案',
+    tagline: 'どの業務にAIを入れるべきかを、提案書の形で持ち帰る',
+    target: 'AIを使いたいが、どの業務から手をつけるか社内で決まっていない',
+    scope: '業務ヒアリング、適用候補の洗い出しと優先順位づけ、提案書の作成',
+    deliverable: 'AI活用提案書（対象業務・想定効果・概算費用・進め方）',
+    meetings: 'ヒアリング2回＋報告1回／チャット相談は実施期間中のみ',
+    hours: '10時間目安（数週間）',
+    implementation: '含まない',
+    contract: '準委任（スポット）',
+    price: '100,000',
+    priceUnit: '一式',
+    featured: false,
+  },
+  {
+    no: '02',
+    code: 'GUIDE',
+    name: 'AI実装アドバイス',
+    tagline: '作るのは自社。技術判断の妥当性だけを外から見る',
+    target: '社内に開発リソースがあり自社で作るが、技術判断を検証できる人がいない',
+    scope: '技術選定レビュー、アーキテクチャレビュー、精度評価の設計、定例レビュー',
+    deliverable: 'レビュー記録、技術方針メモ',
+    meetings: '定例MTG 月2回（各60分）／チャット相談 無制限',
+    hours: '月16時間（週4時間相当）',
+    implementation: '含まない（手は動かしません）',
+    contract: '準委任（月額）',
+    price: '160,000',
+    priceUnit: '月',
+    featured: true,
+  },
+  {
+    no: '03',
+    code: 'ENABLE',
+    name: 'AI導入伴走支援',
+    tagline: '決めるところから実装・運用定着まで、同じチームで進める',
+    target: '導入を決めたが、社内だけでは本番運用まで到達できる体制がない',
+    scope: '要件整理、PoC構築、実装、社内展開、運用定着までの継続関与',
+    deliverable: '動くシステム、導入計画、運用ルール',
+    meetings: '定例MTG 週1回／チャット相談 無制限',
+    hours: '月32時間〜（週8時間相当）',
+    implementation: '含む',
+    contract: '準委任（月額）',
+    price: '320,000',
+    priceUnit: '月〜',
+    featured: false,
+  },
+];
+
+const comparisonRows: { label: string; key: keyof Plan }[] = [
+  { label: 'こんな方に', key: 'target' },
+  { label: 'やること', key: 'scope' },
+  { label: '成果物', key: 'deliverable' },
+  { label: '接触頻度', key: 'meetings' },
+  { label: '想定時間', key: 'hours' },
+  { label: '実装', key: 'implementation' },
+  { label: '契約形態', key: 'contract' },
+];
+
+const painPoints = [
+  {
+    title: '相談したいのに、いきなり開発の見積もりが出てくる',
+    description:
+      '「AIで何ができるか」を整理したい段階なのに、相談するとシステム開発の提案と見積もりが返ってくる。判断材料がないまま発注の可否を迫られる。',
+  },
+  {
+    title: '技術判断が合っているか、社内の誰も検証できない',
+    description:
+      '開発チームはある。ただ生成AIは初めてで、モデルの選び方も精度の測り方も手探り。進んでいる方向が正しいのか確かめる手段がない。',
+  },
+  {
+    title: 'PoCまでは進んだが、本番運用に載せられない',
+    description:
+      '動くものはできた。しかし権限管理、ログ、コスト監視、現場への展開まで手が回らず、試作のまま止まっている。',
+  },
+  {
+    title: '一式いくらの見積もりで、何にいくらかかるか分からない',
+    description:
+      '提示された金額の内訳が読めず、社内で稟議を通せない。範囲を減らしたときにいくら下がるのかも分からない。',
+  },
+];
+
+const steps = [
+  {
+    no: '01',
+    title: '無料相談（30分）',
+    description: '現状の業務、体制、すでに試したことを伺います。この時点で費用は発生しません。',
+  },
+  {
+    no: '02',
+    title: 'プランと時間の提案',
+    description:
+      '3プランのどれが合うか、対象範囲と想定時間を添えてご提案します。「今はAIを入れる段階ではない」とお伝えすることもあります。',
+  },
+  {
+    no: '03',
+    title: '契約・開始',
+    description: '範囲と時間に合意してから開始します。時間の増減は途中でも調整できます。',
+  },
+  {
+    no: '04',
+    title: 'プランの乗り換え',
+    description:
+      '提案（01）から伴走（03）へ、伴走から実装アドバイス（02）へ、といった移行もできます。最初のプランに固定されません。',
+  },
+];
+
+const faqs = [
+  {
+    question: '提案だけ受け取って、実装は他社に依頼してもいいですか？',
+    answer:
+      'はい。AI活用提案（PLAN 01）でお渡しする提案書はお客様の資産です。他社への発注や補助金申請の資料として使っていただいて構いません。実装を当社に発注していただく必要はありません。',
+  },
+  {
+    question: '料金はどのように決まっていますか？',
+    answer:
+      '3プランとも時間単価10,000円（税別）で共通です。プランごとの金額の違いは、想定している時間の違いです。AI活用提案は10時間目安で100,000円、AI実装アドバイスは月16時間で160,000円、AI導入伴走支援は月32時間からで320,000円からとなります。',
+  },
+  {
+    question: '想定時間より多く、または少なくかかった場合はどうなりますか？',
+    answer:
+      '記載の時間は目安です。作業量が想定と大きく変わりそうな場合は、その時点でご相談し、範囲か時間のどちらを調整するかを決めてから進めます。何も言わずに超過することはありません。',
+  },
+  {
+    question: 'AI導入伴走支援と、生成AI受託開発の違いは何ですか？',
+    answer:
+      'どちらも準委任契約です。生成AIは「どこまでできるか作ってみないと分からない」要素が大きく、成果物を先に固定する請負契約は実態に合わないため、当社では準委任で進めます。違いは発注の単位です。生成AI受託開発は作る対象が決まっているプロジェクト単位の発注、AI導入伴走支援は月ごとの時間枠での発注で、何を作るかを決めるところから運用が回る状態になるまでを幅広くお任せいただく形です。',
+  },
+  {
+    question: '最低契約期間はありますか？',
+    answer:
+      '月額の2プラン（AI実装アドバイス・AI導入伴走支援）は最低3ヶ月です。AIは効果が見えるまでに一定の期間が必要なため、最初の3ヶ月だけお願いしています。4ヶ月目以降は月単位で解約でき、違約金はありません。AI活用提案はスポットのため、継続の縛りはありません。',
+  },
+  {
+    question: '途中でプランを変更できますか？',
+    answer:
+      'できます。AI活用提案で方向を決めてから導入伴走支援に移る、自社開発に切り替えるタイミングで実装アドバイスに落とす、といった移行を想定しています。',
+  },
+  {
+    question: 'どのプランが合うか分かりません。',
+    answer:
+      '無料相談で現状を伺い、こちらから提案します。判断材料が足りない段階であればAI活用提案から、作るものが見えているなら導入伴走支援から、というのが一般的な入り口です。',
+  },
+];
+---
+
+<Layout title={`${seoTitle} | Beekle`} description={seoDescription} canonical={pageUrl}>
+  <JsonLd
+    slot="head"
+    type="service"
+    data={{
+      serviceName: 'AI導入支援（AI活用提案・AI実装アドバイス・AI導入伴走支援）',
+      serviceDescription: seoDescription,
+      url: pageUrl,
+      serviceType: 'AI導入支援・コンサルティング',
+      image: `${siteUrl}/og-image.png`,
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: 'AI導入支援3プラン', url: '/services/ai-adoption' },
+      ],
+    }}
+  />
+  <JsonLd slot="head" type="faq" data={{ faqs }} />
+
+  <Header client:idle />
+
+  <main class="pt-20">
+    <!-- ============ HERO ============ -->
+    <section class="relative overflow-hidden bg-primary-500 py-20 md:py-28">
+      <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div class="absolute -top-20 -left-10 w-48 h-96 decoration-bar-purple opacity-25"></div>
+        <div class="absolute top-20 right-10 w-40 h-80 decoration-bar-cyan opacity-25"></div>
+        <div class="absolute bottom-10 left-1/3 w-32 h-64 decoration-bar-yellow opacity-20"></div>
+        <div class="absolute top-32 right-32 w-6 h-6 bg-secondary-500 rounded-full opacity-50"></div>
+        <div class="absolute bottom-40 left-40 w-5 h-5 bg-highlight-500 rounded-full opacity-40"></div>
+      </div>
+      <div class="container mx-auto px-8 lg:px-12 relative">
+        <div class="max-w-3xl">
+          <span class="inline-block px-4 py-1.5 bg-white/15 text-white rounded-full text-sm font-semibold mb-6">
+            AI導入支援 3プラン
+          </span>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
+            AI活用は、<br class="hidden sm:block" />「どこまで任せるか」で選べます。
+          </h1>
+          <p class="text-lg md:text-xl text-white/90 leading-relaxed mb-8">
+            提案だけを受け取る。作るのは自社で、技術判断だけ見てもらう。決めるところから運用まで任せる。
+            3つのプランを用意し、すべて時間単価{HOURLY_RATE}円（税別）で内訳を開示しています。
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a
+              href="/contact?source=services-ai-adoption-hero&intent=genai-adoption"
+              data-cta-source="services-ai-adoption-hero"
+              data-cta-id="contact"
+              class="inline-flex min-h-[52px] items-center justify-center rounded-full bg-white px-8 py-3 text-base font-bold text-accent-950 shadow-strong transition hover:bg-neutral-100"
+            >
+              無料相談でプランを決める（30分）
+              <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </a>
+            <a
+              href="#plans"
+              class="inline-flex min-h-[52px] items-center justify-center rounded-full border-2 border-white/60 px-8 py-3 text-base font-bold text-white transition hover:bg-white/10"
+            >
+              3プランを比較する
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PAIN POINTS ============ -->
+    <Section variant="light" padding="lg" decoration="blursPurple">
+      <SectionHeader
+        title="AI導入は、つまずく場所が決まっています"
+        subtitle="どこで止まっているかによって、必要な支援の形は変わります"
+        number="01"
+        label="ISSUES"
+      />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        {painPoints.map((pain) => (
+          <div class="rounded-3xl bg-white p-6 shadow-soft md:p-8">
+            <h3 class="text-lg md:text-xl font-bold text-navy-950 leading-snug mb-3">
+              {pain.title}
+            </h3>
+            <p class="text-sm md:text-base text-neutral-700 leading-relaxed">{pain.description}</p>
+          </div>
+        ))}
+      </div>
+    </Section>
+
+    <!-- ============ PLAN COMPARISON ============ -->
+    <Section variant="white" padding="lg" decoration="bars" id="plans">
+      <SectionHeader
+        title="3つのプラン"
+        subtitle={`時間単価${HOURLY_RATE}円（税別）は共通。想定時間の違いが、そのまま価格の違いです`}
+        number="02"
+        label="PLANS"
+      />
+
+      <!-- モバイル: プランごとに縦積み -->
+      <div class="md:hidden space-y-6">
+        {plans.map((plan) => (
+          <div
+            class:list={[
+              'rounded-3xl border bg-white p-6 shadow-soft',
+              plan.featured ? 'border-primary-300' : 'border-neutral-200',
+            ]}
+          >
+            <div class="flex items-baseline gap-3 mb-2">
+              <span class="font-Poppins text-3xl font-bold text-primary-500">{plan.no}</span>
+              <span class="text-xs font-semibold uppercase tracking-wide text-primary-500">
+                {plan.code}
+              </span>
+            </div>
+            <h3 class="text-xl font-bold text-navy-950 mb-2">{plan.name}</h3>
+            <p class="text-sm text-neutral-700 leading-relaxed mb-4">{plan.tagline}</p>
+            <p class="mb-5">
+              <span class="font-Poppins text-3xl font-bold text-navy-950">
+                &yen;{plan.price}
+              </span>
+              <span class="ml-1 text-sm font-medium text-neutral-600">/ {plan.priceUnit}（税別）</span>
+            </p>
+            <dl class="space-y-3 border-t border-neutral-200 pt-4">
+              {comparisonRows.map((row) => (
+                <div>
+                  <dt class="text-xs font-bold text-primary-700">{row.label}</dt>
+                  <dd class="text-sm text-neutral-700 leading-relaxed">{plan[row.key]}</dd>
+                </div>
+              ))}
+            </dl>
+            <a
+              href={`/contact?source=services-ai-adoption-plan-${plan.no}&intent=genai-adoption`}
+              data-cta-source={`services-ai-adoption-plan-${plan.no}`}
+              data-cta-id="contact"
+              class="mt-6 inline-flex w-full min-h-[52px] items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-base font-bold text-white shadow-soft transition hover:bg-primary-600"
+            >
+              このプランを相談する
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <!-- PC: 比較表 -->
+      <div class="hidden md:block max-w-6xl mx-auto">
+        <table class="w-full border-separate border-spacing-x-3">
+          <caption class="sr-only">AI導入支援3プランの比較表</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="w-40"><span class="sr-only">項目</span></th>
+              {plans.map((plan) => (
+                <th scope="col" class="align-bottom p-0">
+                  <div
+                    class:list={[
+                      'rounded-t-3xl border-x border-t bg-white px-6 pt-8 pb-6 text-left',
+                      plan.featured ? 'border-primary-300' : 'border-neutral-200',
+                    ]}
+                  >
+                    <div class="flex items-baseline gap-3 mb-2">
+                      <span class="font-Poppins text-4xl font-bold text-primary-500">{plan.no}</span>
+                      <span class="text-xs font-semibold uppercase tracking-wide text-primary-500">
+                        {plan.code}
+                      </span>
+                    </div>
+                    <p class="text-xl font-bold text-navy-950 mb-2">{plan.name}</p>
+                    <p class="text-sm font-normal text-neutral-700 leading-relaxed mb-5">
+                      {plan.tagline}
+                    </p>
+                    <p>
+                      <span class="font-Poppins text-3xl font-bold text-navy-950">
+                        &yen;{plan.price}
+                      </span>
+                      <span class="ml-1 text-sm font-medium text-neutral-600">
+                        / {plan.priceUnit}（税別）
+                      </span>
+                    </p>
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {comparisonRows.map((row) => (
+              <tr>
+                <th scope="row" class="py-4 pr-4 text-left align-top text-sm font-bold text-primary-700">
+                  {row.label}
+                </th>
+                {plans.map((plan) => (
+                  <td
+                    class:list={[
+                      'border-x border-b border-neutral-100 bg-white px-6 py-4 align-top text-sm leading-relaxed text-neutral-700',
+                      plan.featured ? 'border-x-primary-300' : 'border-x-neutral-200',
+                    ]}
+                  >
+                    {plan[row.key]}
+                  </td>
+                ))}
+              </tr>
+            ))}
+            <tr>
+              <td></td>
+              {plans.map((plan) => (
+                <td
+                  class:list={[
+                    'rounded-b-3xl border-x border-b bg-white px-6 pt-2 pb-8',
+                    plan.featured ? 'border-primary-300' : 'border-neutral-200',
+                  ]}
+                >
+                  <a
+                    href={`/contact?source=services-ai-adoption-plan-${plan.no}&intent=genai-adoption`}
+                    data-cta-source={`services-ai-adoption-plan-${plan.no}`}
+                    data-cta-id="contact"
+                    class="inline-flex w-full min-h-[52px] items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-base font-bold text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium"
+                  >
+                    このプランを相談する
+                  </a>
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="mt-8 text-center text-sm text-neutral-600 leading-relaxed">
+        表示価格はすべて税別です。3プランとも時間単価{HOURLY_RATE}円（税別）で算出しています。<br class="hidden md:block" />
+        記載の時間は目安で、範囲が変わりそうな場合はその時点でご相談してから調整します。
+      </p>
+    </Section>
+
+    <!-- ============ PLAN DETAILS ============ -->
+    <Section variant="lightPurple" padding="lg" decoration="blursPurple">
+      <SectionHeader
+        title="それぞれのプランで、何をするのか"
+        subtitle="任せる範囲と、こちらが手を動かす範囲を明確にしています"
+        number="03"
+        label="DETAILS"
+      />
+
+      <div class="max-w-4xl mx-auto space-y-8">
+        <!-- PLAN 01 -->
+        <article class="rounded-3xl bg-white p-6 shadow-soft md:p-10">
+          <div class="flex items-baseline gap-3 mb-3">
+            <span class="font-Poppins text-4xl font-bold text-primary-500">01</span>
+            <span class="text-xs font-semibold uppercase tracking-wide text-primary-500">ADVISE</span>
+          </div>
+          <h3 class="text-2xl md:text-3xl font-bold text-navy-950 mb-4">AI活用提案</h3>
+          <p class="text-base text-neutral-700 leading-relaxed mb-6">
+            AIを入れる前提で話を進めるのではなく、まず「どの業務なら効果が出るか」「そもそも今やるべきか」を整理します。
+            現場の業務フロー、扱っているデータ、体制を伺い、適用候補を洗い出して優先順位をつけ、提案書としてお渡しします。
+          </p>
+          <div class="grid gap-6 sm:grid-cols-2 mb-6">
+            <div>
+              <p class="text-sm font-bold text-primary-700 mb-2">進め方</p>
+              <ul class="space-y-2 text-sm text-neutral-700 leading-relaxed">
+                <li>業務ヒアリング（現場担当者含む）</li>
+                <li>適用候補の洗い出しと効果の見積もり</li>
+                <li>優先順位づけと進め方の設計</li>
+                <li>提案書の作成・報告</li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-primary-700 mb-2">お渡しするもの</p>
+              <ul class="space-y-2 text-sm text-neutral-700 leading-relaxed">
+                <li>対象業務と想定効果</li>
+                <li>概算費用と進め方</li>
+                <li>見送るべき業務とその理由</li>
+              </ul>
+            </div>
+          </div>
+          <div class="rounded-2xl bg-primary-50 p-5">
+            <p class="text-sm text-primary-900 leading-relaxed">
+              <span class="font-bold">提案書はお客様の資産です。</span>
+              他社への発注や補助金申請の資料として使っていただいて構いません。実装まで当社に発注していただく必要はありません。
+            </p>
+          </div>
+        </article>
+
+        <!-- PLAN 02 -->
+        <article class="rounded-3xl border-2 border-primary-300 bg-white p-6 shadow-medium md:p-10">
+          <div class="flex items-baseline gap-3 mb-3">
+            <span class="font-Poppins text-4xl font-bold text-primary-500">02</span>
+            <span class="text-xs font-semibold uppercase tracking-wide text-primary-500">GUIDE</span>
+          </div>
+          <h3 class="text-2xl md:text-3xl font-bold text-navy-950 mb-4">AI実装アドバイス</h3>
+          <p class="text-base text-neutral-700 leading-relaxed mb-6">
+            開発するのは御社のチームです。こちらは手を動かさず、技術判断が妥当かどうかを外から確認する役割に徹します。
+            生成AIは「動いたように見えて実務で使えない」状態になりやすいため、精度をどう測るか、どこに人の確認を残すかを早い段階で決めておくことが効きます。
+          </p>
+          <div class="grid gap-6 sm:grid-cols-2 mb-6">
+            <div>
+              <p class="text-sm font-bold text-primary-700 mb-2">見るところ</p>
+              <ul class="space-y-2 text-sm text-neutral-700 leading-relaxed">
+                <li>モデル・ライブラリの技術選定</li>
+                <li>アーキテクチャとデータの持ち方</li>
+                <li>精度評価の設計（正解例・NG例の集め方）</li>
+                <li>コストとセキュリティの見積もり</li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-primary-700 mb-2">進め方</p>
+              <ul class="space-y-2 text-sm text-neutral-700 leading-relaxed">
+                <li>定例レビュー</li>
+                <li>設計・コードのレビュー</li>
+                <li>判断に迷ったときの随時相談</li>
+                <li>レビュー記録・技術方針メモの共有</li>
+              </ul>
+            </div>
+          </div>
+          <div class="rounded-2xl bg-neutral-100 p-5">
+            <p class="text-sm text-neutral-700 leading-relaxed">
+              <span class="font-bold">実装は含みません。</span>
+              こちらが手を動かす必要が出てきた場合は、AI導入伴走支援への切り替えをご提案します。
+            </p>
+          </div>
+        </article>
+
+        <!-- PLAN 03 -->
+        <article class="rounded-3xl bg-white p-6 shadow-soft md:p-10">
+          <div class="flex items-baseline gap-3 mb-3">
+            <span class="font-Poppins text-4xl font-bold text-primary-500">03</span>
+            <span class="text-xs font-semibold uppercase tracking-wide text-primary-500">ENABLE</span>
+          </div>
+          <h3 class="text-2xl md:text-3xl font-bold text-navy-950 mb-4">AI導入伴走支援</h3>
+          <p class="text-base text-neutral-700 leading-relaxed mb-6">
+            何を作るかを決めるところから、実装、社内展開、運用まで、同じチームが継続して関与します。
+            実装を含むため、御社に開発リソースがなくても本番運用まで進められます。フェーズごとに担当が変わらないぶん、引き継ぎで要件が抜け落ちません。
+          </p>
+          <div class="grid gap-6 sm:grid-cols-2 mb-6">
+            <div>
+              <p class="text-sm font-bold text-primary-700 mb-2">関与する範囲</p>
+              <ul class="space-y-2 text-sm text-neutral-700 leading-relaxed">
+                <li>対象業務の要件整理</li>
+                <li>PoC構築と効果検証</li>
+                <li>本番実装・既存システム連携</li>
+                <li>権限管理・ログ・コスト監視の整備</li>
+                <li>現場への展開と運用ルールづくり</li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-primary-700 mb-2">お渡しするもの</p>
+              <ul class="space-y-2 text-sm text-neutral-700 leading-relaxed">
+                <li>動くシステム</li>
+                <li>導入計画</li>
+                <li>運用ルール・引き継ぎ資料</li>
+              </ul>
+            </div>
+          </div>
+          <div class="rounded-2xl bg-primary-50 p-5">
+            <p class="text-sm text-primary-900 leading-relaxed mb-3">
+              <span class="font-bold">作るものが決まっているなら、生成AI受託開発のほうが適しています。</span>
+              どちらも準委任契約で、成果物を固定せずに進める点は同じです。違うのは発注の単位で、受託開発は作る対象が決まっているプロジェクト単位、伴走支援は月ごとの時間枠です。「何を作るか」から一緒に決めたい場合は伴走支援を選んでください。
+            </p>
+            <a
+              href="/services/ai-development"
+              class="inline-flex min-h-[44px] items-center text-sm font-bold text-primary-600 transition hover:text-primary-700"
+            >
+              生成AI受託開発を見る
+              <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </Section>
+
+    <!-- ============ PROOF ============ -->
+    <Section variant="white" padding="lg" decoration="bars">
+      <SectionHeader
+        title="話を聞く前に、作ったものを触ってください"
+        subtitle="ブラウザで動くAIデモを公開しています。登録不要・5分で試せます"
+        number="04"
+        label="PROOF"
+      />
+      <div class="max-w-5xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+          <a
+            href="/demos/it-advisor"
+            data-cta-source="services-ai-adoption-demos"
+            data-cta-id="demo-it-advisor"
+            class="group block rounded-2xl border border-neutral-200 bg-white p-6 shadow-soft transition hover:border-primary-300 hover:shadow-medium"
+          >
+            <span class="mb-3 inline-block rounded-md bg-primary-50 px-2 py-1 text-xs font-bold text-primary-700">
+              社内資料検索
+            </span>
+            <h3 class="mb-2 text-xl font-bold text-navy-950 transition group-hover:text-primary-600">
+              AIナレッジ相談
+            </h3>
+            <p class="text-sm leading-relaxed text-neutral-700">
+              Beekleのコラム記事をもとに回答する相談員AI。社内資料を探して答える仕組みの精度を、その場で確かめられます。
+            </p>
+            <span class="mt-4 inline-flex items-center text-sm font-medium text-primary-600">
+              試してみる →
+            </span>
+          </a>
+          <a
+            href="/demos/ocr"
+            data-cta-source="services-ai-adoption-demos"
+            data-cta-id="demo-ocr"
+            class="group block rounded-2xl border border-neutral-200 bg-white p-6 shadow-soft transition hover:border-primary-300 hover:shadow-medium"
+          >
+            <span class="mb-3 inline-block rounded-md bg-secondary-50 px-2 py-1 text-xs font-bold text-secondary-600">
+              書類読み取り
+            </span>
+            <h3 class="mb-2 text-xl font-bold text-navy-950 transition group-hover:text-primary-600">
+              AI領収書OCR
+            </h3>
+            <p class="text-sm leading-relaxed text-neutral-700">
+              画像から店舗名・日付・合計・明細を読み取ります。手入力をAIで置き換えたときの精度感を体感できます。
+            </p>
+            <span class="mt-4 inline-flex items-center text-sm font-medium text-primary-600">
+              試してみる →
+            </span>
+          </a>
+        </div>
+        <div class="rounded-3xl bg-neutral-50 p-6 md:p-8">
+          <h3 class="mb-3 text-lg md:text-xl font-bold text-navy-950">
+            本番運用まで進めた案件の記録
+          </h3>
+          <p class="mb-5 text-sm md:text-base leading-relaxed text-neutral-700">
+            社内文書のAI検索、生成AI OCRによる売上データ化、上流工程を支援するAIエージェントなど、
+            課題・打ち手・結果をそのまま公開しています。どの規模の会社が、どこから始めたのかを確認できます。
+          </p>
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <a
+              href="/case-studies?ref=services-ai-adoption"
+              data-cta-source="services-ai-adoption-proof"
+              data-cta-id="case-studies"
+              class="inline-flex min-h-[52px] items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-base font-bold text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium"
+            >
+              導入事例を見る
+            </a>
+            <a
+              href="/contact?source=services-ai-adoption-proof&intent=genai-adoption"
+              data-cta-source="services-ai-adoption-proof"
+              data-cta-id="contact"
+              class="inline-flex min-h-[52px] items-center justify-center rounded-full border-2 border-primary-300 px-6 py-3 text-base font-bold text-primary-700 transition hover:border-primary-500 hover:bg-primary-50"
+            >
+              自社の場合を相談する（無料・30分）
+            </a>
+          </div>
+        </div>
+      </div>
+    </Section>
+
+    <!-- ============ FLOW ============ -->
+    <Section variant="light" padding="lg" decoration="dots">
+      <SectionHeader
+        title="ご相談から開始までの流れ"
+        subtitle="プランを決めるところから無料でご相談いただけます"
+        number="05"
+        label="FLOW"
+      />
+      <div class="max-w-4xl mx-auto space-y-5">
+        {steps.map((step) => (
+          <div class="flex flex-col gap-4 rounded-3xl border border-neutral-200 bg-white p-6 shadow-soft sm:flex-row sm:items-start sm:gap-6 md:p-8">
+            <span class="font-Poppins text-4xl font-bold text-primary-500 leading-none shrink-0">
+              {step.no}
+            </span>
+            <div>
+              <h3 class="text-lg md:text-xl font-bold text-navy-950 mb-2">{step.title}</h3>
+              <p class="text-sm md:text-base text-neutral-700 leading-relaxed">
+                {step.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Section>
+
+    <!-- ============ FAQ ============ -->
+    <Section variant="white" padding="lg" decoration="blursPurple">
+      <SectionHeader
+        title="よくあるご質問"
+        subtitle="料金と契約形態について、事前によくいただく質問をまとめました"
+        number="06"
+        label="FAQ"
+      />
+      <div class="max-w-3xl mx-auto space-y-4">
+        {faqs.map((faq) => (
+          <details class="group rounded-3xl bg-white p-6 shadow-soft md:p-8">
+            <summary class="flex min-h-[44px] cursor-pointer items-center justify-between gap-4 text-base md:text-lg font-bold text-navy-950 list-none">
+              {faq.question}
+              <svg
+                class="h-5 w-5 shrink-0 text-primary-500 transition-transform group-open:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </summary>
+            <p class="mt-4 text-sm md:text-base text-neutral-700 leading-relaxed">{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </Section>
+
+    <!-- ============ CTA ============ -->
+    <section class="relative overflow-hidden bg-navy-950 py-20 md:py-32">
+      <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div class="absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary-500/25 blur-3xl"></div>
+        <div class="absolute -right-20 bottom-8 h-64 w-64 rounded-full bg-secondary-500/15 blur-3xl"></div>
+      </div>
+      <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center relative">
+        <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">
+          どのプランが合うか、無料相談で整理しませんか
+        </h2>
+        <p class="text-lg md:text-xl text-white/90 mb-10 leading-relaxed">
+          業務・体制・すでに試したことを伺い、必要な支援の範囲と時間の目安をご案内します。
+          相談の結果、いま着手すべきでないと判断した場合はそのようにお伝えします。
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/contact?source=services-ai-adoption-final&intent=genai-adoption"
+            data-cta-source="services-ai-adoption-final"
+            data-cta-id="contact"
+            class="inline-flex min-h-[56px] items-center justify-center rounded-full bg-white px-10 py-4 text-lg font-semibold text-accent-950 shadow-strong transition hover:bg-neutral-100"
+          >
+            無料相談を予約する（30分）
+            <svg class="ml-3 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </a>
+          <a
+            href="/services/ai-development"
+            data-cta-source="services-ai-adoption-final"
+            data-cta-id="service-ai-development"
+            class="inline-flex min-h-[56px] items-center justify-center rounded-full bg-primary-500 px-10 py-4 text-lg font-semibold text-white shadow-strong transition hover:bg-primary-600"
+          >
+            生成AI受託開発を見る
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

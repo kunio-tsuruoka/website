@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
 import { readSession } from '../../lib/flow-interview/session';
+import { type LeadClassification, classifyInquiry } from '../../lib/lead-classifier';
 import { verifyTurnstile } from '../../lib/turnstile';
 
 export const prerender = false;
@@ -108,6 +109,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
             CRM_INQUIRY_WEBHOOK_TOKEN?: string;
             CRM_INQUIRY_WEBHOOK_AUTH_HEADER?: string;
             TURNSTILE_SECRET_KEY?: string;
+            OPENROUTER_API_KEY?: string;
+            OPENROUTER_MODEL_LEAD_FILTER?: string;
             RATE_LIMIT?: { get(key: string): Promise<string | null> };
           };
         };
@@ -117,6 +120,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const crmWebhookUrl = runtime?.env?.CRM_INQUIRY_WEBHOOK_URL;
     const crmWebhookToken = runtime?.env?.CRM_INQUIRY_WEBHOOK_TOKEN;
     const crmWebhookAuthHeader = runtime?.env?.CRM_INQUIRY_WEBHOOK_AUTH_HEADER || 'X-Webhook-Token';
+    const openrouterApiKey = runtime?.env?.OPENROUTER_API_KEY;
+    const leadFilterModel = runtime?.env?.OPENROUTER_MODEL_LEAD_FILTER;
     const turnstileSecret = runtime?.env?.TURNSTILE_SECRET_KEY;
     const rateLimitKv = runtime?.env?.RATE_LIMIT;
 
@@ -210,6 +215,47 @@ export const POST: APIRoute = async ({ request, locals }) => {
     ]
       .filter(Boolean)
       .join('\n');
+
+    // 営業メールを CRM に入れないための LLM 判定。Slack には判定結果に関わらず全件通知する。
+    // CRM 連携が無効なら判定自体を省く（無駄なコストを掛けない）。
+    const crmConfigured = !!(crmWebhookUrl && crmWebhookToken);
+    let classification: LeadClassification = { verdict: 'unknown', reason: 'AI判定は未実行' };
+    if (crmConfigured) {
+      if (openrouterApiKey) {
+        classification = await classifyInquiry(
+          openrouterApiKey,
+          {
+            name,
+            company,
+            email,
+            phone,
+            typeLabel,
+            message: displayMessage,
+            source,
+            landingPage,
+            referrer,
+          },
+          leadFilterModel ? { model: leadFilterModel } : undefined
+        );
+      } else {
+        console.warn('[contact] OPENROUTER_API_KEY not configured; skipping lead classification');
+      }
+    }
+    if (crmConfigured && classification.verdict === 'unknown') {
+      console.warn('[contact] lead classification unavailable:', classification.reason);
+    }
+    // 判定不能（キー未設定・タイムアウト・パース失敗）は CRM に通す。
+    // 営業を1件通す損失より、本物のリードを1件落とす損失の方が大きいため。
+    const syncToCrm = crmConfigured && classification.verdict !== 'sales';
+    const crmStatusText =
+      classification.verdict === 'sales'
+        ? `見送り（営業と判定: ${escapeSlack(classification.reason)}）`
+        : classification.verdict === 'lead'
+          ? '実施（問い合わせと判定）'
+          : crmConfigured
+            ? `実施（AI判定できず: ${escapeSlack(classification.reason)}）`
+            : '未設定';
+
     const slackMessage = {
       text: '新しいお問い合わせが届きました',
       blocks: [
@@ -242,6 +288,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
           type: 'context',
           elements: [{ type: 'mrkdwn', text: `*流入:*\n${attributionLine}` }],
         },
+        {
+          type: 'context',
+          elements: [{ type: 'mrkdwn', text: `*CRM連携:* ${crmStatusText}` }],
+        },
         { type: 'divider' },
       ],
     };
@@ -268,8 +318,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
     };
 
     const deliveries: Promise<void>[] = [postToSlack(webhookUrl, slackMessage)];
-    if (crmWebhookUrl && crmWebhookToken) {
+    if (syncToCrm && crmWebhookUrl && crmWebhookToken) {
       deliveries.push(postToCrm(crmWebhookUrl, crmWebhookToken, crmWebhookAuthHeader, crmPayload));
+    } else if (crmConfigured) {
+      console.info('[contact] CRM sync skipped as sales outreach:', classification.reason);
     } else if (crmWebhookUrl || crmWebhookToken) {
       console.warn('[contact] CRM webhook is partially configured; skipping CRM sync');
     }
