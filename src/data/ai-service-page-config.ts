@@ -1,16 +1,16 @@
 export const aiServicePageConfig = {
   'ai-development': {
     eyebrow: '生成AIで業務改善を始めたい企業へ',
-    headline: '社内の手間がかかる仕事を、AIで減らす',
+    headline: '業務を聞き出し、AIで効くユースケースから設計する',
     heroLead:
-      '資料探し、問い合わせ対応、書類の転記、複数システムをまたぐ確認作業など、まず効果を見込みやすい業務から一緒に選びます。',
-    primaryOutcome: '動く試作品で確かめてから、社内で使える形まで進めます。',
+      '資料探し、問い合わせ対応、書類の転記、確認作業などから、AIを入れるべき業務をヒアリングで絞ります。ユースケース、評価基準、運用まで設計してから試作します。',
+    primaryOutcome: '強みは実装前の設計です。業務理解から、AIで変える範囲を確定します。',
     visualTitle: '導入前の不安を減らす',
     visualSubtitle: 'お客さま側のメリット',
     visualItems: ['始める業務を選ぶ', '費用感をつかむ', '試作品で確かめる', '社内利用まで進める'],
     illustration: {
-      src: '/images/services/generative-ai-poc-to-operations.webp',
-      alt: '業務課題から生成AIの試作、効果検証、承認付きの現場運用へ進む流れ',
+      src: '/images/services/generative-ai-business-prototype.webp',
+      alt: '業務フローを選び、AIプロトタイプと効果を確認するチーム',
       stages: ['業務課題', '小さく試す', '効果を測る', '現場で運用'],
     },
     flow: undefined,
@@ -44,10 +44,10 @@ export const aiServicePageConfig = {
   },
   'internal-document-ai-search': {
     eyebrow: '文書を探す時間を減らしたい企業へ',
-    headline: '社内文書を探す時間と問い合わせ対応を減らす',
+    headline: '社内文書の探し方を、質問と知識構造から設計する',
     heroLead:
-      'PDF、マニュアル、規程集を横断検索し、必要な答えと根拠文書にすぐ到達できる状態を作ります。',
-    primaryOutcome: '「知っている人に聞く」運用を減らし、担当者の時間を本来業務に戻します。',
+      'PDF、マニュアル、規程集をただ検索対象に入れるだけでは不十分です。どんな質問に、どの根拠で答えるかを整理し、探せる知識構造を設計します。',
+    primaryOutcome: '文書検索AIの精度は、文書投入前のヒアリングと知識設計で決まります。',
     visualTitle: '探す・聞く時間を減らす',
     visualSubtitle: 'お客さま側のメリット',
     visualItems: [
@@ -56,6 +56,11 @@ export const aiServicePageConfig = {
       '新人教育を効率化',
       '根拠確認を速くする',
     ],
+    illustration: {
+      src: '/images/services/internal-document-ai-search.webp',
+      alt: '社内文書をAIで横断検索し、回答と根拠を確認する業務画面',
+      stages: ['文書を集約', '意味で検索', '根拠を確認', '問い合わせ削減'],
+    },
     flow: {
       eyebrow: 'BEFORE / AFTER',
       title: '資料探しを、根拠つき回答に変える',
@@ -109,10 +114,10 @@ export const aiServicePageConfig = {
   },
   'rag-system-development': {
     eyebrow: '社内文書検索AI・RAG／GraphRAG開発',
-    headline: '「担当者しか答えられない」を、要件から固めて解く社内ナレッジ検索AI',
+    headline: 'RAGを作る前に、質問・根拠・オントロジーを設計する',
     heroLead:
-      '製品仕様・社内規程・過去対応・議事録が散らばり、特定の人しか答えられない状態を、誰もが根拠付きで引けるナレッジ検索に変えます。作るものを決めずに走ると精度もコストも崩れるため、まず「どの質問にどう答えるか」を要件として固めてから、小さく検証して広げます。',
-    primaryOutcome: '汎用AIでは答えられない自社固有の質問に、根拠付きで対応できます。',
+      '製品仕様、社内規程、過去対応、議事録が散らばっている場合、ベクトル検索だけでは限界があります。業務質問、概念同士の関係、根拠提示、更新運用を設計してから実装します。',
+    primaryOutcome: 'BeekleはRAG実装だけでなく、オントロジー設計とユースケース確定から入ります。',
     visualTitle: '判断スピードを上げる',
     visualSubtitle: 'お客さま側のメリット',
     visualItems: [
@@ -179,13 +184,18 @@ export const aiServicePageConfig = {
   },
   'ai-chatbot-development': {
     eyebrow: '問い合わせ対応を減らしたい企業へ',
-    headline: '繰り返しの問い合わせを減らし、担当者の負荷を下げる',
+    headline: 'チャットボットの回答範囲と引き継ぎ方を設計する',
     heroLead:
-      '社内FAQ、顧客サポート、ヘルプデスクの定型質問をAIが一次対応し、必要な時だけ人に引き継ぎます。',
-    primaryOutcome: '利用者の待ち時間を減らし、サポート担当者は重要な対応に集中できます。',
+      '社内FAQ、顧客サポート、ヘルプデスクで、AIが答える質問、人へ戻す質問、記録して改善する質問を切り分けます。回答品質は会話設計と運用設計で決まります。',
+    primaryOutcome: '重要なのはボットを置くことではなく、一次対応の設計と人への戻し方です。',
     visualTitle: '問い合わせ対応を軽くする',
     visualSubtitle: 'お客さま側のメリット',
     visualItems: ['定型質問を自動化', '待ち時間を短縮', '担当者の負荷を削減', '対応品質を改善'],
+    illustration: {
+      src: '/images/services/ai-chatbot-support-handoff.webp',
+      alt: 'AIチャットボットが定型問い合わせに回答し、人へ引き継ぐ画面',
+      stages: ['質問を受ける', 'FAQで回答', '必要時に引継ぎ', 'ログで改善'],
+    },
     flow: {
       eyebrow: 'BEFORE / AFTER',
       title: '繰り返しの質問を、AIの一次対応に変える',
@@ -239,13 +249,18 @@ export const aiServicePageConfig = {
   },
   'ocr-ai-development': {
     eyebrow: '紙・PDFの転記作業を減らしたい企業へ',
-    headline: '帳票の手入力と確認作業を減らし、処理を速くする',
+    headline: '帳票処理を、読み取り後の確認フローまで設計する',
     heroLead:
-      '請求書、申込書、スキャンPDFを読み取り、会計ソフトや基幹システムで使えるデータに変換します。',
-    primaryOutcome: '取引先ごとのフォーマット差を吸収し、月末・期末の転記負荷を軽くします。',
+      '請求書、申込書、スキャンPDFを読み取るだけでなく、どの項目を確定し、どこを人が確認し、どのシステムへ渡すかまで設計します。',
+    primaryOutcome: 'OCRは読み取り精度だけでなく、例外処理と確認導線の設計が成果を左右します。',
     visualTitle: '手入力作業を減らす',
     visualSubtitle: 'お客さま側のメリット',
     visualItems: ['転記時間を削減', '入力ミスを減らす', '月末処理を平準化', '既存システムへ連携'],
+    illustration: {
+      src: '/images/services/ocr-ai-document-extraction.webp',
+      alt: '紙やPDFの帳票をAIで読み取り、確認用データへ変換する画面',
+      stages: ['帳票を投入', '項目を抽出', '人が確認', 'システム連携'],
+    },
     flow: {
       eyebrow: 'BEFORE / AFTER',
       title: '紙・PDFの手入力を、確認中心の仕事に変える',
@@ -299,13 +314,19 @@ export const aiServicePageConfig = {
   },
   'ai-agent-development': {
     eyebrow: '複数システムの手作業を減らしたい企業へ',
-    headline: '人がつないでいる定型業務を、AIで安全に前へ進める',
+    headline: 'AIエージェントに任せる仕事と止め方を設計する',
     heroLead:
-      '調査、判断、入力、通知など複数システムをまたぐ作業を、承認フロー付きのAIエージェントとして設計します。',
-    primaryOutcome: '人は最終判断に集中し、繰り返し作業や転記作業をAIに任せられます。',
+      '調査、判断、入力、通知など複数システムをまたぐ作業は、ユースケース確定が最重要です。任せる範囲、権限、承認、例外、ログを設計してから実装します。',
+    primaryOutcome:
+      'エージェント設計の核は、できることを増やすより、安全に任せる範囲を決めることです。',
     visualTitle: '手作業を前へ進める',
     visualSubtitle: 'お客さま側のメリット',
     visualItems: ['定型作業を削減', '複数システムを連携', '承認でリスクを抑制', '実行ログを残す'],
+    illustration: {
+      src: '/images/services/ai-agent-workflow-approval.webp',
+      alt: 'AIエージェントが複数システムの作業を進め、人が承認する業務画面',
+      stages: ['情報を集める', '下書き実行', '人が承認', 'ログを残す'],
+    },
     flow: {
       eyebrow: 'BEFORE / AFTER',
       title: '人がつないでいる作業を、承認つきで前へ進める',

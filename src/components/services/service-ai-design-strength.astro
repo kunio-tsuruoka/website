@@ -1,0 +1,144 @@
+---
+interface Props {
+  serviceId: string;
+}
+
+const { serviceId } = Astro.props;
+
+const isRag = serviceId === 'rag-system-development' || serviceId === 'internal-document-ai-search';
+const isAgent = serviceId === 'ai-agent-development';
+
+const theme = isRag
+  ? {
+      label: 'RAG / ONTOLOGY DESIGN',
+      title: '文書を入れる前に、知識の地図を作る',
+      center: 'オントロジー設計',
+      inputs: ['業務質問', '社内用語', '文書関係', '根拠ルール'],
+      outputs: ['根拠つき回答', '更新しやすい知識構造'],
+      caption: 'ベクトル検索だけに頼らず、質問・用語・文書の関係から設計します。',
+    }
+  : isAgent
+    ? {
+        label: 'AI AGENT DESIGN',
+        title: '任せる範囲と、止め方を先に決める',
+        center: 'エージェント設計',
+        inputs: ['ユースケース', '権限', '承認', '例外処理'],
+        outputs: ['安全な自動実行', '監査できるログ'],
+        caption: 'できることを増やす前に、禁止操作・人へ戻す条件・ログを設計します。',
+      }
+    : {
+        label: 'AI USE CASE DESIGN',
+        title: 'AIで効く業務を、設計で見極める',
+        center: 'ユースケース設計',
+        inputs: ['業務フロー', '判断基準', '例外処理', '現場制約'],
+        outputs: ['動く試作品', '投資判断できる材料'],
+        caption: 'モデル選定より先に、どの業務をどう変えるかを確定します。',
+      };
+
+const process = [
+  {
+    label: '聞く',
+    title: '徹底ヒアリング',
+    description: '背景・業務・例外を聞き出す',
+  },
+  {
+    label: '絞る',
+    title: 'ユースケース確定',
+    description: '効果が出る範囲に絞る',
+  },
+  {
+    label: '描く',
+    title: '設計図に落とす',
+    description: '構造・権限・評価基準を決める',
+  },
+];
+---
+
+<section class="relative overflow-hidden bg-accent-950 py-16 md:py-20">
+  <div
+    class="absolute -right-20 top-10 h-72 w-72 rounded-full bg-primary-500/20 blur-3xl"
+    aria-hidden="true"
+  >
+  </div>
+  <div
+    class="absolute -left-20 bottom-8 h-64 w-64 rounded-full bg-secondary-500/15 blur-3xl"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="container relative mx-auto px-6 lg:px-12">
+    <div class="mx-auto max-w-6xl">
+      <div class="grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
+        <div>
+          <span class="inline-flex rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white">
+            Beekleの強み: 要件定義力 × シナリオ設計力
+          </span>
+          <p class="mt-5 text-sm font-bold tracking-wide text-primary-200">{theme.label}</p>
+          <h2 class="mt-3 text-3xl font-bold leading-tight text-white md:text-4xl">
+            {theme.title}
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-white/80">
+            {theme.caption}
+          </p>
+        </div>
+
+        <div class="rounded-3xl bg-white p-4 shadow-strong md:p-6">
+          <div class="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
+            <div class="grid grid-cols-2 gap-2">
+              {theme.inputs.map((item) => (
+                <div class="rounded-2xl bg-neutral-50 px-3 py-3 text-center text-sm font-bold text-navy-950">
+                  {item}
+                </div>
+              ))}
+            </div>
+
+            <div class="flex items-center justify-center">
+              <div class="relative flex h-32 w-32 items-center justify-center rounded-full bg-primary-500 text-center text-base font-bold leading-snug text-white shadow-medium">
+                {theme.center}
+                <span class="absolute -left-3 top-1/2 hidden -translate-y-1/2 text-3xl text-primary-300 md:block">
+                  →
+                </span>
+                <span class="absolute -right-3 top-1/2 hidden -translate-y-1/2 text-3xl text-primary-300 md:block">
+                  →
+                </span>
+              </div>
+            </div>
+
+            <div class="grid gap-2">
+              {theme.outputs.map((item) => (
+                <div class="flex min-h-14 items-center gap-3 rounded-2xl bg-primary-50 px-4 py-3 text-sm font-bold text-navy-950">
+                  <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary-500 text-accent-950">
+                    ✓
+                  </span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 grid gap-3 md:grid-cols-3">
+        {process.map((item, index) => (
+          <article class="rounded-3xl bg-white/10 p-5 text-white">
+            <div class="flex items-center gap-3">
+              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-white font-Poppins text-sm font-bold text-primary-500">
+                {index + 1}
+              </span>
+              <p class="text-sm font-bold text-primary-200">{item.label}</p>
+            </div>
+            <h3 class="mt-4 text-xl font-bold">{item.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/75">{item.description}</p>
+          </article>
+        ))}
+      </div>
+
+      <div class="mt-6 rounded-3xl border border-white/15 bg-white/10 p-5 text-white md:p-6">
+        <h3 class="text-xl font-bold">Beekleが設計から入る理由</h3>
+        <p class="mt-3 text-sm leading-relaxed text-white/78 md:text-base">
+          AI開発は、モデルやツールを選ぶだけでは業務価値につながりません。上流工程でユースケース、業務シナリオ、受け入れ基準、データ構造、権限、例外処理を決めておくことで、PoCがデモで終わるリスクを減らせます。Beekleは要件定義力とヒアリング力を使って、発注者が言語化しきれていない課題を整理し、実装前に「何を作れば業務が良くなるか」を明確にします。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -3,6 +3,7 @@ import { Header } from '@/components/header';
 import JsonLd from '@/components/seo/json-ld.astro';
 import AiDevelopmentOverview from '@/components/services/ai-development-overview.astro';
 import ServiceAdditionalSections from '@/components/services/service-additional-sections.astro';
+import ServiceAiDesignStrength from '@/components/services/service-ai-design-strength.astro';
 import ServiceBusinessFlow from '@/components/services/service-business-flow.astro';
 import ServiceCaseStudies from '@/components/services/service-case-studies.astro';
 import ServiceContactCta from '@/components/services/service-contact-cta.astro';
@@ -12,6 +13,7 @@ import ServiceFeatures from '@/components/services/service-features.astro';
 import ServiceHero from '@/components/services/service-hero.astro';
 import ServicePainPoints from '@/components/services/service-pain-points.astro';
 import ServiceRootCause from '@/components/services/service-root-cause.astro';
+import ServiceScanSummary from '@/components/services/service-scan-summary.astro';
 import ServiceSolutions from '@/components/services/service-solutions.astro';
 import { Section, SectionHeader } from '@/components/ui';
 import { getAiServicePageConfig } from '@/data/ai-service-page-config';
@@ -75,6 +77,8 @@ const faqNumber =
   <Header client:idle />
   <main class="pt-20">
     <ServiceHero service={service} config={servicePageConfig} />
+    {servicePageConfig && <ServiceScanSummary service={service} />}
+    {servicePageConfig && <ServiceAiDesignStrength serviceId={service.id} />}
     <ServiceBusinessFlow flow={servicePageConfig?.flow} />
     {service.id === 'ai-development' && <AiDevelopmentOverview />}
     <ServicePainPoints painPoints={service.painPoints} />

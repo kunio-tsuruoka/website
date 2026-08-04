@@ -26,7 +26,7 @@ const benefits = service.benefits.slice(0, 3);
 <!-- ライト基調ヒーロー（2026-07-07 ユーザー指定）。
      ワーキングメモリ配慮: 左=バッジ/見出し/リード/CTAの4要素、右=ビジュアル1点のみ。
      旧: 紺背景+右パネル11要素（チップ・メトリクス・紺ボックス）は情報過多のため撤去 -->
-<section class="relative overflow-hidden bg-white pt-28 pb-16 md:pt-32 md:pb-20">
+<section class="relative overflow-hidden bg-white pt-14 pb-12 md:pt-24 md:pb-20">
   <div
     class="pointer-events-none absolute -right-32 -top-24 h-96 w-96 rounded-full bg-primary-100/60 blur-3xl"
     aria-hidden="true"
@@ -48,7 +48,7 @@ const benefits = service.benefits.slice(0, 3);
           {config?.eyebrow ?? 'Beekle のサービス'}
         </span>
         <h1
-          class="mt-6 max-w-4xl text-4xl font-bold leading-tight text-navy-950 md:text-5xl lg:text-6xl"
+          class="mt-6 max-w-4xl text-3xl font-bold leading-tight text-navy-950 md:text-5xl lg:text-6xl"
         >
           {config?.headline ?? service.title}
         </h1>
@@ -60,6 +60,45 @@ const benefits = service.benefits.slice(0, 3);
             <p class="mt-5 max-w-2xl border-l-4 border-primary-500 pl-4 text-base font-semibold leading-relaxed text-navy-950">
               {config.primaryOutcome}
             </p>
+          )
+        }
+        {
+          config?.illustration && (
+            <figure class="mt-6 overflow-hidden rounded-3xl bg-white shadow-medium lg:hidden">
+              <img
+                src={config.illustration.src}
+                alt={config.illustration.alt}
+                class="aspect-[1.9/1] w-full object-cover"
+                width="950"
+                height="500"
+                loading="eager"
+                decoding="async"
+              />
+              <figcaption class="grid grid-cols-2 gap-2 border border-t-0 border-neutral-100 bg-white p-3">
+                {config.illustration.stages.map((stage, index) => (
+                  <div class="flex items-center gap-2 rounded-full bg-neutral-50 px-3 py-2">
+                    <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-500 font-Poppins text-xs font-bold text-white">
+                      {index + 1}
+                    </span>
+                    <span class="text-xs font-bold leading-snug text-navy-950">{stage}</span>
+                  </div>
+                ))}
+              </figcaption>
+            </figure>
+          )
+        }
+        {
+          config?.metrics && (
+            <div class="mt-6 grid max-w-2xl gap-3 sm:grid-cols-3">
+              {config.metrics.map((metric) => (
+                <div class="rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3">
+                  <p class="text-xs font-bold text-neutral-500">{metric.label}</p>
+                  <p class="mt-1 text-base font-bold leading-snug text-navy-950">
+                    {metric.value}
+                  </p>
+                </div>
+              ))}
+            </div>
           )
         }
         <div class="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -89,7 +128,7 @@ const benefits = service.benefits.slice(0, 3);
 
       {
         config?.illustration ? (
-          <figure class="overflow-hidden rounded-3xl shadow-strong">
+          <figure class="hidden overflow-hidden rounded-3xl bg-white shadow-strong lg:block">
             <img
               src={config.illustration.src}
               alt={config.illustration.alt}
@@ -99,6 +138,16 @@ const benefits = service.benefits.slice(0, 3);
               loading="eager"
               decoding="async"
             />
+            <figcaption class="grid grid-cols-2 gap-2 border border-t-0 border-neutral-100 bg-white p-4 sm:grid-cols-4">
+              {config.illustration.stages.map((stage, index) => (
+                <div class="flex items-center gap-2 rounded-full bg-neutral-50 px-3 py-2">
+                  <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-500 font-Poppins text-xs font-bold text-white">
+                    {index + 1}
+                  </span>
+                  <span class="text-xs font-bold leading-snug text-navy-950">{stage}</span>
+                </div>
+              ))}
+            </figcaption>
           </figure>
         ) : (
           <div class="grid gap-3">
