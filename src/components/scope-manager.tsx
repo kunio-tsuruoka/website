@@ -48,9 +48,20 @@ function parseMarkdown(md: string): Requirement[] {
   const reqs: Requirement[] = [];
   const lines = md.split('\n');
   let i = 0;
+  let inFence = false;
 
   while (i < lines.length) {
     const line = lines[i];
+    // コードフェンス内（書式例など）は要求文として拾わない
+    if (/^\s*```/.test(line)) {
+      inFence = !inFence;
+      i++;
+      continue;
+    }
+    if (inFence) {
+      i++;
+      continue;
+    }
     const m = line.match(
       /^- \*\*(REQ-[A-Za-z0-9-]+)\*\*（([^・）]+)・([^・）]+)・由来:([^）]+)）\s*$/
     );
@@ -354,7 +365,7 @@ export function ScopeManager() {
     const parsed = parseMarkdown(markdown);
     if (parsed.length === 0) {
       setParseHint(
-        '要求文を1件も検出できませんでした。`- **REQ-XXX-NNN**（種別・優先度・由来:XX）` の形式が含まれているかご確認ください。'
+        '要求文を見つけられませんでした。まず「まずサンプルで試す」を押すか、ユーザーストーリー作成ツールの出力（`- **REQ-XXX-NNN**（種別・優先度・由来:XX）` 形式の行を含むもの）を貼り付けてください。'
       );
       return;
     }
@@ -405,7 +416,7 @@ export function ScopeManager() {
   };
 
   const onClear = () => {
-    if (!confirm('入力したMarkdownと評価結果をすべてクリアします。よろしいですか？')) return;
+    if (!confirm('入力内容と評価結果をすべてクリアします。よろしいですか？')) return;
     setMarkdown('');
     setRequirements([]);
     setParseHint(null);
@@ -431,11 +442,12 @@ export function ScopeManager() {
       <section className="bg-white rounded-2xl shadow-soft border border-gray-200 p-6 md:p-8">
         <div className="flex items-start justify-between gap-4 mb-4 flex-wrap">
           <div>
-            <h2 className="text-xl font-bold text-gray-900 mb-1">
-              1. ユーザーストーリー仕様書(Markdown)を読み込む
-            </h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-1">1. 要件リストを読み込む</h2>
             <p className="text-sm text-gray-600">
-              `- **REQ-XXX-NNN**（種別・優先度・由来:XX）` の形式で書かれた要求文を自動抽出します。
+              <a href="/tools/story-builder" className="text-primary-500 hover:underline">
+                ユーザーストーリー作成ツール
+              </a>
+              の出力を貼り付けるか、サンプル・業界別テンプレートから始めてください。機能ひとつひとつを表に展開します。
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
@@ -473,7 +485,7 @@ export function ScopeManager() {
               まずサンプルで試す
             </button>
             <label className="inline-flex items-center px-4 py-3 min-h-[44px] text-sm font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors">
-              .md ファイルを開く
+              ファイルを開く（.md / .txt）
               <input
                 type="file"
                 accept=".md,.markdown,.txt"
@@ -497,14 +509,16 @@ export function ScopeManager() {
             <a href="/tools/story-builder" className="underline hover:text-blue-700">
               ユーザーストーリー作成ツール
             </a>
-            で作ったMarkdownを貼り付けてください。
+            で作った出力を貼り付けてください。
           </div>
         )}
 
         <textarea
           value={markdown}
           onChange={(e) => setMarkdown(e.target.value)}
-          placeholder={'ここにMarkdownを貼り付け、または「まずサンプルで試す」を押してください。'}
+          placeholder={
+            'ここにユーザーストーリー作成ツールの出力を貼り付けるか、「まずサンプルで試す」を押してください。'
+          }
           className="w-full h-48 p-4 border border-gray-300 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-primary-300 resize-y"
         />
 
@@ -533,7 +547,11 @@ export function ScopeManager() {
       {/* 集計＆ツールバー */}
       {requirements.length > 0 && (
         <section className="bg-white rounded-2xl shadow-soft border border-gray-200 p-6 md:p-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">2. 優先度を判定する</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-1">2. 優先度を判定する</h2>
+          <p className="text-sm text-gray-600 mb-4">
+            星やボタンを押すだけで「作る／後回し／作らない」の判定案が自動で入ります。
+            技術コストが分からなければ空欄のままで大丈夫です（開発会社との打ち合わせで一緒に埋めるのがおすすめ）。
+          </p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             {(VERDICT_OPTIONS as Verdict[]).map((v) => (
@@ -621,7 +639,6 @@ export function ScopeManager() {
                   <tr className="border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase">
                     <th className="px-2 py-3 whitespace-nowrap">ID</th>
                     <th className="px-2 py-3 whitespace-nowrap">優先度</th>
-                    <th className="px-2 py-3 whitespace-nowrap">種別</th>
                     <th className="px-2 py-3 min-w-[280px]">要求文</th>
                     <th className="px-2 py-3 whitespace-nowrap">ビジネス価値</th>
                     <th className="px-2 py-3 whitespace-nowrap">現場で使えるか</th>
@@ -645,9 +662,6 @@ export function ScopeManager() {
                         >
                           {r.priority}
                         </span>
-                      </td>
-                      <td className="px-2 py-3 align-top whitespace-nowrap text-xs text-gray-600">
-                        {r.type}
                       </td>
                       <td className="px-2 py-3 align-top text-gray-800 leading-relaxed">
                         {r.body}
@@ -689,7 +703,7 @@ export function ScopeManager() {
                   ))}
                   {filtered.length === 0 && (
                     <tr>
-                      <td colSpan={9} className="px-4 py-8 text-center text-gray-500">
+                      <td colSpan={8} className="px-4 py-8 text-center text-gray-500">
                         条件に合う要求文がありません
                       </td>
                     </tr>
