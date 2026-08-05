@@ -7,7 +7,7 @@ interface ServiceCardProps {
 
 export function ServiceCard({ id, title, description }: ServiceCardProps) {
   return (
-    <div className="relative bg-white p-6 rounded-[32px] group border border-neutral-100 shadow-soft hover:shadow-medium transition-shadow duration-200">
+    <div className="relative h-full bg-white p-6 pb-12 rounded-[32px] group border border-neutral-100 shadow-soft hover:shadow-medium transition-shadow duration-200">
       <a
         href={`/services/${id}`} // IDを使用してリンクを生成
         className="h-full w-full"

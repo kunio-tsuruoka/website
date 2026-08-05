@@ -932,7 +932,7 @@ const hasPrevPage = currentPage > 1;
 
       {/* ページネーション */}
       {totalPages > 1 && (
-        <div class="mt-16 flex justify-center items-center gap-4">
+        <div class="mt-16 flex flex-wrap justify-center items-center gap-2 sm:gap-4">
           {hasPrevPage ? (
             <a
               href={`/case-studies?page=${currentPage - 1}`}
