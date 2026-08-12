@@ -22,8 +22,130 @@ type ContactFormProps = {
   sitekey?: string;
 };
 
+type IntentGuide = {
+  title: string;
+  body: string;
+  placeholder: string;
+  emptyMessage: string;
+};
+
 const PROVENANCE_MAX_LENGTH = 80;
 const PROVENANCE_PATTERN = /^[a-zA-Z0-9_\-./]+$/;
+const DEFAULT_MESSAGE_PLACEHOLDER =
+  '空欄でも送信できます。現状の課題、使いたいデータ、検討中のサービス、概算を知りたい内容などがあればご記入ください。';
+
+const INTENT_TYPE_MAP: Record<string, string> = {
+  'ai-accuracy': 'ai',
+  'ai-development': 'ai',
+  'ai-requirements': 'ai',
+  'cdp-selection': 'cdp',
+  'cost-breakdown': 'estimate',
+  'document-ai-search': 'ai',
+  'genai-adoption': 'ai',
+  'genai-roi': 'ai',
+  'pm-on-rails-ai-cost': 'pm_on_rails',
+  'pm-on-rails-cost': 'estimate',
+  'pm-on-rails-rag': 'ai',
+  'pm-on-rails-requirements': 'pm_on_rails',
+  'pm-on-rails-rfp': 'pm_on_rails',
+  'quote-comparison': 'estimate',
+  'rag-accuracy': 'ai',
+  'rag-evaluation': 'ai',
+  'rag-fit': 'ai',
+  'rag-system-development': 'ai',
+  'requirements-conversion': 'requirements',
+  'requirements-guide': 'requirements',
+  'requirements-process': 'requirements',
+  'requirements-template': 'requirements',
+  rfp: 'requirements',
+};
+
+const INTENT_GUIDES: Record<string, IntentGuide> = {
+  'cdp-selection': {
+    title: 'CDP選定の前提整理として受け付けます',
+    body: '製品名が決まっていなくても、統合対象データ、施策ユースケース、運用体制から確認できます。',
+    placeholder:
+      '例: 比較中のCDP、統合したいデータ、使いたい施策、現状の運用体制などがあればご記入ください。',
+    emptyMessage: 'CDP選定の前提整理について相談したいです。',
+  },
+  'genai-roi': {
+    title: '生成AI導入の費用対効果整理として受け付けます',
+    body: '対象業務、削減できそうな時間、品質リスク、社内説明に必要な材料を分けて確認します。',
+    placeholder:
+      '例: AI化したい業務、月間件数、現在かかっている時間、稟議で説明したい内容などがあればご記入ください。',
+    emptyMessage: '生成AI導入の費用対効果について相談したいです。',
+  },
+  'pm-on-rails-ai-cost': {
+    title: 'AI開発の費用前提整理として受け付けます',
+    body: 'PoC、評価、データ、権限、運用を分けて、見積もり前に確認すべき前提を整理します。',
+    placeholder:
+      '例: 作りたいAI機能、使いたいデータ、PoCか本番化か、概算を知りたい範囲などがあればご記入ください。',
+    emptyMessage: 'AI開発の費用前提について相談したいです。',
+  },
+  'pm-on-rails-cost': {
+    title: '見積もり前提の整理として受け付けます',
+    body: 'RFP、要件、既存見積もりから、範囲・非機能・運用・追加費用の前提を確認します。',
+    placeholder:
+      '例: 見積もりで不安な点、比較中の範囲、RFPや既存資料の要点などがあればご記入ください。',
+    emptyMessage: '見積もり前提の整理について相談したいです。',
+  },
+  'pm-on-rails-rag': {
+    title: 'RAGの用途・要件整理として受け付けます',
+    body: '社内文書、想定質問、根拠、権限、評価方法を分けて、作るべき範囲を確認します。',
+    placeholder:
+      '例: 対象文書、想定質問、利用部署、回答精度や権限で不安な点などがあればご記入ください。',
+    emptyMessage: 'RAGの用途と要件整理について相談したいです。',
+  },
+  'pm-on-rails-requirements': {
+    title: 'RFP・As-Isからの要件定義相談として受け付けます',
+    body: 'RFP、As-Is、議事録があれば、最初の返信でユースケース候補と抜けやすい受入条件を返します。',
+    placeholder:
+      '例: RFPやAs-Isの要点、今止まっている箇所、決めきれていない要件などがあればご記入ください。',
+    emptyMessage: 'RFP・As-Isからの要件定義について相談したいです。',
+  },
+  'pm-on-rails-rfp': {
+    title: 'RFP提出前の論点確認として受け付けます',
+    body: '提案が比較不能になりそうな前提、受入条件、見積もり範囲の抜けを確認します。',
+    placeholder:
+      '例: RFPの目的、依頼予定の範囲、比較で不安な点、既存資料の要点などがあればご記入ください。',
+    emptyMessage: 'RFP提出前の論点確認について相談したいです。',
+  },
+  'rag-accuracy': {
+    title: 'AI回答の精度課題として受け付けます',
+    body: '回答ミスの原因を、検索、生成、評価データ、権限設計のどこで起きているか切り分けます。',
+    placeholder:
+      '例: 間違いやすい質問、対象文書、根拠表示の有無、社内利用で不安な点などがあればご記入ください。',
+    emptyMessage: 'AI回答の精度課題について相談したいです。',
+  },
+  'rag-evaluation': {
+    title: 'RAG評価設計の相談として受け付けます',
+    body: '既存RAG、PoC中、これから構築のどれでも、質問例と文書構造から評価方法を確認します。',
+    placeholder:
+      '例: 評価したいRAG、想定質問、正解データの有無、改善したい回答パターンなどがあればご記入ください。',
+    emptyMessage: 'RAG評価設計について相談したいです。',
+  },
+  'rag-system-development': {
+    title: '社内文書検索AI/RAG構築の相談として受け付けます',
+    body: '必要な文書、権限、質問例、評価方法を確認し、導入可否と最初の作り方を整理します。',
+    placeholder:
+      '例: 対象文書、利用部署、検索したい内容、セキュリティや回答精度の不安などがあればご記入ください。',
+    emptyMessage: '社内文書検索AI/RAG構築について相談したいです。',
+  },
+  'requirements-conversion': {
+    title: '現場要望を発注要件へ変換する相談として受け付けます',
+    body: '現場の要望メモを、見積もりや提案依頼に使えるユースケースと受入条件へ分けて整理します。',
+    placeholder:
+      '例: 現場から出ている要望、誰が使うか、今の業務で困っている点などがあればご記入ください。',
+    emptyMessage: '現場要望を発注要件へ変換する相談をしたいです。',
+  },
+  'requirements-template': {
+    title: '要件定義テンプレートの記入相談として受け付けます',
+    body: 'テンプレートの空欄や記入済みメモから、発注に足りない論点を確認します。',
+    placeholder:
+      '例: 埋められない項目、作りたい機能、運用条件、社内で決めきれていない点などがあればご記入ください。',
+    emptyMessage: '要件定義テンプレートの記入について相談したいです。',
+  },
+};
 
 function sanitizeParam(raw: string | null): string {
   if (!raw) return '';
@@ -31,18 +153,30 @@ function sanitizeParam(raw: string | null): string {
   return PROVENANCE_PATTERN.test(raw) ? raw : '';
 }
 
+function normalizeIntent(intent: string): string {
+  return intent.replace(/-mid$/, '');
+}
+
 // 流入 intent → 相談種別 select の初期値。該当なしは空（既定 consultation のまま）。
 function intentToType(intent: string): string {
-  if (intent.startsWith('partner')) return 'partner';
-  if (intent.startsWith('ai-development')) return 'ai';
-  if (intent.startsWith('genai-adoption')) return 'ai';
-  if (intent.startsWith('cdp')) return 'ai';
-  if (intent.startsWith('dx')) return 'dx';
-  if (intent.startsWith('estimate')) return 'estimate';
-  if (intent.startsWith('requirements')) return 'requirements';
-  if (intent.startsWith('rfp')) return 'requirements';
-  if (intent.startsWith('tech-review')) return 'tech_review';
+  const normalized = normalizeIntent(intent);
+  if (INTENT_TYPE_MAP[normalized]) return INTENT_TYPE_MAP[normalized];
+  if (normalized.startsWith('partner')) return 'partner';
+  if (normalized.startsWith('ai-development')) return 'ai';
+  if (normalized.startsWith('genai-adoption')) return 'ai';
+  if (normalized.startsWith('cdp')) return 'cdp';
+  if (normalized.startsWith('dx')) return 'dx';
+  if (normalized.startsWith('estimate')) return 'estimate';
+  if (normalized.startsWith('pm-on-rails')) return 'pm_on_rails';
+  if (normalized.startsWith('rag')) return 'ai';
+  if (normalized.startsWith('requirements')) return 'requirements';
+  if (normalized.startsWith('rfp')) return 'requirements';
+  if (normalized.startsWith('tech-review')) return 'tech_review';
   return '';
+}
+
+function getIntentGuide(intent: string): IntentGuide | undefined {
+  return INTENT_GUIDES[normalizeIntent(intent)];
 }
 
 const ContactForm = ({ sitekey }: ContactFormProps) => {
@@ -59,6 +193,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
   const [message, setMessage] = useState('');
   // 流入元の intent から相談種別を初期選択し、入力の手間を減らす（Slack 通知の分類精度も上がる）
   const [inquiryType, setInquiryType] = useState('consultation');
+  const intentGuide = getIntentGuide(provenance.intent);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -97,7 +232,8 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
     const data = {
       name: formData.get('from_name') || '',
       email: formData.get('reply_to'),
-      message: rawMessage || `相談内容は未記入です。種別: ${selectedType}`,
+      message:
+        rawMessage || intentGuide?.emptyMessage || `相談内容は未記入です。種別: ${selectedType}`,
       type: selectedType,
       company: formData.get('company_name') || '',
       phone: formData.get('phone') || '',
@@ -173,6 +309,13 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
   return (
     <div className="bg-white rounded-[32px] shadow-soft p-8 md:p-12">
       <form onSubmit={handleSubmit} className="space-y-6">
+        {intentGuide && (
+          <div className="border-l-4 border-primary-400 bg-primary-50 px-4 py-3">
+            <p className="text-sm font-bold text-primary-800">{intentGuide.title}</p>
+            <p className="mt-1 text-sm leading-relaxed text-foreground/75">{intentGuide.body}</p>
+          </div>
+        )}
+
         <div>
           <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="type">
             ご相談内容の種別 <span className="text-destructive">*</span>
@@ -188,6 +331,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
             <option value="consultation">まずは相談したい</option>
             <option value="estimate">見積もり妥当性・概算費用を聞きたい</option>
             <option value="requirements">作りたいもの・依頼内容を整理したい</option>
+            <option value="pm_on_rails">RFP・As-Isから要件定義を進めたい</option>
             <option value="web">Webアプリ開発について</option>
             <option value="mobile">モバイルアプリ開発について</option>
             <option value="prototype">15分で開発方針を整理したい</option>
@@ -243,7 +387,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
-            placeholder="空欄でも送信できます。現状の課題、使いたいデータ、検討中のサービス、概算を知りたい内容などがあればご記入ください。"
+            placeholder={intentGuide?.placeholder ?? DEFAULT_MESSAGE_PLACEHOLDER}
           />
           <p className="text-sm text-muted-foreground mt-2">
             まとまっていなくて構いません。返信時にこちらから具体的に質問します。

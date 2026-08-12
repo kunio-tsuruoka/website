@@ -625,11 +625,29 @@ const CONSULT_CTAS: Record<string, ConsultCta> = {
     body: '金額が高いのか安いのか、あとから増えそうな費用がないか不安な場合は、見積書や作りたい内容をもとに確認します。',
     label: '見積もりを相談する',
   },
+  PM_ON_RAILS_COST_CONSULT: {
+    intent: 'pm-on-rails-cost',
+    title: '見積もり前提を揃えて、後から増える費用を先に確認する',
+    body: 'RFP、要件、既存見積もりから、範囲、非機能、運用、追加費用の前提を分けて整理します。',
+    label: '見積もり前提を整理する',
+  },
+  PM_ON_RAILS_AI_COST_CONSULT: {
+    intent: 'pm-on-rails-ai-cost',
+    title: 'AI開発の費用前提を、PoC・評価・運用に分けて整理する',
+    body: 'PoCだけの金額で判断せず、評価データ、権限、運用、本番化まで含めた見積もり前提を確認します。',
+    label: 'AI開発の費用前提を相談する',
+  },
   RFP_CONSULT: {
     intent: 'rfp',
     title: '提案依頼書の抜け漏れを確認する',
     body: '依頼書のたたき台がある場合も、これから作る場合も、開発会社が見積もりやすく、社内で比べやすい内容になっているかを確認します。',
     label: '依頼書を相談する',
+  },
+  PM_ON_RAILS_RFP_CONSULT: {
+    intent: 'pm-on-rails-rfp',
+    title: 'RFPを出す前に、比較不能になりそうな前提を洗い出す',
+    body: 'RFPやAs-Isの業務整理をもとに、各社提案の前提がズレやすい箇所、受入条件、見積もり範囲を確認します。',
+    label: 'RFP提出前の論点を相談する',
   },
   CDP_CONSULT: {
     intent: 'cdp',
@@ -637,11 +655,53 @@ const CONSULT_CTAS: Record<string, ConsultCta> = {
     body: '顧客情報、購買履歴、広告やサイトのデータが散らばっている状態から、まず何をまとめるべきかを一緒に整理します。',
     label: '顧客データを相談する',
   },
+  CDP_SELECTION_CONSULT: {
+    intent: 'cdp-selection',
+    title: 'CDP製品を選ぶ前に、データと運用制約を整理する',
+    body: 'Treasure Data、Salesforce、BigQuery、自社開発などを比較する前に、統合対象データ、施策ユースケース、運用体制を確認します。',
+    label: 'CDP選定の前提を相談する',
+  },
   REQ_CONSULT: {
     intent: 'requirements',
     title: '作るものを一緒に整理する',
     body: '要望メモ、既存資料、口頭のアイデアだけでも構いません。何を最初に作るべきか、開発会社へどう伝えるかを整理します。',
     label: '作るものを相談する',
+  },
+  PM_ON_RAILS_REQUIREMENTS_CONSULT: {
+    intent: 'pm-on-rails-requirements',
+    title: 'RFP・As-Isを送って、要件の抜けと最初の論点を確認する',
+    body: 'RFP、As-Is、議事録をもとに、ユースケース候補、抜けやすい受入条件、優先順位の論点を返します。',
+    label: 'RFP・As-Isを送って論点をもらう',
+  },
+  REQ_TEMPLATE_CONSULT: {
+    intent: 'requirements-template',
+    title: '空欄のテンプレートを、自社案件で使える粒度にする',
+    body: '目的、作る範囲、必要な機能、運用条件など、埋めづらい項目を発注に使える形へ整理します。',
+    label: 'テンプレを自社向けに整理する',
+  },
+  REQ_CONVERSION_CONSULT: {
+    intent: 'requirements-conversion',
+    title: '現場の要望メモを、発注できる要件に変換する',
+    body: '「こうしたい」という要望を、ユースケース、受入条件、優先順位に分け、開発会社が見積もりやすい形へ整理します。',
+    label: '要望メモを発注要件にする',
+  },
+  PM_ON_RAILS_RAG_CONSULT: {
+    intent: 'pm-on-rails-rag',
+    title: '自社文書でRAGを作る前に、用途と評価方法を確認する',
+    body: '対象文書、想定質問、根拠、閲覧権限、評価基準を分けて、RAGで作るべき範囲と導入可否を整理します。',
+    label: '自社文書でRAG導入を相談する',
+  },
+  RAG_ACCURACY_CONSULT: {
+    intent: 'rag-accuracy',
+    title: 'AIの回答が信用できない原因を切り分ける',
+    body: '回答ミスの原因を、検索、生成、評価データ、権限設計のどこで起きているかに分けて確認します。',
+    label: 'AI回答の精度課題を相談する',
+  },
+  RAG_EVALUATION_CONSULT: {
+    intent: 'rag-evaluation',
+    title: 'RAG評価セットを作り、改善すべき箇所を切り分ける',
+    body: 'PoC中でも構築前でも、想定質問、正解データ、文書構造から評価方法と改善サイクルを確認します。',
+    label: 'RAGの評価設計を相談する',
   },
   // 情シス/技術部門向け。セキュリティや既存システム連携の不安を相談に変える。
   TECH_REVIEW_CONSULT: {

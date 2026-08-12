@@ -132,9 +132,9 @@ const PARTNER_CONSULT: CtaItem = {
 
 const REQ_TEMPLATE_CONSULT: CtaItem = {
   href: '/contact?intent=requirements-template',
-  label: 'このテンプレを自社向けに埋める',
+  label: 'テンプレを自社向けに整理する',
   description:
-    '空欄のまま止まりやすい目的、作る範囲、必要な機能、運用条件を、自社の状況に合わせて整理します',
+    '空欄のまま止まりやすい目的、作る範囲、必要な機能、運用条件を、自社案件に合わせて整理し、発注に足りない論点を返します',
   ctaId: 'consult-requirements-template',
 };
 
@@ -156,17 +156,18 @@ const REQ_PROCESS_CONSULT: CtaItem = {
 
 const REQ_CONVERSION_CONSULT: CtaItem = {
   href: '/contact?intent=requirements-conversion',
-  label: '現場の要望を発注できる形にする',
-  description: '「こうしたい」という要望メモを、開発会社に伝わり、見積もりしやすい形に整理します',
+  label: '要望メモを発注要件にする',
+  description:
+    '「こうしたい」という現場要望を、開発会社に伝わり、見積もりや提案依頼に使える形へ整理します',
   ctaId: 'consult-requirements-conversion',
 };
 
 const RFP_REVIEW_CONSULT: CtaItem = {
-  href: '/contact?intent=rfp-review',
-  label: '提案依頼書の抜け漏れを見直す',
+  href: '/contact?intent=pm-on-rails-rfp',
+  label: 'RFPを出す前に論点を確認する',
   description:
-    '依頼書を出す前に、目的、前提条件、予算感、比較ポイント、質問ルールの抜け漏れを確認します',
-  ctaId: 'consult-rfp-review',
+    'RFPやAs-Isの業務整理をもとに、提案が比較不能になりそうな前提、受入条件、見積もり範囲の抜けを確認します',
+  ctaId: 'consult-pm-on-rails-rfp',
 };
 
 const COST_BREAKDOWN_CONSULT: CtaItem = {
@@ -185,11 +186,35 @@ const QUOTE_COMPARISON_CONSULT: CtaItem = {
 };
 
 const AI_COST_CONSULT: CtaItem = {
-  href: '/contact?intent=ai-cost',
-  label: 'AI開発の見積もりを確認する',
+  href: '/contact?intent=pm-on-rails-ai-cost',
+  label: 'AI開発の費用前提を整理する',
   description:
-    '試作だけの費用なのか、実際に社内で使うところまで含むのか。AI開発の見積もりで見落としやすい費用を確認します',
-  ctaId: 'consult-ai-cost',
+    'PoCだけの金額で判断せず、評価、データ、権限、運用まで含めて、見積もり前に確認すべき前提を整理します',
+  ctaId: 'consult-pm-on-rails-ai-cost',
+};
+
+const PM_ON_RAILS_REQUIREMENTS_CONSULT: CtaItem = {
+  href: '/contact?intent=pm-on-rails-requirements',
+  label: 'RFP・As-Isを送って論点をもらう',
+  description:
+    'RFP、現状業務（As-Is）、議事録をもとに、最初のユースケース候補、抜けやすい受入条件、優先順位の論点を返します',
+  ctaId: 'consult-pm-on-rails-requirements',
+};
+
+const PM_ON_RAILS_COST_CONSULT: CtaItem = {
+  href: '/contact?intent=pm-on-rails-cost',
+  label: '見積もり前提を整理する',
+  description:
+    'RFP、要件、既存見積もりから、範囲、非機能、運用、後から増えやすい費用の前提を整理します',
+  ctaId: 'consult-pm-on-rails-cost',
+};
+
+const PM_ON_RAILS_RAG_CONSULT: CtaItem = {
+  href: '/contact?intent=pm-on-rails-rag',
+  label: '自社文書でRAG導入を相談する',
+  description:
+    '社内資料、想定質問、根拠、権限、評価基準を分けて、RAGで作るべき範囲と導入可否を確認します',
+  ctaId: 'consult-pm-on-rails-rag',
 };
 
 const GENAI_START_CONSULT: CtaItem = {
@@ -209,9 +234,9 @@ const GENAI_ROI_CONSULT: CtaItem = {
 
 const CDP_SELECTION_CONSULT: CtaItem = {
   href: '/contact?intent=cdp-selection',
-  label: '顧客データをどうまとめるか相談する',
+  label: 'CDP選定の前提を整理する',
   description:
-    '顧客情報、購買履歴、広告やサイトのデータが散らばっている状態から、何を一つにまとめるべきか整理します',
+    'Treasure Data、Salesforce、BigQuery、自社開発などを選ぶ前に、統合対象データ、施策ユースケース、運用制約を整理します',
   ctaId: 'consult-cdp-selection',
 };
 
@@ -225,9 +250,9 @@ const RAG_FIT_CONSULT: CtaItem = {
 
 const RAG_ACCURACY_CONSULT: CtaItem = {
   href: '/contact?intent=rag-accuracy',
-  label: 'AIの回答が信用できない問題を相談する',
+  label: 'AI回答の精度課題を相談する',
   description:
-    'AIがそれっぽく間違える、根拠が出ない、部署ごとの閲覧権限が不安。業務で使う前に潰すべき点を整理します',
+    '回答ミスの原因を、検索、生成、評価データ、権限設計のどこで起きているかに分けて確認します',
   ctaId: 'consult-rag-accuracy',
 };
 
@@ -307,8 +332,8 @@ const SLUG_CTA: Record<string, CategoryCta> = {
     DOWNLOAD_DECK
   ),
   'requirements-definition-complete-guide': buildCta(
-    '何から決めればいいか、最初の整理から手伝います',
-    REQ_GUIDE_CONSULT,
+    'RFPやAs-Isから、最初の論点を返します',
+    PM_ON_RAILS_REQUIREMENTS_CONSULT,
     DOWNLOAD_DECK
   ),
   'requirements-definition-process': buildCta(
@@ -317,17 +342,17 @@ const SLUG_CTA: Record<string, CategoryCta> = {
     DOWNLOAD_DECK
   ),
   'requirements-vs-requests': buildCta(
-    '現場の要望が多すぎて、発注内容に落とせず止まっていませんか？',
+    '現場の要望を、発注できる要件に変えませんか？',
     REQ_CONVERSION_CONSULT,
     DOWNLOAD_DECK
   ),
   'how-to-write-rfp': buildCta(
-    '提案依頼書を出す前に、抜け漏れを確認しませんか？',
+    'RFPを出す前に、比較不能になりそうな前提を確認しませんか？',
     RFP_REVIEW_CONSULT,
     DOWNLOAD_DECK
   ),
   'ai-development-cost-guide': buildCta(
-    'AI開発の見積もり、試作だけの金額になっていませんか？',
+    'AI開発の見積もり、PoCだけの金額になっていませんか？',
     AI_COST_CONSULT,
     PARTNER_CONSULT
   ),
@@ -357,8 +382,8 @@ const SLUG_CTA: Record<string, CategoryCta> = {
     PARTNER_CONSULT
   ),
   'system-development-cost-breakdown': buildCta(
-    'その見積もり、あとから費用が増えそうではありませんか？',
-    COST_BREAKDOWN_CONSULT,
+    '見積もり前に、RFP・As-Isから前提を揃えませんか？',
+    PM_ON_RAILS_COST_CONSULT,
     DOWNLOAD_DECK
   ),
   'system-estimate-validity': buildCta(
@@ -377,8 +402,8 @@ const SLUG_CTA: Record<string, CategoryCta> = {
     DOWNLOAD_DECK
   ),
   'what-is-rag': buildCta(
-    '社内資料をAIで探せるようにできるか、確認しませんか？',
-    RAG_FIT_CONSULT,
+    'RAGで作るべき用途を、先にユースケース化しませんか？',
+    PM_ON_RAILS_RAG_CONSULT,
     PARTNER_CONSULT
   ),
   'ai-rag-accuracy-graphrag': buildCta(

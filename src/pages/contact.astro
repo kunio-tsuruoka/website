@@ -10,8 +10,8 @@ const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
 
 const trustPoints = [
   {
-    title: '通常1〜2営業日で返信',
-    body: '営業時間内なら当日返信も多いです。返信が無い場合はメール受信を再度ご確認ください。',
+    title: 'RFP・As-Isから整理',
+    body: '既存のRFP、業務フロー、議事録があれば、PM on Railsでユースケースと受入条件に起こします。',
   },
   {
     title: '無料相談・しつこい営業なし',
@@ -19,7 +19,7 @@ const trustPoints = [
   },
   {
     title: '最初の返信で判断材料を返します',
-    body: '想定構成、概算レンジ、進め方の候補を、わかる範囲で整理して返信します。',
+    body: '想定ユースケース、PoC範囲、概算レンジ、進め方の候補を、わかる範囲で整理して返信します。',
   },
 ];
 ---
@@ -70,9 +70,9 @@ const trustPoints = [
           <div class="mb-8 rounded-2xl bg-primary-50 border border-primary-100 p-5">
             <p class="text-sm font-semibold text-primary-700 mb-2">相談すると返ってくるもの</p>
             <ul class="space-y-2 text-sm text-foreground/85 leading-relaxed">
-              <li>・御社の状況で最初に切り出すべき検証範囲</li>
-              <li>・AI/RAG/業務システム化に必要なデータ・権限・体制の確認点</li>
-              <li>・概算費用レンジと、PoCから本番化までの進め方</li>
+              <li>・RFPやAs-Isから起こすべきユースケースの候補</li>
+              <li>・AI/RAG/業務システム化に必要なデータ・権限・受入条件の確認点</li>
+              <li>・PM on Railsで要件定義を短縮する進め方と概算費用レンジ</li>
             </ul>
             <p class="mt-4 text-sm text-foreground/75 leading-relaxed">
               事前に資料で全体像を把握したい場合は
