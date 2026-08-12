@@ -1,10 +1,13 @@
 export const aiServicePageConfig = {
   'ai-development': {
     eyebrow: '生成AIで業務改善を始めたい企業へ',
-    headline: '業務を聞き出し、AIで効くユースケースから設計する',
+    headline: 'AI開発の失敗を防ぐ要件定義から始める',
     heroLead:
-      '資料探し、問い合わせ対応、書類の転記、確認作業などから、AIを入れるべき業務をヒアリングで絞ります。ユースケース、評価基準、運用まで設計してから試作します。',
-    primaryOutcome: '強みは実装前の設計です。業務理解から、AIで変える範囲を確定します。',
+      '資料探し、問い合わせ対応、書類の転記、確認作業などから、AIを入れるべき業務をヒアリングで絞ります。業務、要件、評価基準まで落としてから試作するので、作っただけで終わらず、社内説明と本番判断まで進めやすくなります。',
+    primaryOutcome:
+      '強みは実装前の設計です。AIを作って終わりにせず、実務で使える状態から逆算します。',
+    contactIntent: 'genai-adoption',
+    contactLabel: 'AI開発の失敗を防ぐ相談をする',
     visualTitle: '導入前の不安を減らす',
     visualSubtitle: 'お客さま側のメリット',
     visualItems: ['始める業務を選ぶ', '費用感をつかむ', '試作品で確かめる', '社内利用まで進める'],
@@ -16,8 +19,8 @@ export const aiServicePageConfig = {
     flow: undefined,
     rootCause: {
       eyebrow: 'なぜ、つまずくのか',
-      title: '止まる原因は技術力ではなく、始め方にある',
-      lead: '上に挙げた不安は別々に見えて、根は共通しています。先にツールを選び、どの仕事をどれだけ楽にするかを決めないまま始めることです。',
+      title: 'AI開発が失敗する原因は、性能より先に決めるべきことの不足にある',
+      lead: '上に挙げた不安は別々に見えて、根は共通しています。先にツールを選び、どの仕事をどこまで変え、何をもって使えると判断するかを決めないまま始めることです。',
       causes: [
         {
           title: '「目的」より先にツールから入っている',
@@ -38,16 +41,19 @@ export const aiServicePageConfig = {
     },
     metrics: [
       { label: '確認方法', value: '動く試作品' },
-      { label: '目的', value: '業務改善' },
+      { label: '判断材料', value: '評価基準' },
       { label: '運用', value: '品質・費用管理' },
     ],
   },
   'internal-document-ai-search': {
     eyebrow: '文書を探す時間を減らしたい企業へ',
-    headline: '社内文書の探し方を、質問と知識構造から設計する',
+    headline: '社内文書AIの失敗を、質問と根拠の設計で防ぐ',
     heroLead:
-      'PDF、マニュアル、規程集をただ検索対象に入れるだけでは不十分です。どんな質問に、どの根拠で答えるかを整理し、探せる知識構造を設計します。',
-    primaryOutcome: '文書検索AIの精度は、文書投入前のヒアリングと知識設計で決まります。',
+      'PDF、マニュアル、規程集をただ検索対象に入れるだけでは不十分です。どんな質問に、どの根拠で答え、どこから人が確認するかを整理してから実装します。',
+    primaryOutcome:
+      '文書検索AIの精度は、文書を入れる前のヒアリング、質問設計、根拠提示ルールで決まります。',
+    contactIntent: 'document-ai-search',
+    contactLabel: '社内文書AIの失敗を防ぐ相談をする',
     visualTitle: '探す・聞く時間を減らす',
     visualSubtitle: 'お客さま側のメリット',
     visualItems: [
@@ -86,8 +92,8 @@ export const aiServicePageConfig = {
     },
     rootCause: {
       eyebrow: 'なぜ、探せないのか',
-      title: '検索が「言葉の一致」で止まっているから',
-      lead: '「あるはずの答え」に届かないのは、探し方と文書の置き方に原因があります。',
+      title: '文書AIが失敗する原因は、文書投入前の質問設計にある',
+      lead: '「あるはずの答え」に届かないのは、AIの性能だけでなく、探し方、文書の置き方、根拠の出し方を先に決めていないことに原因があります。',
       causes: [
         {
           title: '検索が言葉の一致で止まっている',
@@ -114,10 +120,13 @@ export const aiServicePageConfig = {
   },
   'rag-system-development': {
     eyebrow: '社内文書検索AI・RAG／GraphRAG開発',
-    headline: 'RAGを作る前に、質問・根拠・オントロジーを設計する',
+    headline: 'RAGを、PoCで止めない評価設計から始める',
     heroLead:
-      '製品仕様、社内規程、過去対応、議事録が散らばっている場合、ベクトル検索だけでは限界があります。業務質問、概念同士の関係、根拠提示、更新運用を設計してから実装します。',
-    primaryOutcome: 'BeekleはRAG実装だけでなく、オントロジー設計とユースケース確定から入ります。',
+      '製品仕様、社内規程、過去対応、議事録が散らばっている場合、ベクトル検索だけでは限界があります。業務質問、概念同士の関係、根拠提示、評価基準、更新運用を決めてから実装します。',
+    primaryOutcome:
+      'BeekleはRAG実装だけでなく、何を聞ければ業務で使えるかのユースケース確定から入ります。',
+    contactIntent: 'rag-system-development',
+    contactLabel: 'RAGの本番化判断を相談する',
     visualTitle: '判断スピードを上げる',
     visualSubtitle: 'お客さま側のメリット',
     visualItems: [
@@ -156,7 +165,7 @@ export const aiServicePageConfig = {
     },
     rootCause: {
       eyebrow: 'なぜ、答えられないのか',
-      title: '汎用AIには「自社データを検索して渡す」仕組みが無い',
+      title: 'RAGが本番化できない原因は、評価基準と運用設計の不足にある',
       lead: '固有の質問に答えられない、ハルシネーションが怖い、PoCが止まる。これらは別々の問題ではなく、同じ設計の欠落から生じます。',
       causes: [
         {
@@ -172,7 +181,7 @@ export const aiServicePageConfig = {
         {
           title: '精度を測る基準を最初に決めていない',
           description:
-            '評価データセットが無いとPoCは「動いた」印象でしか語れず、本番化の判断も、社内のセキュリティ審査を通す説明もできないまま止まります。',
+            '評価データセットが無いとPoCは「動いた」印象でしか語れず、本番化の判断も、社内のセキュリティ審査を通す説明もできないまま止まります。最初に評価基準を決めれば、使えるかどうかを社内で説明できます。',
         },
       ],
     },
@@ -184,10 +193,13 @@ export const aiServicePageConfig = {
   },
   'ai-chatbot-development': {
     eyebrow: '問い合わせ対応を減らしたい企業へ',
-    headline: 'チャットボットの回答範囲と引き継ぎ方を設計する',
+    headline: 'AIチャットボットの失敗を、回答範囲と引き継ぎ設計で防ぐ',
     heroLead:
-      '社内FAQ、顧客サポート、ヘルプデスクで、AIが答える質問、人へ戻す質問、記録して改善する質問を切り分けます。回答品質は会話設計と運用設計で決まります。',
-    primaryOutcome: '重要なのはボットを置くことではなく、一次対応の設計と人への戻し方です。',
+      '社内FAQ、顧客サポート、ヘルプデスクで、AIが答える質問、人へ戻す質問、記録して改善する質問を切り分けます。導入後に使われるかどうかは、会話設計と運用設計で決まります。',
+    primaryOutcome:
+      '重要なのはボットを置くことではなく、一次対応で減らす負荷と、人へ戻す条件を先に決めることです。',
+    contactIntent: 'ai-chatbot-development',
+    contactLabel: 'チャットボット導入の失敗を防ぐ相談をする',
     visualTitle: '問い合わせ対応を軽くする',
     visualSubtitle: 'お客さま側のメリット',
     visualItems: ['定型質問を自動化', '待ち時間を短縮', '担当者の負荷を削減', '対応品質を改善'],
@@ -221,7 +233,7 @@ export const aiServicePageConfig = {
     },
     rootCause: {
       eyebrow: 'なぜ、負荷が下がらないのか',
-      title: '答えが人の頭と個別のやり取りに閉じているから',
+      title: 'チャットボットが失敗する原因は、答える範囲と人への戻し方が曖昧だから',
       lead: '同じ質問が集中し、時間外は止まる。原因は担当者の頑張りではなく、一次対応の受け皿が「人」しかないことにあります。',
       causes: [
         {
@@ -249,10 +261,13 @@ export const aiServicePageConfig = {
   },
   'ocr-ai-development': {
     eyebrow: '紙・PDFの転記作業を減らしたい企業へ',
-    headline: '帳票処理を、読み取り後の確認フローまで設計する',
+    headline: '帳票AIの失敗を、読み取り後の確認設計で防ぐ',
     heroLead:
       '請求書、申込書、スキャンPDFを読み取るだけでなく、どの項目を確定し、どこを人が確認し、どのシステムへ渡すかまで設計します。',
-    primaryOutcome: 'OCRは読み取り精度だけでなく、例外処理と確認導線の設計が成果を左右します。',
+    primaryOutcome:
+      'OCRは読み取り精度だけでなく、例外処理、確認導線、後続システム連携まで決めて初めて業務で使えます。',
+    contactIntent: 'ocr-ai-development',
+    contactLabel: '帳票AIの失敗を防ぐ相談をする',
     visualTitle: '手入力作業を減らす',
     visualSubtitle: 'お客さま側のメリット',
     visualItems: ['転記時間を削減', '入力ミスを減らす', '月末処理を平準化', '既存システムへ連携'],
@@ -286,8 +301,8 @@ export const aiServicePageConfig = {
     },
     rootCause: {
       eyebrow: 'なぜ、手入力が残るのか',
-      title: '帳票の形式が取引先ごとに違うから',
-      lead: '従来のOCRで読めない帳票が残るのは、精度の問題というより、読み取りの仕組みが形式に依存しているためです。',
+      title: '帳票AIが失敗する原因は、読み取り後の確認設計がないから',
+      lead: '従来のOCRで読めない帳票が残るのは、精度の問題だけではありません。帳票形式の違い、意味の解釈、確認フローを分けて設計していないことが原因です。',
       causes: [
         {
           title: '帳票の形式が取引先ごとに違う',
@@ -314,11 +329,13 @@ export const aiServicePageConfig = {
   },
   'ai-agent-development': {
     eyebrow: '複数システムの手作業を減らしたい企業へ',
-    headline: 'AIエージェントに任せる仕事と止め方を設計する',
+    headline: 'AIエージェントの失敗を、任せる範囲と止め方の設計で防ぐ',
     heroLead:
-      '調査、判断、入力、通知など複数システムをまたぐ作業は、ユースケース確定が最重要です。任せる範囲、権限、承認、例外、ログを設計してから実装します。',
+      '調査、判断、入力、通知など複数システムをまたぐ作業は、ユースケース確定が最重要です。任せる範囲、権限、承認、例外、ログを決めてから実装します。',
     primaryOutcome:
       'エージェント設計の核は、できることを増やすより、安全に任せる範囲を決めることです。',
+    contactIntent: 'ai-agent-development',
+    contactLabel: 'AIエージェントの失敗を防ぐ相談をする',
     visualTitle: '手作業を前へ進める',
     visualSubtitle: 'お客さま側のメリット',
     visualItems: ['定型作業を削減', '複数システムを連携', '承認でリスクを抑制', '実行ログを残す'],
@@ -352,7 +369,7 @@ export const aiServicePageConfig = {
     },
     rootCause: {
       eyebrow: 'なぜ、自動化が進まないのか',
-      title: '業務が複数システムに分断され、人がつなぎ役になっているから',
+      title: 'AIエージェントが失敗する原因は、任せる範囲と止め方が曖昧だから',
       lead: '自動化が進まない、暴走が怖い。この2つは裏表で、「どこまで任せ、どこで止めるか」の設計が無いことに根があります。',
       causes: [
         {

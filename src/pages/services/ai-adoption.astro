@@ -6,9 +6,9 @@ import Layout from '../../layouts/layout.astro';
 
 const siteUrl = 'https://beekle.jp';
 const pageUrl = `${siteUrl}/services/ai-adoption`;
-const seoTitle = 'AI導入支援3プラン｜提案のみ・実装アドバイス・導入伴走を時間単価1万円で';
+const seoTitle = 'AI導入支援3プラン｜失敗を防ぐ業務選定・評価設計・導入伴走';
 const seoDescription =
-  'AI活用提案・AI実装アドバイス・AI導入伴走支援の3プラン。すべて時間単価10,000円（税別）で、想定時間の違いをそのまま価格にしています。提案だけの受け取りも、実装まで含む伴走も選べます。';
+  'AI導入をPoCで終わらせないために、業務選定、評価基準、技術判断、本番運用まで整理します。AI活用提案・AI実装アドバイス・AI導入伴走支援の3プランを時間単価10,000円（税別）で提供。';
 
 const HOURLY_RATE = '10,000';
 
@@ -34,7 +34,7 @@ const plans: Plan[] = [
     no: '01',
     code: 'ADVISE',
     name: 'AI活用提案',
-    tagline: 'どの業務にAIを入れるべきかを、提案書の形で持ち帰る',
+    tagline: '失敗しにくい業務を選び、社内説明できる提案書にする',
     target: 'AIを使いたいが、どの業務から手をつけるか社内で決まっていない',
     scope: '業務ヒアリング、適用候補の洗い出しと優先順位づけ、提案書の作成',
     deliverable: 'AI活用提案書（対象業務・想定効果・概算費用・進め方）',
@@ -50,7 +50,7 @@ const plans: Plan[] = [
     no: '02',
     code: 'GUIDE',
     name: 'AI実装アドバイス',
-    tagline: '作るのは自社。技術判断の妥当性だけを外から見る',
+    tagline: '作るのは自社。評価設計と技術判断のズレを外から見る',
     target: '社内に開発リソースがあり自社で作るが、技術判断を検証できる人がいない',
     scope: '技術選定レビュー、アーキテクチャレビュー、精度評価の設計、定例レビュー',
     deliverable: 'レビュー記録、技術方針メモ',
@@ -66,7 +66,7 @@ const plans: Plan[] = [
     no: '03',
     code: 'ENABLE',
     name: 'AI導入伴走支援',
-    tagline: '決めるところから実装・運用定着まで、同じチームで進める',
+    tagline: 'PoCで止めず、実装・運用定着まで同じチームで進める',
     target: '導入を決めたが、社内だけでは本番運用まで到達できる体制がない',
     scope: '要件整理、PoC構築、実装、社内展開、運用定着までの継続関与',
     deliverable: '動くシステム、導入計画、運用ルール',
@@ -219,20 +219,21 @@ const faqs = [
             AI導入支援 3プラン
           </span>
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
-            AI活用は、<br class="hidden sm:block" />「どこまで任せるか」で選べます。
+            AI導入の失敗を、<br class="hidden sm:block" />業務選定と評価設計で防ぐ。
           </h1>
           <p class="text-lg md:text-xl text-white/90 leading-relaxed mb-8">
-            提案だけを受け取る。作るのは自社で、技術判断だけ見てもらう。決めるところから運用まで任せる。
-            3つのプランを用意し、すべて時間単価{HOURLY_RATE}円（税別）で内訳を開示しています。
+            どの業務にAIを入れるか、何をもって使えると判断するか、誰が運用するか。
+            失敗しやすい論点を先に整理し、提案だけ・技術レビュー・導入伴走の3つから選べます。
+            すべて時間単価{HOURLY_RATE}円（税別）で内訳を開示しています。
           </p>
           <div class="flex flex-col sm:flex-row gap-4">
             <a
               href="/contact?source=services-ai-adoption-hero&intent=genai-adoption"
               data-cta-source="services-ai-adoption-hero"
               data-cta-id="contact"
-              class="inline-flex min-h-[52px] items-center justify-center rounded-full bg-white px-8 py-3 text-base font-bold text-accent-950 shadow-strong transition hover:bg-neutral-100"
+              class="inline-flex min-h-[52px] items-center justify-center rounded-full bg-white px-6 py-3 text-center text-base font-bold leading-snug text-accent-950 shadow-strong transition hover:bg-neutral-100 sm:px-8"
             >
-              無料相談でプランを決める（30分）
+              AI導入の失敗を防ぐ進め方を相談する
               <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
               </svg>
@@ -251,8 +252,8 @@ const faqs = [
     <!-- ============ PAIN POINTS ============ -->
     <Section variant="light" padding="lg" decoration="blursPurple">
       <SectionHeader
-        title="AI導入は、つまずく場所が決まっています"
-        subtitle="どこで止まっているかによって、必要な支援の形は変わります"
+        title="AI導入は、失敗する場所が決まっています"
+        subtitle="どこで止まりそうかによって、必要な支援の形は変わります"
         number="01"
         label="ISSUES"
       />
@@ -272,7 +273,7 @@ const faqs = [
     <Section variant="white" padding="lg" decoration="bars" id="plans">
       <SectionHeader
         title="3つのプラン"
-        subtitle={`時間単価${HOURLY_RATE}円（税別）は共通。想定時間の違いが、そのまま価格の違いです`}
+        subtitle="失敗を防ぐために、業務選定・評価設計・導入伴走のどこから入るかを選べます"
         number="02"
         label="PLANS"
       />
@@ -424,8 +425,8 @@ const faqs = [
           </div>
           <h3 class="text-2xl md:text-3xl font-bold text-navy-950 mb-4">AI活用提案</h3>
           <p class="text-base text-neutral-700 leading-relaxed mb-6">
-            AIを入れる前提で話を進めるのではなく、まず「どの業務なら効果が出るか」「そもそも今やるべきか」を整理します。
-            現場の業務フロー、扱っているデータ、体制を伺い、適用候補を洗い出して優先順位をつけ、提案書としてお渡しします。
+            AIを入れる前提で話を進めるのではなく、まず「どの業務なら効果が出るか」「何をもって使えると判断するか」「そもそも今やるべきか」を整理します。
+            現場の業務フロー、扱っているデータ、体制を伺い、失敗しにくい適用候補を洗い出して優先順位をつけ、提案書としてお渡しします。
           </p>
           <div class="grid gap-6 sm:grid-cols-2 mb-6">
             <div>
@@ -684,10 +685,10 @@ const faqs = [
       </div>
       <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center relative">
         <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">
-          どのプランが合うか、無料相談で整理しませんか
+          AI導入を失敗させない進め方から整理しませんか
         </h2>
         <p class="text-lg md:text-xl text-white/90 mb-10 leading-relaxed">
-          業務・体制・すでに試したことを伺い、必要な支援の範囲と時間の目安をご案内します。
+          業務・体制・すでに試したことを伺い、必要な評価基準、支援範囲、時間の目安をご案内します。
           相談の結果、いま着手すべきでないと判断した場合はそのようにお伝えします。
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -695,9 +696,9 @@ const faqs = [
             href="/contact?source=services-ai-adoption-final&intent=genai-adoption"
             data-cta-source="services-ai-adoption-final"
             data-cta-id="contact"
-            class="inline-flex min-h-[56px] items-center justify-center rounded-full bg-white px-10 py-4 text-lg font-semibold text-accent-950 shadow-strong transition hover:bg-neutral-100"
+            class="inline-flex min-h-[56px] items-center justify-center rounded-full bg-white px-6 py-4 text-center text-base font-semibold leading-snug text-accent-950 shadow-strong transition hover:bg-neutral-100 md:px-10 md:text-lg"
           >
-            無料相談を予約する（30分）
+            AI導入の失敗を防ぐ相談をする
             <svg class="ml-3 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
@@ -706,7 +707,7 @@ const faqs = [
             href="/services/ai-development"
             data-cta-source="services-ai-adoption-final"
             data-cta-id="service-ai-development"
-            class="inline-flex min-h-[56px] items-center justify-center rounded-full bg-primary-500 px-10 py-4 text-lg font-semibold text-white shadow-strong transition hover:bg-primary-600"
+            class="inline-flex min-h-[56px] items-center justify-center rounded-full bg-primary-500 px-6 py-4 text-center text-base font-semibold leading-snug text-white shadow-strong transition hover:bg-primary-600 md:px-10 md:text-lg"
           >
             生成AI受託開発を見る
           </a>

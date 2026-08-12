@@ -16,11 +16,15 @@ interface Props {
     visualItems: readonly string[];
     illustration?: Illustration;
     metrics: readonly Metric[];
+    contactIntent?: string;
+    contactLabel?: string;
   };
 }
 
 const { service, config } = Astro.props;
 const benefits = service.benefits.slice(0, 3);
+const contactIntent = config?.contactIntent ?? 'consult';
+const contactLabel = config?.contactLabel ?? '無料相談する';
 ---
 
 <!-- ライト基調ヒーロー（2026-07-07 ユーザー指定）。
@@ -103,12 +107,12 @@ const benefits = service.benefits.slice(0, 3);
         }
         <div class="mt-9 flex flex-col gap-3 sm:flex-row">
           <a
-            href={`/contact?source=services-${service.id}-hero&intent=${service.id === 'ai-development' ? 'genai-adoption' : 'consult'}`}
+            href={`/contact?source=services-${service.id}-hero&intent=${contactIntent}`}
             data-cta-source={`services-${service.id}-hero`}
             data-cta-id="contact"
-            class="inline-flex min-h-[52px] items-center justify-center rounded-full bg-primary-500 px-8 py-3 text-base font-bold text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium"
+            class="inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-center text-base font-bold leading-snug text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium sm:w-auto sm:px-8"
           >
-            {service.id === 'ai-development' ? 'AI導入の進め方を相談する' : '無料相談する'}
+            {contactLabel}
             <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
@@ -119,7 +123,7 @@ const benefits = service.benefits.slice(0, 3);
           </a>
           <a
             href="/prooffirst"
-            class="inline-flex min-h-[52px] items-center justify-center rounded-full border-2 border-primary-200 px-8 py-3 text-base font-bold text-primary-700 transition hover:border-primary-400 hover:bg-primary-50"
+            class="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-2 border-primary-200 px-6 py-3 text-center text-base font-bold leading-snug text-primary-700 transition hover:border-primary-400 hover:bg-primary-50 sm:w-auto sm:px-8"
           >
             初期費用0円で始める
           </a>

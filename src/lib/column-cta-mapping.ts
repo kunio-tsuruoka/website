@@ -84,9 +84,9 @@ const CDP_CONSULT: CtaItem = {
 
 const GENAI_ADOPTION_CONSULT: CtaItem = {
   href: '/contact?intent=genai-adoption',
-  label: '生成AI導入を相談する（無料）',
+  label: 'AI導入をPoCで終わらせない進め方を相談する',
   description:
-    'どの業務から始めるか・費用・セキュリティまで、生成AI導入の進め方を無料でご相談いただけます',
+    'どの業務から始めるか、何をもって使えると判断するか、社内説明に必要な材料まで整理します',
   ctaId: 'consult-genai-adoption',
 };
 
@@ -211,17 +211,17 @@ const PM_ON_RAILS_COST_CONSULT: CtaItem = {
 
 const PM_ON_RAILS_RAG_CONSULT: CtaItem = {
   href: '/contact?intent=pm-on-rails-rag',
-  label: '自社文書でRAG導入を相談する',
+  label: 'RAGを業務で使える形にする',
   description:
-    '社内資料、想定質問、根拠、権限、評価基準を分けて、RAGで作るべき範囲と導入可否を確認します',
+    '社内資料、想定質問、根拠、権限、評価基準を分けて、RAGで作るべき範囲と本番化の判断材料を確認します',
   ctaId: 'consult-pm-on-rails-rag',
 };
 
 const GENAI_START_CONSULT: CtaItem = {
   href: '/contact?intent=genai-adoption',
-  label: 'AI導入の進め方を相談する',
+  label: 'AI導入をPoCで止めない進め方を相談する',
   description:
-    '資料探し、問い合わせ対応、書類の転記、確認作業など、どの業務から始めると効果を見込みやすいかを整理します',
+    'どの業務から始め、何をもって使えると判断し、社内説明に必要な材料をどう揃えるかを整理します',
   ctaId: 'consult-genai-adoption',
 };
 
@@ -250,9 +250,9 @@ const RAG_FIT_CONSULT: CtaItem = {
 
 const RAG_ACCURACY_CONSULT: CtaItem = {
   href: '/contact?intent=rag-accuracy',
-  label: 'AI回答の精度課題を相談する',
+  label: 'AI回答を業務で使える精度に近づける',
   description:
-    '回答ミスの原因を、検索、生成、評価データ、権限設計のどこで起きているかに分けて確認します',
+    '回答ミスの原因を、検索、生成、評価データ、権限設計に分け、社内利用前に直すべき論点を確認します',
   ctaId: 'consult-rag-accuracy',
 };
 
@@ -362,7 +362,7 @@ const SLUG_CTA: Record<string, CategoryCta> = {
     DOWNLOAD_DECK
   ),
   'ai-era-development-flow': buildCta(
-    'AI導入を試しただけで終わらせない進め方を整理しませんか？',
+    'AI導入を試しただけで終わらせず、社内説明できる形にしませんか？',
     GENAI_START_CONSULT,
     DOWNLOAD_DECK
   ),
@@ -402,7 +402,7 @@ const SLUG_CTA: Record<string, CategoryCta> = {
     DOWNLOAD_DECK
   ),
   'what-is-rag': buildCta(
-    'RAGで作るべき用途を、先にユースケース化しませんか？',
+    'RAGで作る前に、業務で使える基準を決めませんか？',
     PM_ON_RAILS_RAG_CONSULT,
     PARTNER_CONSULT
   ),

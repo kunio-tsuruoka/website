@@ -35,6 +35,14 @@ const serviceUrl = `${siteUrl}/services/${service.id}`;
 const seoTitle = service.seoTitle ?? service.title;
 const seoDescription = service.seoDescription ?? service.description;
 const servicePageConfig = getAiServicePageConfig(service.id);
+const contactIntent = servicePageConfig?.contactIntent ?? 'consult';
+const finalCtaLabel = servicePageConfig?.contactLabel ?? '無料相談を予約する';
+const finalCtaHeading = servicePageConfig
+  ? 'PoCで止めず、業務で使える形にしませんか'
+  : 'どこから始めるか、無料相談で整理しませんか';
+const finalCtaLead = servicePageConfig
+  ? '業務・データ・評価基準を伺い、本番判断に必要な進め方と概算費用の考え方をご案内します。'
+  : '業務・データ・既存システムを伺い、小さく検証できる範囲と概算費用の考え方をご案内します。';
 const faqNumber =
   service.id === 'ai-development'
     ? '07'
@@ -136,9 +144,9 @@ const faqNumber =
                 精度・情報漏洩・運用の不安は、作る前の要件とスキーマ設計で大きく減らせます。何をどう聞くAIにするかを一緒に固め、通常RAG／GraphRAGのどれで解くかまで整理します。
               </p>
               <a
-                href="/contact?source=services-rag-system-development-persona-it&intent=consult"
+                href="/contact?source=services-rag-system-development-persona-it&intent=rag-system-development"
                 data-cta-source="services-rag-system-development-persona-it"
-                data-cta-id="contact-consult"
+                data-cta-id="contact-rag-system-development"
                 class="mt-6 inline-flex min-h-[52px] items-center justify-center rounded-full border-2 border-primary-300 px-6 py-3 text-base font-bold text-primary-700 transition hover:border-primary-500 hover:bg-primary-50"
               >
                 要件・構成から相談する
@@ -253,19 +261,19 @@ const faqNumber =
       <div class="pointer-events-none absolute -right-20 bottom-8 h-64 w-64 rounded-full bg-secondary-500/15 blur-3xl" aria-hidden="true"></div>
       <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center relative z-10">
         <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 font-Montserrat">
-          どこから始めるか、無料相談で整理しませんか
+          {finalCtaHeading}
         </h2>
         <p class="text-xl text-white/90 mb-10 leading-relaxed">
-          業務・データ・既存システムを伺い、小さく検証できる範囲と概算費用の考え方をご案内します。
+          {finalCtaLead}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a
-            href={`/contact?source=services-${service.id}-final&intent=${service.id === 'ai-development' ? 'genai-adoption' : 'consult'}`}
+            href={`/contact?source=services-${service.id}-final&intent=${contactIntent}`}
             data-cta-source={`services-${service.id}-final`}
             data-cta-id="contact"
-            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-accent-950 bg-white rounded-full hover:bg-gray-100 transition-all shadow-strong hover:scale-105 transform"
+            class="inline-flex min-h-[56px] items-center justify-center rounded-full bg-white px-6 py-4 text-center text-base font-semibold leading-snug text-accent-950 shadow-strong transition-all hover:scale-105 hover:bg-gray-100 md:px-10 md:py-5 md:text-xl"
           >
-            {service.id === 'ai-development' ? 'AI導入の進め方を相談する' : '無料相談を予約する'}
+            {finalCtaLabel}
             <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
@@ -274,7 +282,7 @@ const faqNumber =
             href={`/downloads/zero-start?ref=services-${service.id}`}
             data-cta-source={`services-${service.id}-final`}
             data-cta-id="download-zero-start"
-            class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-primary-500 rounded-full hover:bg-primary-600 transition-all shadow-strong hover:scale-105 transform"
+            class="inline-flex min-h-[56px] items-center justify-center rounded-full bg-primary-500 px-6 py-4 text-center text-base font-semibold leading-snug text-white shadow-strong transition-all hover:scale-105 hover:bg-primary-600 md:px-10 md:py-5 md:text-xl"
           >
             サービス資料をダウンロード
             <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

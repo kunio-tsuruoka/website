@@ -36,6 +36,8 @@ const DEFAULT_MESSAGE_PLACEHOLDER =
 
 const INTENT_TYPE_MAP: Record<string, string> = {
   'ai-accuracy': 'ai',
+  'ai-agent-development': 'ai',
+  'ai-chatbot-development': 'ai',
   'ai-development': 'ai',
   'ai-requirements': 'ai',
   'cdp-selection': 'cdp',
@@ -49,6 +51,7 @@ const INTENT_TYPE_MAP: Record<string, string> = {
   'pm-on-rails-requirements': 'pm_on_rails',
   'pm-on-rails-rfp': 'pm_on_rails',
   'quote-comparison': 'estimate',
+  'ocr-ai-development': 'ai',
   'rag-accuracy': 'ai',
   'rag-evaluation': 'ai',
   'rag-fit': 'ai',
@@ -61,6 +64,41 @@ const INTENT_TYPE_MAP: Record<string, string> = {
 };
 
 const INTENT_GUIDES: Record<string, IntentGuide> = {
+  'genai-adoption': {
+    title: 'AI導入をPoCで終わらせない相談として受け付けます',
+    body: '対象業務、使える判断基準、必要なデータ、社内説明に使う材料を分けて確認します。',
+    placeholder:
+      '例: AI化したい業務、いま試していること、PoCで止まりそうな理由、社内説明で不安な点などがあればご記入ください。',
+    emptyMessage: 'AI導入をPoCで終わらせない進め方について相談したいです。',
+  },
+  'document-ai-search': {
+    title: '社内文書AIの失敗を防ぐ相談として受け付けます',
+    body: '対象文書、想定質問、根拠提示、権限、評価方法を分けて、業務で使えるかを確認します。',
+    placeholder:
+      '例: 対象文書、利用部署、探したい内容、根拠表示や権限で不安な点などがあればご記入ください。',
+    emptyMessage: '社内文書AIの失敗を防ぐ進め方について相談したいです。',
+  },
+  'ai-chatbot-development': {
+    title: 'AIチャットボット導入の失敗を防ぐ相談として受け付けます',
+    body: 'AIが答える質問、人へ戻す質問、対応ログの活用、運用体制を分けて確認します。',
+    placeholder:
+      '例: 対象FAQ、問い合わせ件数、有人対応に戻したい条件、導入後の運用で不安な点などがあればご記入ください。',
+    emptyMessage: 'AIチャットボット導入の失敗を防ぐ進め方について相談したいです。',
+  },
+  'ocr-ai-development': {
+    title: '帳票AIの失敗を防ぐ相談として受け付けます',
+    body: '帳票種類、読み取り項目、確認フロー、連携先システム、例外処理を分けて確認します。',
+    placeholder:
+      '例: 読み取りたい帳票、件数、手入力で困っている箇所、既存システム連携の有無などがあればご記入ください。',
+    emptyMessage: '帳票AIの失敗を防ぐ進め方について相談したいです。',
+  },
+  'ai-agent-development': {
+    title: 'AIエージェントの失敗を防ぐ相談として受け付けます',
+    body: '任せたい業務、実行権限、人間承認、例外時の止め方、ログ管理を分けて確認します。',
+    placeholder:
+      '例: 自動化したい業務、連携したいシステム、人が承認したい操作、暴走リスクで不安な点などがあればご記入ください。',
+    emptyMessage: 'AIエージェントの失敗を防ぐ進め方について相談したいです。',
+  },
   'cdp-selection': {
     title: 'CDP選定の前提整理として受け付けます',
     body: '製品名が決まっていなくても、統合対象データ、施策ユースケース、運用体制から確認できます。',
@@ -91,7 +129,7 @@ const INTENT_GUIDES: Record<string, IntentGuide> = {
   },
   'pm-on-rails-rag': {
     title: 'RAGの用途・要件整理として受け付けます',
-    body: '社内文書、想定質問、根拠、権限、評価方法を分けて、作るべき範囲を確認します。',
+    body: '社内文書、想定質問、根拠、権限、評価方法を分けて、業務で使えるRAGにするための範囲を確認します。',
     placeholder:
       '例: 対象文書、想定質問、利用部署、回答精度や権限で不安な点などがあればご記入ください。',
     emptyMessage: 'RAGの用途と要件整理について相談したいです。',
@@ -112,7 +150,7 @@ const INTENT_GUIDES: Record<string, IntentGuide> = {
   },
   'rag-accuracy': {
     title: 'AI回答の精度課題として受け付けます',
-    body: '回答ミスの原因を、検索、生成、評価データ、権限設計のどこで起きているか切り分けます。',
+    body: '回答ミスの原因を、検索、生成、評価データ、権限設計のどこで起きているか切り分け、社内利用前に直すべき論点を整理します。',
     placeholder:
       '例: 間違いやすい質問、対象文書、根拠表示の有無、社内利用で不安な点などがあればご記入ください。',
     emptyMessage: 'AI回答の精度課題について相談したいです。',
@@ -126,7 +164,7 @@ const INTENT_GUIDES: Record<string, IntentGuide> = {
   },
   'rag-system-development': {
     title: '社内文書検索AI/RAG構築の相談として受け付けます',
-    body: '必要な文書、権限、質問例、評価方法を確認し、導入可否と最初の作り方を整理します。',
+    body: '必要な文書、権限、質問例、評価方法を確認し、PoCで止まらず本番判断できる作り方を整理します。',
     placeholder:
       '例: 対象文書、利用部署、検索したい内容、セキュリティや回答精度の不安などがあればご記入ください。',
     emptyMessage: '社内文書検索AI/RAG構築について相談したいです。',

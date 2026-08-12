@@ -22,14 +22,24 @@ const content = {
   },
   cases: {
     eyebrow: '似た課題がある方へ',
-    title: '自社の場合の進め方を相談する',
-    description: '実現したいことを伺い、必要な機能、進め方、概算費用の考え方をご案内します。',
-    label: 'お問い合わせはこちら',
+    title: '自社で失敗しない進め方を相談する',
+    description:
+      '実現したいことを伺い、必要な要件、評価基準、進め方、概算費用の考え方をご案内します。',
+    label: '失敗を防ぐ進め方を相談する',
   },
 } as const;
 
 const cta = content[placement];
 const source = `services-${serviceId}-${placement}`;
+const AI_SERVICE_INTENTS: Record<string, string> = {
+  'ai-agent-development': 'ai-agent-development',
+  'ai-chatbot-development': 'ai-chatbot-development',
+  'ai-development': 'genai-adoption',
+  'internal-document-ai-search': 'document-ai-search',
+  'ocr-ai-development': 'ocr-ai-development',
+  'rag-system-development': 'rag-system-development',
+};
+const contactIntent = AI_SERVICE_INTENTS[serviceId] ?? 'consult';
 ---
 
 <aside class="bg-white px-6 py-4 lg:px-12">
@@ -41,10 +51,10 @@ const source = `services-${serviceId}-${placement}`;
       <p class="mt-2 text-sm leading-relaxed text-neutral-700 md:text-base">{cta.description}</p>
     </div>
     <a
-      href={`/contact?source=${source}&intent=consult`}
+      href={`/contact?source=${source}&intent=${contactIntent}`}
       data-cta-source={source}
-      data-cta-id="contact-consult"
-      class="relative inline-flex min-h-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium md:text-base"
+      data-cta-id={`contact-${contactIntent}`}
+      class="relative inline-flex min-h-[52px] shrink-0 items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-center text-sm font-bold leading-snug text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium md:text-base"
     >
       {cta.label}
       <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
