@@ -78,6 +78,11 @@ function pctToNum(s) {
   return Number.isFinite(n) ? n : null;
 }
 
+function csvNumber(s) {
+  const n = Number(String(s).replace(/,/g, '').trim());
+  return Number.isFinite(n) ? n : null;
+}
+
 function parseClarityCsv(text) {
   // BOM 除去
   const clean = text.replace(/^﻿/, '');
@@ -147,8 +152,8 @@ function parseClarityCsv(text) {
         const n = Number(c2);
         if (Number.isFinite(n)) result.soa = n;
         else soaTableMode = true;
-      } else if (/Page citations/i.test(c1 || '')) result.pageCitations = Number(c2);
-      else if (/AI referral traffic/i.test(c1 || '')) result.aiReferralTraffic = Number(c2);
+      } else if (/Page citations/i.test(c1 || '')) result.pageCitations = csvNumber(c2);
+      else if (/AI referral traffic/i.test(c1 || '')) result.aiReferralTraffic = csvNumber(c2);
       continue;
     }
 
@@ -162,7 +167,7 @@ function parseClarityCsv(text) {
     }
 
     if (!mode || !idx || !c0) continue;
-    const citations = idx.citations == null ? null : Number(cols[idx.citations]);
+    const citations = idx.citations == null ? null : csvNumber(cols[idx.citations]);
     const soaPct = idx.soa == null ? null : pctToNum(cols[idx.soa]);
     if (mode === 'query') result.queries.push({ query: c0, soaPct, citations });
     else if (mode === 'topic') result.topics.push({ topic: c0, soaPct, citations });

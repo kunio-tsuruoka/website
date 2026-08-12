@@ -189,7 +189,11 @@ function main() {
   const text = readFileSync(csvPath, 'utf-8');
 
   // 誤ファイルガード: AI Citations export を渡された場合はこちらでは扱わない
-  if (/FullyCitedQueries|"Query","SoA","Citations"/.test(text)) {
+  if (
+    /FullyCitedQueries|"Query","(?:SoA","Citations|Citations","SoA)"|"Page URL","Citations"/.test(
+      text
+    )
+  ) {
     log(
       `[ERROR] これは AI Citations export のよう (src=${basename(csvPath)})。→ node scripts/data/import-clarity-citations.mjs`
     );
