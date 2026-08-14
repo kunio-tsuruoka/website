@@ -5,9 +5,16 @@ import type { ServiceDetail } from '@/types/service';
 interface Props {
   features: ServiceDetail['features'];
   number?: string;
+  title?: string;
+  subtitle?: string;
 }
 
-const { features, number = '04' } = Astro.props;
+const {
+  features,
+  number = '04',
+  title = 'Beekleが対応できる開発領域',
+  subtitle = '技術選定から運用まで、必要な範囲をまとめて引き受けます',
+} = Astro.props;
 
 // ブランド3色の番号チップローテーション（design.md §2）
 const chipTones = ['bg-primary-100 text-primary-600'];
@@ -20,8 +27,8 @@ const chipTones = ['bg-primary-100 text-primary-600'];
   <div class="container relative mx-auto px-6 lg:px-12">
     <SectionHeader
       client:visible
-      title="Beekleが対応できる開発領域"
-      subtitle="必要な機能を、業務導線に合わせて組み込みます"
+      title={title}
+      subtitle={subtitle}
       number={number}
       label="FEATURES"
     />
