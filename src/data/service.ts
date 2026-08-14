@@ -520,7 +520,7 @@ export const services: ServiceDetail[] = [
         ],
       },
       {
-        title: 'リアルタイム翻訳AIプロダクトのMVP開発',
+        title: 'リアルタイム翻訳AIプロダクトの開発',
         challenge:
           '言語が違うユーザー同士が音声メッセージや通話でも自然に会話できるかどうかを、企画書のままでは判断できませんでした。',
         solution:
