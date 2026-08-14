@@ -16,6 +16,8 @@ interface CaseStudy {
   challenge: string;
   solution: string;
   results: string[];
+  /** なぜBeekleだから実現できたか（任意）。1〜2文。事実の範囲で書く */
+  whyUs?: string;
   /** 技術スタック・インフラ構成（任意）。`ラベル: 内容` 形式の文字列を推奨 */
   techStack?: string[];
 }

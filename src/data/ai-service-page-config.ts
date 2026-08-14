@@ -40,9 +40,9 @@ export const aiServicePageConfig = {
       ],
     },
     metrics: [
-      { label: '確認方法', value: '動く試作品' },
-      { label: '判断材料', value: '評価基準' },
-      { label: '運用', value: '品質・費用管理' },
+      { label: '始め方', value: '初期費用0円で試作' },
+      { label: '判断', value: '実物を見て決める' },
+      { label: '運用', value: '費用と品質を監視' },
     ],
   },
   'internal-document-ai-search': {
