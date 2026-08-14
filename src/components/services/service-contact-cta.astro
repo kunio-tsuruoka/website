@@ -22,14 +22,43 @@ const content = {
   },
   cases: {
     eyebrow: '似た課題がある方へ',
-    title: '自社で失敗しない進め方を相談する',
-    description:
-      '実現したいことを伺い、必要な要件、評価基準、進め方、概算費用の考え方をご案内します。',
-    label: '失敗を防ぐ進め方を相談する',
+    title: '自社の場合はどうなるか、相談してみませんか',
+    description: '業務内容と現在のデータを伺い、最初に検証すべき範囲をご案内します。',
+    label: '無料で相談する',
   },
 } as const;
 
-const cta = content[placement];
+// 事例直後のCTAは、サービスごとに「何を相談できるか」を具体的に言い切る（改善指示書 8）
+const SERVICE_CTA: Record<string, { title: string; label: string }> = {
+  'ai-development': {
+    title: 'どの業務をAIに任せられるか、相談してみませんか',
+    label: '自社でAIに任せられる業務を相談する',
+  },
+  'rag-system-development': {
+    title: '自社のデータでRAGが成立するか、確かめてみませんか',
+    label: '自社データでRAGが成立するか相談する',
+  },
+  'internal-document-ai-search': {
+    title: '自社の文書で「探す時間」をどこまで減らせるか、相談してみませんか',
+    label: '自社文書で何が探せるようになるか相談する',
+  },
+  'ai-chatbot-development': {
+    title: '自社の問い合わせを、どこまでAIに任せられるでしょうか',
+    label: '自社問い合わせの何割をAIに任せられるか相談する',
+  },
+  'ocr-ai-development': {
+    title: '自社の帳票で、どこまで手入力を減らせるでしょうか',
+    label: '自社帳票でどこまで手入力を減らせるか相談する',
+  },
+  'ai-agent-development': {
+    title: 'どこまでをAIに任せ、どこから人が承認するか相談してみませんか',
+    label: '任せる範囲と承認の設計を相談する',
+  },
+};
+
+const base = content[placement];
+const override = placement === 'cases' ? SERVICE_CTA[serviceId] : undefined;
+const cta = { ...base, ...override };
 const source = `services-${serviceId}-${placement}`;
 const AI_SERVICE_INTENTS: Record<string, string> = {
   'ai-agent-development': 'ai-agent-development',
