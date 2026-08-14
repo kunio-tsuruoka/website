@@ -13,8 +13,8 @@ import ServiceFeatures from '@/components/services/service-features.astro';
 import ServiceHero from '@/components/services/service-hero.astro';
 import ServicePainPoints from '@/components/services/service-pain-points.astro';
 import ServiceRootCause from '@/components/services/service-root-cause.astro';
-import ServiceScanSummary from '@/components/services/service-scan-summary.astro';
 import ServiceSolutions from '@/components/services/service-solutions.astro';
+import ServiceWhyBeekle from '@/components/services/service-why-beekle.astro';
 import { Section, SectionHeader } from '@/components/ui';
 import { getAiServicePageConfig } from '@/data/ai-service-page-config';
 import { services } from '@/data/service';
@@ -41,14 +41,46 @@ const finalCtaHeading = servicePageConfig
   ? 'PoCで止めず、業務で使える形にしませんか'
   : 'どこから始めるか、無料相談で整理しませんか';
 const finalCtaLead = servicePageConfig
-  ? '業務・データ・評価基準を伺い、本番判断に必要な進め方と概算費用の考え方をご案内します。'
+  ? '業務内容と現在のデータを伺い、最初に検証すべき範囲をご案内します。'
   : '業務・データ・既存システムを伺い、小さく検証できる範囲と概算費用の考え方をご案内します。';
-const faqNumber =
-  service.id === 'ai-development'
-    ? '07'
-    : service.relatedColumns && service.relatedColumns.length > 0
-      ? '06'
-      : '05';
+
+// CEP → Promise → Mechanism → RTB → 事例 → 機能 → 工程 → FAQ → CTA の順で読ませる。
+// RTB（なぜBeekleなら実現できるのか）を持つページだけ番号が1つ増える。
+type RtbConfig = {
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  items: readonly { title: string; description: string }[];
+  note?: { title: string; description: string };
+};
+const rtb = (servicePageConfig as { rtb?: RtbConfig } | undefined)?.rtb;
+const sectionNumbers = rtb
+  ? { painPoints: '01', whyBeekle: '02', caseStudies: '03', solutions: '04', features: '05' }
+  : { painPoints: '01', whyBeekle: '02', caseStudies: '02', solutions: '03', features: '04' };
+const faqNumber = rtb ? '06' : '05';
+
+// 事例はRTBを証明する材料として見せる（サービスごとに切り口を変える）
+const caseStudiesCopy: Record<string, { title: string; subtitle: string }> = {
+  'ai-development': {
+    title: '本当にできるのか、実案件で示します',
+    subtitle: 'AIをどの業務に載せ、何が変わったか',
+  },
+  'rag-system-development': {
+    title: '本当にできるのか、実案件で示します',
+    subtitle: 'ベクトル検索だけでは届かなかった検索を、どう成立させたか',
+  },
+  'ai-chatbot-development': {
+    title: '本当にできるのか、実案件で示します',
+    subtitle: '人がやっていた問い合わせ対応を、どうAIへ移したか',
+  },
+  'ocr-ai-development': {
+    title: '本当にできるのか、実案件で示します',
+    subtitle: '全件入力を、どこまで確認作業に変えられたか',
+  },
+};
+const caseStudiesTitle = caseStudiesCopy[service.id]?.title ?? '実際に、こう作ってきました';
+const caseStudiesSubtitle =
+  caseStudiesCopy[service.id]?.subtitle ?? 'どのような課題を、どう実装に落としたか';
 ---
 
 <Layout title={`${seoTitle} | Beekle`} description={seoDescription} canonical={serviceUrl}>
@@ -85,17 +117,22 @@ const faqNumber =
   <Header client:idle />
   <main class="pt-20">
     <ServiceHero service={service} config={servicePageConfig} />
-    {servicePageConfig && <ServiceScanSummary service={service} />}
-    {servicePageConfig && <ServiceAiDesignStrength serviceId={service.id} />}
+    <ServicePainPoints painPoints={service.painPoints} number={sectionNumbers.painPoints} />
+    <ServiceRootCause rootCause={servicePageConfig?.rootCause} />
     <ServiceBusinessFlow flow={servicePageConfig?.flow} />
     {service.id === 'ai-development' && <AiDevelopmentOverview />}
-    <ServicePainPoints painPoints={service.painPoints} />
-    <ServiceRootCause rootCause={servicePageConfig?.rootCause} />
-    <ServiceSolutions solutions={service.solutions} />
+    {servicePageConfig && <ServiceAiDesignStrength serviceId={service.id} />}
+    {rtb && <ServiceWhyBeekle rtb={rtb} number={sectionNumbers.whyBeekle} />}
 
-    <ServiceCaseStudies caseStudies={service.caseStudies} />
+    <ServiceCaseStudies
+      caseStudies={service.caseStudies}
+      number={sectionNumbers.caseStudies}
+      title={caseStudiesTitle}
+      subtitle={caseStudiesSubtitle}
+    />
     {servicePageConfig && <ServiceContactCta serviceId={service.id} placement="cases" />}
-    <ServiceFeatures features={service.features} />
+    <ServiceSolutions solutions={service.solutions} number={sectionNumbers.solutions} />
+    <ServiceFeatures features={service.features} number={sectionNumbers.features} />
 
     {service.additionalSections && service.additionalSections.length > 0 && (
       <ServiceAdditionalSections sections={service.additionalSections} />

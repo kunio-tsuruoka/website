@@ -4,9 +4,10 @@ import type { ServiceDetail } from '@/types/service';
 
 interface Props {
   solutions: ServiceDetail['solutions'];
+  number?: string;
 }
 
-const { solutions } = Astro.props;
+const { solutions, number = '02' } = Astro.props;
 
 const iconPaths = {
   compass:
@@ -43,7 +44,7 @@ const iconTones = ['bg-primary-100 text-primary-600'];
       client:visible
       title="つまずきを、設計で防ぐ"
       subtitle="PoCで終わらせず、業務で使える状態まで設計します"
-      number="02"
+      number={number}
       label="SOLUTIONS"
     />
     <div class="grid gap-5 lg:grid-cols-2">

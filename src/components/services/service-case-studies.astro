@@ -4,9 +4,17 @@ import type { ServiceDetail } from '@/types/service';
 
 interface Props {
   caseStudies: ServiceDetail['caseStudies'];
+  number?: string;
+  title?: string;
+  subtitle?: string;
 }
 
-const { caseStudies } = Astro.props;
+const {
+  caseStudies,
+  number = '03',
+  title = '実際に、こう作ってきました',
+  subtitle = 'どのような課題を、どう実装に落としたか',
+} = Astro.props;
 
 const barColors = ['bg-primary-500'];
 const lastIsWide = caseStudies.length > 1 && caseStudies.length % 2 === 1;
@@ -19,9 +27,9 @@ const lastIsWide = caseStudies.length > 1 && caseStudies.length % 2 === 1;
   <div class="container relative mx-auto px-6 lg:px-12">
     <SectionHeader
       client:visible
-      title="実際に、こう作ってきました"
-      subtitle="どのような課題を、どう実装に落としたか"
-      number="03"
+      title={title}
+      subtitle={subtitle}
+      number={number}
       label="CASE STUDIES"
     />
     <div class="grid gap-6 lg:grid-cols-2">
