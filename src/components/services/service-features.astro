@@ -4,9 +4,10 @@ import type { ServiceDetail } from '@/types/service';
 
 interface Props {
   features: ServiceDetail['features'];
+  number?: string;
 }
 
-const { features } = Astro.props;
+const { features, number = '04' } = Astro.props;
 
 // ブランド3色の番号チップローテーション（design.md §2）
 const chipTones = ['bg-primary-100 text-primary-600'];
@@ -21,7 +22,7 @@ const chipTones = ['bg-primary-100 text-primary-600'];
       client:visible
       title="Beekleが対応できる開発領域"
       subtitle="必要な機能を、業務導線に合わせて組み込みます"
-      number="04"
+      number={number}
       label="FEATURES"
     />
     <div class="grid gap-4 md:grid-cols-2">
