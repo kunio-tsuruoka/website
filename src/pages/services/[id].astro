@@ -37,8 +37,17 @@ const seoDescription = service.seoDescription ?? service.description;
 const servicePageConfig = getAiServicePageConfig(service.id);
 const contactIntent = servicePageConfig?.contactIntent ?? 'consult';
 const finalCtaLabel = servicePageConfig?.contactLabel ?? '無料相談を予約する';
+// 最終CTAも、そのページのCEPに対する答えの形で書く（4ページで同じ見出しにしない）
+const FINAL_CTA_HEADINGS: Record<string, string> = {
+  'ai-development': 'どの業務なら本当に手が空くのか、一緒に見極めませんか',
+  'rag-system-development': '自社のデータで、探す時間をどこまで減らせるでしょうか',
+  'internal-document-ai-search': '「あの人に聞かないと分からない」を、どこから減らしますか',
+  'ai-chatbot-development': '自社の問い合わせは、どこまでAIに任せられるでしょうか',
+  'ocr-ai-development': '自社の帳票なら、どこまで手入力を減らせるでしょうか',
+  'ai-agent-development': 'どこまで任せて、どこから人が承認するか決めませんか',
+};
 const finalCtaHeading = servicePageConfig
-  ? 'PoCで止めず、業務で使える形にしませんか'
+  ? (FINAL_CTA_HEADINGS[service.id] ?? 'PoCで止めず、業務で使える形にしませんか')
   : 'どこから始めるか、無料相談で整理しませんか';
 const finalCtaLead = servicePageConfig
   ? '業務内容と現在のデータを伺い、最初に検証すべき範囲をご案内します。'
@@ -81,6 +90,55 @@ const caseStudiesCopy: Record<string, { title: string; subtitle: string }> = {
 const caseStudiesTitle = caseStudiesCopy[service.id]?.title ?? '実際に、こう作ってきました';
 const caseStudiesSubtitle =
   caseStudiesCopy[service.id]?.subtitle ?? 'どのような課題を、どう実装に落としたか';
+
+// 解決策・機能の見出しもサービスごとに変える（4ページで同じ文言を繰り返さない）
+const sectionCopy: Record<
+  string,
+  { solutions: { title: string; subtitle: string }; features: { title: string; subtitle: string } }
+> = {
+  'ai-development': {
+    solutions: {
+      title: 'どこから任せて、どこまで広げるか',
+      subtitle: '効果を確かめながら、AIに任せる範囲を広げていきます',
+    },
+    features: {
+      title: 'AI開発で作れるもの',
+      subtitle: '相談から本番運用まで、必要な範囲をまとめて引き受けます',
+    },
+  },
+  'rag-system-development': {
+    solutions: {
+      title: '探せる状態にするまでに、何をするか',
+      subtitle: '文書を入れる前の設計から、運用後の精度改善まで',
+    },
+    features: {
+      title: '検索の仕組みとして作れるもの',
+      subtitle: '検索の設計からインフラ・運用まで引き受けます',
+    },
+  },
+  'ai-chatbot-development': {
+    solutions: {
+      title: 'AIに任せる質問と、人に残す質問を分ける',
+      subtitle: '答える範囲、引き継ぎ、改善の回し方まで設計します',
+    },
+    features: {
+      title: 'チャットボットに組み込める機能',
+      subtitle: '会話の設計から運用の改善まで引き受けます',
+    },
+  },
+  'ocr-ai-development': {
+    solutions: {
+      title: '読み取ってから、業務に載せるまで',
+      subtitle: '確認の導線と後続システムへの連携まで設計します',
+    },
+    features: {
+      title: '帳票AIに組み込める機能',
+      subtitle: '読み取りから確認画面、システム連携まで引き受けます',
+    },
+  },
+};
+const solutionsCopy = sectionCopy[service.id]?.solutions;
+const featuresCopy = sectionCopy[service.id]?.features;
 ---
 
 <Layout title={`${seoTitle} | Beekle`} description={seoDescription} canonical={serviceUrl}>
@@ -120,7 +178,6 @@ const caseStudiesSubtitle =
     <ServicePainPoints painPoints={service.painPoints} number={sectionNumbers.painPoints} />
     <ServiceRootCause rootCause={servicePageConfig?.rootCause} />
     <ServiceBusinessFlow flow={servicePageConfig?.flow} />
-    {service.id === 'ai-development' && <AiDevelopmentOverview />}
     {servicePageConfig && <ServiceAiDesignStrength serviceId={service.id} />}
     {rtb && <ServiceWhyBeekle rtb={rtb} number={sectionNumbers.whyBeekle} />}
 
@@ -131,8 +188,19 @@ const caseStudiesSubtitle =
       subtitle={caseStudiesSubtitle}
     />
     {servicePageConfig && <ServiceContactCta serviceId={service.id} placement="cases" />}
-    <ServiceSolutions solutions={service.solutions} number={sectionNumbers.solutions} />
-    <ServiceFeatures features={service.features} number={sectionNumbers.features} />
+    <ServiceSolutions
+      solutions={service.solutions}
+      number={sectionNumbers.solutions}
+      title={solutionsCopy?.title}
+      subtitle={solutionsCopy?.subtitle}
+    />
+    {service.id === 'ai-development' && <AiDevelopmentOverview />}
+    <ServiceFeatures
+      features={service.features}
+      number={sectionNumbers.features}
+      title={featuresCopy?.title}
+      subtitle={featuresCopy?.subtitle}
+    />
 
     {service.additionalSections && service.additionalSections.length > 0 && (
       <ServiceAdditionalSections sections={service.additionalSections} />
