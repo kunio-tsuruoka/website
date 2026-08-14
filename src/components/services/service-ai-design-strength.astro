@@ -5,36 +5,100 @@ interface Props {
 
 const { serviceId } = Astro.props;
 
-const isRag = serviceId === 'rag-system-development' || serviceId === 'internal-document-ai-search';
-const isAgent = serviceId === 'ai-agent-development';
+const themes: Record<
+  string,
+  {
+    label: string;
+    title: string;
+    center: string;
+    inputs: string[];
+    outputs: string[];
+    caption: string;
+    closing: { title: string; description: string };
+  }
+> = {
+  'rag-system-development': {
+    label: 'RAG / ONTOLOGY DESIGN',
+    title: '文書を入れる前に、答えるべき問いを決める',
+    center: 'オントロジー設計',
+    inputs: ['業務質問', '社内用語', '文書関係', '評価基準'],
+    outputs: ['根拠つき回答', '本番判断できる材料'],
+    caption: 'ベクトル検索だけに頼らず、質問・用語・文書の関係と評価基準から設計します。',
+    closing: {
+      title: 'なぜ、投入する前に問いを決めるのか',
+      description:
+        '同じ文書群でも、何を聞かれるかによって必要な分割単位もメタデータも変わります。先に実際の業務質問を集めてから設計するので、入れてみたが目的の答えに届かない、という作り直しが起きません。評価用の質問セットもこの段階で揃うため、精度が上がったかどうかを毎回同じ物差しで確認できます。',
+    },
+  },
+  'internal-document-ai-search': {
+    label: 'RAG / ONTOLOGY DESIGN',
+    title: '文書を入れる前に、答えるべき問いを決める',
+    center: 'オントロジー設計',
+    inputs: ['業務質問', '社内用語', '文書関係', '評価基準'],
+    outputs: ['根拠つき回答', '本番判断できる材料'],
+    caption: 'ベクトル検索だけに頼らず、質問・用語・文書の関係と評価基準から設計します。',
+    closing: {
+      title: 'なぜ、投入する前に問いを決めるのか',
+      description:
+        '同じ文書群でも、何を聞かれるかによって必要な分割単位もメタデータも変わります。先に実際の業務質問を集めてから設計するので、入れてみたが目的の答えに届かない、という作り直しが起きません。',
+    },
+  },
+  'ai-agent-development': {
+    label: 'AI AGENT DESIGN',
+    title: '任せる範囲と、止め方を先に決める',
+    center: 'エージェント設計',
+    inputs: ['ユースケース', '権限', '承認', '例外処理'],
+    outputs: ['安全な自動実行', '監査できるログ'],
+    caption: 'できることを増やす前に、禁止操作・人へ戻す条件・ログを設計します。',
+    closing: {
+      title: 'なぜ、できることより先に止め方を決めるのか',
+      description:
+        '自律的に動くAIは、便利さと事故のリスクが同じ設計から生まれます。実行してよい操作、承認が要る操作、失敗したときの戻し方を先に決めるので、任せる範囲を段階的に広げても、取り返しのつかない操作が起きません。',
+    },
+  },
+  'ai-chatbot-development': {
+    label: 'ANSWER SCOPE DESIGN',
+    title: 'AIが答える範囲と、人へ戻す条件を先に決める',
+    center: '回答範囲の設計',
+    inputs: ['よくある質問', '回答の根拠', '戻す条件', '会話ログ'],
+    outputs: ['一次対応の自動化', '人が対応すべき問い合わせ'],
+    caption: '答えられる質問と答えてはいけない質問を切り分けてから、会話と引き継ぎを設計します。',
+    closing: {
+      title: 'なぜ、答える範囲を先に決めるのか',
+      description:
+        '広く答えさせるほど、根拠のない回答が混ざって信用を落とします。根拠を持って答えられる範囲だけをAIに任せ、それ以外は会話の要約とともに人へ渡す設計にするので、利用者が最初から人を呼ぶ状態に戻りません。答えられなかった質問はログに残し、対応できる範囲を運用しながら広げます。',
+    },
+  },
+  'ocr-ai-development': {
+    label: 'REVIEW FLOW DESIGN',
+    title: '読み取った後、どこを人が見るかを先に決める',
+    center: '確認導線の設計',
+    inputs: ['帳票の種類', '必要項目', '確信度の基準', '連携先'],
+    outputs: ['例外だけの確認作業', 'そのまま渡せるデータ'],
+    caption: '読み取り精度だけでなく、確信度の低い項目をどう人へ戻すかまで設計します。',
+    closing: {
+      title: 'なぜ、精度より確認導線を先に決めるのか',
+      description:
+        '読み取り精度を100%にすることはできません。だからこそ、どの項目がどれだけ確からしければ通してよいか、迷ったものを誰がどの画面で直すかを先に決めます。全件確認を前提にしない運用になるので、精度が完璧でなくても入力作業そのものが減ります。',
+    },
+  },
+};
 
-const theme = isRag
-  ? {
-      label: 'RAG / ONTOLOGY DESIGN',
-      title: '文書を入れる前に、答えるべき問いを決める',
-      center: 'オントロジー設計',
-      inputs: ['業務質問', '社内用語', '文書関係', '評価基準'],
-      outputs: ['根拠つき回答', '本番判断できる材料'],
-      caption: 'ベクトル検索だけに頼らず、質問・用語・文書の関係と評価基準から設計します。',
-    }
-  : isAgent
-    ? {
-        label: 'AI AGENT DESIGN',
-        title: '任せる範囲と、止め方を先に決める',
-        center: 'エージェント設計',
-        inputs: ['ユースケース', '権限', '承認', '例外処理'],
-        outputs: ['安全な自動実行', '監査できるログ'],
-        caption: 'できることを増やす前に、禁止操作・人へ戻す条件・ログを設計します。',
-      }
-    : {
-        label: 'AI USE CASE DESIGN',
-        title: 'AIで効く業務を、要件と評価基準で見極める',
-        center: 'ユースケース設計',
-        inputs: ['業務フロー', '判断基準', '例外処理', '評価基準'],
-        outputs: ['動く試作品', '社内説明できる材料'],
-        caption:
-          'モデル選定より先に、どの業務をどう変え、何をもって使えると判断するかを確定します。',
-      };
+const defaultTheme = {
+  label: 'AI USE CASE DESIGN',
+  title: 'AIで効く業務を、要件と評価基準で見極める',
+  center: 'ユースケース設計',
+  inputs: ['業務フロー', '判断基準', '例外処理', '評価基準'],
+  outputs: ['動く試作品', '社内説明できる材料'],
+  caption: 'モデル選定より先に、どの業務をどう変え、何をもって使えると判断するかを確定します。',
+  closing: {
+    title: 'なぜ、作る前に決めるのか',
+    description:
+      'AI開発が止まるのは、モデルの選び間違いだけが理由ではありません。どの業務のどの手間を減らすか、何をもって使えると判断するかを先に決めておくと、動いたけれど本番に進めない、という止まり方を避けられます。決めた基準は、そのまま社内説明の材料になります。',
+  },
+};
+
+const theme = themes[serviceId] ?? defaultTheme;
 
 const process = [
   {
@@ -135,9 +199,9 @@ const process = [
       </div>
 
       <div class="mt-6 rounded-3xl border border-white/15 bg-white/10 p-5 text-white md:p-6">
-        <h3 class="text-xl font-bold">Beekleが設計から入る理由</h3>
+        <h3 class="text-xl font-bold">{theme.closing.title}</h3>
         <p class="mt-3 text-sm leading-relaxed text-white/78 md:text-base">
-          AI開発の失敗は、モデルやツールの選び間違いだけで起きるわけではありません。上流工程でユースケース、業務シナリオ、受け入れ基準、データ構造、権限、例外処理を決めておくことで、PoCがデモで終わるリスクを減らせます。Beekleは要件定義力とヒアリング力を使って、発注者が言語化しきれていない課題を整理し、実装前に「何を作れば業務が良くなり、社内で本番化を説明できるか」を明確にします。
+          {theme.closing.description}
         </p>
       </div>
     </div>
