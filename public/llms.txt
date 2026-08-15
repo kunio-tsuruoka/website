@@ -1,66 +1,54 @@
 # Beekle Co., Ltd. (Beekle株式会社)
-> 要件定義からAI駆動開発までを一つのプロセスで支援する開発会社
 
-## Company Overview
-Beekle株式会社は、日本のシステム開発会社です。自社開発のPM基盤「PM on Rails」（https://pmonrails.com）を実際の開発プロセスに組み込み、ヒアリング・議事録・既存資料から要求を整理して、ユーザーストーリー・受入条件・開発タスクへ構造化。その仕様をAIエージェントへ接続し、実装・テスト・要件更新を短いサイクルで繰り返します。Web/モバイルアプリケーション開発、AI開発、プロトタイプ・PoC開発を中心に、お客様のビジネス課題解決を支援しています。
+## Site
+- Domain: https://beekle.jp
+- Language: Japanese
+- Company location: Japan
+- Corporate profile: /company
+- Beekleは、実案件で使用しているプロジェクト管理基盤「PM on Rails」（https://pmonrails.com）の開発元です
 
-## Core Services
+## What Beekle Does
+Beekle株式会社は、要件定義からAI駆動開発までを一つのプロセスで支援する開発会社です。業務と課題を整理し、要求をユーザーストーリー・受入条件・開発タスクへ構造化。その仕様を自社開発のPM基盤「PM on Rails」でAIエージェントによる実装につなぎ、動くものを確認しながら短いサイクルで改善します。
 
-### 1. ゼロスタート（Zero Start）
-初期費用0円で検証用プロトタイプを開発するサービス。実物を確認してからPoC・MVP・本開発へ進めるため、リスクを最小化しながら仮説検証が可能。
-- URL: /prooffirst
-- 特徴: 初期費用0円、最短数日〜2週間で検証用プロトタイプ完成（PoC・MVP・本開発は有料）
+いきなり大きく作らず、初期費用0円の検証用プロトタイプ（ゼロスタート）で業務適合・要件・データ・利用者の反応を確認し、Go / No-Goを判断してからPoC・MVP・本開発へ進みます（PoC・MVP・本開発は有料）。
 
-### 2. MVP・PoC・プロトタイプ開発
-新規事業・DXを「課題・アイデア→無料プロトタイプ→PoC→MVP→本開発」の標準プロセスで検証してから本番化する主力サービス。
-- URL: /services/mvp-poc-development
+## Core Strengths (Beekleの開発方法)
+- PM on Railsによる再現性ある要件定義: 要求・ユーザーストーリー・受入条件・開発タスクを構造化し、なぜその要件かを後から追える
+- 仕様をつなぐAI駆動開発: AIが迷わず実装できる仕様を作ってから、AIエージェントにコードを書かせる。仕様の精度がAIの速度を開発の速度に変える
+- Proof-first（ゼロスタート）: 最初に巨大な仕様を固定せず、検証用プロトタイプで確かめてから進む
+- フルスタック実装力: フロントエンド、バックエンド、インフラまで一つの体制。他社で約3ヶ月停滞した開発を引き継ぎ3週間で完成させた実績
 
-### 3. 生成AI受託開発
-ChatGPT/Claude等のLLMを活用したAIアプリケーション開発。社内資料検索、問い合わせ対応、書類処理、業務自動化等。要件定義・評価設計から支援。
-- URL: /services/ai-development
+## Important Pages
+- /strengths - Beekleの開発方法。なぜ速く作っても仕様が崩れにくいのか
+- /prooffirst - Zero Start（ゼロスタート）。本開発前に検証用プロトタイプで確かめる開発の入口（初期費用0円）
+- /process - 導入の流れ。各段階でBeekleがすること・お客様にお願いすること・決まること
+- /services/mvp-poc-development - MVP・PoC・プロトタイプ開発（主力）。課題・アイデア→無料プロトタイプ→PoC→MVP→本開発
+- /services/ai-adoption - AI導入支援3プラン。業務選定、評価設計、技術判断、本番運用まで整理
+- /services/ai-development - 生成AI受託開発。要件定義・評価設計からAI開発を支援
+- /services/rag-system-development - RAGシステム構築。社内文書検索やGraphRAGの設計・開発
+- /services/internal-document-ai-search - 社内文書AI検索システム開発
+- /services/ai-chatbot-development - AIチャットボット開発
+- /services/ocr-ai-development - OCR・帳票読み取りAI開発
+- /services/ai-agent-development - AIエージェント開発
+- /services/web-mobile-development - WEBアプリ・モバイルアプリ開発。要件定義からAI駆動開発・運用まで一気通貫
+- /services/cdp-development - CDP構築・顧客データ基盤開発
+- /services/requirements-definition-support - 要件定義から伴走するシステム開発
+- /services/rfp-creation-support - RFP作成・発注準備支援
 
-### 4. RAGシステム構築・社内文書AI検索
-社内文書・過去対応を横断検索し、根拠つきで回答するナレッジ検索の構築。GraphRAG対応。
-- URL: /services/rag-system-development
-- URL: /services/internal-document-ai-search
-
-### 5. Web/モバイルアプリ開発
-フルスタック開発サービス。要件定義からデザイン、AI駆動開発、運用まで一貫してサポート。
-- URL: /services/web-mobile-development
-
-### 6. CDP構築・顧客データ基盤開発
-BigQueryを中心としたデータ統合基盤の構築。BIダッシュボード、顧客分析環境の整備。
-- URL: /services/cdp-development
-
-## Strengths (Beekleの開発方法)
-1. **PM on Railsによる再現性ある要件定義**: 自社開発のPM基盤で要求・ユーザーストーリー・受入条件・開発タスクを構造化。なぜその要件かを後から追える
-2. **仕様をつなぐAI駆動開発**: AIが迷わず実装できる仕様を作ってから、AIエージェントにコードを書かせる。仕様の精度がAIの速度を開発の速度に変える
-3. **Proof-first（ゼロスタート）**: 最初に巨大な仕様を固定せず、初期費用0円の検証用プロトタイプで確かめてから進む
-4. **フルスタック実装力**: フロントエンド、バックエンド、インフラまで一つの体制。他社難航案件を引き継ぎ3週間で完成させた実績
-- 詳細: /strengths
-
-## Content
-- /column - システム開発を成功させるための発注者向けコラム記事
-- /qa - 一問一答（よくある質問）
-- /testimonial - お客様の声
+## Content Sections
+- /column - システム開発、AI導入、要件定義、見積もり、発注、プロジェクト管理に関する発注者向けコラム
+- /knowledge - Beekleが実務で使う要件定義・設計手法などのナレッジ
+- /qa - よくある質問（検証用プロトタイプ・PoC・MVPの違い、見積もり、機密情報の扱いなど）
+- /testimonial - お客様の声（要件定義・優先順位づけ・推進など、進め方への評価で分類）
 - /case-studies - 導入事例
 
 ## Tools
+- /tools - 開発発注・要件整理を支援する無料ツール一覧
+- /tools/flow-mapper - 業務フロー整理ツール
 - /tools/story-builder - ユーザーストーリー作成支援ツール
-- /tools/scope-manager - スコープ管理（FM法）支援ツール
+- /tools/scope-manager - スコープ管理支援ツール
+- /tools/rfp-builder - RFP作成支援ツール
 - /checklists/dev-process - 開発プロセスチェックリスト
 
-## Pillar Articles (主要ガイド)
-- /column/project-management-complete-guide - プロジェクトマネジメント完全ガイド
-- /column/estimate-complete-guide - システム開発見積もり完全ガイド
-- /column/communication-complete-guide - コミュニケーション完全ガイド
-
 ## Contact
-- URL: /contact
-- 無料相談を随時受付中
-
-## Location
-日本
-
-## Language
-日本語（Japanese）
+- /contact - 業務課題の相談。要件が固まっていない段階、複数社比較中でも相談可
