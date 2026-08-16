@@ -32,6 +32,9 @@ const TARGETS = {
   'graphrag-knowledge-search': 'RAG_SERVICE_BRIDGE',
   'rag-evaluation': 'RAG_SERVICE_BRIDGE',
   'how-to-build-knowledge-graph-agent': 'RAG_SERVICE_BRIDGE',
+  // 2026-08-17 ARTICLE-P0-01: Featured記事のGSC監査で本文サービスブリッジ皆無と判明した2本
+  'web-system-cost-by-scale': 'WEB_MOBILE_SERVICE_BRIDGE',
+  'project-management-complete-guide': 'REQUIREMENTS_SERVICE_BRIDGE',
 };
 
 const textOf = (s) =>
