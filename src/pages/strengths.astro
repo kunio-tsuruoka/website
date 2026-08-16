@@ -9,8 +9,8 @@ import Layout from '../layouts/layout.astro';
 ---
 
 <Layout
-  title="Beekleの強み | Beekle"
-  description="Beekleの強みは、自社開発のPM基盤「PM on Rails」による再現性ある要件定義と、その仕様をAIエージェントへ接続するAI駆動開発。要求整理から実装・テスト・要件更新までを短いサイクルで繰り返します。"
+  title="Beekleの開発方法（強み）| Beekle"
+  description="なぜ速く作っても、仕様が崩れないのか。業務理解→ユースケース→受入条件→テスト→AI駆動実装まで、自社開発のPM基盤「PM on Rails」で要求と実装をつないで進めるBeekleの開発方法を説明します。"
 >
   <JsonLd
     slot="head"
@@ -27,9 +27,9 @@ import Layout from '../layouts/layout.astro';
     type="webPage"
     data={{
       pageType: 'AboutPage',
-      name: 'Beekleの強み | Beekle',
+      name: 'Beekleの開発方法（強み）| Beekle',
       description:
-        'Beekleの強みは、自社開発のPM基盤「PM on Rails」による再現性ある要件定義と、その仕様をAIエージェントへ接続するAI駆動開発。要求整理から実装・テスト・要件更新までを短いサイクルで繰り返します。',
+        'なぜ速く作っても、仕様が崩れないのか。業務理解→ユースケース→受入条件→テスト→AI駆動実装まで、自社開発のPM基盤「PM on Rails」で要求と実装をつないで進めるBeekleの開発方法を説明します。',
       url: 'https://beekle.jp/strengths',
     }}
   />
@@ -37,9 +37,46 @@ import Layout from '../layouts/layout.astro';
   <main class="pt-20">
     <!-- Hero Section -->
     <PageHero
-      title="Beekleの強み"
-      subtitle="自社開発のPM基盤「PM on Rails」で要求を実装可能な仕様へ構造化し、その仕様をAIエージェントにつないで高速に実装・改善する"
+      title="Beekleの開発方法"
+      subtitle="なぜ速く作っても、仕様が崩れないのか。要求から実装・テストまでを一つながりに管理する、Beekleの開発の進め方を説明します。"
     />
+
+    <!-- 要求→実装のトレーサビリティ -->
+    <section class="bg-white py-10 md:py-14">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="rounded-3xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
+          <p class="text-sm font-bold text-primary-500">要求から実装までのトレーサビリティ</p>
+          <div class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-3">
+            {
+              [
+                '業務理解',
+                'ユースケース',
+                'Gherkin / BDD',
+                '受入条件',
+                'DB・API設計',
+                '非機能要件',
+                'テスト',
+                'AI駆動実装',
+              ].map((step, i, arr) => (
+                <>
+                  <span class="rounded-full bg-white border border-neutral-200 px-4 py-2 text-sm font-semibold text-navy-950">
+                    {step}
+                  </span>
+                  {i < arr.length - 1 && (
+                    <svg class="h-4 w-4 flex-none text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  )}
+                </>
+              ))
+            }
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-neutral-600">
+            この一連の流れを、自社開発のPM基盤「PM on Rails」の上で管理しながら、実際の開発プロジェクトで毎日運用しています。だから、AIエージェントで速く実装しても、要求と実装のつながりが切れません。
+          </p>
+        </div>
+      </div>
+    </section>
 
     <!-- 強み1: 要件定義力 -->
     <Section variant="white" padding="lg" decoration="blursPurple">
@@ -901,6 +938,14 @@ import Layout from '../layouts/layout.astro';
                 だから他社が頓挫した案件も立て直せるのです。
               </p>
             </div>
+            <p class="mt-6">
+              <a href="/case-studies" class="inline-flex min-h-[44px] items-center font-semibold text-primary-500 hover:text-primary-600">
+                この進め方で作った導入事例を見る
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </p>
           </div>
         </Card>
       </div>
