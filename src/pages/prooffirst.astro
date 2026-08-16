@@ -5,16 +5,16 @@ import Layout from '../layouts/layout.astro';
 ---
 
 <Layout
-  title="ゼロスタートとは｜初期費用0円のプロトタイプ無料体験で発注前に動くシステムを試す | Beekle"
-  description="ゼロスタートとは、Beekleの「プロトタイプ無料体験」サービス。初期費用0円で動くシステムを試せる、新しいシステム発注の形です。見積書だけで判断する不安を解消し、実物を確認してから本契約を決められます。中堅企業のDX担当者向け。"
+  title="本開発前に動くプロトタイプで確かめる｜Zero Start | Beekle"
+  description="Zero Startは、本開発の前に検証用プロトタイプを作り、業務適合・要件・データ・利用者の反応を実物で確認するBeekleの開発入口です。確認結果をもとにGo / No-Goを判断し、必要な場合のみPoC・MVP・本開発へ進みます。"
 >
   <JsonLd
     slot="head"
     type="service"
     data={{
-      serviceName: 'プロトタイプ無料体験（ゼロスタート）',
+      serviceName: 'ゼロスタート（Zero Start）',
       serviceDescription:
-        '初期費用0円で動くプロトタイプを体験してから本契約を決められるサービス。見積書と提案資料だけで判断を迫られる不安を解消します。',
+        '本開発の前に検証用プロトタイプを作り、業務適合・要件・データ・利用者の反応を実物で確認する開発の入口。確認結果をもとにGo / No-Goを判断し、必要な場合のみPoC・MVP・本開発へ進みます。',
       url: 'https://beekle.jp/prooffirst',
       serviceType: 'システム開発プロトタイプ作成',
     }}
@@ -61,18 +61,18 @@ import Layout from '../layouts/layout.astro';
               Beekle <span class="opacity-50 mx-1">×</span> techbeans <span class="opacity-50 mx-1">×</span> AmpTech
             </span>
 
-            <h1 class="text-[1.75rem] sm:text-3xl md:text-4xl lg:text-[2.5rem] xl:text-5xl font-bold leading-[1.2] text-accent-950 mb-4 tracking-tight whitespace-nowrap">
-              まず、動くものを見よう。
+            <h1 class="text-[1.75rem] sm:text-3xl md:text-4xl lg:text-[2.5rem] xl:text-5xl font-bold leading-[1.25] text-accent-950 mb-4 tracking-tight">
+              本開発を発注する前に、<br />動くもので確かめる。
             </h1>
 
-            <p class="text-2xl md:text-3xl lg:text-[2.25rem] font-bold text-accent-950 mb-6 leading-tight">
-              話すより、<span class="text-primary-500">Proof</span><span class="text-primary-500 text-xl md:text-2xl align-baseline">（証拠）</span>を。
+            <p class="text-lg md:text-xl font-bold text-accent-950 mb-6 leading-tight">
+              話すより、<span class="text-primary-500">Proof</span><span class="text-primary-500 text-sm md:text-base align-baseline">（証拠）</span>を。
             </p>
 
             <p class="text-sm md:text-base text-neutral-700 leading-relaxed mb-8 max-w-xl">
-              不確実な見積もり、長い要件定義、すれ違う認識のギャップ。<br class="hidden md:block"/>
-              それ、すべて「まず動くものを見る」ことで解決できます。<br class="hidden md:block"/>
-              <span class="text-primary-500 font-semibold">ゼロスタート</span>は、初期費用<span class="text-primary-500 font-bold">0円</span>でプロトタイプを開発。動くものを見てから、次の一手を決められます。
+              不確実な見積もり、すれ違う認識、作ってから気づく要件のズレ。<br class="hidden md:block"/>
+              その多くは、本開発の前に「動くものを見る」ことで小さくできます。<br class="hidden md:block"/>
+              <span class="text-primary-500 font-semibold">ゼロスタート</span>は、初期費用<span class="text-primary-500 font-bold">0円</span>で検証用プロトタイプを開発。業務適合・要件・データ・利用者の反応を実物で確認し、Go / No-Goを判断してから、PoC・MVP・本開発へ進めます。
             </p>
 
             <a
@@ -102,91 +102,41 @@ import Layout from '../layouts/layout.astro';
                 <span class="w-2.5 h-2.5 rounded-full bg-red-400/80"></span>
                 <span class="w-2.5 h-2.5 rounded-full bg-yellow-400/80"></span>
                 <span class="w-2.5 h-2.5 rounded-full bg-green-400/80"></span>
-                <span class="ml-3 text-[11px] font-semibold text-neutral-500">ダッシュボード</span>
+                <span class="ml-3 text-[11px] font-semibold text-neutral-500">検証チェックリスト（イメージ）</span>
               </div>
 
-              <div class="p-4 space-y-3">
-                {/* KPI tiles */}
-                <div class="grid grid-cols-2 gap-2.5">
-                  <div class="rounded-lg bg-primary-50/70 p-2.5">
-                    <p class="text-[9px] text-neutral-500 mb-0.5">売上 月次</p>
-                    <p class="text-sm md:text-base font-bold text-accent-950">¥24,560,400</p>
-                    <p class="text-[9px] text-green-600 font-semibold">▲ +24.5%</p>
+              <div class="p-4 space-y-2.5">
+                {[
+                  { label: '業務フロー適合', note: '実際の手順に当てはめて確認', status: '確認済み', done: true },
+                  { label: '入力データ確認', note: '実データ・サンプルで動作確認', status: '確認済み', done: true },
+                  { label: '利用者レビュー', note: '現場の担当者が実際に触る', status: '進行中', done: false },
+                  { label: 'Go / No-Go 判断', note: '本開発へ進む価値があるか', status: 'これから', done: false },
+                ].map((item) => (
+                  <div class="flex items-center gap-3 rounded-lg border border-neutral-100 bg-white px-3 py-2.5">
+                    <span class={`flex h-6 w-6 flex-none items-center justify-center rounded-full ${item.done ? 'bg-primary-500' : 'border-2 border-neutral-300 bg-white'}`}>
+                      {item.done && (
+                        <svg class="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+                        </svg>
+                      )}
+                    </span>
+                    <div class="min-w-0 flex-1">
+                      <p class="text-xs md:text-sm font-bold text-accent-950 leading-tight">{item.label}</p>
+                      <p class="text-[10px] md:text-[11px] text-neutral-500 leading-tight mt-0.5">{item.note}</p>
+                    </div>
+                    <span class={`flex-none rounded-full px-2 py-0.5 text-[10px] font-semibold ${item.done ? 'bg-primary-50 text-primary-600' : 'bg-neutral-100 text-neutral-500'}`}>
+                      {item.status}
+                    </span>
                   </div>
-                  <div class="rounded-lg bg-secondary-50/70 p-2.5">
-                    <p class="text-[9px] text-neutral-500 mb-0.5">コスト削減効果</p>
-                    <p class="text-sm md:text-base font-bold text-accent-950">¥5,240,000</p>
-                    <p class="text-[9px] text-green-600 font-semibold">▲ +32.1%</p>
-                  </div>
-                </div>
-
-                {/* Chart */}
-                <div class="rounded-lg border border-neutral-100 p-3">
-                  <p class="text-[10px] font-semibold text-neutral-700 mb-1">ROI 推移</p>
-                  <svg class="w-full h-24" viewBox="0 0 220 90" fill="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="hf" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#00c4cc" stop-opacity="0.3"/>
-                        <stop offset="100%" stop-color="#00c4cc" stop-opacity="0"/>
-                      </linearGradient>
-                    </defs>
-                    {/* grid */}
-                    <line x1="20" y1="15" x2="220" y2="15" stroke="#E5E7EB" stroke-width="0.4" stroke-dasharray="2 2"/>
-                    <line x1="20" y1="40" x2="220" y2="40" stroke="#E5E7EB" stroke-width="0.4" stroke-dasharray="2 2"/>
-                    <line x1="20" y1="65" x2="220" y2="65" stroke="#E5E7EB" stroke-width="0.4" stroke-dasharray="2 2"/>
-                    <text x="14" y="17" font-size="6" fill="#9CA3AF" text-anchor="end">80%</text>
-                    <text x="14" y="42" font-size="6" fill="#9CA3AF" text-anchor="end">50%</text>
-                    <text x="14" y="67" font-size="6" fill="#9CA3AF" text-anchor="end">20%</text>
-                    <path d="M30 70 L62 64 L94 50 L126 38 L158 25 L190 18 L218 10 L218 80 L30 80 Z" fill="url(#hf)"/>
-                    <path d="M30 70 L62 64 L94 50 L126 38 L158 25 L190 18 L218 10" stroke="#00c4cc" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="30" cy="70" r="1.6" fill="#00c4cc"/>
-                    <circle cx="62" cy="64" r="1.6" fill="#00c4cc"/>
-                    <circle cx="94" cy="50" r="1.6" fill="#00c4cc"/>
-                    <circle cx="126" cy="38" r="1.6" fill="#00c4cc"/>
-                    <circle cx="158" cy="25" r="1.6" fill="#00c4cc"/>
-                    <circle cx="190" cy="18" r="2" fill="#00c4cc"/>
-                    <circle cx="218" cy="10" r="2.5" fill="#3D4DB7"/>
-                    <text x="30" y="88" font-size="6" fill="#9CA3AF" text-anchor="middle">2月</text>
-                    <text x="62" y="88" font-size="6" fill="#9CA3AF" text-anchor="middle">3月</text>
-                    <text x="94" y="88" font-size="6" fill="#9CA3AF" text-anchor="middle">4月</text>
-                    <text x="126" y="88" font-size="6" fill="#9CA3AF" text-anchor="middle">5月</text>
-                    <text x="158" y="88" font-size="6" fill="#9CA3AF" text-anchor="middle">6月</text>
-                    <text x="190" y="88" font-size="6" fill="#9CA3AF" text-anchor="middle">7月</text>
-                  </svg>
-                </div>
+                ))}
+                <p class="text-[10px] text-neutral-400 pt-1">※ 画面はイメージです</p>
               </div>
             </div>
 
-            {/* Floating badge: プロトタイプ達成 75% */}
+            {/* Floating badge: 実物で判断 */}
             <div class="absolute -top-3 -right-3 sm:-right-6 bg-white rounded-2xl shadow-medium px-3 py-2 border border-primary-100/80 animate-float">
-              <p class="text-[9px] text-neutral-500 leading-none mb-1">プロトタイプ達成</p>
-              <p class="text-base sm:text-lg font-bold text-primary-500 leading-none">75<span class="text-xs">%</span></p>
-            </div>
-
-            {/* Floating badge: AI予測モデル 精度 92% */}
-            <div class="absolute top-1/2 -right-3 sm:-right-8 -translate-y-1/2 bg-white rounded-2xl shadow-medium px-3 py-2 border border-primary-100/80 animate-float-delay">
-              <div class="flex items-center gap-2">
-                <span class="w-6 h-6 rounded-full bg-secondary-100 flex items-center justify-center text-secondary-600 flex-shrink-0">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.091 3.091Z"/>
-                  </svg>
-                </span>
-                <div>
-                  <p class="text-[9px] text-neutral-500 leading-none mb-0.5">AI予測モデル</p>
-                  <p class="text-xs sm:text-sm font-bold text-accent-950 leading-none">精度 <span class="text-secondary-600">92%</span></p>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating badge: ユーザー満足度 4.8/5 */}
-            <div class="absolute bottom-16 -left-2 sm:-left-6 bg-white rounded-2xl shadow-medium px-3 py-2 border border-secondary-100/80 animate-float">
-              <div class="flex items-center gap-2">
-                <span class="text-highlight-500">★</span>
-                <div>
-                  <p class="text-[9px] text-neutral-500 leading-none mb-0.5">ユーザー満足度</p>
-                  <p class="text-xs sm:text-sm font-bold text-accent-950 leading-none">4.8<span class="text-[10px] text-neutral-400 font-normal">/5</span></p>
-                </div>
-              </div>
+              <p class="text-[9px] text-neutral-500 leading-none mb-1">本開発の前に</p>
+              <p class="text-xs sm:text-sm font-bold text-primary-500 leading-none">実物でGo / No-Go</p>
             </div>
 
             {/* Floating yellow burst: 初期費用 0円 */}
@@ -254,7 +204,7 @@ import Layout from '../layouts/layout.astro';
           {[
             {
               title: '実物で合意形成',
-              desc: 'まず動くプロトタイプを見て、関係者全員で実物の合意形成。認識のズレをゼロにします。',
+              desc: 'まず動くプロトタイプを見て、関係者全員で実物の合意形成。認識のズレを、実装が大きくなる前に見つけます。',
               iconBg: 'bg-primary-100', iconColor: 'text-primary-500',
               icon: 'M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z',
             },
@@ -281,6 +231,25 @@ import Layout from '../layouts/layout.astro';
               <p class="text-xs md:text-sm text-neutral-700 leading-relaxed">{c.desc}</p>
             </div>
           ))}
+        </div>
+
+        {/* 本開発前に確認する4つのこと */}
+        <div class="max-w-5xl mx-auto mt-10 md:mt-12">
+          <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-accent-950 mb-5">本開発前に確認する4つのこと</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            {[
+              { n: '01', title: '業務適合', desc: '実際の業務フローに当てはめ、使えるかを確認する。' },
+              { n: '02', title: '要件', desc: '画面や挙動を見ながら、要求と実装のズレを見つける。' },
+              { n: '03', title: 'データ・技術', desc: '必要なデータが揃うか、期待する処理が成立するかを確認する。' },
+              { n: '04', title: '投資判断', desc: '検証結果をもとに、本開発へ進む価値があるかを判断する。' },
+            ].map((c) => (
+              <div class="bg-white rounded-2xl p-4 md:p-5 shadow-soft border border-neutral-100">
+                <p class="text-xs font-bold text-primary-500">{c.n}</p>
+                <p class="mt-1.5 text-sm md:text-base font-bold text-accent-950">{c.title}</p>
+                <p class="mt-2 text-xs md:text-sm text-neutral-700 leading-relaxed">{c.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* 要件定義との関係 */}
@@ -575,13 +544,13 @@ import Layout from '../layouts/layout.astro';
 
           <div class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 relative">
             {[
-              { n: 1, title: 'お問い合わせ・\nヒアリング', desc: '課題やアイデアをヒアリング、目的を明確にします。',
+              { n: 1, title: '業務課題整理・\n検証仮説', desc: '課題をヒアリングし、何を検証すべきかを決めます。',
                 icon: 'M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z' },
               { n: 2, title: 'ゼロスタート開発\n（初期費用0円）', desc: '最短数週間が目安。0円でここまで体験できます。',
                 icon: 'm6.75 7.5 3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z' },
-              { n: 3, title: '実機テスト・\n効果検証', desc: '実環境でテストし、効果をデータで検証。レポートをご提供します。',
+              { n: 3, title: '実業務での確認・\n効果検証', desc: '実環境でテストし、業務適合と効果を確認。結果を整理してご提供します。',
                 icon: 'M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25Z' },
-              { n: 4, title: '導入判断・\n本開発へ', desc: '結果をもとに本契約。ご納得いただいたら本開発へ進みます。',
+              { n: 4, title: 'Go / No-Go\n判断', desc: '検証結果をもとに進む・見送るを判断。進む場合はPoC・MVP・本開発へ。',
                 icon: 'M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z' },
               { n: 5, title: '運用開始・\n継続改善', desc: '安定運用に加え、事業成長をサポートします。',
                 icon: 'M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z' },
@@ -671,6 +640,54 @@ import Layout from '../layouts/layout.astro';
               </div>
             </div>
             <p class="text-[11px] md:text-xs text-neutral-500 mt-3">※ 期間（最短数日〜数週間）は検証用プロトタイプの目安です。規模・要件により変動し、本番開発の確定納期とは異なります。</p>
+          </div>
+        </div>
+
+        {/* 向いている / 向いていない案件 */}
+        <div class="max-w-5xl mx-auto mt-6 md:mt-8">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="bg-white rounded-2xl p-5 md:p-6 border border-secondary-500/15 shadow-soft">
+              <h4 class="text-base md:text-lg font-bold text-secondary-600 mb-3">ゼロスタートが向いている案件</h4>
+              <ul class="space-y-2 text-xs md:text-sm text-neutral-700">
+                {[
+                  '実際の業務課題がある',
+                  '検証担当者が参加できる',
+                  '検証用のデータやサンプルを用意できる',
+                  '本開発前に確かめたい仮説がある',
+                  '有料開発へ進む可能性がある',
+                ].map((t) => (
+                  <li class="flex items-start gap-2">
+                    <span class="mt-0.5 w-4 h-4 rounded-full bg-secondary-500 flex items-center justify-center flex-shrink-0">
+                      <svg class="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+                      </svg>
+                    </span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div class="bg-white rounded-2xl p-5 md:p-6 border border-neutral-200 shadow-soft">
+              <h4 class="text-base md:text-lg font-bold text-neutral-600 mb-3">ゼロスタートが向いていない案件</h4>
+              <ul class="space-y-2 text-xs md:text-sm text-neutral-700">
+                {[
+                  '完成品を無料で納品してほしい',
+                  '検証目的がなく、とりあえず作ってほしい',
+                  '利用者が検証に参加できない',
+                  '本開発の意思がなく、無料制作だけを希望',
+                  '本番品質を初回から要求する',
+                ].map((t) => (
+                  <li class="flex items-start gap-2">
+                    <span class="mt-0.5 w-4 h-4 rounded-full bg-neutral-300 flex items-center justify-center flex-shrink-0">
+                      <svg class="w-2.5 h-2.5 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+                      </svg>
+                    </span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
@@ -831,6 +848,24 @@ import Layout from '../layouts/layout.astro';
     </section>
   </main>
 </Layout>
+
+<script>
+  import { trackEvent } from '@/lib/analytics';
+
+  // Zero Start専用の計測 (tasks-v3 TASK-P0-01 Analytics)。
+  // cta_click（layout.astroのグローバル委譲）に加えて、ファネル分析用の専用イベントを発火する。
+  trackEvent('zero_start_view', { page_path: window.location.pathname });
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const el = target.closest<HTMLElement>('[data-cta-source^="prooffirst"]');
+    if (!el) return;
+    trackEvent('zero_start_cta_click', {
+      source: el.getAttribute('data-cta-source') || '',
+      cta: el.getAttribute('data-cta-id') || '',
+    });
+  });
+</script>
 
 <style>
   @keyframes float {

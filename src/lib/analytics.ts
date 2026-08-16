@@ -21,6 +21,12 @@ export function trackCtaClick({ source, cta, meta }: CtaClickParams): void {
   window.gtag('event', 'cta_click', payload);
 }
 
+// 任意のGA4イベントを発火する汎用ヘルパ（zero_start_view 等のページ固有イベント用）。
+export function trackEvent(name: string, params: Record<string, string> = {}): void {
+  if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
+  window.gtag('event', name, params);
+}
+
 type ToolEventName =
   | 'tool_start'
   | 'tool_save'
