@@ -71,7 +71,7 @@ export const HeroSection = () => {
               data-cta-id="contact"
               className="page-cta group inline-flex items-center justify-center rounded-full bg-primary-500 px-8 py-4 text-lg font-semibold text-white shadow-soft transition-all hover:bg-primary-600 hover:shadow-medium"
             >
-              無料相談で整理する
+              業務課題を相談する
               <motion.div animate={{ x: isHovered ? 5 : 0 }} transition={{ duration: 0.2 }}>
                 <ArrowRight className="ml-2 h-5 w-5" />
               </motion.div>
