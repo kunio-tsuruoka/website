@@ -14,10 +14,10 @@
 /service/cdp                       /services/cdp-development         301
 /service/cdp/                      /services/cdp-development         301
 /cdp                               /services/cdp-development         301
-/service/overseas-website          /services                         301
-/service/overseas-website/         /services                         301
-/services/global-service           /services                         301
-/services/global-service/          /services                         301
+/service/overseas-website          /                                 301
+/service/overseas-website/         /                                 301
+/services/global-service           /                                 301
+/services/global-service/          /                                 301
 /service/application-development   /services/web-mobile-development  301
 /service/application-development/  /services/web-mobile-development  301
 /service/in-house-support          /services/web-mobile-development  301
@@ -27,11 +27,15 @@
 /service/prototype                 /services/web-mobile-development  301
 /service/prototype/                /services/web-mobile-development  301
 
+# ノーコード開発サービス終了（2026-08-16）→ MVP・PoC開発へ統合
+/services/no-code-development   /services/mvp-poc-development  301
+/services/no-code-development/  /services/mvp-poc-development  301
+
 # 削除された新形式 services パス
-/services/prototype-poc   /services  301
-/services/prototype-poc/  /services  301
-/services/ai-b2b-website   /services  301
-/services/ai-b2b-website/  /services  301
+/services/prototype-poc   /services/mvp-poc-development  301
+/services/prototype-poc/  /services/mvp-poc-development  301
+/services/ai-b2b-website   /services/web-mobile-development  301
+/services/ai-b2b-website/  /services/web-mobile-development  301
 
 # 旧 development-issues ページ（削除済み）
 /development-issues/*  /case-studies  301

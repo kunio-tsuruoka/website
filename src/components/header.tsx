@@ -18,10 +18,10 @@ const aiServiceItems = {
 };
 
 const serviceItems = [
-  { label: '要件定義から伴走するシステム開発', href: '/services/requirements-definition-support' },
   { label: 'MVP・PoC・プロトタイプ開発', href: '/services/mvp-poc-development' },
-  { label: 'RFP作成・発注準備支援', href: '/services/rfp-creation-support' },
+  { label: '要件定義から伴走するシステム開発', href: '/services/requirements-definition-support' },
   { label: 'WEBアプリ・モバイルアプリ開発', href: '/services/web-mobile-development' },
+  { label: 'RFP作成・発注準備支援', href: '/services/rfp-creation-support' },
   { label: 'CDP構築・顧客データ基盤開発', href: '/services/cdp-development' },
 ];
 

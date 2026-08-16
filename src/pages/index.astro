@@ -10,7 +10,7 @@ import JsonLd from '../components/seo/json-ld.astro';
 import { ServiceCard } from '../components/service-card';
 import { services } from '../data/service';
 
-const TOP_SERVICE_IDS = ['ai-development', 'web-mobile-development', 'cdp-development'];
+const TOP_SERVICE_IDS = ['mvp-poc-development', 'ai-development', 'web-mobile-development'];
 const topServices = services.filter((s) => TOP_SERVICE_IDS.includes(s.id));
 import Layout from '../layouts/layout.astro';
 import { type MicroCMSEnv, getColumns } from '../lib/microcms';
@@ -160,14 +160,30 @@ try {
           <span class="number-label">02</span>
           <span class="section-label ml-4">WHAT WE SOLVE</span>
           <h2 class="mt-4 text-4xl font-bold text-navy-950 lg:text-5xl">
-            相談が多いのは、この3つです。
+            相談が多いのは、この4つです。
           </h2>
           <p class="mx-auto mt-4 max-w-3xl text-lg leading-relaxed text-neutral-600">
-            どれも最初から大きな開発に入るより、業務の一部を動く形にしてから判断した方が失敗を減らせます。
+            どれも最初から大きな開発に入るより、まず動く形にしてから判断した方が失敗を減らせます。
           </p>
         </div>
 
-        <div class="grid gap-6 lg:grid-cols-3">
+        <div class="grid gap-6 md:grid-cols-2">
+          <a href="/services/mvp-poc-development" class="group block">
+            <div class="card-base card-hover h-full p-8">
+              <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary-50 text-lg font-bold text-primary-500">
+                MVP
+              </span>
+              <h3 class="mt-5 text-2xl font-bold leading-snug text-navy-950">
+                新規事業・DXをまず検証したい
+              </h3>
+              <p class="mt-4 leading-relaxed text-neutral-600">
+                アイデア段階から、無料プロトタイプ→PoC→MVP→本開発へ。大きく作る前に、小さく確かめてから投資を判断できます。
+              </p>
+              <p class="mt-5 font-semibold text-primary-500 group-hover:text-primary-600">
+                MVP・PoC開発を見る
+              </p>
+            </div>
+          </a>
           <a href="/services/ai-development" class="group block">
             <div class="card-base card-hover h-full p-8">
               <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary-50 text-xl font-bold text-primary-500">
@@ -236,7 +252,7 @@ try {
             Beekleが<span class="text-primary-500">作れるもの</span>
           </h2>
           <p class="text-xl text-neutral-600 max-w-3xl mx-auto">
-            AI・Webアプリ・モバイルアプリ・顧客データ基盤まで。最初に業務課題を絞り、必要な機能から動く形にします。
+            MVP・PoCでの検証から、AI・Webアプリ・モバイルアプリの本開発まで。最初に業務課題を絞り、必要な機能から動く形にします。
           </p>
         </div>
 
