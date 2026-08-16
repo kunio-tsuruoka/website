@@ -2,6 +2,7 @@
 import { AiOcrDemo } from '@/features/ai-ocr-demo';
 import { Header } from '../../components/header';
 import JsonLd from '../../components/seo/json-ld.astro';
+import DemoBusinessBridge from '../../components/ui/demo-business-bridge.astro';
 import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import Layout from '../../layouts/layout.astro';
@@ -42,6 +43,27 @@ const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
         </div>
       </div>
     </section>
+
+    <DemoBusinessBridge
+      useCases={[
+        '請求書・発注書の入力自動化',
+        '経費精算のレシート処理',
+        '申込書・紙帳票のデータ化',
+        '商品カタログの構造化とマスタ照合',
+        '紙書類のアーカイブ検索化',
+      ]}
+      productionNeeds={[
+        '確信度に応じた人のレビュー画面',
+        '会計・基幹システムへの連携（API / CSV）',
+        '取引先ごとの帳票フォーマット差への対応',
+        '権限・監査ログ',
+        '読み取りエラー時の例外運用',
+      ]}
+      serviceHref="/services/ocr-ai-development"
+      serviceLabel="OCR・帳票読み取りAIを見る"
+      source="demo-ocr-bridge"
+      intent="ocr-ai-development"
+    />
 
     <FloatingCTA source="tool-ai-ocr-demo" />
   </main>

@@ -1,4 +1,6 @@
 ---
+// 「資料置き場」ではなく、購買段階ごとに必要な判断材料へ案内するHub (tasks-v3 TASK-P1-02 / [B2B-1])。
+// 発注準備キットは主役にしない（Hero・先頭カテゴリに置かない）。
 import { Header } from '../components/header';
 import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
@@ -18,59 +20,94 @@ type Resource = {
 
 type ResourceCategory = {
   heading: string;
+  lead: string;
   resources: Resource[];
 };
 
 const categories: ResourceCategory[] = [
   {
-    heading: 'サービス資料',
+    heading: '課題を整理する',
+    lead: '何に困っていて、何を変えたいのか。発注の前に課題を言葉にするための材料です。',
     resources: [
       {
-        title: 'ゼロスタート開発 サービスデック',
+        title: '発注者向けコラム',
         description:
-          '初期費用0円で検証用プロトタイプを体験してから判断する仕組み・対象企業・進行プロセスをまとめたサービス資料です（フォーム入力後にダウンロード）。',
-        landingUrl: '/downloads/zero-start?ref=materials',
-        ctaLabel: '詳細・ダウンロード',
-        ctaId: 'download-zero-start',
+          '要件定義・見積もり・費用相場・AI開発まで、発注者の目線で判断材料を解説しています。',
+        landingUrl: '/column',
+        ctaLabel: 'コラムを見る',
+        ctaId: 'column',
       },
-    ],
-  },
-  {
-    heading: '無料ツール・デモ',
-    resources: [
+      {
+        title: '要件定義の完全ガイド',
+        description:
+          '要求と要件の違いから、進め方・テンプレートまで。発注前に読まれている定番記事です。',
+        landingUrl: '/column/requirements-definition-complete-guide',
+        ctaLabel: '記事を読む',
+        ctaId: 'column-requirements-guide',
+      },
       {
         title: '発注準備キット（無料ツール）',
         description:
-          'RFP作成、スコープ管理、ユーザーストーリー整理、業務フロー可視化。発注前の要求整理を自分で進められる無料ツール群です（会員登録不要）。',
+          'RFP作成、スコープ整理、業務フロー可視化。自分で要求を整理したい方向けの無料ツール群です。',
         landingUrl: '/tools',
         ctaLabel: 'ツールを見る',
         ctaId: 'tools-index',
       },
+    ],
+  },
+  {
+    heading: '技術・選択肢を理解する',
+    lead: 'AI・RAGで何ができて、何が難しいのか。技術の当たりをつけるための材料です。',
+    resources: [
       {
         title: 'ブラウザで触れるAIデモ',
         description:
-          'AIナレッジ相談、領収書OCRなど、導入前に「実際の挙動」を5分で体感できるデモを公開しています。',
+          'AIナレッジ相談（RAG）、領収書OCRなど、導入前に「実際の挙動」を5分で体感できます。',
         landingUrl: '/demos',
         ctaLabel: 'デモを試す',
         ctaId: 'demos-index',
       },
+      {
+        title: '生成AI導入の完全ガイド',
+        description:
+          '何から始めるか、セキュリティ、社内説得まで。生成AI導入を進める側の論点を一冊にまとめた記事です。',
+        landingUrl: '/column/genai-introduction-complete-guide',
+        ctaLabel: '記事を読む',
+        ctaId: 'column-genai-guide',
+      },
+      {
+        title: 'ナレッジグラフ・RAGは発注者に何の得があるか',
+        description: 'RAGだけのAIが答えられない問いと、その解決を発注者目線で解説しています。',
+        landingUrl: '/column/knowledge-graph-rag-business',
+        ctaLabel: '記事を読む',
+        ctaId: 'column-kg-rag',
+      },
     ],
   },
   {
-    heading: '事例・開発基盤',
+    heading: '開発方法を確認する',
+    lead: 'Beekleがどう作るのか。発注前の不確実性をどう減らすのかを確認できます。',
     resources: [
       {
-        title: '導入事例',
+        title: 'ゼロスタート開発 サービスデック',
         description:
-          '他社難航案件のリカバリー、新規事業の短期立ち上げ、AI・データ基盤構築など、実案件の課題と成果をまとめています。',
-        landingUrl: '/case-studies',
-        ctaLabel: '事例を見る',
-        ctaId: 'case-studies',
+          '初期費用0円で検証用プロトタイプを作り、実物を確認してから判断する仕組みをまとめた資料です（フォーム入力後にダウンロード）。',
+        landingUrl: '/downloads/zero-start?ref=materials',
+        ctaLabel: '詳細・ダウンロード',
+        ctaId: 'download-zero-start',
+      },
+      {
+        title: 'Beekleの開発方法',
+        description:
+          'なぜ速く作っても仕様が崩れにくいのか。要求から実装・テストまでを一つながりに管理する進め方の説明です。',
+        landingUrl: '/strengths',
+        ctaLabel: '開発方法を見る',
+        ctaId: 'strengths',
       },
       {
         title: 'PM on Rails（自社開発のPM基盤）',
         description:
-          '要求・要件からユーザーストーリー・受入条件・開発タスクまでを構造化し、AIエージェントによる実装につなげるプロジェクト管理基盤。Beekleの開発プロセスの中核です。',
+          '要求・要件からユーザーストーリー・受入条件・開発タスクまでを構造化し、AIエージェントによる実装につなげるプロジェクト管理基盤です。',
         landingUrl: 'https://pmonrails.com',
         ctaLabel: 'PM on Railsを見る',
         ctaId: 'pmonrails',
@@ -79,7 +116,44 @@ const categories: ResourceCategory[] = [
     ],
   },
   {
+    heading: '比較・稟議を進める',
+    lead: '社内で発注判断を進めるための、実例・費用対効果・比較の材料です。',
+    resources: [
+      {
+        title: '導入事例',
+        description:
+          '他社難航案件のリカバリー、新規事業の短期立ち上げ、AI・データ基盤構築など、実案件の課題と成果です。',
+        landingUrl: '/case-studies',
+        ctaLabel: '事例を見る',
+        ctaId: 'case-studies',
+      },
+      {
+        title: 'お客様の声（進め方への評価）',
+        description:
+          '要件定義・優先順位づけ・推進など、どの進め方を評価いただいたかで分類したお客様の声です。',
+        landingUrl: '/testimonial',
+        ctaLabel: '声を見る',
+        ctaId: 'testimonial',
+      },
+      {
+        title: '生成AI導入の費用対効果とROIの考え方',
+        description: '経営層への説明・稟議に使える、投資判断の組み立て方を解説した記事です。',
+        landingUrl: '/column/genai-roi-investment',
+        ctaLabel: '記事を読む',
+        ctaId: 'column-genai-roi',
+      },
+      {
+        title: 'AI受託開発会社の選び方',
+        description: '発注先を比較する7つのチェックポイント。複数社比較の物差しに使えます。',
+        landingUrl: '/column/ai-development-vendor-selection',
+        ctaLabel: '記事を読む',
+        ctaId: 'column-vendor-selection',
+      },
+    ],
+  },
+  {
     heading: '提携資料',
+    lead: '',
     resources: [
       {
         title: 'ワンテクワールドd-popsアライアンス',
@@ -94,17 +168,17 @@ const categories: ResourceCategory[] = [
 ];
 
 const pageDescription =
-  'Beekleの資料・ツールの一覧。ゼロスタート開発のサービス資料、発注準備を支援する無料ツール、AIデモ、導入事例、自社開発のPM基盤「PM on Rails」をまとめています。';
+  'Beekleの資料・判断材料の一覧。課題整理、技術理解、開発方法の確認、比較・稟議と、検討の段階に合わせて必要な資料・記事・事例へ案内します。';
 ---
 
-<Layout title="資料・ツール | Beekle" description={pageDescription}>
+<Layout title="資料・判断材料 | Beekle" description={pageDescription} noindex={true}>
   <JsonLd
     slot="head"
     type="breadcrumb"
     data={{
       items: [
         { name: 'ホーム', url: '/' },
-        { name: '資料・ツール', url: '/materials' },
+        { name: '資料・判断材料', url: '/materials' },
       ],
     }}
   />
@@ -113,7 +187,7 @@ const pageDescription =
     type="webPage"
     data={{
       pageType: 'CollectionPage',
-      name: '資料・ツール | Beekle',
+      name: '資料・判断材料 | Beekle',
       description: pageDescription,
       url: 'https://beekle.jp/materials',
     }}
@@ -121,15 +195,16 @@ const pageDescription =
   <Header client:idle />
   <main class="pt-20">
     <PageHero
-      title="資料・ツール"
-      subtitle="サービス資料のダウンロードから、発注準備に使える無料ツール、AIデモ、導入事例まで。検討段階に合わせてご利用ください。"
+      title="資料・判断材料"
+      subtitle="いま検討がどの段階かに合わせて、必要な材料へ案内します。課題の整理から、技術の理解、開発方法の確認、社内での比較・稟議まで。"
     />
 
     <section class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-16">
       {categories.map((category) => (
         <div class="mb-16">
-          <h2 class="text-2xl font-bold text-gray-900 mb-8">{category.heading}</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-2">{category.heading}</h2>
+          {category.lead && <p class="text-gray-600 mb-8">{category.lead}</p>}
+          <div class={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ${category.lead ? '' : 'mt-8'}`}>
             {category.resources.map((resource) => (
               <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
                 <div class="p-8 flex flex-col flex-1">
@@ -183,9 +258,9 @@ const pageDescription =
 
       {/* CTA セクション */}
       <div class="mt-8 text-center pb-16">
-        <h2 class="text-3xl font-bold text-gray-900">資料を読む前でも、読んだ後でも</h2>
+        <h2 class="text-3xl font-bold text-gray-900">どの段階か分からなくても大丈夫です</h2>
         <p class="mt-4 text-xl text-gray-600">
-          どの資料が合うか分からない段階でも、業務課題からご相談いただけます
+          課題の整理段階から、業務課題ベースでご相談いただけます
         </p>
         <div class="mt-8">
           <a
