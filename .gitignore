@@ -46,3 +46,4 @@ __pycache__/
 
 # コラムの原稿は MicroCMS が正。drafts はローカル作業用でコミットしない
 claudedocs/drafts/
+tasks-v3.md

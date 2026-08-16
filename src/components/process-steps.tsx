@@ -1,78 +1,85 @@
 import { CheckCircle, Lightbulb, PhoneCall, Rocket, TestTube } from 'lucide-react';
 import React from 'react';
 
+// 各Stepは「Beekleがすること」「お客様にお願いすること」「この段階で決まること」の3列で見せる。
+// 金銭負担がないことと「リスクがない」ことは同義ではないため、リスクゼロ系の表現は使わない
+// (tasks-v3 TASK-P0-05 / [VALUE-1] 総コスト = 価格 + 金銭以外の負担)。
 interface ProcessStep {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   duration: string;
   cost: string;
   description: string;
-  details: string[];
+  beekle: string[];
+  customer: string[];
+  decision: string;
   highlight?: boolean;
 }
 
 const processSteps: ProcessStep[] = [
   {
     icon: PhoneCall,
-    title: 'お問い合わせ・ヒアリング',
+    title: 'お問い合わせ・業務理解',
     duration: '1-2時間',
     cost: '無料',
     description:
-      '課題や実現したいことをお聞かせください。オンラインまたは訪問でのヒアリングを実施します。',
-    details: ['現状の課題ヒアリング', '実現したいことの確認', '大まかな方向性の提案'],
+      '課題や実現したいことをお聞かせください。オンラインまたは訪問でのヒアリングで、何を検証すべきかを一緒に決めます。',
+    beekle: ['業務フロー・利用者・課題の整理', '検証すべき仮説のご提案'],
+    customer: ['現行業務・資料・関係者の共有'],
+    decision: '何を検証するべきか（検証仮説）',
   },
   {
     icon: Lightbulb,
-    title: 'ゼロスタート開発',
+    title: 'ゼロスタート開発（検証用プロトタイプ）',
     duration: '1-2週間（目安）',
     cost: '初期費用0円',
     description:
-      '初期費用0円で、動くプロトタイプを開発。検証用としてお試しいただけます（成果物の譲渡を伴う納品ではありません）。',
-    details: [
-      'コア機能に絞った検証用プロトタイプ開発',
-      '実業務で試せる形でのお試し提供（検証用）',
-      'リスクなしで効果を確認',
-      '買取しなくても費用負担なし',
-    ],
+      '最重要の仮説を確認できる検証用プロトタイプを開発します（成果物の譲渡を伴う納品ではありません）。',
+    beekle: ['コア機能に絞った検証用プロトタイプ開発', '実業務で試せる形でのお試し提供（検証用）'],
+    customer: ['検証用データ・サンプルの用意', '検証担当者の参加'],
+    decision: '実物で何を確認するか',
     highlight: true,
   },
   {
     icon: TestTube,
-    title: '実機テスト・効果検証',
+    title: '実業務での確認・効果検証',
     duration: '1-2週間（目安）',
     cost: '無料',
     description:
-      '実際の業務環境で試用いただき、効果の方向性を確認。代表的なケースで手応えと改善余地を整理します。',
-    details: [
-      '実業務環境での試用',
-      '代表ケースでの効果確認',
-      '効果の方向性・改善余地の整理',
-      '本格導入判断材料の提供',
-    ],
+      '実際の業務環境で試用いただき、業務適合・要件のズレ・データ・利用者の反応を確認します。',
+    beekle: ['代表ケースでの効果確認', '効果の方向性・改善余地の整理'],
+    customer: ['実業務に近いケースで触る', '利用者の反応・気づきの共有'],
+    decision: '業務に合うか。何を直せば使えるか',
   },
   {
     icon: CheckCircle,
-    title: '導入判断・本開発へ',
+    title: 'Go / No-Go 判断',
     duration: '応相談',
     cost: '見積提示',
     description:
-      '効果を確認できたら、本格開発へ進みます。既に動く基盤があるため、精度の高い見積もりと短期間での展開が可能です。',
-    details: [
-      '採用の場合：本開発・拡張へスムーズ移行',
-      '見送りの場合：費用負担なし・リスクゼロ',
-      '動く基盤があるため見積精度が高い',
-      '短期間での本番展開が可能',
-    ],
+      '検証結果をもとに、先へ進むか・見送るかを判断いただきます。見送りの場合、開発費用の負担はありません。動く実物があるため、進む場合の見積もり精度が高くなります。',
+    beekle: ['検証結果の整理', '本開発の見積・進め方のご提案'],
+    customer: ['社内での投資判断'],
+    decision: 'Go / No-Go。進む場合はPoC・MVP・本開発のどこからか',
   },
   {
     icon: Rocket,
-    title: '運用開始・継続改善',
+    title: '本開発・運用改善',
     duration: '継続的に対応',
-    cost: '保守契約',
-    description: '本番環境での運用を開始。保守サポートや追加機能開発も柔軟に対応します。',
-    details: ['システムの本番稼働', '保守サポート対応', '追加機能の開発', '継続的な改善提案'],
+    cost: '個別見積・保守契約',
+    description:
+      '検証で作ったものと学びをそのまま引き継いで本開発へ。公開後も保守サポートと継続改善を行います。',
+    beekle: ['本番品質での開発・公開', '保守サポート・継続的な改善提案'],
+    customer: ['フィードバックと優先順位の判断'],
+    decision: '次に何を改善するか',
   },
 ];
+
+const COLUMN_LABELS = {
+  beekle: 'Beekleがすること',
+  customer: 'お客様にお願いすること',
+  decision: 'この段階で決まること',
+} as const;
 
 export const ProcessSteps = () => {
   const [visibleSteps, setVisibleSteps] = React.useState<Set<number>>(new Set());
@@ -146,18 +153,19 @@ export const ProcessSteps = () => {
                   <div className="flex flex-wrap items-center gap-3 mb-2">
                     <h2 className="text-xl font-bold text-gray-900">{step.title}</h2>
                     {step.highlight && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-primary-500 to-primary-600 text-white animate-pulse">
-                        おすすめ
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-primary-500 to-primary-600 text-white">
+                        初期費用0円
                       </span>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-3 mb-3">
-                    <span className="inline-flex items-center text-sm text-primary-500 font-medium bg-primary-50 px-3 py-1 rounded-full transition-all hover:bg-primary-100 hover:scale-105">
+                    <span className="inline-flex items-center text-sm text-primary-500 font-medium bg-primary-50 px-3 py-1 rounded-full">
                       <svg
                         className="w-4 h-4 mr-1"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
+                        aria-hidden="true"
                       >
                         <path
                           strokeLinecap="round"
@@ -169,45 +177,53 @@ export const ProcessSteps = () => {
                       {step.duration}
                     </span>
                     <span
-                      className={`inline-flex items-center text-sm font-medium px-3 py-1 rounded-full transition-all hover:scale-105 ${
+                      className={`inline-flex items-center text-sm font-medium px-3 py-1 rounded-full ${
                         step.cost === '初期費用0円' || step.cost === '無料'
-                          ? 'text-secondary-500 bg-secondary-50 hover:bg-secondary-100'
-                          : 'text-gray-600 bg-gray-100 hover:bg-gray-200'
+                          ? 'text-secondary-500 bg-secondary-50'
+                          : 'text-gray-600 bg-gray-100'
                       }`}
                     >
-                      <svg
-                        className="w-4 h-4 mr-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
                       {step.cost}
                     </span>
                   </div>
                   <p className="mt-2 text-gray-700 leading-relaxed">{step.description}</p>
-                  <ul className="mt-4 space-y-2">
-                    {step.details.map((detail, detailIdx) => (
-                      <li
-                        key={detail}
-                        className="flex items-start text-gray-600"
-                        style={{
-                          opacity: visibleSteps.has(idx) ? 1 : 0,
-                          transform: visibleSteps.has(idx) ? 'translateX(0)' : 'translateX(-20px)',
-                          transition: `all 0.4s ease ${idx * 0.15 + 0.3 + detailIdx * 0.1}s`,
-                        }}
-                      >
-                        <span className="mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary-500" />
-                        <span>{detail}</span>
-                      </li>
-                    ))}
-                  </ul>
+
+                  <div className="mt-5 grid gap-4 md:grid-cols-3">
+                    <div className="rounded-xl bg-gray-50 p-4">
+                      <p className="text-xs font-bold text-primary-500 mb-2">
+                        {COLUMN_LABELS.beekle}
+                      </p>
+                      <ul className="space-y-1.5">
+                        {step.beekle.map((item) => (
+                          <li key={item} className="flex items-start text-sm text-gray-600">
+                            <span className="mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary-500" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="rounded-xl bg-gray-50 p-4">
+                      <p className="text-xs font-bold text-primary-500 mb-2">
+                        {COLUMN_LABELS.customer}
+                      </p>
+                      <ul className="space-y-1.5">
+                        {step.customer.map((item) => (
+                          <li key={item} className="flex items-start text-sm text-gray-600">
+                            <span className="mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary-500" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="rounded-xl border border-primary-200 bg-primary-50 p-4">
+                      <p className="text-xs font-bold text-primary-600 mb-2">
+                        {COLUMN_LABELS.decision}
+                      </p>
+                      <p className="text-sm font-semibold text-gray-800 leading-relaxed">
+                        {step.decision}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
