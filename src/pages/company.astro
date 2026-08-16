@@ -157,5 +157,36 @@ const pageDescription = `株式会社Beekleの会社概要。${companyPositionin
         </div>
       </div>
     </section>
+
+    <!-- CTA Section -->
+    <section class="relative py-20 md:py-24 overflow-hidden bg-navy-950">
+      <div class="container mx-auto px-8 text-center relative">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+          まずは、業務課題からお聞かせください。
+        </h2>
+        <p class="text-lg text-white/90 mb-8">
+          要件が固まっていない段階でも大丈夫です。初期費用0円の検証用プロトタイプから始められます。
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/contact?source=company-final"
+            data-cta-source="company-final"
+            data-cta-id="contact"
+            class="page-cta inline-flex min-h-[52px] items-center justify-center rounded-full bg-white px-8 py-4 text-lg font-semibold text-accent-950 shadow-soft transition-all hover:bg-gray-100 hover:shadow-medium"
+          >
+            業務課題を相談する
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+          <a
+            href="/prooffirst"
+            class="inline-flex min-h-[52px] items-center justify-center rounded-full border-2 border-white bg-transparent px-8 py-4 text-lg font-semibold text-white transition-all hover:bg-white hover:text-accent-950"
+          >
+            ゼロスタートを見る
+          </a>
+        </div>
+      </div>
+    </section>
   </main>
 </Layout>

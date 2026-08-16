@@ -36,7 +36,7 @@ const seoTitle = service.seoTitle ?? service.title;
 const seoDescription = service.seoDescription ?? service.description;
 const servicePageConfig = getAiServicePageConfig(service.id);
 const contactIntent = servicePageConfig?.contactIntent ?? 'consult';
-const finalCtaLabel = servicePageConfig?.contactLabel ?? '無料相談を予約する';
+const finalCtaLabel = servicePageConfig?.contactLabel ?? '業務課題を相談する';
 // 最終CTAも、そのページのCEPに対する答えの形で書く（4ページで同じ見出しにしない）
 const FINAL_CTA_HEADINGS: Record<string, string> = {
   'ai-development': 'どの業務なら本当に手が空くのか、一緒に見極めませんか',

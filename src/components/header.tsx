@@ -253,7 +253,7 @@ export function Header() {
               onClick={() => trackCtaClick({ source: 'header-desktop', cta: 'contact' })}
               className="inline-flex items-center px-4 py-3 sm:py-2 min-h-[44px] sm:min-h-0 bg-primary-500 text-white rounded-full text-sm font-semibold hover:bg-primary-600 transition-colors shadow-soft hover:shadow-medium"
             >
-              お問い合わせ
+              業務課題を相談する
             </a>
           </li>
         </ul>
@@ -429,7 +429,7 @@ export function Header() {
                     setIsOpen(false);
                   }}
                 >
-                  お問い合わせ
+                  業務課題を相談する
                 </a>
                 <a
                   href="/downloads/zero-start?source=header-mobile"
