@@ -33,7 +33,7 @@ const knowledgeItems = [
   { label: 'AIデモ', href: '/demos' },
   { label: '発注準備キット（無料ツール）', href: '/tools' },
   { label: 'ゼロスタート開発 資料DL', href: '/downloads/zero-start' },
-  { label: '関連資料・資料ダウンロード', href: '/materials' },
+  { label: '資料・ツール', href: '/materials' },
 ];
 
 const aboutItems = [

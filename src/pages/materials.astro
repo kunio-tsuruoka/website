@@ -4,49 +4,107 @@ import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
 
-type Material = {
+type Resource = {
   title: string;
   description: string;
-  category: string;
-  /** 直接DL: PDFパス／ゲート付き: 専用LPへのリンク */
+  /** 直接DL: PDFパス／それ以外: リンク先 */
   fileName?: string;
   fileUrl?: string;
   landingUrl?: string;
   ctaLabel?: string;
+  ctaId: string;
+  external?: boolean;
 };
 
-const materials: Material[] = [
+type ResourceCategory = {
+  heading: string;
+  resources: Resource[];
+};
+
+const categories: ResourceCategory[] = [
   {
-    title: 'ゼロスタート開発 サービスデック',
-    description:
-      '初期費用0円で動くプロトタイプを体験してから判断する仕組み・対象企業・進行プロセスをまとめたサービス資料です（フォーム入力後にダウンロード）。',
-    category: 'サービス資料',
-    landingUrl: '/downloads/zero-start',
-    ctaLabel: '詳細・ダウンロード',
+    heading: 'サービス資料',
+    resources: [
+      {
+        title: 'ゼロスタート開発 サービスデック',
+        description:
+          '初期費用0円で検証用プロトタイプを体験してから判断する仕組み・対象企業・進行プロセスをまとめたサービス資料です（フォーム入力後にダウンロード）。',
+        landingUrl: '/downloads/zero-start?ref=materials',
+        ctaLabel: '詳細・ダウンロード',
+        ctaId: 'download-zero-start',
+      },
+    ],
   },
   {
-    title: 'ワンテクワールドd-popsアライアンス',
-    description:
-      '弊社はワンテクワールドという開発アライアンスを組んで開発を行っています。その関連資料になります。',
-    fileName: 'ワンテクワールドd-popsアライアンス.pdf',
-    fileUrl: '/pdf/ワンテクワールドd-popsアライアンス.pdf',
-    category: '提携資料',
+    heading: '無料ツール・デモ',
+    resources: [
+      {
+        title: '発注準備キット（無料ツール）',
+        description:
+          'RFP作成、スコープ管理、ユーザーストーリー整理、業務フロー可視化。発注前の要求整理を自分で進められる無料ツール群です（会員登録不要）。',
+        landingUrl: '/tools',
+        ctaLabel: 'ツールを見る',
+        ctaId: 'tools-index',
+      },
+      {
+        title: 'ブラウザで触れるAIデモ',
+        description:
+          'AIナレッジ相談、領収書OCRなど、導入前に「実際の挙動」を5分で体感できるデモを公開しています。',
+        landingUrl: '/demos',
+        ctaLabel: 'デモを試す',
+        ctaId: 'demos-index',
+      },
+    ],
+  },
+  {
+    heading: '事例・開発基盤',
+    resources: [
+      {
+        title: '導入事例',
+        description:
+          '他社難航案件のリカバリー、新規事業の短期立ち上げ、AI・データ基盤構築など、実案件の課題と成果をまとめています。',
+        landingUrl: '/case-studies',
+        ctaLabel: '事例を見る',
+        ctaId: 'case-studies',
+      },
+      {
+        title: 'PM on Rails（自社開発のPM基盤）',
+        description:
+          '要求・要件からユーザーストーリー・受入条件・開発タスクまでを構造化し、AIエージェントによる実装につなげるプロジェクト管理基盤。Beekleの開発プロセスの中核です。',
+        landingUrl: 'https://pmonrails.com',
+        ctaLabel: 'PM on Railsを見る',
+        ctaId: 'pmonrails',
+        external: true,
+      },
+    ],
+  },
+  {
+    heading: '提携資料',
+    resources: [
+      {
+        title: 'ワンテクワールドd-popsアライアンス',
+        description:
+          '弊社はワンテクワールドという開発アライアンスを組んで開発を行っています。その関連資料になります。',
+        fileName: 'ワンテクワールドd-popsアライアンス.pdf',
+        fileUrl: '/pdf/ワンテクワールドd-popsアライアンス.pdf',
+        ctaId: 'pdf-onetech',
+      },
+    ],
   },
 ];
+
+const pageDescription =
+  'Beekleの資料・ツールの一覧。ゼロスタート開発のサービス資料、発注準備を支援する無料ツール、AIデモ、導入事例、自社開発のPM基盤「PM on Rails」をまとめています。';
 ---
 
-<Layout
-  title="関連資料 | Beekle"
-  description="Beekleの関連資料・提携アライアンス資料のダウンロードページ。"
-  noindex={true}
->
+<Layout title="資料・ツール | Beekle" description={pageDescription}>
   <JsonLd
     slot="head"
     type="breadcrumb"
     data={{
       items: [
         { name: 'ホーム', url: '/' },
-        { name: '関連資料', url: '/materials' },
+        { name: '資料・ツール', url: '/materials' },
       ],
     }}
   />
@@ -55,73 +113,79 @@ const materials: Material[] = [
     type="webPage"
     data={{
       pageType: 'CollectionPage',
-      name: '関連資料 | Beekle',
-      description: 'Beekleの関連資料・提携アライアンス資料のダウンロードページ。',
+      name: '資料・ツール | Beekle',
+      description: pageDescription,
       url: 'https://beekle.jp/materials',
     }}
   />
   <Header client:idle />
   <main class="pt-20">
     <PageHero
-      title="関連資料"
-      subtitle="各種資料をダウンロードいただけます"
+      title="資料・ツール"
+      subtitle="サービス資料のダウンロードから、発注準備に使える無料ツール、AIデモ、導入事例まで。検討段階に合わせてご利用ください。"
     />
 
     <section class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-16">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {materials.map((material) => (
-          <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-            <div class="p-8 flex flex-col flex-1">
-              {/* カテゴリバッジ */}
-              <div class="mb-4">
-                <span class={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${material.landingUrl ? 'bg-secondary-100 text-secondary-700' : 'bg-primary-100 text-primary-700'}`}>
-                  {material.category}
-                </span>
+      {categories.map((category) => (
+        <div class="mb-16">
+          <h2 class="text-2xl font-bold text-gray-900 mb-8">{category.heading}</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {category.resources.map((resource) => (
+              <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                <div class="p-8 flex flex-col flex-1">
+                  <div class="mb-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-700">
+                      {category.heading}
+                    </span>
+                  </div>
+
+                  <h3 class="text-xl font-bold text-gray-900 mb-3">
+                    {resource.title}
+                  </h3>
+
+                  <p class="text-gray-600 mb-6 flex-1">
+                    {resource.description}
+                  </p>
+
+                  {resource.landingUrl ? (
+                    <a
+                      href={resource.landingUrl}
+                      {...(resource.external ? { rel: 'noopener' } : {})}
+                      data-cta-source="materials"
+                      data-cta-id={resource.ctaId}
+                      class="inline-flex items-center justify-center w-full px-6 py-3 min-h-[44px] text-base font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors duration-200"
+                    >
+                      {resource.ctaLabel || '詳細を見る'}
+                      <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </a>
+                  ) : (
+                    <a
+                      href={resource.fileUrl}
+                      download={resource.fileName}
+                      data-cta-source="materials"
+                      data-cta-id={resource.ctaId}
+                      class="inline-flex items-center justify-center w-full px-6 py-3 min-h-[44px] text-base font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors duration-200"
+                    >
+                      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      ダウンロード
+                    </a>
+                  )}
+                </div>
               </div>
-
-              {/* タイトル */}
-              <h2 class="text-xl font-bold text-gray-900 mb-3">
-                {material.title}
-              </h2>
-
-              {/* 説明 */}
-              <p class="text-gray-600 mb-6 flex-1">
-                {material.description}
-              </p>
-
-              {/* CTAボタン: ゲート付きはLPへ、直DLはPDF */}
-              {material.landingUrl ? (
-                <a
-                  href={material.landingUrl}
-                  class="inline-flex items-center justify-center w-full px-6 py-3 min-h-[44px] text-base font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors duration-200"
-                >
-                  {material.ctaLabel || '詳細・ダウンロード'}
-                  <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </a>
-              ) : (
-                <a
-                  href={material.fileUrl}
-                  download={material.fileName}
-                  class="inline-flex items-center justify-center w-full px-6 py-3 min-h-[44px] text-base font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors duration-200"
-                >
-                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  ダウンロード
-                </a>
-              )}
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
 
       {/* CTA セクション */}
-      <div class="mt-24 text-center pb-16">
-        <h2 class="text-3xl font-bold text-gray-900">お気軽にお問い合わせください</h2>
+      <div class="mt-8 text-center pb-16">
+        <h2 class="text-3xl font-bold text-gray-900">資料を読む前でも、読んだ後でも</h2>
         <p class="mt-4 text-xl text-gray-600">
-          資料に関するご質問やご相談はこちらから
+          どの資料が合うか分からない段階でも、業務課題からご相談いただけます
         </p>
         <div class="mt-8">
           <a
@@ -130,8 +194,8 @@ const materials: Material[] = [
             data-cta-id="contact"
             class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-primary-500 border border-transparent rounded-full hover:bg-primary-600"
           >
-            お問い合わせ
-            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            業務課題を相談する
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </a>
