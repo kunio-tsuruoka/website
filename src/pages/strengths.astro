@@ -10,7 +10,7 @@ import Layout from '../layouts/layout.astro';
 
 <Layout
   title="Beekleの強み | Beekle"
-  description="Beekleの強みは、AI開発やシステム開発の失敗を防ぐ要件定義力。業務、要件、評価基準まで落とし、社内説明と本番判断ができる開発にします。"
+  description="Beekleの強みは、自社開発のPM基盤「PM on Rails」による再現性ある要件定義と、その仕様をAIエージェントへ接続するAI駆動開発。要求整理から実装・テスト・要件更新までを短いサイクルで繰り返します。"
 >
   <JsonLd
     slot="head"
@@ -29,7 +29,7 @@ import Layout from '../layouts/layout.astro';
       pageType: 'AboutPage',
       name: 'Beekleの強み | Beekle',
       description:
-        'Beekleの強みは、AI開発やシステム開発の失敗を防ぐ要件定義力。業務、要件、評価基準まで落とし、社内説明と本番判断ができる開発にします。',
+        'Beekleの強みは、自社開発のPM基盤「PM on Rails」による再現性ある要件定義と、その仕様をAIエージェントへ接続するAI駆動開発。要求整理から実装・テスト・要件更新までを短いサイクルで繰り返します。',
       url: 'https://beekle.jp/strengths',
     }}
   />
@@ -38,7 +38,7 @@ import Layout from '../layouts/layout.astro';
     <!-- Hero Section -->
     <PageHero
       title="Beekleの強み"
-      subtitle="業務、要件、評価基準まで落として、実務で使えるAI・システム開発にする"
+      subtitle="自社開発のPM基盤「PM on Rails」で要求を実装可能な仕様へ構造化し、その仕様をAIエージェントにつないで高速に実装・改善する"
     />
 
     <!-- 強み1: 要件定義力 -->
@@ -52,7 +52,7 @@ import Layout from '../layouts/layout.astro';
           </span>
           <div class="relative z-10">
             <h2 class="text-3xl md:text-4xl font-bold text-accent-950 mb-4">
-              AI開発の失敗を防ぐ<br /><span class="text-primary-500">要件定義力</span>
+              PM on Railsによる<br /><span class="text-primary-500">再現性ある要件定義</span>
             </h2>
             <span
               class="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-sm font-medium mb-8"
@@ -60,7 +60,7 @@ import Layout from '../layouts/layout.astro';
               Strength
             </span>
             <p class="text-xl text-neutral-700 leading-relaxed">
-              作る前に、業務、要件、評価基準をそろえる。だから、PoCで止まらず、社内説明と本番判断まで進められます。
+              ヒアリング・議事録・既存資料から要求を整理し、ユーザーストーリー・受入条件・開発タスクまで構造化する。担当者の力量に頼らず、同じ品質の要件定義を繰り返せます。
             </p>
           </div>
         </div>
@@ -77,18 +77,18 @@ import Layout from '../layouts/layout.astro';
               プロジェクトの失敗は、多くの場合、下流工程ではなく上流工程のミスに起因します。
             </p>
             <p class="text-neutral-700 mb-6 leading-relaxed">
-              AI活用によってコーディングの効率化が進む現代でも、上流工程での適切な設計と綿密な協議がなければ、ビジネス価値のないシステムを速く作ってしまうリスクがあります。
+              AIでコーディングが速くなった今はなおさらです。仕様が曖昧なまま作り始めると、ビジネス価値のないシステムを速く作ってしまうことになります。
             </p>
             <div class="bg-primary-50 rounded-xl p-6">
               <p class="font-bold text-primary-500 text-lg">
-                Beekleは、AIを作って終わりにせず、業務で使える状態まで逆算して設計します。
+                Beekleは、要求・要件・ユーザーストーリー・受入条件・タスクを一つながりに管理し、「なぜこの要件なのか」を後から追える状態で開発します。
               </p>
             </div>
           </Card>
 
           <Card variant="light" padding="md" hover="none" className="mt-8">
             <p class="text-neutral-700">
-              弊社のクリエイターは専門領域に留まらず、幅広い知識を持つジェネラリストが多数在籍。多角的な視点からの質の高いコミュニケーションが可能です。
+              <a href="https://pmonrails.com" rel="noopener" class="font-bold text-primary-500 hover:text-primary-600">PM on Rails</a>は、Beekleが自社開発し、実際の開発プロジェクトで使っているプロジェクト管理基盤です。要求から実装タスクまでのつながりを記録し、仕様が変わったときにどこへ影響するかを確認しながら進められます。
             </p>
           </Card>
         </div>
@@ -104,10 +104,10 @@ import Layout from '../layouts/layout.astro';
               class="text-2xl font-bold text-accent-950 mb-6 flex items-center"
             >
               <span class="w-2 h-8 bg-primary-500 rounded-full mr-4"></span>
-              プロアクティブなアプローチ
+              AIの速度を、開発の速度に変える
             </h3>
             <p class="text-neutral-700 mb-8 leading-relaxed">
-              システム開発は本質的に複雑で、仕様を最初から完璧に定義することは不可能です。プロジェクトの進行に応じて柔軟に対応する必要があります。
+              AIコーディングツールは、どの開発会社でも使えます。差が出るのは「AIへ何を渡すか」です。仕様が曖昧なままでは、AIの実装が速くても手戻りが増えるだけです。
             </p>
 
             <div class="space-y-6">
@@ -129,7 +129,7 @@ import Layout from '../layouts/layout.astro';
                   </svg>
                 </div>
                 <p class="text-neutral-700">
-                  開発依頼の背景と事業詳細の徹底的なヒアリング
+                  PM on Railsで構造化した要件・受入条件を、そのままAIエージェントへ渡す
                 </p>
               </div>
               <div class="flex items-start gap-4 group">
@@ -150,7 +150,7 @@ import Layout from '../layouts/layout.astro';
                   </svg>
                 </div>
                 <p class="text-neutral-700">
-                  顧客企業の強みを正確に把握した上での提案
+                  実装結果はテストと動くデモで確認する
                 </p>
               </div>
               <div class="flex items-start gap-4 group">
@@ -171,7 +171,7 @@ import Layout from '../layouts/layout.astro';
                   </svg>
                 </div>
                 <p class="text-neutral-700">
-                  運用段階での価値最大化を見据えた機能設計
+                  フィードバックを要件に書き戻し、更新された仕様で再実装する
                 </p>
               </div>
             </div>
@@ -186,7 +186,7 @@ import Layout from '../layouts/layout.astro';
           </span>
           <div class="relative z-10">
             <h2 class="text-3xl md:text-4xl font-bold text-accent-950 mb-4">
-              高度な<br /><span class="text-primary-500">問題解決能力</span>
+              仕様をつなぐ<br /><span class="text-primary-500">AI駆動開発</span>
             </h2>
             <span
               class="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-sm font-medium mb-8"
@@ -194,11 +194,11 @@ import Layout from '../layouts/layout.astro';
               Strength
             </span>
             <p class="text-xl text-neutral-700 leading-relaxed mb-8">
-              単に指示された内容を実装するのではなく、お客様の真のニーズを理解し、プロフェッショナルとして最適なソリューションをご提案します。
+              AIにコードを書かせるのではなく、AIが迷わず実装できる状態を作ってからコードを書かせる。これがBeekleのAI駆動開発です。
             </p>
             <Card variant="lightPurple" padding="md" hover="none">
               <p class="text-neutral-700">
-                弊社の強みは、高いコンサルティング能力にあります。技術的な専門性とビジネス理解を兼ね備えたメンバーが、お客様の課題に対して本質的な解決策を提供します。
+                要件定義→実装→確認→要件更新を短いサイクルで回すので、最初に巨大な仕様書を完成させる必要がありません。要件の精度と開発スピードを両立できます。
               </p>
             </Card>
           </div>
@@ -220,17 +220,17 @@ import Layout from '../layouts/layout.astro';
           Strength
         </span>
         <h2 class="text-3xl md:text-4xl font-bold text-accent-950 mb-4">
-          学習と創造を愛する<br /><span class="text-primary-500">チーム</span>
+          フロントエンドからインフラまで<br /><span class="text-primary-500">横断する実装力</span>
         </h2>
         <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
-          Beekleには、知的好奇心が旺盛で、新しい技術や知識を積極的に吸収し、実務に活かすことができる優秀なメンバーが集まっています。
+          仕様を正確に作れても、実装を一体で持てなければ開発は速くなりません。Beekleはフロントエンド・バックエンド・インフラを一つの体制で担当します。
         </p>
       </div>
 
       <div class="max-w-4xl mx-auto mb-16">
         <Card variant="lightPurple" padding="lg" hover="none">
           <p class="text-lg text-accent-950 leading-relaxed">
-            高品質なコンサルティングとシステム設計には、確かな技術力と継続的な学習が不可欠です。付け焼き刃では対応できない複雑な課題にも、日々の研鑽によって培われた実力で対応します。
+            会社をまたぐ調整や責任範囲の押し付け合いが発生しないので、動くものへのフィードバックがそのまま実装に反映されます。他社が難航した案件を引き継ぎ、バックエンド・フロントエンド・インフラまで一貫して立て直した実績もあります。
           </p>
         </Card>
       </div>
@@ -252,9 +252,9 @@ import Layout from '../layouts/layout.astro';
               ></path>
             </svg>
           </CardIcon>
-          <CardTitle className="text-xl mb-3">週次勉強会</CardTitle>
+          <CardTitle className="text-xl mb-3">フロントエンド</CardTitle>
           <CardDescription>
-            毎週開催される任意参加の勉強会で、最新技術や業界動向について学び合っています。
+            Web・モバイルの画面と操作性を、業務の流れに合わせて設計・実装します。触って確認できるデモを早い段階で出せます。
           </CardDescription>
         </Card>
 
@@ -274,9 +274,9 @@ import Layout from '../layouts/layout.astro';
               ></path>
             </svg>
           </CardIcon>
-          <CardTitle className="text-xl mb-3">知識共有文化</CardTitle>
+          <CardTitle className="text-xl mb-3">バックエンド</CardTitle>
           <CardDescription>
-            学んだ知識や経験を積極的に共有し、チーム全体のレベルアップを図っています。
+            API、データベース、外部システム連携まで、業務ロジックを支える基盤を実装します。AI連携もこの層で設計します。
           </CardDescription>
         </Card>
 
@@ -296,9 +296,9 @@ import Layout from '../layouts/layout.astro';
               ></path>
             </svg>
           </CardIcon>
-          <CardTitle className="text-xl mb-3">実践的な学習</CardTitle>
+          <CardTitle className="text-xl mb-3">インフラ</CardTitle>
           <CardDescription>
-            新しい技術を実際のプロジェクトに適用し、最適なソリューションを提供します。
+            クラウド構成、監視、セキュリティまで、公開後も動き続ける環境を整えます。運用・保守も同じ体制で続けられます。
           </CardDescription>
         </Card>
       </div>
@@ -319,16 +319,16 @@ import Layout from '../layouts/layout.astro';
           Strength
         </span>
         <h2 class="text-3xl md:text-4xl font-bold text-accent-950 mb-4">
-          ビジネスから逆算する<br /><span class="text-primary-500"
-            >シナリオ設計力</span
+          動くものを確認しながら<br /><span class="text-primary-500"
+            >要件を更新する反復型開発</span
           >
         </h2>
         <p class="text-lg text-neutral-600 max-w-3xl mx-auto">
-          UXをしっかり設計し、ビジネス上の目的から逆算してシステムの振る舞いを定義。<br
+          ビジネス上の目的から逆算し、システムの振る舞いを受入条件まで定義。<br
           />
-          無駄な開発をせず、<span class="font-bold text-accent-950"
-            >納得感を持ってプロジェクトを進められる</span
-          >から、最小コストで最大の費用対効果を実現します。
+          動くものを確認するたびに要件を更新するので、<span class="font-bold text-accent-950"
+            >無駄な開発をせず、納得感を持ってプロジェクトを進められます</span
+          >。
         </p>
       </div>
 
@@ -888,17 +888,17 @@ import Layout from '../layouts/layout.astro';
         <Card variant="lightPurple" padding="lg" hover="none">
           <div class="text-center">
             <p class="text-neutral-700 mb-4">
-              ここまで設計が固まっていれば、<span class="font-bold"
-                >生成AIを使ってコードを素早く書くことも可能</span
-              >です。<br />
+              ここまで仕様が構造化されていれば、<span class="font-bold"
+                >AIエージェントに直接つないで、コードを高速に書かせることができます</span
+              >。<br />
               コードを書くだけなら多くの開発会社ができます。
             </p>
             <p class="text-lg font-bold text-accent-950 mb-4">
-              しかし、ここまでプロセス化してチームで実践できる会社は多くありません。
+              しかし、要求整理から受入条件、AI実装、テスト、要件更新までを一つのプロセスとして仕組み化し、チームで実践できる会社は多くありません。
             </p>
             <div class="inline-block bg-white rounded-xl px-6 py-4 shadow-soft">
               <p class="text-lg font-bold text-primary-500">
-                🎯 だから他社が頓挫した案件も立て直せるのです。
+                だから他社が頓挫した案件も立て直せるのです。
               </p>
             </div>
           </div>
@@ -1193,8 +1193,8 @@ import Layout from '../layouts/layout.astro';
           ビジネスを成功へ
         </h2>
         <p class="text-xl text-white/90 mb-12 max-w-3xl mx-auto">
-          要件定義力、問題解決能力、学習意欲の高いチーム、<br />
-          そしてシナリオ設計力が、お客様のプロジェクトを成功に導きます。
+          PM on Railsによる要件定義、仕様をつなぐAI駆動開発、<br />
+          そして横断的な実装力が、お客様のプロジェクトを成功に導きます。
         </p>
         <div class="flex flex-col sm:flex-row gap-6 justify-center">
           <ButtonLink
