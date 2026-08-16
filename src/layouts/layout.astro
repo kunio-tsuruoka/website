@@ -59,9 +59,11 @@ const fullTitle = title.includes('Beekle') ? title : `${title} | Beekle`;
     <Footer />
     <script>
       import { initEngagementTracking, trackCtaClick } from '@/lib/analytics';
-      import { captureFirstTouch } from '@/lib/attribution';
+      import { captureFirstTouch, capturePageView } from '@/lib/attribution';
       // セッション最初のページで入口・参照元・UTM を記録（フォーム送信時に問い合わせ通知へ載せる）
       captureFirstTouch();
+      // 直前ページ（last-touch）も毎ページで更新し、どの記事/LPからフォームへ来たかを追えるようにする
+      capturePageView();
       document.addEventListener('click', (event) => {
         const target = event.target;
         if (!(target instanceof Element)) return;
