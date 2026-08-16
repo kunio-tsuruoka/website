@@ -9,8 +9,8 @@ import Layout from '../layouts/layout.astro';
 ---
 
 <Layout
-  title="Beekleの開発方法（強み）| Beekle"
-  description="なぜ速く作っても、仕様が崩れないのか。業務理解→ユースケース→受入条件→テスト→AI駆動実装まで、自社開発のPM基盤「PM on Rails」で要求と実装をつないで進めるBeekleの開発方法を説明します。"
+  title="Beekleの開発方法｜要件定義からAI駆動開発まで | Beekle"
+  description="なぜBeekleは、速く作っても仕様が崩れにくいのか。業務理解→ユースケース→受入条件→テスト→AI駆動実装まで、自社開発のPM基盤「PM on Rails」で要求と実装をつないで進めるBeekleの開発方法を、仕組みと証拠つきで説明します。"
 >
   <JsonLd
     slot="head"
@@ -27,9 +27,9 @@ import Layout from '../layouts/layout.astro';
     type="webPage"
     data={{
       pageType: 'AboutPage',
-      name: 'Beekleの開発方法（強み）| Beekle',
+      name: 'Beekleの開発方法｜要件定義からAI駆動開発まで | Beekle',
       description:
-        'なぜ速く作っても、仕様が崩れないのか。業務理解→ユースケース→受入条件→テスト→AI駆動実装まで、自社開発のPM基盤「PM on Rails」で要求と実装をつないで進めるBeekleの開発方法を説明します。',
+        'なぜBeekleは、速く作っても仕様が崩れにくいのか。業務理解→ユースケース→受入条件→テスト→AI駆動実装まで、自社開発のPM基盤「PM on Rails」で要求と実装をつないで進めるBeekleの開発方法を、仕組みと証拠つきで説明します。',
       url: 'https://beekle.jp/strengths',
     }}
   />
@@ -37,8 +37,8 @@ import Layout from '../layouts/layout.astro';
   <main class="pt-20">
     <!-- Hero Section -->
     <PageHero
-      title="Beekleの開発方法"
-      subtitle="なぜ速く作っても、仕様が崩れないのか。要求から実装・テストまでを一つながりに管理する、Beekleの開発の進め方を説明します。"
+      title="なぜBeekleは、速く作っても仕様が崩れにくいのか"
+      subtitle="Beekleの開発方法。要求から実装・テストまでを一つながりに管理する進め方を、仕組みと実際の声・事例つきで説明します。"
     />
 
     <!-- 要求→実装のトレーサビリティ -->
@@ -97,7 +97,15 @@ import Layout from '../layouts/layout.astro';
               Strength
             </span>
             <p class="text-xl text-neutral-700 leading-relaxed">
-              ヒアリング・議事録・既存資料から要求を整理し、ユーザーストーリー・受入条件・開発タスクまで構造化する。担当者の力量に頼らず、同じ品質の要件定義を繰り返せます。
+              ヒアリング・議事録・既存資料から要求を整理し、ユーザーストーリー・受入条件・開発タスクまで構造化する。要件の整理方法を共通化し、担当者ごとの差を減らします。
+            </p>
+            <p class="mt-5">
+              <a href="/testimonial" class="inline-flex min-h-[44px] items-center text-base font-semibold text-primary-500 hover:text-primary-600">
+                要件定義を評価いただいた、お客様の声を見る
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
             </p>
           </div>
         </div>
@@ -238,6 +246,14 @@ import Layout from '../layouts/layout.astro';
                 要件定義→実装→確認→要件更新を短いサイクルで回すので、最初に巨大な仕様書を完成させる必要がありません。要件の精度と開発スピードを両立できます。
               </p>
             </Card>
+            <p class="mt-5">
+              <a href="/case-studies" class="inline-flex min-h-[44px] items-center text-base font-semibold text-primary-500 hover:text-primary-600">
+                実案件の例: 議事録から1日で動くデモ、他社3ヶ月停滞を3週間で完成
+                <svg class="w-4 h-4 ml-1 flex-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </p>
           </div>
         </div>
       </div>
@@ -564,9 +580,9 @@ import Layout from '../layouts/layout.astro';
                 </div>
               </div>
               <p class="text-xs text-neutral-500 mt-2">
-                ここまで設計すれば<span class="font-bold"
-                  >「何を作るか」が完全に明確</span
-                >になります。
+                ここまで設計すれば、<span class="font-bold"
+                  >実装前に期待する挙動と受入条件が明文化</span
+                >されます。
               </p>
             </div>
           </div>

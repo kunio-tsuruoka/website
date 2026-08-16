@@ -12,7 +12,7 @@ const problemItems = [
 ];
 
 const methodItems = [
-  { label: 'Beekleの開発方法（強み）', href: '/strengths' },
+  { label: 'Beekleの開発方法', href: '/strengths' },
   { label: 'Proof-first・ゼロスタート', href: '/prooffirst' },
   { label: '要件定義から伴走する開発', href: '/services/requirements-definition-support' },
   { label: 'PM on Rails（自社開発のPM基盤）', href: 'https://pmonrails.com' },
