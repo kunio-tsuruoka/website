@@ -757,6 +757,18 @@ const SERVICE_BRIDGES: Record<string, ServiceBridge> = {
     body: '規程・マニュアル・過去対応が散らばって探せない状態を、根拠と一緒に答えるAI検索に変えます。属人化した知識の引き継ぎにも有効です。',
     label: 'サービス内容を見る',
   },
+  WEB_MOBILE_SERVICE_BRIDGE: {
+    href: '/services/web-mobile-development',
+    title: 'BeekleのWEBアプリ・モバイルアプリ開発',
+    body: '要件定義から実装・運用まで一気通貫。費用が読みにくい段階でも、初期費用0円の検証用プロトタイプで範囲を確定させてから、内訳つきの見積もりを提示します。',
+    label: 'サービス内容を見る',
+  },
+  REQUIREMENTS_SERVICE_BRIDGE: {
+    href: '/services/requirements-definition-support',
+    title: 'Beekleの要件定義から伴走するシステム開発',
+    body: '要件が固まっていない段階から、要求の整理・ユーザーストーリー・受入条件への構造化まで伴走します。整理した要件は、そのまま開発へ引き継げます。',
+    label: 'サービス内容を見る',
+  },
 };
 
 function buildServiceBridge(source: string, key: string, bridge: ServiceBridge): string {
