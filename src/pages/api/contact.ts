@@ -39,6 +39,7 @@ const ContactSchema = z.object({
   // 流入アトリビューション（src/lib/attribution.ts が付与）。クライアント由来なので長さ制限のみ。
   clientId: z.string().trim().max(120).optional().default(''),
   landingPage: z.string().trim().max(400).optional().default(''),
+  lastPage: z.string().trim().max(400).optional().default(''),
   referrer: z.string().trim().max(400).optional().default(''),
   utmSource: z.string().trim().max(120).optional().default(''),
   utmMedium: z.string().trim().max(120).optional().default(''),
@@ -158,6 +159,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       sessionId,
       clientId,
       landingPage,
+      lastPage,
       referrer,
       utmSource,
       utmMedium,
@@ -207,8 +209,19 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // 流入アトリビューション（入口ページ・外部参照元・UTM・GA client_id）。
     // 参照元が空＝直接/ブックマーク/外部アプリ。client_id は GA4 探索での後追い照合用。
     const utmText = [utmSource, utmMedium, utmCampaign].filter(Boolean).join(' / ');
+    // 直前ページから、問い合わせを生んだコンテンツ/サービスLPを機械的に特定する (TASK-014)
+    const lastPathOnly = lastPage.split('?')[0];
+    const contentMatch = lastPathOnly.match(/^\/(?:column|knowledge)\/([^/]+)/);
+    const serviceMatch = lastPathOnly.match(/^\/services\/([^/]+)/);
+    const originLabel = contentMatch
+      ? `記事: ${contentMatch[1]}`
+      : serviceMatch
+        ? `サービスLP: ${serviceMatch[1]}`
+        : '';
     const attributionLine = [
       `着地: ${landingPage ? escapeSlack(landingPage) : '不明'}`,
+      lastPage ? `直前: ${escapeSlack(lastPage)}` : '',
+      originLabel ? escapeSlack(originLabel) : '',
       `参照元: ${referrer ? escapeSlack(referrer) : '直接/なし'}`,
       utmText ? `UTM: ${escapeSlack(utmText)}` : '',
       clientId ? `GA cid: ${escapeSlack(clientId)}` : '',

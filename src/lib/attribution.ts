@@ -5,6 +5,7 @@
 // GA4 探索との後追い照合の唯一の手がかりになる。
 
 const FIRST_TOUCH_KEY = 'beekle-first-touch-v1';
+const PAGE_TRAIL_KEY = 'beekle-page-trail-v1';
 
 type FirstTouch = {
   landingPage: string;
@@ -18,6 +19,8 @@ type FirstTouch = {
 export type Attribution = {
   clientId: string;
   landingPage: string;
+  /** フォーム到達の直前に見ていたサイト内ページ（last-touch）。記事/サービスLPの特定に使う */
+  lastPage: string;
   referrer: string;
   utmSource: string;
   utmMedium: string;
@@ -43,6 +46,37 @@ export function captureFirstTouch(): void {
     window.sessionStorage.setItem(FIRST_TOUCH_KEY, JSON.stringify(data));
   } catch {
     // プライベートモード等で sessionStorage が使えない場合は黙って諦める（計測は best-effort）
+  }
+}
+
+// ページ遷移の足あと（直前ページ）を記録する。layout から全ページで呼ぶ。
+// first-touch（入口）と last-touch（フォーム直前のページ）を両方持つことで、
+// 「どの記事/LPが問い合わせを生んだか」を Slack 通知から追えるようにする (tasks.md TASK-014)。
+export function capturePageView(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const path = window.location.pathname + window.location.search;
+    const raw = window.sessionStorage.getItem(PAGE_TRAIL_KEY);
+    const trail = raw ? (JSON.parse(raw) as { prev?: string; current?: string }) : {};
+    if (trail.current === path) return;
+    window.sessionStorage.setItem(
+      PAGE_TRAIL_KEY,
+      JSON.stringify({ prev: trail.current || '', current: path })
+    );
+  } catch {
+    // best-effort
+  }
+}
+
+function readLastPage(): string {
+  if (typeof window === 'undefined') return '';
+  try {
+    const raw = window.sessionStorage.getItem(PAGE_TRAIL_KEY);
+    if (!raw) return '';
+    const trail = JSON.parse(raw) as { prev?: string; current?: string };
+    return trail.prev || '';
+  } catch {
+    return '';
   }
 }
 
@@ -75,6 +109,7 @@ export function getAttribution(): Attribution {
   return {
     clientId: getGaClientId(),
     landingPage: cap(ft.landingPage || '', 300),
+    lastPage: cap(readLastPage(), 300),
     referrer: cap(ft.referrer || '', 300),
     utmSource: cap(ft.utmSource || '', 80),
     utmMedium: cap(ft.utmMedium || '', 80),
