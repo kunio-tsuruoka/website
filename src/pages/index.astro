@@ -53,7 +53,7 @@ try {
 
 <Layout
   title="動くプロトタイプから始めるシステム開発｜初期費用0円のゼロスタート | Beekle株式会社"
-  description="Beekle株式会社は、AI・Webアプリ・モバイルアプリ開発を手がけるシステム開発会社です。初期費用0円のゼロスタートで、動くプロトタイプを見てから判断できる新しい開発体験を提供します。"
+  description="Beekle株式会社は、要件定義からAI駆動開発までを一つのプロセスで支援するシステム開発会社です。自社開発のPM基盤「PM on Rails」で要求を実装可能な仕様に構造化し、AIエージェントで高速に実装。初期費用0円のゼロスタートで、動くプロトタイプを見てから判断できます。"
 >
   <JsonLd slot="head" type="website" />
   <Header client:idle />
@@ -67,50 +67,87 @@ try {
       <div class="absolute bottom-10 left-4 w-32 h-64 decoration-bar-purple opacity-10"></div>
 
       <div class="container mx-auto px-8 lg:px-12 relative">
-        <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div class="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
           <div>
             <span class="number-label">01</span>
             <span class="section-label ml-4">WHY BEEKLE</span>
             <h2 class="mt-4 text-4xl font-bold leading-tight text-navy-950 lg:text-5xl">
-              開発前の<span class="text-primary-500">判断材料</span>を、
+              要件定義から、
               <br class="hidden lg:block" />
-              先につくります。
+              <span class="text-primary-500">AI駆動開発</span>まで。
             </h2>
             <p class="mt-6 text-lg leading-relaxed text-neutral-700">
-              見積書と仕様書だけでは、完成後の使いやすさや効果は判断しきれません。
-              Beekleは業務の流れを短く整理し、コア機能を先に触れる形にします。
+              AIでコードを書くこと自体は、特別なことではなくなりました。
+              開発の速度と品質を分けるのは、「何を作るべきか」をどれだけ正確に、実装できる仕様へ変換できるかです。
+            </p>
+            <p class="mt-4 text-lg leading-relaxed text-neutral-700">
+              Beekleは、自社開発のPM基盤「PM on Rails」を実際の開発プロジェクトで使い、ヒアリングや既存資料から要求を整理して、ユーザーストーリー・受入条件・開発タスクまで構造化。その仕様をAIエージェントへつなぎ、実装・テスト・改善を高速に繰り返します。
+            </p>
+            <p class="mt-6 text-xl font-bold leading-relaxed text-navy-950">
+              要件定義を速く、正確に。<br />そのままAIで、速く作る。
             </p>
           </div>
 
-          <div class="grid gap-4 sm:grid-cols-3">
+          <div class="grid gap-4">
             <div class="card-base p-6">
-              <p class="text-sm font-bold text-primary-500">Strength 01</p>
-              <h3 class="mt-3 text-xl font-bold leading-snug text-navy-950">
-                業務理解から入る
+              <p class="text-sm font-bold text-primary-500">01</p>
+              <h3 class="mt-2 text-xl font-bold leading-snug text-navy-950">
+                業務を理解し、作るべきものを絞る
               </h3>
               <p class="mt-3 text-sm leading-relaxed text-neutral-600">
-                現場の手順、判断、例外処理を見て、何を作るべきかを絞ります。
+                要望をそのまま開発するのではなく、業務・課題・利用者を理解したうえで、本当に必要な機能を整理します。
               </p>
             </div>
             <div class="card-base p-6">
-              <p class="text-sm font-bold text-primary-500">Strength 02</p>
-              <h3 class="mt-3 text-xl font-bold leading-snug text-navy-950">
-                早く触れる形にする
+              <p class="text-sm font-bold text-primary-500">02</p>
+              <h3 class="mt-2 text-xl font-bold leading-snug text-navy-950">
+                PM on Railsで要件を実装可能な仕様へ
               </h3>
               <p class="mt-3 text-sm leading-relaxed text-neutral-600">
-                コア機能をプロトタイプ化し、画面・操作・回答品質を実物で確認します。
+                自社開発のPM on Railsで、要求・ユーザーストーリー・受入条件・タスクを構造化。なぜその要件になったのかを後から追える状態を保ちます。
               </p>
             </div>
             <div class="card-base p-6">
-              <p class="text-sm font-bold text-primary-500">Strength 03</p>
-              <h3 class="mt-3 text-xl font-bold leading-snug text-navy-950">
-                導入後まで設計する
+              <p class="text-sm font-bold text-primary-500">03</p>
+              <h3 class="mt-2 text-xl font-bold leading-snug text-navy-950">
+                AIエージェントで高速に実装・改善
               </h3>
               <p class="mt-3 text-sm leading-relaxed text-neutral-600">
-                本番化、運用、改善まで見越して、使われ続けるシステムにします。
+                構造化された仕様をAIエージェントへ渡し、実装・テスト・修正を高速に繰り返します。仕様が明確だから、AIの速度がそのまま開発の速度になります。
               </p>
             </div>
           </div>
+        </div>
+
+        {/* 開発サイクル */}
+        <div class="mt-14 rounded-3xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
+          <p class="text-sm font-bold text-primary-500">BEEKLEの開発サイクル</p>
+          <div class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-3">
+            {
+              [
+                '相談・ヒアリング',
+                'PM on Railsで要求・要件を構造化',
+                'ユーザーストーリー・受入条件・タスク',
+                'AIエージェントが実装・テスト',
+                '動くものを確認',
+                'フィードバックで要件を更新',
+              ].map((step, i, arr) => (
+                <>
+                  <span class="rounded-full bg-white border border-neutral-200 px-4 py-2 text-sm font-semibold text-navy-950">
+                    {step}
+                  </span>
+                  {i < arr.length - 1 && (
+                    <svg class="h-4 w-4 flex-none text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  )}
+                </>
+              ))
+            }
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-neutral-600">
+            最初に巨大な仕様書を完成させるのではなく、このサイクルを短く回します。<a href="https://pmonrails.com" rel="noopener" class="font-semibold text-primary-500 hover:text-primary-600">PM on Rails</a>は、Beekleが自社開発し、実案件で使っているプロジェクト管理基盤です。
+          </p>
         </div>
       </div>
     </section>

@@ -49,9 +49,30 @@ const organizationSchema = {
   url: siteUrl,
   logo: `${siteUrl}/logo.png`,
   description:
-    'AI・Webアプリ・モバイルアプリ開発を手がけるシステム開発会社。初期費用0円のゼロスタートで、動くプロトタイプを体験してから判断できます。',
+    '要件定義からAI駆動開発までを一つのプロセスで支援するシステム開発会社。自社開発のPM基盤「PM on Rails」で要求を実装可能な仕様に構造化し、AIエージェントで高速に実装。初期費用0円のゼロスタートで、動くプロトタイプを体験してから判断できます。',
   foundingDate: '2023-02-01',
   founder: toPersonSchema(authors.tsuruoka),
+  knowsAbout: [
+    '要件定義',
+    'AI駆動開発',
+    '生成AI受託開発',
+    'RAG',
+    'Webアプリ開発',
+    'モバイルアプリ開発',
+  ],
+  owns: {
+    '@type': 'SoftwareApplication',
+    name: 'PM on Rails',
+    url: 'https://pmonrails.com',
+    applicationCategory: 'BusinessApplication',
+    description:
+      'Beekle株式会社が自社開発し、実際の開発プロジェクトで利用しているプロジェクト管理基盤。要求・要件からユーザーストーリー・受入条件・開発タスクまでを構造化し、AIエージェントによる実装につなげる。',
+    creator: {
+      '@type': 'Organization',
+      name: 'Beekle株式会社',
+      url: siteUrl,
+    },
+  },
   address: {
     '@type': 'PostalAddress',
     streetAddress: '久が原3丁目14番27号',

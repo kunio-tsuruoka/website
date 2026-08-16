@@ -282,6 +282,31 @@ import Layout from '../layouts/layout.astro';
             </div>
           ))}
         </div>
+
+        {/* 要件定義との関係 */}
+        <div class="max-w-5xl mx-auto mt-10 md:mt-12 rounded-2xl border border-primary-500/15 bg-primary-50/60 p-6 md:p-8">
+          <p class="text-lg md:text-xl font-bold text-accent-950 leading-relaxed mb-3">
+            要件定義をなくすのではなく、<span class="text-primary-500">最初に巨大な仕様を固定する開発</span>をやめる。
+          </p>
+          <p class="text-sm md:text-base text-neutral-700 leading-relaxed mb-5">
+            ゼロスタートでも、要求の整理から始めます。違うのは、仕様を最初に固め切らないことです。動くものを確認するたびに要件を更新し、次のサイクルへ進みます。この高速な反復を支えているのが、Beekleが自社開発し実案件で使っているPM基盤「PM on Rails」です。要求・受入条件・開発タスクを構造化し、AIエージェントによる実装へつなぎます。
+          </p>
+          <div class="flex flex-wrap items-center gap-x-2 gap-y-2">
+            {['要件整理', 'プロトタイプ', '確認', '要件更新', '再実装'].map((step, i, arr) => (
+              <>
+                <span class="rounded-full bg-white border border-primary-500/20 px-4 py-1.5 text-xs md:text-sm font-semibold text-accent-950">
+                  {step}
+                </span>
+                {i < arr.length - 1 && (
+                  <svg class="h-3.5 w-3.5 flex-none text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                )}
+              </>
+            ))}
+            <span class="text-xs md:text-sm text-neutral-500 ml-1">を高速に繰り返す</span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -400,7 +425,7 @@ import Layout from '../layouts/layout.astro';
               、私たちも損をします。
             </p>
             <p>
-              要件定義にコストをかけて延々と仕様を詰めても、結局「
+              最初に分厚い仕様書を書き上げてから作り始めても、結局「
               <span class="relative inline-block">
                 <span class="absolute inset-x-0 bottom-0.5 h-2 bg-highlight-400/60 -z-10"></span>
                 <span class="relative font-bold">思ってたのと違う</span>
