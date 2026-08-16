@@ -266,6 +266,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
     const form = e.currentTarget;
     const formData = new FormData(form);
     const selectedType = String(formData.get('type') || 'consultation');
+    const buyingStage = String(formData.get('buying_stage') || '');
     const rawMessage = String(formData.get('message') || '').trim();
     const data = {
       name: formData.get('from_name') || '',
@@ -278,6 +279,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
       source: provenance.source,
       intent: provenance.intent,
       phase: provenance.phase,
+      buyingStage,
       turnstileToken: turnstileToken ?? '',
       // 流入元（入口ページ・参照元・UTM・GA client_id）を問い合わせ通知へ同送
       ...getAttribution(),
@@ -305,6 +307,8 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
       if (provenance.source) eventParams.source = provenance.source;
       if (provenance.intent) eventParams.intent = provenance.intent;
       if (provenance.phase) eventParams.phase = provenance.phase;
+      // Buying Stage (PIIではない選択値のみ) を計測に載せる (tasks-v3 TASK-P0-03)
+      if (buyingStage) eventParams.buying_stage = buyingStage;
 
       let navigated = false;
       const navigate = () => {
@@ -377,9 +381,32 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
             <option value="cdp">顧客データを整理・活用したい</option>
             <option value="dx">業務改善・AI導入について</option>
             <option value="tech_review">社内データ・既存システムの不安を相談したい</option>
-            <option value="global">海外向けサービス開発について</option>
+            <option value="mvp_poc">MVP・PoC・新規事業検証について</option>
             <option value="partner">開発パートナー・協業のご相談（開発会社・SIer様）</option>
             <option value="other">その他</option>
+          </select>
+        </div>
+
+        <div>
+          <label
+            className="block text-base font-medium text-foreground/80 mb-2"
+            htmlFor="buying_stage"
+          >
+            現在の検討状況 <span className="text-sm text-muted-foreground">（任意）</span>
+          </label>
+          <select
+            id="buying_stage"
+            name="buying_stage"
+            defaultValue=""
+            className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
+          >
+            <option value="">選択してください</option>
+            <option value="problem_recognition">課題を整理している</option>
+            <option value="research">情報収集中</option>
+            <option value="requirements">要件を整理している</option>
+            <option value="vendor_comparison">複数社を比較している</option>
+            <option value="purchase_decision">発注先を決めたい</option>
+            <option value="unknown">まだ分からない</option>
           </select>
         </div>
 
