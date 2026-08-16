@@ -3,6 +3,7 @@
 // JSON-LD 構造化データコンポーネント
 
 import { type Author, authors, defaultAuthor, defaultReviewer } from '../../data/authors';
+import { companyPositioning } from '../../data/company';
 
 export interface Props {
   type:
@@ -48,8 +49,7 @@ const organizationSchema = {
   alternateName: 'Beekle',
   url: siteUrl,
   logo: `${siteUrl}/logo.png`,
-  description:
-    '要件定義からAI駆動開発までを一つのプロセスで支援するシステム開発会社。自社開発のPM基盤「PM on Rails」で要求を実装可能な仕様に構造化し、AIエージェントで高速に実装。初期費用0円のゼロスタートで、動くプロトタイプを体験してから判断できます。',
+  description: `${companyPositioning.short}${companyPositioning.long}自社開発のPM基盤「PM on Rails」を実際の開発プロセスに組み込んでいます。${companyPositioning.zeroStart}`,
   foundingDate: '2023-02-01',
   founder: toPersonSchema(authors.tsuruoka),
   knowsAbout: [

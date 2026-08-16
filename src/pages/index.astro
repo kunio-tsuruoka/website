@@ -8,6 +8,7 @@ import { ButtonLink } from '@/components/ui/button';
 import { Header } from '../components/header';
 import JsonLd from '../components/seo/json-ld.astro';
 import { ServiceCard } from '../components/service-card';
+import { companyPositioning } from '../data/company';
 import { services } from '../data/service';
 
 const TOP_SERVICE_IDS = ['mvp-poc-development', 'ai-development', 'web-mobile-development'];
@@ -53,7 +54,7 @@ try {
 
 <Layout
   title="動くプロトタイプから始めるシステム開発｜初期費用0円のゼロスタート | Beekle株式会社"
-  description="Beekle株式会社は、要件定義からAI駆動開発までを一つのプロセスで支援するシステム開発会社です。自社開発のPM基盤「PM on Rails」で要求を実装可能な仕様に構造化し、AIエージェントで高速に実装。初期費用0円のゼロスタートで、動くプロトタイプを見てから判断できます。"
+  description={`Beekle株式会社は、${companyPositioning.short}${companyPositioning.long}${companyPositioning.zeroStart}`}
 >
   <JsonLd slot="head" type="website" />
   <Header client:idle />

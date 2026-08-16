@@ -1,42 +1,16 @@
 ---
 // src/pages/company.astro
 
+import { companyInfo, companyPositioning } from '@/data/company';
 import Layout from '@/layouts/layout.astro';
 import { Header } from '../components/header';
 import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
 
-const companyInfo = {
-  name: '株式会社Beekle',
-  established: '2023年2月1日',
-  capital: '100万円',
-  ceo: '鶴岡邦夫',
-  address: '東京都大田区久が原３丁目１４番２７号',
-  email: 'support@beekle.jp',
-  holiday: '土曜日、日曜日、祝日',
-  advisors: {
-    tax: '檜山税理士事務所',
-    legal: '猿渡法律事務所',
-    tech: '中村有貴',
-    labor: '笠原労務管理事務所',
-  },
-  business: [
-    'コンピュータのソフトウェア・ハードウェアの企画、研究、開発、設計、製造、販売、保守、リース、賃貸、輸出入',
-    'インターネット等を利用した各種情報提供サービス',
-    '通信販売事業',
-    '各種業務に関するアウトソーシングの受託',
-    '人材育成・能力開発のための研修、教育',
-    'マーケティングに関する企画、調査',
-    'コンサルティング業務',
-    '前各号に附帯関連する一切の事業',
-  ],
-};
+const pageDescription = `株式会社Beekleの会社概要。${companyPositioning.short}${companyPositioning.long}自社開発のPM基盤「PM on Rails」を実際の開発プロセスに組み込んでいます。`;
 ---
 
-<Layout
-  title="会社概要 | Beekle"
-  description="株式会社Beekleの会社概要。AI・Webシステム開発を、要件定義から実装・運用まで支援する開発会社です。自社開発のPM基盤「PM on Rails」を開発プロセスに組み込み、要求整理からAIエージェントによる実装まで一気通貫で行っています。"
->
+<Layout title="会社概要 | Beekle" description={pageDescription}>
   <JsonLd
     slot="head"
     type="breadcrumb"
@@ -53,7 +27,7 @@ const companyInfo = {
     data={{
       pageType: 'AboutPage',
       name: '会社概要 | Beekle',
-      description: '株式会社Beekleの会社概要。AI・Webシステム開発を、要件定義から実装・運用まで支援する開発会社です。自社開発のPM基盤「PM on Rails」を開発プロセスに組み込み、要求整理からAIエージェントによる実装まで一気通貫で行っています。',
+      description: pageDescription,
       url: 'https://beekle.jp/company',
     }}
   />
@@ -62,22 +36,22 @@ const companyInfo = {
     <!-- Hero Section -->
     <PageHero
       title="会社概要"
-      subtitle="Beekleは、AI・Webシステム開発を要件定義から実装・運用まで支援する開発会社です。小規模ながら、デザイナーからマーケター、エンジニアまで多様なメンバーが所属しており、幅広い案件を担当することが可能です。"
+      subtitle="Beekleは、業務と課題を整理し、要件を実装可能な仕様へ変換し、その仕様をAIエージェントにつなぐ開発会社です。いきなり大きく作らず、まず動くプロトタイプで確かめ、フィードバックを要件へ戻しながら本開発へ進みます。"
     />
 
     <!-- About Section -->
     <section class="py-32">
       <div class="container mx-auto px-8">
         <div class="max-w-4xl mx-auto prose prose-lg">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">どう開発する会社か</h2>
           <p class="text-gray-600 leading-relaxed mb-8">
-            Webサイトやシステムの構築については、上流から下流の工程でお手伝いさせていただきます。
-            要件定義のヒアリングから、設計、画面設計、デザインの作成、実装、運用まで一貫して引き受ける事が可能です。
+            Beekleが提供しているのは「作る作業」ではなく、開発の進め方そのものです。業務と課題を理解して作るべきものを絞り、要求をユーザーストーリー・受入条件・開発タスクへ構造化し、その仕様をAIエージェントにつないで実装します。要件定義から実装・運用までを一つの体制で引き受けるため、工程の間で認識がずれません。
           </p>
           <p class="text-gray-600 leading-relaxed mb-8">
-            開発プロセスの中核には、自社開発のPM基盤「<a href="https://pmonrails.com" rel="noopener" class="text-primary-500 font-semibold hover:text-primary-600">PM on Rails</a>」があります。ヒアリングや既存資料から整理した要求を、ユーザーストーリー・受入条件・開発タスクへ構造化し、その仕様をAIエージェントによる実装へつなぐことで、要件定義から実装までを短いサイクルで繰り返しています。
+            この構造化と反復を支えているのが、自社開発のPM基盤「<a href="https://pmonrails.com" rel="noopener" class="text-primary-500 font-semibold hover:text-primary-600">PM on Rails</a>」です。要求から実装タスクまでのつながりを記録し、AIが迷わず実装できる状態を作ってからコードを書かせます。
           </p>
           <p class="text-gray-600 leading-relaxed">
-            また、「こんなサービスを作りたいんだけど、どういう技術で作れるだろう？」といった段階のご相談もお受けしております。
+            最初に巨大な仕様を固定することはしません。<a href="/prooffirst" class="text-primary-500 font-semibold hover:text-primary-600">初期費用0円のゼロスタート</a>で検証用プロトタイプを作成し、実物を確認してからPoC・MVP・本開発へ進みます。要件が固まっていない段階からのご相談を歓迎します。
           </p>
         </div>
       </div>
@@ -90,7 +64,7 @@ const companyInfo = {
           <h2 class="text-3xl font-bold text-center mb-16">会社のカルチャー</h2>
           <div class="bg-white rounded-xl shadow-lg p-12">
             <p class="text-xl text-gray-700 leading-relaxed text-center italic">
-              "その場に求められる最適解を物作りの場において出す"
+              "言葉で正解を探し続けるより、動くものを見て確かめる。<br />その場に求められる最適解を、物作りの場で出す"
             </p>
           </div>
         </div>
@@ -103,15 +77,16 @@ const companyInfo = {
         <div class="max-w-4xl mx-auto">
           <h2 class="text-3xl font-bold text-center mb-16">代表プロフィール</h2>
           <div class="bg-white rounded-xl shadow-lg p-12">
-            <h3 class="text-2xl font-bold text-gray-800 mb-6">代表 鶴岡邦夫</h3>
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">代表 {companyInfo.representative}</h3>
             <div class="space-y-6 text-gray-600">
               <p>
-                フロントエンド、バックエンド、インフラと一通り対応できるフルスタックエンジニア。
-                自分も案件を受ける傍でマネジメントとディレクションを行い案件を並行しています。
+                フロントエンド、バックエンド、インフラまで一通り対応するフルスタックエンジニア。自らも実装しながら、複数案件のマネジメントとディレクションを並行しています。
               </p>
               <p>
-                個人で事業を行う過程でITで困る人が多いと知り、Beekleを立ち上げチームで受託を開始するようになりました。
-                創業2018年、現在のBeekleとしての会社の立ち上げが2023年になります。
+                現在は、自社開発のPM基盤「PM on Rails」を軸に、要求整理からAIエージェントによる実装までの開発プロセスそのものを設計・改善しています。
+              </p>
+              <p>
+                個人で事業を行う過程でITで困る人が多いと知り、Beekleを立ち上げチームで受託を開始。創業2018年、現在のBeekleとしての会社の立ち上げが2023年になります。
               </p>
             </div>
           </div>
@@ -131,10 +106,10 @@ const companyInfo = {
                   会社名: companyInfo.name,
                   設立: companyInfo.established,
                   資本金: companyInfo.capital,
-                  代表取締役: companyInfo.ceo,
+                  代表取締役: companyInfo.representative,
                   所在地: companyInfo.address,
                   メールアドレス: companyInfo.email,
-                  休日: companyInfo.holiday,
+                  休日: companyInfo.holidays,
                 }).map(([key, value]) => (
                   <div class="flex py-4 px-6">
                     <dt class="w-40 font-bold text-gray-700">{key}</dt>
@@ -150,7 +125,7 @@ const companyInfo = {
             <h3 class="text-xl font-bold text-gray-800 mb-6">事業内容</h3>
             <ol class="list-decimal list-inside space-y-4 text-gray-600">
               {
-                companyInfo.business.map((item) => (
+                companyInfo.businessActivities.map((item) => (
                   <li class="leading-relaxed">{item}</li>
                 ))
               }
@@ -169,7 +144,7 @@ const companyInfo = {
                         ? "税理士"
                         : type === "legal"
                           ? "弁護士"
-                          : type === "tech"
+                          : type === "technical"
                             ? "技術顧問"
                             : "労務顧問"}
                     </dt>
@@ -184,12 +159,3 @@ const companyInfo = {
     </section>
   </main>
 </Layout>
-
-<style>
-  .bg-grid-pattern {
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-</style>
