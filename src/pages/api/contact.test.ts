@@ -173,3 +173,48 @@ describe('POST /api/contact のCRM仕分け', () => {
     expect(await res.json()).toEqual({ success: true });
   });
 });
+
+describe('POST /api/contact のBuying Stage (tasks-v3 TASK-P0-03)', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn());
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.spyOn(console, 'info').mockImplementation(() => {});
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  function crmBody(mock: FetchMock): Record<string, unknown> {
+    const call = mock.mock.calls.find((c) => c[0] === CRM_URL);
+    if (!call) throw new Error('crm was not called');
+    return JSON.parse((call[1] as { body: string }).body) as Record<string, unknown>;
+  }
+
+  it('buyingStage指定時、Slackに検討状況ラベル・CRM metaに値が載る', async () => {
+    const fetchMock = routeFetch({ openrouter: () => llmVerdict('lead', '開発の相談') });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await POST({
+      request: contactRequest({ buyingStage: 'vendor_comparison' }),
+      locals: baseEnv(),
+    } as never);
+
+    expect(res.status).toBe(200);
+    expect(slackBody(fetchMock)).toContain('複数社を比較している');
+    const meta = (crmBody(fetchMock) as { meta: Record<string, unknown> }).meta;
+    expect(meta.buying_stage).toBe('vendor_comparison');
+  });
+
+  it('未選択でも送信でき、Slackは未選択・CRM metaはnullになる', async () => {
+    const fetchMock = routeFetch({ openrouter: () => llmVerdict('lead', '開発の相談') });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await POST({ request: contactRequest(), locals: baseEnv() } as never);
+
+    expect(res.status).toBe(200);
+    expect(slackBody(fetchMock)).toContain('検討状況');
+    const meta = (crmBody(fetchMock) as { meta: Record<string, unknown> }).meta;
+    expect(meta.buying_stage).toBeNull();
+  });
+});

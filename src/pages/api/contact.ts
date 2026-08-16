@@ -17,6 +17,8 @@ const TYPE_LABELS: Record<string, string> = {
   cdp: '顧客データを整理・活用したい',
   dx: '業務改善・AI導入について',
   tech_review: '社内データ・既存システムの不安を相談したい',
+  mvp_poc: 'MVP・PoC・新規事業検証について',
+  // legacy: サービス終了済みだが、キャッシュされた旧フォームからの送信をラベル不明にしないため残す
   global: '海外向けサービス開発について',
   partner: '開発パートナー・協業のご相談（開発会社・SIer様）',
   other: 'その他',
@@ -33,6 +35,8 @@ const ContactSchema = z.object({
   source: z.string().optional().default(''),
   intent: z.string().optional().default(''),
   phase: z.string().optional().default(''),
+  // 購買プロセス上の現在地 (tasks-v3 TASK-P0-03 / [B2B-1])。任意入力
+  buyingStage: z.string().trim().max(40).optional().default(''),
   turnstileToken: z.string().optional().default(''),
   // flow-interview など、開始時に既に Turnstile を通したセッション経由の送信
   sessionId: z.string().optional().default(''),
@@ -155,6 +159,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       source,
       intent,
       phase,
+      buyingStage,
       turnstileToken,
       sessionId,
       clientId,
@@ -195,6 +200,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     const typeStr = type;
     const typeLabel = TYPE_LABELS[typeStr] || typeStr || '未選択';
+    const BUYING_STAGE_LABELS: Record<string, string> = {
+      problem_recognition: '課題を整理している',
+      research: '情報収集中',
+      requirements: '要件を整理している',
+      vendor_comparison: '複数社を比較している',
+      purchase_decision: '発注先を決めたい',
+      unknown: 'まだ分からない',
+    };
+    const buyingStageLabel = buyingStage
+      ? BUYING_STAGE_LABELS[buyingStage] || buyingStage
+      : '未選択';
     const displayMessage = message || '未記入';
     // ユーザー由来の値は Slack mrkdwn の制御文字 (& < >) を無害化してから埋め込む。
     // これで <!channel>/<!here> の全員メンション、<url|偽装テキスト> のフィッシングリンク注入を防ぐ。
@@ -287,6 +303,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             { type: 'mrkdwn', text: `*お名前:*\n${escapeSlack(name) || '未記入'}` },
             { type: 'mrkdwn', text: `*会社名:*\n${escapeSlack(company) || '未記入'}` },
             { type: 'mrkdwn', text: `*電話番号:*\n${escapeSlack(phone) || '未記入'}` },
+            { type: 'mrkdwn', text: `*検討状況:*\n${escapeSlack(buyingStageLabel)}` },
           ],
         },
         {
@@ -320,6 +337,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         source: source || null,
         intent: intent || null,
         phase: phase || null,
+        buying_stage: buyingStage || null,
         landing_page: landingPage || null,
         referrer: referrer || null,
         ga_cid: clientId || null,
