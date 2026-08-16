@@ -2,6 +2,8 @@
 // src/components/seo/seo-head.astro
 // 再利用可能なSEOメタタグコンポーネント
 
+import { companyPositioning } from '../../data/company';
+
 export interface Props {
   title: string;
   description?: string;
@@ -15,7 +17,7 @@ export interface Props {
 
 const {
   title,
-  description = 'Beekle株式会社は、要件定義からAI駆動開発までを一つのプロセスで支援するシステム開発会社です。初期費用0円のゼロスタートで、動くプロトタイプを見てから判断できます。',
+  description = `Beekle株式会社は、${companyPositioning.short}${companyPositioning.zeroStart}`,
   canonical,
   ogImage = '/og-image.png',
   ogType = 'website',
