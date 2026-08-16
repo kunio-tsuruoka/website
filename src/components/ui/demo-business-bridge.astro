@@ -1,0 +1,77 @@
+---
+// AIデモを「動くこと」の証明で終わらせず、業務課題への橋にする固定セクション
+// (tasks-v3 TASK-P1-04)。デモをProduction相当と誤認させないための注記を必ず含む。
+
+interface Props {
+  /** このデモが使える業務（3〜5例） */
+  useCases: string[];
+  /** 実案件では追加で必要になること */
+  productionNeeds: string[];
+  /** 関連サービスLP */
+  serviceHref: string;
+  serviceLabel: string;
+  /** CTA計測用 source */
+  source: string;
+  /** CTAのintentパラメータ */
+  intent: string;
+}
+
+const { useCases, productionNeeds, serviceHref, serviceLabel, source, intent } = Astro.props;
+---
+
+<section class="py-12 md:py-16 bg-white">
+  <div class="container mx-auto px-6 md:px-8 max-w-5xl">
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="rounded-2xl border border-primary-100 bg-primary-50/60 p-6 md:p-8">
+        <h2 class="text-xl md:text-2xl font-bold text-navy-950">このデモが使える業務</h2>
+        <ul class="mt-4 space-y-2.5">
+          {useCases.map((u) => (
+            <li class="flex items-start gap-2 text-sm md:text-base text-neutral-700">
+              <span class="mt-1 w-4 h-4 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
+                <svg class="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+              </span>
+              {u}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
+        <h2 class="text-xl md:text-2xl font-bold text-navy-950">実案件では追加で必要になること</h2>
+        <p class="mt-2 text-xs md:text-sm text-neutral-500">
+          このデモは体験用です。本番のシステムには、少なくとも以下の設計・実装が加わります。
+        </p>
+        <ul class="mt-4 space-y-2.5">
+          {productionNeeds.map((n) => (
+            <li class="flex items-start gap-2 text-sm md:text-base text-neutral-700">
+              <span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-neutral-400"></span>
+              {n}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a
+        href={`/contact?source=${source}&intent=${intent}`}
+        data-cta-source={source}
+        data-cta-id="contact"
+        class="page-cta inline-flex min-h-[52px] items-center justify-center rounded-full bg-primary-500 px-8 py-3.5 text-base font-semibold text-white shadow-soft transition-all hover:bg-primary-600 hover:shadow-medium"
+      >
+        この仕組みを自社業務に使えるか相談する
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+      <a
+        href={serviceHref}
+        class="inline-flex min-h-[52px] items-center justify-center rounded-full border-2 border-primary-300 px-8 py-3.5 text-base font-semibold text-primary-700 transition hover:border-primary-500 hover:bg-primary-50"
+      >
+        {serviceLabel}
+      </a>
+    </div>
+  </div>
+</section>

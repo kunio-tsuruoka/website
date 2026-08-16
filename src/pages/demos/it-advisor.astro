@@ -2,6 +2,7 @@
 import { AiItAdvisor } from '@/features/ai-it-advisor';
 import { Header } from '../../components/header';
 import JsonLd from '../../components/seo/json-ld.astro';
+import DemoBusinessBridge from '../../components/ui/demo-business-bridge.astro';
 import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import Layout from '../../layouts/layout.astro';
@@ -49,6 +50,27 @@ const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
         </div>
       </div>
     </section>
+
+    <DemoBusinessBridge
+      useCases={[
+        '社内マニュアル・規程への問い合わせ対応',
+        '新人オンボーディングの質問対応',
+        '顧客サポートの一次回答',
+        '過去の提案・対応履歴の検索',
+        'ヘルプデスクのFAQ回答',
+      ]}
+      productionNeeds={[
+        '認証・アクセス権限（誰がどの文書を見られるか）',
+        '社内文書の取り込みと更新パイプライン',
+        '回答品質を測る評価データセット',
+        '監査ログ・利用分析',
+        '答えられない質問の有人引き継ぎ',
+      ]}
+      serviceHref="/services/rag-system-development"
+      serviceLabel="RAGシステム構築を見る"
+      source="demo-it-advisor-bridge"
+      intent="rag-system-development"
+    />
 
     <FloatingCTA source="tool-ai-it-advisor" />
   </main>

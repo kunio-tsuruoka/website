@@ -31,9 +31,8 @@ const knowledgeItems = [
   { label: '生成AI導入', href: '/column/genai-adoption' },
   { label: 'Beekleのナレッジ', href: '/knowledge' },
   { label: 'AIデモ', href: '/demos' },
-  { label: '発注準備キット（無料ツール）', href: '/tools' },
   { label: 'ゼロスタート開発 資料DL', href: '/downloads/zero-start' },
-  { label: '資料・ツール', href: '/materials' },
+  { label: '資料・判断材料', href: '/materials' },
 ];
 
 const aboutItems = [
