@@ -197,6 +197,15 @@ const allCases = [
       whyBeekle:
         'Beekleでは、要件を画面一覧ではなくユースケース単位で定義し、As-Is/To-Be、業務データ、例外、受入基準まで整理したうえで、同じ仕様を設計・API・画面・テストへつなげます。この案件でも要件定義から実機のスキャン・プリンター制御まで一貫して担当したため、現場固有の例外を実装段階で落とさずに済みました。',
     },
+    // 発注判断の裏側は、顧客ヒアリングで事実が取れた事例にのみ記載する（推測で埋めない）
+    decision: {
+      alternatives:
+        'オフショア開発会社との比較になり、価格はオフショアが下回っていました。Beekleの方が高い状態からの検討です。',
+      concerns:
+        '紙とベテランの記憶に依存した例外の多い業務で要件が複雑なうえ、オフショア開発では失敗のリスクが高いことが不安視されていました。',
+      whyChosen:
+        '価格差よりも、要件定義から一貫して進められる安心が決め手となり、価格で上回るBeekleが選定されました。',
+    },
   },
   {
     title: '生成AI OCRによるレシート売上データ化システム',
@@ -1317,6 +1326,40 @@ const hasPrevPage = currentPage > 1;
                         {case_study.strength.whyBeekle}
                       </p>
                       <p class="mt-4 text-sm text-gray-500">{case_study.strength.category}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* 発注判断の裏側（顧客ヒアリングで事実が取れた事例のみ） */}
+                {'decision' in case_study && case_study.decision && (
+                  <div class="lg:col-span-12 mt-8">
+                    <div class="rounded-2xl border border-neutral-200 bg-white p-6 md:p-8 shadow-soft">
+                      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary-500 text-white">
+                        発注判断の裏側
+                      </span>
+                      <p class="mt-3 text-sm text-gray-500">
+                        このお客様が、何と比較し、何を不安に感じ、なぜBeekleに決めたか。
+                      </p>
+                      <div class="mt-5 grid gap-5 md:grid-cols-3">
+                        <div class="rounded-xl bg-gray-50 p-5">
+                          <p class="text-sm font-bold text-primary-600 mb-2">比較した選択肢</p>
+                          <p class="text-sm text-gray-600 leading-relaxed">
+                            {case_study.decision.alternatives}
+                          </p>
+                        </div>
+                        <div class="rounded-xl bg-gray-50 p-5">
+                          <p class="text-sm font-bold text-primary-600 mb-2">不安だったこと</p>
+                          <p class="text-sm text-gray-600 leading-relaxed">
+                            {case_study.decision.concerns}
+                          </p>
+                        </div>
+                        <div class="rounded-xl border border-primary-200 bg-primary-50/40 p-5">
+                          <p class="text-sm font-bold text-primary-600 mb-2">Beekleを選んだ理由</p>
+                          <p class="text-sm text-gray-700 leading-relaxed font-medium">
+                            {case_study.decision.whyChosen}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}

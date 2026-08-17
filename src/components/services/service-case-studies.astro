@@ -74,6 +74,25 @@ const lastIsWide = caseStudies.length > 1 && caseStudies.length % 2 === 1;
                       <p class="mt-3 text-sm leading-relaxed text-neutral-700">{caseStudy.whyUs}</p>
                     </div>
                   )}
+                  {caseStudy.decision && (
+                    <div class="rounded-2xl bg-neutral-50 p-4 md:p-5">
+                      <p class="inline-flex items-center rounded-full bg-primary-500 px-3 py-1 text-xs font-bold tracking-wide text-white">発注判断の裏側</p>
+                      <dl class="mt-3 space-y-3">
+                        <div>
+                          <dt class="text-xs font-bold text-primary-600">比較した選択肢</dt>
+                          <dd class="mt-1 text-sm leading-relaxed text-neutral-700">{caseStudy.decision.alternatives}</dd>
+                        </div>
+                        <div>
+                          <dt class="text-xs font-bold text-primary-600">不安だったこと</dt>
+                          <dd class="mt-1 text-sm leading-relaxed text-neutral-700">{caseStudy.decision.concerns}</dd>
+                        </div>
+                        <div>
+                          <dt class="text-xs font-bold text-primary-600">Beekleを選んだ理由</dt>
+                          <dd class="mt-1 text-sm font-medium leading-relaxed text-neutral-800">{caseStudy.decision.whyChosen}</dd>
+                        </div>
+                      </dl>
+                    </div>
+                  )}
                   {caseStudy.techStack && caseStudy.techStack.length > 0 && (
                     <div class="rounded-2xl bg-neutral-50 p-4 md:p-5">
                       <p class="inline-flex items-center rounded-full bg-secondary-100 px-3 py-1 text-xs font-bold tracking-wide text-accent-950">技術スタック・構成</p>
