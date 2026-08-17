@@ -20,6 +20,18 @@ interface CaseStudy {
   whyUs?: string;
   /** 技術スタック・インフラ構成（任意）。`ラベル: 内容` 形式の文字列を推奨 */
   techStack?: string[];
+  /**
+   * 発注判断の裏側（任意）。顧客ヒアリングで事実が取れた事例にのみ記載する（推測で埋めない）。
+   * ヒアリング項目は docs/program/case-hearing-template.md を参照
+   */
+  decision?: {
+    /** 何社・何手段と比較したか */
+    alternatives: string;
+    /** 検討時に何が不安だったか */
+    concerns: string;
+    /** なぜBeekleを選んだか（決裁に効いた材料） */
+    whyChosen: string;
+  };
 }
 
 interface Feature {
