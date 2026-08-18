@@ -12,18 +12,24 @@ describe('requirements content upgrades', () => {
 
   it('upgrades the complete guide without removing unrelated SEO content', () => {
     const source = [
-      section('要件定義とは何か：目的と位置付け', `<p>old intro</p>${subsection('要件定義と要求定義の違い')}`),
+      section(
+        '要件定義とは何か：目的と位置付け',
+        `<p>old intro</p>${subsection('要件定義と要求定義の違い')}`
+      ),
       section('なぜ要件定義で失敗するのか'),
       section('要件定義の5つのフェーズ'),
       section('要件定義書に書くべき項目'),
       section('要件の書き方ルール：EARS記法'),
       section('要件定義の成果物チェックリスト'),
-      section('よくある質問', [
-        subsection('Q1. 要件定義の期間はどれくらいですか？'),
-        subsection('Q2. 要件定義の費用相場は？'),
-        subsection('Q4. 要件定義書は何ページくらいになりますか？'),
-        subsection('Q5. アジャイル開発でも要件定義書は必要ですか？'),
-      ].join('')),
+      section(
+        'よくある質問',
+        [
+          subsection('Q1. 要件定義の期間はどれくらいですか？'),
+          subsection('Q2. 要件定義の費用相場は？'),
+          subsection('Q4. 要件定義書は何ページくらいになりますか？'),
+          subsection('Q5. アジャイル開発でも要件定義書は必要ですか？'),
+        ].join('')
+      ),
       section('まとめ：要件定義は "投資"'),
     ].join('');
 
@@ -38,7 +44,10 @@ describe('requirements content upgrades', () => {
     const source = [
       section('Gherkinとは何か'),
       section('なぜ Gherkin が必要なのか'),
-      section('キーワードの意味と使い分け', `${subsection('When（操作・イベント）')}${subsection('Then（期待される結果）')}`),
+      section(
+        'キーワードの意味と使い分け',
+        `${subsection('When（操作・イベント）')}${subsection('Then（期待される結果）')}`
+      ),
       section('Gherkin と EARS の関係'),
       section('Gherkin を実行する：主要フレームワーク'),
       section('Gherkin を導入するステップ'),
