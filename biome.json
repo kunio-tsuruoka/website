@@ -27,7 +27,15 @@
         "noArrayIndexKey": "off"
       }
     },
-    "ignore": [".astro", "dist/**", "astro.config.mjs", "node_modules/**", "*.generated.*"]
+    "ignore": [
+      ".astro",
+      "dist/**",
+      "astro.config.mjs",
+      "node_modules/**",
+      "*.generated.*",
+      "src/lib/requirements-content-upgrades.js",
+      "scripts/rewrite-requirements-content-2026-08-19.mjs"
+    ]
   },
   "formatter": {
     "enabled": true,
