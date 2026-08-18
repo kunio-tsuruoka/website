@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - content/requirements-rewrite-2026-08-19
-  pull_request:
-    branches:
-      - main
+    paths-ignore:
+      - 'reports/requirements-content-rewrite-latest.txt'
+
+permissions:
+  contents: write
 
 jobs:
   validate-and-apply:
@@ -14,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: content/requirements-rewrite-2026-08-19
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
@@ -22,9 +26,26 @@ jobs:
         env:
           MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
           MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+        shell: bash
         run: |
+          set +e
+          mkdir -p reports
           if [ -f scripts/.apply-requirements-rewrite ]; then
-            node scripts/rewrite-requirements-content-2026-08-19.mjs --apply
+            node scripts/rewrite-requirements-content-2026-08-19.mjs --apply > reports/requirements-content-rewrite-latest.txt 2>&1
+            code=$?
           else
-            node scripts/rewrite-requirements-content-2026-08-19.mjs
+            node scripts/rewrite-requirements-content-2026-08-19.mjs > reports/requirements-content-rewrite-latest.txt 2>&1
+            code=$?
           fi
+          cat reports/requirements-content-rewrite-latest.txt
+          echo "exit_code=$code" >> reports/requirements-content-rewrite-latest.txt
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/requirements-content-rewrite-latest.txt
+          if [ -f scripts/.apply-requirements-rewrite ]; then
+            git rm scripts/.apply-requirements-rewrite
+          fi
+          git commit -m "chore: record requirements rewrite validation [skip ci]" || true
+          git push origin HEAD:content/requirements-rewrite-2026-08-19
+          exit $code
