@@ -15,6 +15,7 @@ import {
   getRelatedColumns,
   isPillarArticle,
 } from '../../lib/microcms';
+import { upgradeRequirementsContent } from '../../lib/requirements-content-upgrades.js';
 import { type TocItem, slugify } from '../../lib/toc';
 
 // SSR: リクエスト時にMicroCMSから取得
@@ -39,6 +40,9 @@ const isKnowledge = column?.category?.id === 'knowledge';
 if (!column) {
   return Astro.redirect('/404');
 }
+
+// 既存のslug/title/description/categoryを維持し、対象6記事の本文だけを現在のBeekle実務へ更新する。
+column.content = upgradeRequirementsContent(columnId, column.content || '');
 
 // 目次データを収集しながらHTMLを生成するカスタムレンダラー
 const toc: TocItem[] = [];
