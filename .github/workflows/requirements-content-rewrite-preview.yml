@@ -1,51 +1,70 @@
-name: Requirements content rewrite preview
+name: Requirements rewrite branch validation
 
 on:
   push:
     branches:
       - content/requirements-rewrite-2026-08-19
     paths-ignore:
-      - 'reports/requirements-content-rewrite-latest.txt'
+      - 'reports/requirements-rewrite-ci.txt'
 
 permissions:
   contents: write
 
 jobs:
-  validate-and-apply:
-    name: MicroCMS rewrite validation
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: content/requirements-rewrite-2026-08-19
+          fetch-depth: 0
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+
+      - name: Restore column route and apply minimal hook
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout origin/main -- 'src/pages/column/[...slug].astro'
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('src/pages/column/[...slug].astro')
+          text = path.read_text()
+          import_anchor = "} from '../../lib/microcms';\n"
+          import_line = "import { upgradeRequirementsContent } from '../../lib/requirements-content-upgrades.js';\n"
+          if import_line not in text:
+              text = text.replace(import_anchor, import_anchor + import_line, 1)
+          hook_anchor = "if (!column) {\n  return Astro.redirect('/404');\n}\n"
+          hook = "\n// 既存のslug/title/description/categoryを維持し、対象6記事の本文だけを現在のBeekle実務へ更新する。\ncolumn.content = upgradeRequirementsContent(columnId, column.content || '');\n"
+          if hook not in text:
+              text = text.replace(hook_anchor, hook_anchor + hook, 1)
+          path.write_text(text)
+          PY
+
       - run: bun install --frozen-lockfile
-      - name: Validate rewrite against current MicroCMS content
-        env:
-          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
-          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+
+      - name: Run repository validation
         shell: bash
         run: |
           set +e
           mkdir -p reports
-          if [ -f scripts/.apply-requirements-rewrite ]; then
-            node scripts/rewrite-requirements-content-2026-08-19.mjs --apply > reports/requirements-content-rewrite-latest.txt 2>&1
-            code=$?
-          else
-            node scripts/rewrite-requirements-content-2026-08-19.mjs > reports/requirements-content-rewrite-latest.txt 2>&1
-            code=$?
-          fi
-          cat reports/requirements-content-rewrite-latest.txt
-          echo "exit_code=$code" >> reports/requirements-content-rewrite-latest.txt
+          : > reports/requirements-rewrite-ci.txt
+          for cmd in "bun run check:ci" "bun run test:ci" "bun run build"; do
+            echo "=== $cmd ===" | tee -a reports/requirements-rewrite-ci.txt
+            bash -lc "$cmd" 2>&1 | tee -a reports/requirements-rewrite-ci.txt
+            status=${PIPESTATUS[0]}
+            echo "exit_code=$status" | tee -a reports/requirements-rewrite-ci.txt
+            if [ "$status" -ne 0 ]; then
+              failed=1
+            fi
+          done
+          echo "route_diff:" | tee -a reports/requirements-rewrite-ci.txt
+          git diff origin/main -- 'src/pages/column/[...slug].astro' | tee -a reports/requirements-rewrite-ci.txt
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/requirements-content-rewrite-latest.txt
-          if [ -f scripts/.apply-requirements-rewrite ]; then
-            git rm scripts/.apply-requirements-rewrite
-          fi
-          git commit -m "chore: record requirements rewrite validation [skip ci]" || true
+          git add 'src/pages/column/[...slug].astro' reports/requirements-rewrite-ci.txt
+          git commit -m "fix: keep column route change minimal [skip ci]" || true
           git push origin HEAD:content/requirements-rewrite-2026-08-19
-          exit $code
+          test -z "$failed"
