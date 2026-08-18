@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - content/requirements-rewrite-2026-08-19
+  pull_request:
+    branches:
+      - main
 
 jobs:
   validate-and-apply:
