@@ -1,0 +1,27 @@
+name: Requirements content rewrite preview
+
+on:
+  push:
+    branches:
+      - content/requirements-rewrite-2026-08-19
+
+jobs:
+  validate-and-apply:
+    name: MicroCMS rewrite validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Validate rewrite against current MicroCMS content
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+        run: |
+          if [ -f scripts/.apply-requirements-rewrite ]; then
+            node scripts/rewrite-requirements-content-2026-08-19.mjs --apply
+          else
+            node scripts/rewrite-requirements-content-2026-08-19.mjs
+          fi
