@@ -41,6 +41,11 @@ jobs:
               text = text.replace(hook_anchor, hook_anchor + hook, 1)
           path.write_text(text)
           PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'src/pages/column/[...slug].astro'
+          git commit -m "fix: keep column route change minimal [skip ci]" || true
+          git push origin HEAD:content/requirements-rewrite-2026-08-19
 
       - run: bun install --frozen-lockfile
 
@@ -61,10 +66,7 @@ jobs:
           done
           echo "route_diff:" | tee -a reports/requirements-rewrite-ci.txt
           git diff origin/main -- 'src/pages/column/[...slug].astro' | tee -a reports/requirements-rewrite-ci.txt
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add 'src/pages/column/[...slug].astro' reports/requirements-rewrite-ci.txt
-          git commit -m "fix: keep column route change minimal [skip ci]" || true
+          git add reports/requirements-rewrite-ci.txt
+          git commit -m "chore: record requirements rewrite CI [skip ci]" || true
           git push origin HEAD:content/requirements-rewrite-2026-08-19
           test -z "$failed"
