@@ -1,0 +1,229 @@
+---
+interface Props {
+  serviceId: string;
+}
+
+const { serviceId } = Astro.props;
+
+type RiskItem = {
+  risk: string;
+  control: string;
+  gate: string;
+};
+
+type RiskConfig = {
+  title: string;
+  lead: string;
+  risks: RiskItem[];
+};
+
+const commonGate = {
+  title: '検証で基準を満たさなければ、本開発へ進めません',
+  description:
+    'AIは実データを当てるまで精度・速度・費用を完全には読めません。最初に成功基準と中止基準を合意し、実データで評価します。基準を満たさない場合は、無理に本開発へ進めず、原因・検証結果・代替案を成果物として残します。No-Goを早く判断できることも、検証の成果です。',
+};
+
+const configs: Record<string, RiskConfig> = {
+  'ai-development': {
+    title: 'AI開発の不確実性を、先に管理する',
+    lead:
+      '通常のシステム開発と違い、生成AIは同じ入力でも出力が揺れます。データ・モデル・費用・運用条件によって結果も変わるため、「作れば使える」を前提にせず、検証と安全網を工程に組み込みます。',
+    risks: [
+      {
+        risk: '出力品質が一定ではない',
+        control: '正解例・NG例・難しい例から評価データセットを作り、人の確認が必要な範囲も定義します。',
+        gate: '受入条件を満たすか。満たさない場合は用途縮小・人間レビュー・方式変更を判断します。',
+      },
+      {
+        risk: '実データで精度が出るか読めない',
+        control: 'ダミーデータだけで判断せず、可能な範囲で実業務に近いデータを使って早期検証します。',
+        gate: '対象業務のデータ量・品質で成立するか。成立しなければ対象業務を変えるかNo-Goにします。',
+      },
+      {
+        risk: 'API費用・速度・モデル仕様が変わる',
+        control: '1件あたり費用、応答時間、利用量を計測し、モデル差し替えや上限設定を前提に設計します。',
+        gate: '想定利用量で費用対効果と応答時間が許容範囲かを確認します。',
+      },
+      {
+        risk: '機密情報・権限・誤操作の事故',
+        control: '最小権限、人の承認、実行ログ、データ送信範囲を設計し、必要な操作だけAIへ許可します。',
+        gate: '情シス・業務責任者が許容できる権限と監査性を確保できるかを確認します。',
+      },
+    ],
+  },
+  'rag-system-development': {
+    title: 'RAGの「答えられるはず」を、テスト可能にする',
+    lead:
+      'RAGは文書を入れれば正しく答える仕組みではありません。検索漏れ、古い文書、権限違反、ハルシネーションを前提に、質問セットと根拠確認で成立性を測ります。',
+    risks: [
+      {
+        risk: '必要な根拠を検索できない',
+        control: '業務で実際に出る質問を評価セット化し、Recall・MRR・引用元の妥当性を継続測定します。',
+        gate: '重要質問で必要な根拠へ到達できるか。難しければ検索方式・文書構造を見直します。',
+      },
+      {
+        risk: '根拠外の回答・ハルシネーション',
+        control: '引用必須、根拠外は回答しない条件、人への確認導線を設けます。',
+        gate: '誤回答のコストに対して、許容できるエラー率と確認フローになっているかを判断します。',
+      },
+      {
+        risk: '古い文書や権限外情報を参照する',
+        control: '更新フロー、文書の有効期限、アクセス権を検索時にも反映し、誰が何を見たかをログ化します。',
+        gate: 'データ更新と権限同期を運用できる体制があるかを確認します。',
+      },
+      {
+        risk: '高精度化のため構成が過剰になる',
+        control: 'ベクトル検索で十分ならGraphRAG等を追加せず、実測で必要な複雑さだけ採用します。',
+        gate: '精度向上分が開発・運用コストに見合うかを比較します。',
+      },
+    ],
+  },
+  'internal-document-ai-search': {
+    title: '社内文書AIは、文書品質と運用まで含めて評価する',
+    lead:
+      '検索AIの精度はモデルだけでは決まりません。文書の鮮度、重複、版管理、権限、質問の種類によって結果が変わるため、導入前に「答えられる範囲」を明確にします。',
+    risks: [
+      {
+        risk: '文書自体が古い・矛盾している',
+        control: '正本・版・更新日を整理し、回答根拠を必ず表示して人が原本へ戻れるようにします。',
+        gate: 'AI以前に文書管理を直す必要がある場合は、その範囲を先に切り出します。',
+      },
+      {
+        risk: '質問によって検索精度が大きく変わる',
+        control: '実際の利用者から質問を集め、頻出・重要・難問を分けて評価します。',
+        gate: '重要質問群で業務利用できる水準に達するかを確認します。',
+      },
+      {
+        risk: '見せてはいけない文書が回答に混ざる',
+        control: 'ユーザー・部署・文書単位の権限を検索経路へ反映し、閲覧ログを残します。',
+        gate: '既存の権限体系をAI側でも再現できるかを本番前に確認します。',
+      },
+      {
+        risk: '導入後に文書更新が止まる',
+        control: '追加・更新・削除の運用担当と同期方法を決め、古い情報が残らない仕組みにします。',
+        gate: '継続更新できる運用責任者と手順が決まっているかを確認します。',
+      },
+    ],
+  },
+  'ai-chatbot-development': {
+    title: 'チャットボットは、答えられない時の設計までが品質',
+    lead:
+      'チャットボットは誤回答ゼロを前提にできません。回答範囲、有人への戻し方、利用ログ、コスト上限を先に決め、AIが無理に答えない状態を作ります。',
+    risks: [
+      {
+        risk: 'もっともらしい誤回答を返す',
+        control: '根拠付き回答、回答禁止条件、確信できない場合の有人引き継ぎを実装します。',
+        gate: '誤回答時の影響に応じた自動回答範囲になっているかを確認します。',
+      },
+      {
+        risk: '人への引き継ぎで利用者が詰まる',
+        control: '会話履歴・要約・問い合わせ内容を人へ渡し、最初から説明し直さなくてよい導線にします。',
+        gate: '営業時間外や担当者不在時も含め、引き継ぎSLAが成立するかを確認します。',
+      },
+      {
+        risk: '利用増でAPI費用が想定を超える',
+        control: '1会話あたりの利用量、キャッシュ、モデル選択、上限を設計し、費用を監視します。',
+        gate: '想定問い合わせ件数で人件費削減とAI費用が見合うかを確認します。',
+      },
+      {
+        risk: '個人情報・機密情報を不用意に扱う',
+        control: '入力可能情報、保存期間、ログの閲覧権限、外部APIへ送る範囲を決めます。',
+        gate: '情報管理ルールに適合できない場合は対象データを限定します。',
+      },
+    ],
+  },
+  'ocr-ai-development': {
+    title: 'OCRは、100%認識ではなく「例外を安全に戻せるか」で設計する',
+    lead:
+      '帳票の画質、レイアウト、手書き、項目名の揺れによって認識率は変わります。全件正解を約束するのではなく、AIが迷った箇所だけ人へ戻すことで業務全体の工数を減らします。',
+    risks: [
+      {
+        risk: '帳票によって読み取り精度が変わる',
+        control: '実帳票を種類・画質・例外ごとに集め、項目単位で精度と確信度を測ります。',
+        gate: '重要項目で必要精度を満たすか。満たさなければ対象帳票や項目を限定します。',
+      },
+      {
+        risk: '誤認識が後続システムへ流れる',
+        control: '確信度が低い項目、金額など重要項目を人のレビュー対象にし、承認後だけ連携します。',
+        gate: '誤入力の損失に対してレビュー条件が十分かを確認します。',
+      },
+      {
+        risk: '人の確認が多すぎて工数が減らない',
+        control: '全件確認ではなく例外確認率をKPIにし、どの項目で人手が残るかを測ります。',
+        gate: '確認工数を含めても現行より総工数が減るかを判断します。',
+      },
+      {
+        risk: '大量処理で費用・処理時間が膨らむ',
+        control: '1枚あたり費用と処理時間を計測し、OCR・Vision・LLMの役割を分けて最適化します。',
+        gate: '月間処理量で費用と締め時間に収まるかを確認します。',
+      },
+    ],
+  },
+  'ai-agent-development': {
+    title: 'AIエージェントは、できることより先に「止め方」を設計する',
+    lead:
+      'エージェントは外部システムを操作できる分、誤回答より事故コストが大きくなります。権限、承認、再実行、監査ログを先に設計し、任せる範囲を段階的に広げます。',
+    risks: [
+      {
+        risk: '誤った操作・高権限の実行',
+        control: '最小権限、操作ごとの許可、重要操作前の人間承認、禁止操作を明示します。',
+        gate: '自動実行してよい操作と人が承認すべき操作を業務責任者が合意できるかを確認します。',
+      },
+      {
+        risk: 'API失敗や二重実行で業務データが壊れる',
+        control: '冪等性、再試行、タイムアウト、途中状態の保存、ロールバック方針を設計します。',
+        gate: '失敗時に人が復旧でき、同じ操作を重複実行しないことをテストします。',
+      },
+      {
+        risk: 'プロンプトインジェクション・情報漏洩',
+        control: '外部入力を命令として信用しない設計、ツール権限分離、機密データの送信制限、監査ログを組み込みます。',
+        gate: '攻撃入力を含む異常系テストで、権限外操作や機密出力が起きないかを確認します。',
+      },
+      {
+        risk: '自動化範囲が広がり、誰も判断根拠を追えなくなる',
+        control: '実行理由、入力、使用ツール、結果、承認者をログに残し、後から追跡できる状態にします。',
+        gate: '監査・事故調査に必要な情報が残るかを確認してから自動化範囲を広げます。',
+      },
+    ],
+  },
+};
+
+const config = configs[serviceId];
+---
+
+{config && (
+  <section class="relative overflow-hidden bg-neutral-50 py-16 md:py-20">
+    <div class="container relative mx-auto px-6 lg:px-12">
+      <div class="mx-auto max-w-6xl">
+        <div class="max-w-4xl">
+          <p class="text-sm font-bold tracking-wide text-amber-700">AI UNCERTAINTY / RISK MANAGEMENT</p>
+          <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">{config.title}</h2>
+          <p class="mt-4 text-base leading-relaxed text-neutral-700 md:text-lg">{config.lead}</p>
+        </div>
+
+        <div class="mt-8 grid gap-4 md:grid-cols-2">
+          {config.risks.map((item) => (
+            <article class="rounded-3xl border border-neutral-200 bg-white p-5 shadow-soft md:p-6">
+              <p class="text-xs font-bold tracking-wide text-amber-700">RISK</p>
+              <h3 class="mt-2 text-xl font-bold leading-snug text-accent-950">{item.risk}</h3>
+              <div class="mt-4 rounded-2xl bg-primary-50 p-4">
+                <p class="text-xs font-bold tracking-wide text-primary-700">どう抑えるか</p>
+                <p class="mt-2 text-sm leading-relaxed text-neutral-700">{item.control}</p>
+              </div>
+              <div class="mt-3 rounded-2xl bg-neutral-50 p-4">
+                <p class="text-xs font-bold tracking-wide text-neutral-600">GO / NO-GO</p>
+                <p class="mt-2 text-sm leading-relaxed text-neutral-700">{item.gate}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div class="mt-6 rounded-3xl border border-amber-200 bg-amber-50 p-5 md:p-7">
+          <p class="text-xs font-bold tracking-wide text-amber-800">STOP RULE</p>
+          <h3 class="mt-2 text-xl font-bold text-accent-950 md:text-2xl">{commonGate.title}</h3>
+          <p class="mt-3 text-sm leading-relaxed text-neutral-700 md:text-base">{commonGate.description}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
