@@ -2,7 +2,11 @@ import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
 
-const proofPoints = ['初期費用0円で検証', '最短数日でプロトタイプ', '業務に合わせて本開発へ'];
+const proofPoints = [
+  'ヒアリングから要件化',
+  'PM on Railsで実装・テスト',
+  '導入・運用まで一気通貫',
+];
 
 export const HeroSection = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -27,22 +31,22 @@ export const HeroSection = () => {
           className="max-w-3xl"
         >
           <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white shadow-soft backdrop-blur">
-            発注前に、動くものを見て判断する開発
+            ヒアリング → 要件化 → 実装 → テスト → 導入
           </span>
 
           <h1 className="mt-6 text-3xl font-bold leading-tight text-white md:text-5xl xl:text-6xl">
-            業務に合うかを
+            業務を聞く。
             <br />
-            <span className="text-secondary-300">動くプロトタイプ</span>で
+            <span className="text-secondary-300">仕様に変える。</span>
             <br />
-            確かめてから、
+            動かす。
             <br />
-            本開発へ進む。
+            導入する。
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/90 md:text-xl">
-            Beekleは、AI・Webアプリ・業務システムを「要件整理だけ」で終わらせません。
-            現場の流れを読み解き、数日から触れる形にして、費用・効果・使い勝手を判断できる状態まで持っていきます。
+            Beekleは、AI・Webアプリ・業務システムを「コンサルします」「要件を整理します」で終わらせません。
+            自社開発のPM基盤「PM on Rails」で、ヒアリング内容を要求・受入条件・開発タスクへつなぎ、そのままAIエージェントで実装・テスト。現場導入と運用まで一気通貫で進めます。
           </p>
 
           <div className="mt-8 grid max-w-2xl gap-3 sm:grid-cols-3">
@@ -85,7 +89,7 @@ export const HeroSection = () => {
           </motion.div>
 
           <p className="mt-5 text-sm leading-relaxed text-white/70">
-            AI導入、社内業務アプリ、顧客データ活用など、まだ要件が固まっていない段階から相談できます。
+            AI導入、社内業務アプリ、顧客データ活用など、要件が固まっていない段階から相談できます。
           </p>
         </motion.div>
       </div>
