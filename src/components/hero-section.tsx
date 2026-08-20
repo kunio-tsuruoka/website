@@ -2,11 +2,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
 
-const proofPoints = [
-  'ヒアリングから要件化',
-  'PM on Railsで実装・テスト',
-  '導入・運用まで一気通貫',
-];
+const proofPoints = ['ヒアリングから要件化', 'PM on Railsで実装・テスト', '導入・運用まで一気通貫'];
 
 export const HeroSection = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -46,7 +42,8 @@ export const HeroSection = () => {
 
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/90 md:text-xl">
             Beekleは、AI・Webアプリ・業務システムを「コンサルします」「要件を整理します」で終わらせません。
-            自社開発のPM基盤「PM on Rails」で、ヒアリング内容を要求・受入条件・開発タスクへつなぎ、そのままAIエージェントで実装・テスト。現場導入と運用まで一気通貫で進めます。
+            自社開発のPM基盤「PM on
+            Rails」で、ヒアリング内容を要求・受入条件・開発タスクへつなぎ、そのままAIエージェントで実装・テスト。現場導入と運用まで一気通貫で進めます。
           </p>
 
           <div className="mt-8 grid max-w-2xl gap-3 sm:grid-cols-3">
