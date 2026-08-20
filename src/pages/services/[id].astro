@@ -13,6 +13,7 @@ import ServiceFaq from '@/components/services/service-faq.astro';
 import ServiceFeatures from '@/components/services/service-features.astro';
 import ServiceHero from '@/components/services/service-hero.astro';
 import ServicePainPoints from '@/components/services/service-pain-points.astro';
+import ServiceProductPackage from '@/components/services/service-product-package.astro';
 import ServiceRootCause from '@/components/services/service-root-cause.astro';
 import ServiceSolutions from '@/components/services/service-solutions.astro';
 import ServiceWhyBeekle from '@/components/services/service-why-beekle.astro';
@@ -174,6 +175,7 @@ const featuresCopy = sectionCopy[service.id]?.features;
     <ServicePainPoints painPoints={service.painPoints} number={sectionNumbers.painPoints} />
     <ServiceRootCause rootCause={servicePageConfig?.rootCause} />
     <ServiceBusinessFlow flow={servicePageConfig?.flow} />
+    {service.id !== 'ai-development' && <ServiceProductPackage serviceId={service.id} />}
     {servicePageConfig && <ServiceAiDesignStrength serviceId={service.id} />}
     {servicePageConfig && <ServiceAiRiskManagement serviceId={service.id} />}
     {rtb && <ServiceWhyBeekle rtb={rtb} number={sectionNumbers.whyBeekle} />}
