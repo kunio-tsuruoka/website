@@ -3,6 +3,19 @@ interface Props {
   serviceId: string;
 }
 
+type ProcessItem = {
+  label: string;
+  title: string;
+  description: string;
+};
+
+type DeliveryPackage = {
+  promise: string;
+  process: string;
+  deliverables: string[];
+  note?: string;
+};
+
 const { serviceId } = Astro.props;
 
 const themes: Record<
@@ -15,8 +28,72 @@ const themes: Record<
     outputs: string[];
     caption: string;
     closing: { title: string; description: string };
+    process?: ProcessItem[];
+    deliveryPackage?: DeliveryPackage;
   }
 > = {
+  'ai-development': {
+    label: 'AI IMPLEMENTATION PACKAGE',
+    title: 'ヒアリングから、実装・テスト・導入までを一つにつなぐ',
+    center: 'PM on Rails',
+    inputs: ['業務ヒアリング', '現行資料', '判断基準', '例外・権限'],
+    outputs: ['実装できる要件', '動くAI・業務システム', 'テスト結果', '運用ルール'],
+    caption:
+      '「AIコンサル」で提案書を渡して終わりにはしません。ヒアリング内容をPM on Railsで要求・ユーザーストーリー・受入条件・開発タスクへ構造化し、そのままAIエージェントで実装・テストし、現場導入まで進めます。',
+    deliveryPackage: {
+      promise:
+        '対象業務を一つに絞り、AIを使う範囲・人が確認する範囲を決め、実際に現場で使える状態まで持っていきます。',
+      process:
+        '業務ヒアリング → 要件構造化 → 成功基準・受入条件 → プロトタイプ → AI実装・テスト → 導入・定着',
+      deliverables: [
+        'AI活用候補と優先順位',
+        'As-Is / To-Be業務フロー',
+        '要求・ユーザーストーリー・受入条件',
+        '動くAI機能・業務システム',
+        '評価データセット・テスト結果',
+        '権限・人の確認条件・実行ログ設計',
+        '操作・運用ルールと改善バックログ',
+      ],
+      note: '成果物は案件の対象業務に合わせて調整します。最初から全社導入を狙わず、効果を測れる一業務から始めます。',
+    },
+    process: [
+      {
+        label: '聞く',
+        title: '業務ヒアリング',
+        description: '現場の流れ・例外・判断・困りごとを整理する',
+      },
+      {
+        label: '構造化',
+        title: 'PM on Railsで要件化',
+        description: '要求をユーザーストーリーと開発タスクへつなぐ',
+      },
+      {
+        label: '基準化',
+        title: '受入条件を決める',
+        description: '何をもって「使える」とするかを先に定義する',
+      },
+      {
+        label: '作る',
+        title: 'AIで実装',
+        description: '仕様をAIエージェントへつなぎ、動く形にする',
+      },
+      {
+        label: '確かめる',
+        title: 'テスト・実データ検証',
+        description: '精度・削減時間・確認工数・例外を測る',
+      },
+      {
+        label: '使う',
+        title: '導入・定着',
+        description: '権限・ログ・人の確認・運用ルールまで整える',
+      },
+    ],
+    closing: {
+      title: 'なぜ、コンサルで止まらず導入まで進められるのか',
+      description:
+        'ヒアリング結果を人が読むだけの議事録や提案書で終わらせず、PM on Rails上で要求→ユーザーストーリー→受入条件→開発タスクへ接続します。実装後のテスト結果や変更も同じ流れへ戻せるため、「コンサル会社が整理して、別の開発会社へ説明し直す」という分断がありません。業務理解から実装・検証・導入まで、同じ文脈のまま進められます。',
+    },
+  },
   'rag-system-development': {
     label: 'RAG / ONTOLOGY DESIGN',
     title: '文書を入れる前に、答えるべき問いを決める',
@@ -98,9 +175,7 @@ const defaultTheme = {
   },
 };
 
-const theme = themes[serviceId] ?? defaultTheme;
-
-const process = [
+const defaultProcess: ProcessItem[] = [
   {
     label: '聞く',
     title: '徹底ヒアリング',
@@ -117,6 +192,11 @@ const process = [
     description: '構造・権限・評価基準を決める',
   },
 ];
+
+const theme = themes[serviceId] ?? defaultTheme;
+const process = 'process' in theme && theme.process ? theme.process : defaultProcess;
+const deliveryPackage = 'deliveryPackage' in theme ? theme.deliveryPackage : undefined;
+const processGridClass = process.length >= 6 ? 'md:grid-cols-3 lg:grid-cols-6' : 'md:grid-cols-3';
 ---
 
 <section class="relative overflow-hidden bg-accent-950 py-16 md:py-20">
@@ -149,15 +229,19 @@ const process = [
 
         <div class="rounded-3xl bg-white p-4 shadow-strong md:p-6">
           <div class="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
-            <div class="grid grid-cols-2 gap-2">
-              {theme.inputs.map((item) => (
-                <div class="rounded-2xl bg-neutral-50 px-3 py-3 text-center text-sm font-bold text-navy-950">
-                  {item}
-                </div>
-              ))}
+            <div>
+              <p class="mb-2 text-xs font-bold tracking-wide text-neutral-500">INPUT</p>
+              <div class="grid grid-cols-2 gap-2">
+                {theme.inputs.map((item) => (
+                  <div class="rounded-2xl bg-neutral-50 px-3 py-3 text-center text-sm font-bold text-navy-950">
+                    {item}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div class="flex items-center justify-center">
+            <div class="flex flex-col items-center justify-center">
+              <p class="mb-2 text-xs font-bold tracking-wide text-neutral-500">CONNECT</p>
               <div class="relative flex h-32 w-32 items-center justify-center rounded-full bg-primary-500 text-center text-base font-bold leading-snug text-white shadow-medium">
                 {theme.center}
                 <span class="absolute -left-3 top-1/2 hidden -translate-y-1/2 text-3xl text-primary-300 md:block">
@@ -169,21 +253,63 @@ const process = [
               </div>
             </div>
 
-            <div class="grid gap-2">
-              {theme.outputs.map((item) => (
-                <div class="flex min-h-14 items-center gap-3 rounded-2xl bg-primary-50 px-4 py-3 text-sm font-bold text-navy-950">
-                  <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary-500 text-accent-950">
-                    ✓
-                  </span>
-                  <span>{item}</span>
-                </div>
-              ))}
+            <div>
+              <p class="mb-2 text-xs font-bold tracking-wide text-neutral-500">DELIVERABLES</p>
+              <div class="grid gap-2">
+                {theme.outputs.map((item) => (
+                  <div class="flex min-h-14 items-center gap-3 rounded-2xl bg-primary-50 px-4 py-3 text-sm font-bold text-navy-950">
+                    <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary-500 text-accent-950">
+                      ✓
+                    </span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-8 grid gap-3 md:grid-cols-3">
+      {deliveryPackage && (
+        <div class="mt-8 rounded-3xl border border-white/15 bg-white/10 p-5 md:p-7">
+          <div class="max-w-3xl">
+            <p class="text-sm font-bold tracking-wide text-primary-200">約束 × 工程 × 成果物</p>
+            <h3 class="mt-2 text-2xl font-bold text-white md:text-3xl">
+              「何をしてくれる会社か」を、最初から明確にします
+            </h3>
+          </div>
+          <div class="mt-6 grid gap-4 lg:grid-cols-3">
+            <article class="rounded-2xl bg-white p-5 shadow-soft">
+              <p class="text-xs font-bold tracking-wide text-primary-500">PROMISE / 約束</p>
+              <p class="mt-3 text-sm font-semibold leading-relaxed text-navy-950 md:text-base">
+                {deliveryPackage.promise}
+              </p>
+            </article>
+            <article class="rounded-2xl bg-white p-5 shadow-soft">
+              <p class="text-xs font-bold tracking-wide text-primary-500">PROCESS / 工程</p>
+              <p class="mt-3 text-sm font-semibold leading-relaxed text-navy-950 md:text-base">
+                {deliveryPackage.process}
+              </p>
+            </article>
+            <article class="rounded-2xl bg-white p-5 shadow-soft">
+              <p class="text-xs font-bold tracking-wide text-primary-500">DELIVERABLES / 成果物</p>
+              <ul class="mt-3 space-y-2">
+                {deliveryPackage.deliverables.map((item) => (
+                  <li class="flex gap-2 text-sm leading-relaxed text-neutral-700">
+                    <span class="mt-0.5 font-bold text-secondary-500">✓</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+          {deliveryPackage.note && (
+            <p class="mt-4 text-sm leading-relaxed text-white/70">{deliveryPackage.note}</p>
+          )}
+        </div>
+      )}
+
+      <div class:list={['mt-8 grid gap-3', processGridClass]}>
         {process.map((item, index) => (
           <article class="rounded-3xl bg-white/10 p-5 text-white">
             <div class="flex items-center gap-3">
