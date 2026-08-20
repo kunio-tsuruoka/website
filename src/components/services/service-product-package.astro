@@ -1,0 +1,272 @@
+---
+interface Props {
+  serviceId: string;
+}
+
+type PackageConfig = {
+  promise: string;
+  process: string[];
+  deliverables: string[];
+  boundary: string;
+};
+
+const { serviceId } = Astro.props;
+
+const configs: Record<string, PackageConfig> = {
+  'web-mobile-development': {
+    promise:
+      '要件が固まっていない段階から入り、動くものを確認しながら仕様を固め、実装・テスト・公開・運用まで一つのチームで進めます。',
+    process: [
+      '業務・課題ヒアリング',
+      '要求・スコープ整理',
+      'プロトタイプ確認',
+      '受入条件・設計',
+      '実装・テスト',
+      '公開・運用改善',
+    ],
+    deliverables: [
+      '要求・ユーザーストーリー・受入条件',
+      '画面・動くプロトタイプ',
+      'ソースコードと実稼働システム',
+      'テスト結果・リリース判断材料',
+      'インフラ・運用手順・改善バックログ',
+    ],
+    boundary:
+      '機能数・連携先・非機能要件によって期間と費用は変わります。最初に固定し切らず、優先順位と受入条件を合意して段階的に進めます。',
+  },
+  'cdp-development': {
+    promise:
+      '散らばった顧客データを、同じ定義で見られる基盤へ統合し、ダッシュボードと分析を実際の施策判断に使える状態まで整えます。',
+    process: [
+      'データ源の棚卸し',
+      '指標・顧客定義の統一',
+      '連携・ETL設計',
+      'DWH / CDP構築',
+      'BI・分析実装',
+      '運用・活用定着',
+    ],
+    deliverables: [
+      'データソース一覧と項目定義',
+      'データ連携・ETLパイプライン',
+      'DWH / CDP環境',
+      'BIダッシュボード',
+      '分析クエリ・再現可能な分析環境',
+      '更新・監視・活用の運用手順',
+    ],
+    boundary:
+      '元データに欠損・ID不整合・計測漏れがある場合、基盤だけ作っても正しい判断はできません。データ品質を確認し、必要なら計測設計の修正を先に行います。',
+  },
+  'internal-document-ai-search': {
+    promise:
+      '社内文書をただAIへ入れるのではなく、実際の質問に根拠付きで答えられ、権限を守って運用できる状態まで作ります。',
+    process: [
+      '文書・権限の棚卸し',
+      '業務質問の収集',
+      '検索・回答ルール設計',
+      'プロトタイプ',
+      '評価・権限テスト',
+      '本番導入・更新運用',
+    ],
+    deliverables: [
+      '対象文書・権限整理',
+      '評価用の業務質問セット',
+      '動く社内文書AI検索',
+      '回答・根拠・検索品質の評価結果',
+      'アクセス制御・閲覧ログ設計',
+      '文書更新・改善の運用ルール',
+    ],
+    boundary:
+      '文書自体が古い、矛盾している、正本が決まっていない場合は、AIだけで解決できません。文書管理を先に直すべき範囲も含めて切り分けます。',
+  },
+  'rag-system-development': {
+    promise:
+      'RAGありきで作らず、業務で必要な質問に必要な根拠が届くかを測り、必要な方式だけを採用して本番運用までつなげます。',
+    process: [
+      '質問・文書の収集',
+      '評価基準の定義',
+      '検索方式の設計',
+      'PoC構築',
+      '検索・回答評価',
+      '本番化・継続改善',
+    ],
+    deliverables: [
+      '評価質問・正解根拠セット',
+      'RAG / GraphRAG等の方式比較',
+      '動く検索・回答システム',
+      'Recall・MRR・回答品質の評価結果',
+      '引用・権限・ログ設計',
+      '更新・再評価の運用手順',
+    ],
+    boundary:
+      '高機能な構成ほど良いとは限りません。通常RAGで十分ならGraphRAG等を追加せず、精度向上と開発・運用コストを実測で比較します。',
+  },
+  'ai-chatbot-development': {
+    promise:
+      'AIが答える範囲と人へ戻す条件を決め、定型問い合わせを減らしながら、答えられない利用者を放置しない運用まで作ります。',
+    process: [
+      '問い合わせ分析',
+      '回答範囲・根拠整理',
+      '有人引継ぎ設計',
+      'プロトタイプ',
+      '回答品質・導線評価',
+      '導入・ログ改善',
+    ],
+    deliverables: [
+      '質問分類と回答範囲',
+      '根拠データ・回答ルール',
+      '動くチャットボット',
+      '有人引継ぎフロー',
+      '評価結果・対応ログ',
+      '改善・運用ルール',
+    ],
+    boundary:
+      '誤回答ゼロは前提にできません。誤回答時の影響に応じて自動回答範囲を絞り、根拠が弱い質問は人へ戻す設計にします。',
+  },
+  'ocr-ai-development': {
+    promise:
+      'OCR精度だけを追わず、全件手入力を「AIが読み取り、迷った箇所だけ人が確認する業務」へ変えます。',
+    process: [
+      '実帳票の収集',
+      '必要項目・重要度定義',
+      '読み取りPoC',
+      '精度・確信度評価',
+      '確認画面・連携実装',
+      '本番処理・改善',
+    ],
+    deliverables: [
+      '帳票種類・抽出項目定義',
+      '動くOCR / AI読み取り',
+      '項目別の精度・確信度評価',
+      '人間レビュー画面・条件',
+      '既存システムへの連携',
+      '例外処理・運用ルール',
+    ],
+    boundary:
+      '帳票の画質・レイアウト・手書き等で精度は変わります。100%認識を約束せず、重要項目と低確信度だけ安全に人へ戻します。',
+  },
+  'ai-agent-development': {
+    promise:
+      '一つの業務フローから、AIに任せる操作と人が承認する操作を分け、安全に実行・停止・監査できるエージェントを導入します。',
+    process: [
+      '業務フロー分析',
+      '権限・承認設計',
+      'PoC・ツール接続',
+      '異常系・攻撃テスト',
+      '本番連携',
+      '監視・自律度拡張',
+    ],
+    deliverables: [
+      '人とAIの責任分界',
+      '権限・承認・禁止操作の定義',
+      '動くAIエージェント',
+      'ツール / MCP連携',
+      '異常系テスト結果・実行ログ',
+      '監視・復旧・運用ルール',
+    ],
+    boundary:
+      '権限が大きいほど自動化効果と事故コストの両方が上がります。最小権限から始め、テストと監査性を確認してから自律度を広げます。',
+  },
+  'requirements-definition-support': {
+    promise:
+      '「何を作るべきか」が曖昧な段階から、業務と目的を整理し、発注・実装・受入に使える要件と動く確認材料まで残します。',
+    process: [
+      '目的・業務ヒアリング',
+      'As-Is / To-Be整理',
+      'スコープ・優先順位',
+      'ストーリー・受入条件',
+      'プロトタイプ確認',
+      '要件確定・引継ぎ',
+    ],
+    deliverables: [
+      'As-Is / To-Be業務フロー',
+      'スコープ・優先順位',
+      '要求・ユーザーストーリー',
+      '受入条件・非機能要件',
+      '動くプロトタイプ',
+      '発注・実装へ引き継げる要件一式',
+    ],
+    boundary:
+      '要件は一度書けば固定されるものではありません。動くものや新しい事実で変更が必要になった場合は、理由と影響範囲を追える形で更新します。',
+  },
+  'mvp-poc-development': {
+    promise:
+      'アイデアを「作るべきか」の判断材料へ変えます。仮説と成功基準を先に決め、実物とデータでGo / No-Go / Pivotを判断できる状態まで進めます。',
+    process: [
+      '仮説・課題の定義',
+      '成功・中止基準',
+      '無料プロトタイプ',
+      'PoC・実利用検証',
+      '結果の評価',
+      'Go / No-Go / Pivot',
+    ],
+    deliverables: [
+      '検証仮説と評価基準',
+      '動くプロトタイプ / PoC',
+      'ユーザー・業務検証結果',
+      '技術・費用・運用上の論点',
+      'Go / No-Go / Pivot判断材料',
+      'Goの場合の要件・改善バックログ',
+    ],
+    boundary:
+      'PoCの目的は本開発へ進むことではなく、投資判断を早く正しくすることです。基準を満たさなければ、無理にMVPや本開発へ進めません。',
+  },
+};
+
+const config = configs[serviceId];
+---
+
+{config && (
+  <section class="relative overflow-hidden bg-white py-16 md:py-20">
+    <div class="container relative mx-auto px-6 lg:px-12">
+      <div class="mx-auto max-w-6xl">
+        <div class="max-w-4xl">
+          <p class="text-sm font-bold tracking-wide text-primary-500">SERVICE PACKAGE</p>
+          <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+            約束 × 工程 × 成果物を、最初に明確にする
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-neutral-700 md:text-lg">
+            「支援します」だけでは、何を買うのか分かりません。このサービスでどこまで進め、何が手元に残るかを先に共有します。
+          </p>
+        </div>
+
+        <div class="mt-8 grid gap-4 lg:grid-cols-3">
+          <article class="rounded-3xl border border-neutral-200 bg-neutral-50 p-5 md:p-6">
+            <p class="text-xs font-bold tracking-wide text-primary-600">PROMISE / 約束</p>
+            <p class="mt-3 text-sm font-semibold leading-relaxed text-accent-950 md:text-base">
+              {config.promise}
+            </p>
+          </article>
+
+          <article class="rounded-3xl border border-neutral-200 bg-neutral-50 p-5 md:p-6">
+            <p class="text-xs font-bold tracking-wide text-primary-600">PROCESS / 工程</p>
+            <ol class="mt-3 space-y-2">
+              {config.process.map((item, index) => (
+                <li class="flex gap-3 text-sm leading-relaxed text-neutral-700">
+                  <span class="font-bold text-primary-600">{index + 1}.</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ol>
+          </article>
+
+          <article class="rounded-3xl border border-neutral-200 bg-neutral-50 p-5 md:p-6">
+            <p class="text-xs font-bold tracking-wide text-primary-600">DELIVERABLES / 成果物</p>
+            <ul class="mt-3 space-y-2">
+              {config.deliverables.map((item) => (
+                <li class="flex gap-3 text-sm leading-relaxed text-neutral-700">
+                  <span class="font-bold text-secondary-500">✓</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </article>
+        </div>
+
+        <div class="mt-5 rounded-2xl border border-neutral-200 bg-white p-4 md:p-5">
+          <p class="text-xs font-bold tracking-wide text-neutral-600">SCOPE / 前提・境界</p>
+          <p class="mt-2 text-sm leading-relaxed text-neutral-700">{config.boundary}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
