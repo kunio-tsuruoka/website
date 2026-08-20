@@ -4,6 +4,7 @@ import JsonLd from '@/components/seo/json-ld.astro';
 import AiDevelopmentOverview from '@/components/services/ai-development-overview.astro';
 import ServiceAdditionalSections from '@/components/services/service-additional-sections.astro';
 import ServiceAiDesignStrength from '@/components/services/service-ai-design-strength.astro';
+import ServiceAiRiskManagement from '@/components/services/service-ai-risk-management.astro';
 import ServiceBusinessFlow from '@/components/services/service-business-flow.astro';
 import ServiceCaseStudies from '@/components/services/service-case-studies.astro';
 import ServiceContactCta from '@/components/services/service-contact-cta.astro';
@@ -37,7 +38,6 @@ const seoDescription = service.seoDescription ?? service.description;
 const servicePageConfig = getAiServicePageConfig(service.id);
 const contactIntent = servicePageConfig?.contactIntent ?? 'consult';
 const finalCtaLabel = servicePageConfig?.contactLabel ?? '業務課題を相談する';
-// 最終CTAも、そのページのCEPに対する答えの形で書く（4ページで同じ見出しにしない）
 const FINAL_CTA_HEADINGS: Record<string, string> = {
   'ai-development': 'どの業務なら本当に手が空くのか、一緒に見極めませんか',
   'rag-system-development': '自社のデータで、探す時間をどこまで減らせるでしょうか',
@@ -53,8 +53,6 @@ const finalCtaLead = servicePageConfig
   ? '業務内容と現在のデータを伺い、最初に検証すべき範囲をご案内します。'
   : '業務・データ・既存システムを伺い、小さく検証できる範囲と概算費用の考え方をご案内します。';
 
-// CEP → Promise → Mechanism → RTB → 事例 → 機能 → 工程 → FAQ → CTA の順で読ませる。
-// RTB（なぜBeekleなら実現できるのか）を持つページだけ番号が1つ増える。
 type RtbConfig = {
   eyebrow: string;
   title: string;
@@ -68,7 +66,6 @@ const sectionNumbers = rtb
   : { painPoints: '01', whyBeekle: '02', caseStudies: '02', solutions: '03', features: '04' };
 const faqNumber = rtb ? '06' : '05';
 
-// 事例はRTBを証明する材料として見せる（サービスごとに切り口を変える）
 const caseStudiesCopy: Record<string, { title: string; subtitle: string }> = {
   'ai-development': {
     title: '本当にできるのか、実案件で示します',
@@ -91,7 +88,6 @@ const caseStudiesTitle = caseStudiesCopy[service.id]?.title ?? '実際に、こ�
 const caseStudiesSubtitle =
   caseStudiesCopy[service.id]?.subtitle ?? 'どのような課題を、どう実装に落としたか';
 
-// 解決策・機能の見出しもサービスごとに変える（4ページで同じ文言を繰り返さない）
 const sectionCopy: Record<
   string,
   { solutions: { title: string; subtitle: string }; features: { title: string; subtitle: string } }
@@ -179,6 +175,7 @@ const featuresCopy = sectionCopy[service.id]?.features;
     <ServiceRootCause rootCause={servicePageConfig?.rootCause} />
     <ServiceBusinessFlow flow={servicePageConfig?.flow} />
     {servicePageConfig && <ServiceAiDesignStrength serviceId={service.id} />}
+    {servicePageConfig && <ServiceAiRiskManagement serviceId={service.id} />}
     {rtb && <ServiceWhyBeekle rtb={rtb} number={sectionNumbers.whyBeekle} />}
 
     <ServiceCaseStudies
@@ -359,7 +356,6 @@ const featuresCopy = sectionCopy[service.id]?.features;
 
     <ServiceFaq faq={service.faq} number={faqNumber} />
 
-    <!-- CTA -->
     <section class="relative py-20 md:py-32 overflow-hidden bg-navy-950">
       <div class="absolute inset-0 bg-grid-pattern-light opacity-30"></div>
       <div class="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary-500/25 blur-3xl" aria-hidden="true"></div>
