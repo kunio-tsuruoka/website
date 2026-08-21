@@ -97,7 +97,7 @@
 
 ## 検証手順（トークン投入後）
 
-1. `/contact` か `/downloads/zero-start` からテスト送信
+1. `/contact` からテスト送信
 2. HubSpot の Contacts に email で登録されているか、Deals に「Web問い合わせ: …」が出来て Contact に紐づいているか
 3. Deal が出来ていなければ Cloudflare のログで `[hubspot] deal create failed` を確認 → パイプライン/ステージ ID を env で修正
 4. Slack 通知は従来どおり届くこと（HubSpot 有無に関わらず）
