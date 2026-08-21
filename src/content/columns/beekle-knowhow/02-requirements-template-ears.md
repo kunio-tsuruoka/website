@@ -210,7 +210,7 @@ THEN THE システム shall 「該当メールアドレスは登録されてい�
 
 Beekleでは、要件定義フェーズで **発注側と共同でユーザーストーリーとEARS要件を書き起こすワークショップ** を提供しています。テンプレートを渡して終わり、ではなく、書き上がるまで伴走します。
 
-要件定義書のテンプレート全文（Word/Markdown形式）が必要な方は、お問い合わせフォームよりご連絡ください。
+要件定義書テンプレートは、[Markdown版](/docs/requirements-definition-template.md)をそのままダウンロードできます。取得だけでは問い合わせや営業リードとして扱いません。
 
 [お問い合わせフォーム](/contact)
 [EARS記法 入門](/column/ears-requirements-syntax-guide)

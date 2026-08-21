@@ -10,7 +10,7 @@ export type CategoryCta = {
   heading: string;
   /** 主動線: 常に問い合わせ（/contact）などリード獲得アクションにする */
   primary: CtaItem;
-  /** 副動線: 資料DL／ゼロスタートLP のみ（任意）。ツールは使わない */
+  /** 副動線: 直接DL資料／ゼロスタートLP のみ（任意）。ツールは使わない */
   secondary?: CtaItem;
   /** 後方互換: 古いコードが直接 primaryHref などを参照していた場合のフォールバック */
   primaryHref: string;
@@ -19,7 +19,7 @@ export type CategoryCta = {
   primaryCtaId: string;
 };
 
-// ---- 副動線（LP・資料DL のみ。ツールは問い合わせに繋がらないため使わない） ----
+// ---- 副動線（LP・直接DL資料のみ。ツールは問い合わせに繋がらないため使わない） ----
 const PROOFFIRST: CtaItem = {
   href: '/prooffirst',
   label: 'ゼロスタートを詳しく見る',
@@ -28,11 +28,11 @@ const PROOFFIRST: CtaItem = {
 };
 
 const DOWNLOAD_DECK: CtaItem = {
-  href: '/downloads/zero-start',
+  href: '/downloads/beekle-zero-start-sales-deck.pdf',
   label: 'サービス資料を無料ダウンロード',
   description:
-    'ゼロスタート開発（初期費用0円で動くプロトタイプ）のサービス資料も無料配布しています',
-  ctaId: 'download-zero-start',
+    'ゼロスタート開発（初期費用0円で動くプロトタイプ）のサービス資料を直接ダウンロードできます',
+  ctaId: 'pdf-zero-start-sales-deck',
 };
 
 // ---- 主動線（すべて /contact へのリード獲得）。intent はカテゴリ別に計測用で分ける ----
@@ -291,7 +291,7 @@ const DEFAULT_CTA: CategoryCta = buildCta(
 
 // キーは MicroCMS の実カテゴリ ID と一致させること。
 // 方針（2026-07-01）: 記事末の主CTAは常に「相談」= リード獲得。
-// 副動線は資料DL／ゼロスタートLP のみ。ツール（flow-mapper 等）は問い合わせに繋がらないため出さない
+// 副動線は直接DL資料／ゼロスタートLP のみ。ツール（flow-mapper 等）は問い合わせに繋がらないため出さない
 // （ユーザー指摘 2026-07-01 / content-strategy-goals）。
 const MAPPING: Record<string, CategoryCta> = {
   'project-management': buildCta('プロジェクトの進め方、Beekleに相談しませんか？', PROJECT_CONSULT),

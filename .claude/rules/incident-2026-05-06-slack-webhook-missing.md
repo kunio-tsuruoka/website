@@ -1,7 +1,7 @@
 # Incident: 本番 SLACK_WEBHOOK_URL 未設定で /api/contact が全件500 (2026-05-06)
 
 ## 症状
-本番 https://beekle.jp で /contact フォームと /downloads/zero-start フォームが「サーバー設定エラーが発生しました」(HTTP 500) を返していた。期間不明（少なくとも 2026-05-06 ユーザー発見時点で発生）。
+本番 https://beekle.jp で /contact フォームと当時存在した旧フォームが「サーバー設定エラーが発生しました」(HTTP 500) を返していた。期間不明（少なくとも 2026-05-06 ユーザー発見時点で発生）。資料取得は `/api/contact` を経由しない。
 
 ## 直接原因
 Cloudflare Pages production の secrets に `SLACK_WEBHOOK_URL` が無かった。`/api/contact` (src/pages/api/contact.ts:47-50) は SLACK_WEBHOOK_URL が必須で、無ければ即500を返す設計。
@@ -29,4 +29,4 @@ Cloudflare Pages production の secrets に `SLACK_WEBHOOK_URL` が無かった�
 - [ ] **必須env一覧の単一情報源**: `src/lib/required-env.ts` 等にリストし、各ファイルでimport。docsを真実の源にしない。
 
 ## why this matters
-お問い合わせと資料DLの両方が同時に死ぬ。検討段階の濃いリードが消えるので、機会損失が直接売上に響く。
+お問い合わせ通知が死ぬ。営業相談の取りこぼしは機会損失が直接売上に響く。

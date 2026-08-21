@@ -9,9 +9,9 @@
  *   content-group     content_group別 セッション/CV/エンゲージ
  *   channels          流入チャネル別 セッション/CV
  *   top-pages         pagePath別 PV/セッション
- *   key-events        リード系キーイベントのカウント
+ *   key-events        問い合わせ系キーイベントのカウント
  *   cta-clicks        CTAクリックの source/cta 別内訳
- *   form-sources      フォーム送信・リード系イベントの source/phase 別内訳
+ *   form-sources      フォーム送信・問い合わせ系イベントの source/phase 別内訳
  *   sc-landing        Search Console連携メトリクス (landingPage別) ※SC系は単独リクエスト必須
  *
  * 使い方:
@@ -26,15 +26,8 @@ const SA_KEY = '/Users/kunio/.gcp-keys/ga4-mcp-beekle.json';
 const PROPERTY = '355503040';
 const API = `https://analyticsdata.googleapis.com/v1beta/properties/${PROPERTY}:runReport`;
 
-// リード系キーイベント (analytics-ga4.md の TARGET_EVENTS と揃える)
-const KEY_EVENTS = [
-  'form_submit',
-  'generate_lead',
-  'contact_complete',
-  'cta_click',
-  'download_request',
-  'purchase',
-];
+// 問い合わせ系キーイベント (analytics-ga4.md の TARGET_EVENTS と揃える)
+const KEY_EVENTS = ['form_submit', 'generate_lead', 'contact_complete', 'cta_click', 'purchase'];
 
 function parseArgs(argv) {
   const args = { start: '28daysAgo', end: 'yesterday' };
@@ -165,7 +158,7 @@ async function main() {
           filter: {
             fieldName: 'eventName',
             inListFilter: {
-              values: ['form_submit', 'generate_lead', 'contact_complete', 'download_request'],
+              values: ['form_submit', 'generate_lead', 'contact_complete'],
             },
           },
         },

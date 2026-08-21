@@ -14,7 +14,6 @@ export const BUSINESS_TYPE_LABELS: Record<string, string> = {
   global: '海外向けサービス開発について',
   partner: '開発パートナー・協業のご相談（開発会社・SIer様）',
   other: 'その他',
-  download_zero_start: '【資料DL】ゼロスタート開発サービスデック',
 };
 
 export const RECRUITMENT_TYPE_LABELS: Record<string, string> = {
@@ -32,10 +31,9 @@ export function isRecruitmentInquiry(type: string): boolean {
   return type.startsWith('recruitment');
 }
 
-/** 業務相談は会社名必須。採用と資料DLは個人でも送れる。 */
+/** 業務相談は会社名必須。採用は個人でも送れる。 */
 export function requiresCompanyName(type: string): boolean {
   if (isRecruitmentInquiry(type)) return false;
-  if (type === 'download_zero_start') return false;
   return true;
 }
 

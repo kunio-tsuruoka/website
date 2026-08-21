@@ -48,6 +48,7 @@ const ContactSchema = z
 
 const WEBHOOK_TIMEOUT_MS = 8000;
 const MAX_RETRIES = 2;
+const DEPRECATED_CONTACT_TYPES = new Set(['download_zero_start']);
 
 async function postJsonWithRetry(
   url: string,
@@ -126,14 +127,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const turnstileSecret = runtime?.env?.TURNSTILE_SECRET_KEY;
     const rateLimitKv = runtime?.env?.RATE_LIMIT;
 
-    if (!webhookUrl) {
-      console.error('[contact] SLACK_WEBHOOK_URL is not configured');
-      return jsonError(500, 'サーバー設定エラーが発生しました', 'webhook not configured');
-    }
-
     const body = await request.json().catch(() => null);
     if (!body || typeof body !== 'object') {
       return jsonError(400, '不正なリクエスト形式です', 'invalid json');
+    }
+
+    const rawType = (body as { type?: unknown }).type;
+    if (typeof rawType === 'string' && DEPRECATED_CONTACT_TYPES.has(rawType)) {
+      return jsonError(
+        410,
+        'この資料ダウンロードフォームは廃止済みです。資料は公開URLから直接取得してください。',
+        'deprecated contact type'
+      );
     }
 
     const parsed = ContactSchema.safeParse(body);
@@ -145,6 +150,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
         first?.path.join('.') ?? 'validation'
       );
     }
+    if (!webhookUrl) {
+      console.error('[contact] SLACK_WEBHOOK_URL is not configured');
+      return jsonError(500, 'サーバー設定エラーが発生しました', 'webhook not configured');
+    }
+
     const {
       message,
       email,

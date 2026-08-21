@@ -20,12 +20,12 @@ const DIMENSIONS = [
   {
     parameterName: 'cta',
     displayName: 'CTA ID',
-    description: '押されたCTAの識別子 (data-cta-id: contact / download-zero-start 等)',
+    description: '押されたCTAの識別子 (data-cta-id)',
   },
   {
     parameterName: 'phase',
     displayName: 'Consideration Phase',
-    description: '資料DLフォームの検討段階 (info_gathering/considering/comparing/rfp_planned)',
+    description: '問い合わせ・ツール引き継ぎの段階や文脈',
   },
   {
     parameterName: 'tool',

@@ -528,14 +528,16 @@ function buildBridgeCta(source: string): string {
 // ネストアンカーを避ける（2026-07-01, CVR改善 P1）。
 function buildCtaCard(opts: {
   href: string;
+  download?: string;
   source: string;
   ctaId: string;
   title: string;
   body: string;
   label: string;
 }): string {
-  const { href, source, ctaId, title, body, label } = opts;
-  return `<a class="cv-card cv-card-cta" href="${href}" data-cta-source="${source}" data-cta-id="${ctaId}">
+  const { href, download, source, ctaId, title, body, label } = opts;
+  const downloadAttr = download ? ` download="${download}"` : '';
+  return `<a class="cv-card cv-card-cta" href="${href}"${downloadAttr} data-cta-source="${source}" data-cta-id="${ctaId}">
   <span class="cv-card-header cv-header-primary">${title}</span>
   <span class="cv-card-body">
     <span class="cv-cta-lead">${body}</span>
@@ -557,12 +559,13 @@ function buildContactCta(source: string, intent: string): string {
 
 function buildZeroStartCta(source: string, intent: string): string {
   return buildCtaCard({
-    href: `/downloads/zero-start?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(intent)}`,
+    href: '/downloads/beekle-zero-start-sales-deck.pdf',
+    download: 'beekle-zero-start-sales-deck.pdf',
     source,
-    ctaId: `zero-start-${intent}`,
+    ctaId: `pdf-zero-start-${intent}`,
     title: '発注前に、まず動く試作品で確かめる',
     body: 'Beekleの「ゼロスタート開発」は、初期費用0円で動く試作品を体験してから本契約を判断できるサービスです。提案書だけで判断するのではなく、実際に触って「現場で使えるか」「投資に見合うか」を確認したうえで進められます。',
-    label: 'サービス資料を無料ダウンロード',
+    label: 'サービス資料を直接ダウンロード',
   });
 }
 

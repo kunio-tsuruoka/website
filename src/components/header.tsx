@@ -32,7 +32,6 @@ const knowledgeItems = [
   { label: '生成AI導入', href: '/column/genai-adoption' },
   { label: 'Beekleのナレッジ', href: '/knowledge' },
   { label: 'AIデモ', href: '/demos' },
-  { label: 'ゼロスタート開発 資料DL', href: '/downloads/zero-start' },
   { label: '資料・判断材料', href: '/materials' },
 ];
 
@@ -238,13 +237,6 @@ export function Header() {
                   }}
                 >
                   業務課題を相談する
-                </a>
-                <a
-                  href="/downloads/zero-start?source=header-mobile"
-                  className="inline-flex items-center justify-center w-full max-w-xs px-6 py-3 min-h-[48px] bg-white/10 border border-white/40 rounded-full text-white text-base font-medium hover:bg-white/20 transition-colors"
-                  onClick={() => setIsOpen(false)}
-                >
-                  資料ダウンロード（無料）
                 </a>
               </li>
             </ul>

@@ -54,7 +54,7 @@ GA4の `form_submit` `generate_lead` `contact_complete` は **`/contact` フォ�
 
 # カスタマージャーニー計測（2026-05-30 実装）
 
-ジャーニーを「流入 → 回遊 → ツール利用 → リード/DL → 完了」で追えるよう、以下を実装した。GA4 の探索（Explore）の **経路データ探索 / 目標到達プロセス** で読む前提。
+ジャーニーを「流入 → 回遊 → ツール利用 → 問い合わせ → 完了」で追えるよう、以下を実装した。GA4 の探索（Explore）の **経路データ探索 / 目標到達プロセス** で読む前提。
 
 ## 計測の構成要素
 
@@ -75,19 +75,19 @@ GA4の `form_submit` `generate_lead` `contact_complete` は **`/contact` フォ�
 ## 制約・注意
 
 - ジャーニー定義（ファネル / 経路）は **GA4 探索 UI 側で組む**。コードにファネル定義は持たない。
-- 既存の「form_submit はスパム含む」前提は変わらない。ジャーニーの終点 CV は `download_request`（資料DL専用、2026-05-30 キーイベント化）か `generate_lead` を見る。
+- 既存の「form_submit はスパム含む」前提は変わらない。ジャーニーの終点 CV は実問い合わせに紐づく `generate_lead` / `contact_complete` を見る。テンプレート・資料の直接ダウンロードは Contact Conversion として扱わない。
 
-## キーイベント（2026-05-30 時点）
+## キーイベント
 
-`form_submit, generate_lead, contact_complete, cta_click, download_request, purchase`。`scripts/setup-ga4-key-events.mjs` の `TARGET_EVENTS` が真実源（`download_request` 追加済み）。
+`form_submit, generate_lead, contact_complete`。`scripts/setup-ga4-key-events.mjs` の `TARGET_EVENTS` が真実源。
 
 # 問い合わせの「どう来たか」: source は CTA位置、流入は別途アトリビューションで捕捉（2026-06-12）
 
-`/api/contact` の `source`（例: `header-desktop`, `download-zero-start-...`）は**流入チャネルではなく「サイト内のどのCTAを押したか」**。`header-desktop` は `header.tsx` の `/contact?source=header-desktop` ＝ PCヘッダーの問い合わせボタンを押した、という意味でしかない。
+`/api/contact` の `source`（例: `header-desktop`）は**流入チャネルではなく「サイト内のどのCTAを押したか」**。`header-desktop` は `header.tsx` の `/contact?source=header-desktop` ＝ PCヘッダーの問い合わせボタンを押した、という意味でしかない。
 
 ## 流入元（参照元/検索/直接）の追い方
 - contact API のペイロードには referrer/UTM/チャネルが**昔は一切無かった**ため、問い合わせ単体からは流入元が不明だった。
-- 2026-06-12 に `src/lib/attribution.ts`（`captureFirstTouch`/`getGaClientId`/`getAttribution`）を追加。`layout.astro` が全ページで first-touch（着地ページ・外部 referrer・UTM）を sessionStorage に記録し、フォーム送信時に GA client_id（`_ga` クッキー由来）と合わせて `/api/contact` へ同送 → Slack 通知に「流入」ブロックで表示。contact-form / download-zero-start-form 両方が対象。
+- 2026-06-12 に `src/lib/attribution.ts`（`captureFirstTouch`/`getGaClientId`/`getAttribution`）を追加。`layout.astro` が全ページで first-touch（着地ページ・外部 referrer・UTM）を sessionStorage に記録し、フォーム送信時に GA client_id（`_ga` クッキー由来）と合わせて `/api/contact` へ同送 → Slack 通知に「流入」ブロックで表示。対象は問い合わせフォーム。
 - **本変更以降の問い合わせ**のみ流入元が分かる。既存は遡及不可。
 
 ## GA4 で個人を特定できない理由（再掲・重要）

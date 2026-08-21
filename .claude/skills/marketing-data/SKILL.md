@@ -29,7 +29,7 @@ docs/marketing/data/gsc/latest/ctr-opportunities.json# 派生: title/desc書換�
 docs/marketing/data/ga4/latest/content-group.json    # column/lp/tool/contact... 別 sessions/keyEvents
 docs/marketing/data/ga4/latest/channels.json         # 流入チャネル別
 docs/marketing/data/ga4/latest/top-pages.json        # PV/セッション上位
-docs/marketing/data/ga4/latest/key-events.json       # form_submit/generate_lead/cta_click/download_request 等
+docs/marketing/data/ga4/latest/key-events.json       # form_submit/generate_lead/cta_click 等
 docs/marketing/data/ga4/latest/sc-landing.json       # GA4のSC連携メトリクス (landingPagePlusQueryString別)
 docs/marketing/data/clarity/latest/ai-citations.json      # AI検索の引用クエリ別 + SoA (Queries view)
 docs/marketing/data/clarity/latest/ai-citation-pages.json # AI検索の引用ページ別 (Pages view = AIがどのページに送客するか)

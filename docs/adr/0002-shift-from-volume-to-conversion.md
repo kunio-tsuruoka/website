@@ -17,7 +17,7 @@
 
 **コンテンツの主目標を「公開本数」から「転換（＝質の高い実問い合わせ件数）」へ移す。本数ノルマは撤廃する。**
 
-1. **北極星指標を実問い合わせ件数に置く**（Slack到着ベース、スパム除外）。GA4 の `form_submit` はスパムを含むため主KPIに使わない。先行指標は高インプレ記事のCTR・`cta_click`・資料DL(`download_request`)・B-zone LP到達。
+1. **北極星指標を実問い合わせ件数に置く**（Slack到着ベース、スパム除外）。GA4 の `form_submit` はスパムを含むため主KPIに使わない。先行指標は高インプレ記事のCTR・`cta_click`・B-zone LP到達。テンプレート・資料の直接ダウンロードは問い合わせCVとして扱わない。
 2. **新規記事は買い手意図（B-zone）に絞る**。費用・RFP・CDP比較・要件定義、および下請け/協業クエリ（「AI開発 外注」「RAG 開発会社」等）。**A-zone（Gherkin/EARS 等の純エンジニア向け）の新規量産はしない**。
 3. **新規より既存「勝ち筋」ページの深掘りを優先**。AI Citations / GSC で引用・流入の多い買い手意図ページ（`system-development-cost-breakdown` / `how-to-write-rfp` / `cdp-product-comparison` / `requirements-definition-*` / `ai-development-cost-guide` 等）に、CTA・RTB・事例・社内ナレッジ実例を厚くする。新規1本より既存改稿のROIが高い局面と位置づける。
 4. **技術記事は捨てない。ただし出すCTAを変える**。AI開発/RAG等の技術深掘りは下請け/協業（セグメントB）に効くため、これらのページには「開発パートナー/開発リソースをお探しの開発会社・SIer様」向けの相談CTAを置く（発注準備ツール誘導はBには無効）。

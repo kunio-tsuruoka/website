@@ -41,14 +41,7 @@ type GscRow = {
   position: number;
 };
 
-const KEY_EVENTS = [
-  'form_submit',
-  'generate_lead',
-  'contact_complete',
-  'cta_click',
-  'download_request',
-  'purchase',
-];
+const KEY_EVENTS = ['form_submit', 'generate_lead', 'contact_complete', 'cta_click', 'purchase'];
 
 const GA4_REPORTS: Record<Ga4ReportName, Ga4ReportDefinition> = {
   'content-group': {
@@ -102,7 +95,7 @@ const GA4_REPORTS: Record<Ga4ReportName, Ga4ReportDefinition> = {
       filter: {
         fieldName: 'eventName',
         inListFilter: {
-          values: ['form_submit', 'generate_lead', 'contact_complete', 'download_request'],
+          values: ['form_submit', 'generate_lead', 'contact_complete'],
         },
       },
     },

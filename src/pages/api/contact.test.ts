@@ -160,6 +160,25 @@ describe('POST /api/contact のCRM仕分け', () => {
     expect(slackBody(fetchMock)).toContain('*CRM連携:* 未設定');
   });
 
+  it('廃止済み資料DLフォームの送信はSlack/CRM/LLMへ送らない', async () => {
+    const fetchMock = routeFetch({
+      openrouter: () => llmVerdict('lead', '資料ダウンロード'),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await POST({
+      request: contactRequest({
+        type: 'download_zero_start',
+        source: 'download-zero-start',
+        message: '【ゼロスタート開発 サービスデックDL】',
+      }),
+      locals: baseEnv(),
+    } as never);
+
+    expect(res.status).toBe(410);
+    expect(calledUrls(fetchMock)).toEqual([]);
+  });
+
   it('CRM送信が失敗しても問い合わせ自体は成功にする', async () => {
     const fetchMock = routeFetch({
       openrouter: () => llmVerdict('lead', '開発の相談'),
@@ -271,22 +290,5 @@ describe('POST /api/contact の会社名と採用仕分け', () => {
     expect(slackBody(fetchMock)).toContain('採用のお問い合わせ');
     expect(slackBody(fetchMock)).toContain('対象外（採用）');
     expect(slackBody(fetchMock)).not.toContain('検討状況');
-  });
-
-  it('資料DLは会社名なしでも送れる', async () => {
-    const fetchMock = routeFetch({ openrouter: () => llmVerdict('lead', '資料DL') });
-    vi.stubGlobal('fetch', fetchMock);
-
-    const res = await POST({
-      request: contactRequest({
-        type: 'download_zero_start',
-        company: '',
-        message: '資料を希望します。',
-      }),
-      locals: baseEnv(),
-    } as never);
-
-    expect(res.status).toBe(200);
-    expect(calledUrls(fetchMock)).toContain(CRM_URL);
   });
 });

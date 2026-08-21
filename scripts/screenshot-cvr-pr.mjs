@@ -32,8 +32,8 @@ const targets = [
   { path: '/', file: 'home-mobile.png', viewport: MOBILE },
   { path: '/contact', file: 'contact-desktop.png', viewport: DESKTOP },
   { path: '/contact', file: 'contact-mobile.png', viewport: MOBILE },
-  { path: '/downloads/zero-start', file: 'download-zero-start-desktop.png', viewport: DESKTOP },
-  { path: '/downloads/zero-start', file: 'download-zero-start-mobile.png', viewport: MOBILE },
+  { path: '/materials', file: 'materials-desktop.png', viewport: DESKTOP },
+  { path: '/materials', file: 'materials-mobile.png', viewport: MOBILE },
 ];
 
 const browser = await chromium.launch();
