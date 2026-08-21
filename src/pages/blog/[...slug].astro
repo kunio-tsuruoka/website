@@ -4,6 +4,7 @@ import { Header } from '../../components/header';
 import AuthorByline from '../../components/seo/author-byline.astro';
 import JsonLd from '../../components/seo/json-ld.astro';
 import Layout from '../../layouts/layout.astro';
+import { renderBlogContentVisuals } from '../../lib/blog-content';
 import {
   type Blog,
   type BlogTag,
@@ -107,6 +108,8 @@ htmlContent = htmlContent.replace(
     return existingId ? match : `<h${depth} id="${id}"${attrs}>${inner}</h${depth}>`;
   }
 );
+
+htmlContent = renderBlogContentVisuals(htmlContent, blogId);
 
 const relatedBlogs = await getRelatedBlogs(blogId, 4, env);
 const metaDescription = getExcerpt(blog);
