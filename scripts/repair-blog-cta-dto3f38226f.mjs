@@ -26,7 +26,7 @@ if (!serviceDomain || !apiKey) {
   status.status = 'failed';
   status.error = 'microCMS environment variables are unavailable';
   await saveStatus();
-  process.exit(0);
+  process.exit(1);
 }
 
 const client = createClient({ serviceDomain, apiKey });
@@ -197,3 +197,4 @@ try {
 
 await saveStatus();
 console.log(JSON.stringify(status, null, 2));
+if (status.status === 'failed') process.exit(1);
