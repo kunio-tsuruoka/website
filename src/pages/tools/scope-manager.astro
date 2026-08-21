@@ -9,7 +9,7 @@ import Layout from '../../layouts/layout.astro';
 
 <Layout
   title="スコープ管理ツール｜要件を「作る／後回し／作らない」に振り分け | Beekle"
-  description="要件定義書(Markdown)を取り込み、機能ごとに『ビジネス価値・現場で使えるか・技術コスト』を評価して『作る／後回し／作らない』を可視化。開発の予算オーバーを防ぎ、合意形成を加速します。"
+  description="ユーザーストーリー作成ツールの出力を取り込み、機能ごとに『ビジネス価値・現場で使えるか・技術コスト』を評価して『作る／後回し／作らない』を可視化。開発の予算オーバーを防ぎ、合意形成を加速します。"
 >
   <JsonLd
     slot="head"
@@ -62,7 +62,7 @@ import Layout from '../../layouts/layout.astro';
             <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-3">1</div>
             <h3 class="font-bold text-gray-900 mb-1">要件を一覧で見渡せる</h3>
             <p class="text-sm text-gray-600 leading-relaxed">
-              要件定義書(Markdown)を貼り付けるだけで、機能ひとつひとつを表に展開。
+              ユーザーストーリー作成ツールの出力を貼り付けるだけで、機能ひとつひとつを表に展開。
               全体ボリュームが一目で分かります。
             </p>
           </div>
@@ -161,15 +161,15 @@ import Layout from '../../layouts/layout.astro';
             <li class="flex gap-3">
               <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">1</span>
               <div>
-                <strong>要件定義書(Markdown)を読み込む</strong>。「サンプルを試す」を押すか、
+                <strong>要件リストを読み込む</strong>。「サンプルを試す」を押すか、
                 <a href="/tools/story-builder" class="text-primary-500 hover:underline inline-block py-2">ユーザーストーリー作成ツール</a>
-                で作ったMarkdownを貼り付けてください。
+                で作った出力を貼り付けてください。
               </div>
             </li>
             <li class="flex gap-3">
               <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">2</span>
               <div>
-                <strong>「要求文を抽出」を押す</strong>。<code class="px-1 py-0.5 bg-gray-100 rounded text-xs">REQ-XXX-NNN</code> 形式の要求文を自動で表に展開します。
+                <strong>「要求文を抽出」を押す</strong>。要求文を自動で読み取り、表に展開します。
               </div>
             </li>
             <li class="flex gap-3">
