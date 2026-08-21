@@ -1,7 +1,13 @@
 import type { APIRoute } from 'astro';
 import { services } from '../data/service';
 import { redirectedColumnIds } from '../lib/column-redirects';
-import { type MicroCMSEnv, getColumns, isPillarArticle } from '../lib/microcms';
+import {
+  BLOGS_PER_PAGE,
+  type MicroCMSEnv,
+  getBlogs,
+  getColumns,
+  isPillarArticle,
+} from '../lib/microcms';
 
 const SITE_URL = 'https://beekle.jp';
 
@@ -32,6 +38,7 @@ const staticPages: SitemapPage[] = [
   { url: '/column/ai-development', priority: '0.8', changefreq: 'weekly' },
   { url: '/column/cdp-development', priority: '0.8', changefreq: 'weekly' },
   { url: '/column/dx', priority: '0.8', changefreq: 'weekly' },
+  { url: '/blog', priority: '0.7', changefreq: 'weekly' },
   { url: '/knowledge', priority: '0.8', changefreq: 'weekly' },
   { url: '/partner', priority: '0.8', changefreq: 'monthly' },
   { url: '/careers', priority: '0.6', changefreq: 'monthly' },
@@ -83,8 +90,38 @@ export const GET: APIRoute = async ({ locals }) => {
     console.error('Failed to fetch columns for sitemap:', error);
   }
 
+  // MicroCMSブログ記事
+  let blogPages: SitemapPage[] = [];
+  let blogIndexPages: SitemapPage[] = [];
+  try {
+    const blogs = await getBlogs(env);
+    const totalBlogIndexPages = Math.ceil(blogs.length / BLOGS_PER_PAGE);
+    blogIndexPages =
+      totalBlogIndexPages > 1
+        ? Array.from({ length: totalBlogIndexPages - 1 }, (_, index) => ({
+            url: `/blog/page/${index + 2}`,
+            priority: '0.5',
+            changefreq: 'weekly',
+          }))
+        : [];
+    blogPages = blogs.map((blog) => ({
+      url: `/blog/${blog.id}`,
+      priority: '0.6',
+      changefreq: 'weekly',
+      lastmod: blog.updatedAt ? new Date(blog.updatedAt).toISOString().split('T')[0] : undefined,
+    }));
+  } catch (error) {
+    console.error('Failed to fetch blogs for sitemap:', error);
+  }
+
   // 全ページを結合
-  const allPages = [...staticPages, ...servicePages, ...columnPages];
+  const allPages = [
+    ...staticPages,
+    ...servicePages,
+    ...columnPages,
+    ...blogIndexPages,
+    ...blogPages,
+  ];
 
   // XML生成
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

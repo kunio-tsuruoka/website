@@ -1,0 +1,371 @@
+---
+import { Renderer, marked } from 'marked';
+import { Header } from '../../components/header';
+import AuthorByline from '../../components/seo/author-byline.astro';
+import JsonLd from '../../components/seo/json-ld.astro';
+import Layout from '../../layouts/layout.astro';
+import {
+  type Blog,
+  type BlogTag,
+  type MicroCMSEnv,
+  getBlog,
+  getRelatedBlogs,
+} from '../../lib/microcms';
+import { type TocItem, slugify } from '../../lib/toc';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+const blogId = slug as string;
+
+const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
+const env = runtime?.env;
+
+const blog = await getBlog(blogId, env);
+
+if (!blog) {
+  return Astro.redirect('/404');
+}
+
+function formatJaDate(...values: (string | undefined)[]): string {
+  for (const v of values) {
+    if (!v) continue;
+    const d = new Date(v);
+    if (!Number.isNaN(d.getTime())) return d.toLocaleDateString('ja-JP');
+  }
+  return '';
+}
+
+function stripContent(value?: string): string {
+  if (!value) return '';
+  return value
+    .replace(/<[^>]*>/g, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/[#*_`>]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getBlogBody(item: Blog): string {
+  return item.content || item.body || '';
+}
+
+function getExcerpt(item: Blog): string {
+  const text = item.description || stripContent(getBlogBody(item));
+  return text.length > 120 ? `${text.slice(0, 120)}...` : text;
+}
+
+function getImageUrl(item: Blog): string | undefined {
+  return item.eyecatch?.url || item.thumbnail?.url || item.cover?.url || item.image?.url;
+}
+
+function normalizeTags(tags: Blog['tags']): string[] {
+  if (!tags) return [];
+  if (typeof tags === 'string') {
+    return tags
+      .split(/[,、]/)
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+  return tags
+    .map((tag: BlogTag) => (typeof tag === 'string' ? tag : tag.title || tag.name || tag.id || ''))
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+}
+
+const toc: TocItem[] = [];
+const renderer = new Renderer();
+
+renderer.heading = ({ text, depth }) => {
+  if (depth === 2 || depth === 3) {
+    const id = slugify(text);
+    toc.push({ id, text, level: depth });
+    return `<h${depth} id="${id}">${text}</h${depth}>`;
+  }
+  return `<h${depth}>${text}</h${depth}>`;
+};
+
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+});
+marked.use({ renderer });
+
+let htmlContent = marked(getBlogBody(blog)) as string;
+
+htmlContent = htmlContent.replace(
+  /<h([23])([^>]*)>([\s\S]*?)<\/h\1>/g,
+  (match, level, attrs, inner) => {
+    const depth = Number(level);
+    const text = inner.replace(/<[^>]*>/g, '').trim();
+    if (!text) return match;
+    const existingId = attrs.match(/\bid="([^"]+)"/)?.[1];
+    const id = existingId ?? slugify(text);
+    if (!toc.some((item) => item.id === id)) {
+      toc.push({ id, text, level: depth });
+    }
+    return existingId ? match : `<h${depth} id="${id}"${attrs}>${inner}</h${depth}>`;
+  }
+);
+
+const relatedBlogs = await getRelatedBlogs(blogId, 4, env);
+const metaDescription = getExcerpt(blog);
+const articleUrl = `https://beekle.jp/blog/${blogId}`;
+const imageUrl = getImageUrl(blog);
+const tags = normalizeTags(blog.tags);
+---
+
+<Layout
+  title={`${blog.title} | Beekle`}
+  description={metaDescription}
+  ogType="article"
+  ogImage={imageUrl}
+  publishedTime={blog.publishedAt}
+  modifiedTime={blog.updatedAt}
+  canonical={articleUrl}
+>
+  <JsonLd
+    slot="head"
+    type="article"
+    data={{
+      title: blog.title,
+      description: metaDescription,
+      publishedTime: blog.publishedAt,
+      modifiedTime: blog.updatedAt,
+      url: articleUrl,
+      image: imageUrl,
+      reviewerId: null,
+      articleSection: 'ブログ',
+      keywords: tags.length > 0 ? tags.join(',') : 'Beekle,ブログ',
+      about: [
+        { name: 'Beekle株式会社', url: 'https://beekle.jp' },
+        { name: 'ブログ', url: 'https://beekle.jp/blog' },
+      ],
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: 'ブログ', url: '/blog' },
+        { name: blog.title, url: `/blog/${blogId}` },
+      ],
+    }}
+  />
+  <Header client:idle />
+  <main class="pt-20">
+    <section class="border-b border-gray-200 bg-gray-50 py-6">
+      <div class="container mx-auto max-w-4xl px-6 md:px-8">
+        <nav class="flex min-h-[44px] items-center gap-2 text-sm text-gray-600">
+          <a href="/" class="px-1 py-3 transition-colors hover:text-primary-500">ホーム</a>
+          <span>/</span>
+          <a href="/blog" class="px-1 py-3 transition-colors hover:text-primary-500">ブログ</a>
+          <span>/</span>
+          <span class="text-gray-900">{blog.title}</span>
+        </nav>
+      </div>
+    </section>
+
+    <article class="bg-white">
+      <header class="border-b border-gray-100 py-12 md:py-16">
+        <div class="container mx-auto max-w-3xl px-6 md:px-8">
+          <div class="mb-5">
+            <span class="inline-flex rounded-full bg-primary-50 px-3 py-1 text-xs font-bold text-primary-600">
+              Blog
+            </span>
+          </div>
+          <h1 class="text-3xl font-bold leading-tight text-gray-900 md:text-5xl">
+            {blog.title}
+          </h1>
+          <div class="mt-6">
+            <AuthorByline
+              variant="compact"
+              reviewerId={null}
+              publishedAt={blog.publishedAt}
+              updatedAt={blog.updatedAt}
+            />
+          </div>
+          {tags.length > 0 && (
+            <div class="mt-5 flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+        {imageUrl && (
+          <div class="container mx-auto mt-10 max-w-5xl px-6 md:px-8">
+            <div class="aspect-[16/9] overflow-hidden rounded-lg bg-gray-100">
+              <img src={imageUrl} alt="" class="h-full w-full object-cover" />
+            </div>
+          </div>
+        )}
+      </header>
+
+      {toc.length > 0 && (
+        <section class="border-b border-gray-100 bg-white py-8">
+          <div class="container mx-auto max-w-3xl px-6 md:px-8">
+            <nav class="rounded-lg border border-gray-200 bg-gray-50 p-5">
+              <h2 class="mb-3 text-sm font-bold text-gray-900">目次</h2>
+              <ul class="space-y-1">
+                {toc.map((item) => (
+                  <li class={item.level === 3 ? 'ml-4' : ''}>
+                    <a
+                      href={`#${item.id}`}
+                      class="flex min-h-[36px] items-center text-sm text-gray-600 transition-colors hover:text-primary-500"
+                    >
+                      {item.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        </section>
+      )}
+
+      <section class="py-14 md:py-18">
+        <div class="container mx-auto max-w-3xl px-6 md:px-8">
+          <div class="blog-content">
+            <Fragment set:html={htmlContent} />
+          </div>
+        </div>
+      </section>
+    </article>
+
+    {relatedBlogs.length > 0 && (
+      <section class="border-t border-gray-100 bg-gray-50 py-14 md:py-16">
+        <div class="container mx-auto max-w-4xl px-6 md:px-8">
+          <h2 class="text-2xl font-bold text-gray-900">最近のブログ</h2>
+          <div class="mt-6 grid gap-4 md:grid-cols-2">
+            {relatedBlogs.map((related) => (
+              <a
+                href={`/blog/${related.id}`}
+                class="group rounded-lg border border-gray-200 bg-white p-5 transition-all hover:border-primary-200 hover:shadow-soft"
+              >
+                <time class="text-sm text-gray-500">
+                  {formatJaDate(related.publishedAt, related.updatedAt)}
+                </time>
+                <h3 class="mt-2 text-lg font-bold leading-tight text-gray-900 transition-colors group-hover:text-primary-500">
+                  {related.title}
+                </h3>
+                {getExcerpt(related) && (
+                  <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-gray-600">
+                    {getExcerpt(related)}
+                  </p>
+                )}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <section class="bg-white py-12">
+      <div class="container mx-auto max-w-3xl px-6 md:px-8">
+        <a
+          href="/blog"
+          class="inline-flex items-center py-3 font-semibold text-primary-500 transition-colors hover:text-primary-600"
+        >
+          <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span>ブログ一覧に戻る</span>
+        </a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .blog-content {
+    @apply text-lg leading-loose text-gray-800;
+  }
+
+  .blog-content :global(h2) {
+    @apply mt-14 mb-5 border-b border-gray-200 pb-3 text-2xl font-bold leading-tight text-gray-900 md:text-3xl;
+    scroll-margin-top: 6rem;
+  }
+
+  .blog-content :global(h3) {
+    @apply mt-10 mb-4 border-l-4 border-primary-500 pl-4 text-xl font-bold leading-tight text-gray-900 md:text-2xl;
+    scroll-margin-top: 6rem;
+  }
+
+  .blog-content :global(h4) {
+    @apply mt-8 mb-3 text-lg font-bold text-gray-900 md:text-xl;
+  }
+
+  .blog-content :global(p) {
+    @apply mb-6 text-lg leading-loose text-gray-700;
+  }
+
+  .blog-content :global(a) {
+    @apply font-semibold text-primary-500 underline underline-offset-4 transition-colors hover:text-primary-600;
+  }
+
+  .blog-content :global(strong) {
+    @apply font-bold text-gray-900;
+  }
+
+  .blog-content :global(ul),
+  .blog-content :global(ol) {
+    @apply my-6 pl-6 text-gray-700;
+  }
+
+  .blog-content :global(ul) {
+    @apply list-disc;
+  }
+
+  .blog-content :global(ol) {
+    @apply list-decimal;
+  }
+
+  .blog-content :global(li) {
+    @apply mb-2 leading-loose;
+  }
+
+  .blog-content :global(blockquote) {
+    @apply my-8 border-l-4 border-primary-500 bg-gray-50 px-5 py-4 text-gray-700;
+  }
+
+  .blog-content :global(blockquote p:last-child) {
+    @apply mb-0;
+  }
+
+  .blog-content :global(pre) {
+    @apply my-8 overflow-x-auto rounded-lg bg-gray-900 p-5 text-sm leading-relaxed text-gray-100;
+  }
+
+  .blog-content :global(code) {
+    @apply rounded bg-gray-100 px-1.5 py-0.5 text-sm text-gray-900;
+  }
+
+  .blog-content :global(pre code) {
+    @apply bg-transparent p-0 text-gray-100;
+  }
+
+  .blog-content :global(img) {
+    @apply my-8 h-auto max-w-full rounded-lg;
+  }
+
+  .blog-content :global(table) {
+    @apply my-8 w-full border-collapse overflow-hidden rounded-lg text-left text-sm;
+  }
+
+  .blog-content :global(th) {
+    @apply border border-gray-200 bg-gray-50 px-4 py-3 font-bold text-gray-900;
+  }
+
+  .blog-content :global(td) {
+    @apply border border-gray-200 px-4 py-3 text-gray-700;
+  }
+
+  .blog-content :global(hr) {
+    @apply my-10 border-gray-200;
+  }
+</style>
