@@ -311,6 +311,60 @@ const tags = normalizeTags(blog.tags);
     @apply font-semibold text-primary-500 underline underline-offset-4 transition-colors hover:text-primary-600;
   }
 
+  .blog-content :global(.blog-cta-stack) {
+    @apply my-12 grid gap-4;
+  }
+
+  .blog-content :global(a.cv-card-cta) {
+    @apply block rounded-lg border border-gray-200 bg-white p-5 text-left no-underline shadow-soft transition-all;
+    border-bottom: 0;
+    color: inherit;
+    font-weight: 400;
+  }
+
+  .blog-content :global(a.cv-card-cta)::after,
+  .blog-content :global(a.cv-card-cta:hover)::after {
+    content: none;
+    display: none;
+  }
+
+  .blog-content :global(a.cv-card-cta:hover) {
+    @apply -translate-y-0.5 border-primary-200 shadow-medium;
+  }
+
+  .blog-content :global(a.cv-card-cta[data-cta-id^='bridge']) {
+    border-left: 4px solid #00c4cc;
+  }
+
+  .blog-content :global(a.cv-card-cta[data-cta-id^='contact']) {
+    border-left: 4px solid #3d4db7;
+  }
+
+  .blog-content :global(a.cv-card-cta .cv-card-header) {
+    @apply block text-base font-bold leading-snug text-gray-900 md:text-lg;
+  }
+
+  .blog-content :global(a.cv-card-cta .cv-card-body) {
+    @apply mt-3 block;
+  }
+
+  .blog-content :global(a.cv-card-cta .cv-cta-lead) {
+    @apply block text-sm font-normal leading-relaxed text-gray-600 md:text-base;
+  }
+
+  .blog-content :global(a.cv-card-cta .cv-cta-button) {
+    @apply mt-4 inline-flex min-h-[44px] items-center rounded-full bg-primary-500 px-5 text-sm font-bold text-white transition-colors;
+  }
+
+  .blog-content :global(a.cv-card-cta:hover .cv-cta-button) {
+    @apply bg-primary-600;
+  }
+
+  .blog-content :global(a.cv-card-cta .cv-cta-button)::after {
+    content: '→';
+    margin-left: 0.5rem;
+  }
+
   .blog-content :global(strong) {
     @apply font-bold text-gray-900;
   }
