@@ -426,6 +426,31 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
         </div>
 
         <div>
+          <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="company">
+            会社名 <span className="text-destructive">*</span>
+          </label>
+          <input
+            type="text"
+            id="company"
+            name="company_name"
+            required
+            autoComplete="organization"
+            className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
+            placeholder="株式会社○○"
+          />
+          <p className="text-sm text-muted-foreground mt-2">
+            企業のご担当者様からのご相談を受け付けています。採用・カジュアル面談は
+            <a
+              href="/careers/contact"
+              className="text-primary-500 underline hover:text-primary-600 mx-1"
+            >
+              採用のお問い合わせ
+            </a>
+            へ。
+          </p>
+        </div>
+
+        <div>
           <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="email">
             メールアドレス <span className="text-destructive">*</span>
           </label>
@@ -462,25 +487,9 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
         <details className="group">
           <summary className="cursor-pointer text-base font-medium text-foreground/70 hover:text-primary-500 select-none list-none flex items-center gap-2">
             <span className="text-primary-500 group-open:rotate-90 transition-transform">▶</span>
-            会社名・電話番号も記入する（任意）
+            電話番号も記入する（任意）
           </summary>
           <div className="space-y-6 mt-4 pl-4 border-l-2 border-primary-100">
-            <div>
-              <label
-                className="block text-base font-medium text-foreground/80 mb-2"
-                htmlFor="company"
-              >
-                会社名
-              </label>
-              <input
-                type="text"
-                id="company"
-                name="company_name"
-                autoComplete="organization"
-                className="w-full px-4 py-3 rounded-lg border border-input focus:ring-2 focus:ring-primary focus:border-primary"
-                placeholder="株式会社○○"
-              />
-            </div>
             <div>
               <label
                 className="block text-base font-medium text-foreground/80 mb-2"

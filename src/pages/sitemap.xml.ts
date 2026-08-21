@@ -42,6 +42,7 @@ const staticPages: SitemapPage[] = [
   { url: '/knowledge', priority: '0.8', changefreq: 'weekly' },
   { url: '/partner', priority: '0.8', changefreq: 'monthly' },
   { url: '/careers', priority: '0.6', changefreq: 'monthly' },
+  { url: '/careers/contact', priority: '0.5', changefreq: 'monthly' },
   { url: '/qa', priority: '0.7', changefreq: 'monthly' },
   { url: '/tools', priority: '0.8', changefreq: 'monthly' },
   { url: '/tools/flow-mapper', priority: '0.8', changefreq: 'monthly' },

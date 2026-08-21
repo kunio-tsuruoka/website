@@ -60,6 +60,8 @@ await page.waitForSelector('form', { timeout: 5000 });
 
 console.log('2) フォーム入力');
 await page.selectOption('select[name="type"]', 'consultation');
+await page.fill('input[name="from_name"]', '計測検証');
+await page.fill('input[name="company_name"]', '株式会社Beekle検証');
 await page.fill('input[name="reply_to"]', TEST_EMAIL);
 await page.fill('textarea[name="message"]', TEST_MESSAGE);
 

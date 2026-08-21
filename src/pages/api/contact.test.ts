@@ -29,6 +29,7 @@ function contactRequest(body: Record<string, unknown> = {}) {
       email: 'yamada@example.co.jp',
       message: '開発の相談をしたいです。',
       type: 'consultation',
+      company: '株式会社テスト',
       ...body,
     }),
   });
@@ -216,5 +217,76 @@ describe('POST /api/contact のBuying Stage (tasks-v3 TASK-P0-03)', () => {
     expect(slackBody(fetchMock)).toContain('検討状況');
     const meta = (crmBody(fetchMock) as { meta: Record<string, unknown> }).meta;
     expect(meta.buying_stage).toBeNull();
+  });
+});
+
+describe('POST /api/contact の会社名と採用仕分け', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn());
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.spyOn(console, 'info').mockImplementation(() => {});
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('会社名が空の業務問い合わせは400にする', async () => {
+    const fetchMock = routeFetch({
+      openrouter: () => {
+        throw new Error('should not call openrouter');
+      },
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await POST({
+      request: contactRequest({ company: '' }),
+      locals: baseEnv(),
+    } as never);
+
+    expect(res.status).toBe(400);
+    expect(await res.json()).toMatchObject({ error: '会社名を入力してください' });
+    expect(calledUrls(fetchMock)).toEqual([]);
+  });
+
+  it('採用問い合わせは会社名なしで送れ、CRMには送らない', async () => {
+    const fetchMock = routeFetch({
+      openrouter: () => {
+        throw new Error('should not call openrouter');
+      },
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await POST({
+      request: contactRequest({
+        type: 'recruitment_casual',
+        company: '',
+        message: 'カジュアル面談をお願いします。',
+      }),
+      locals: baseEnv(),
+    } as never);
+
+    expect(res.status).toBe(200);
+    expect(calledUrls(fetchMock)).toEqual([SLACK_URL]);
+    expect(slackBody(fetchMock)).toContain('採用のお問い合わせ');
+    expect(slackBody(fetchMock)).toContain('対象外（採用）');
+    expect(slackBody(fetchMock)).not.toContain('検討状況');
+  });
+
+  it('資料DLは会社名なしでも送れる', async () => {
+    const fetchMock = routeFetch({ openrouter: () => llmVerdict('lead', '資料DL') });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await POST({
+      request: contactRequest({
+        type: 'download_zero_start',
+        company: '',
+        message: '資料を希望します。',
+      }),
+      locals: baseEnv(),
+    } as never);
+
+    expect(res.status).toBe(200);
+    expect(calledUrls(fetchMock)).toContain(CRM_URL);
   });
 });

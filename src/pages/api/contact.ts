@@ -1,54 +1,50 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
+import {
+  contactTypeLabel,
+  isRecruitmentInquiry,
+  requiresCompanyName,
+} from '../../lib/contact-inquiry';
 import { readSession } from '../../lib/flow-interview/session';
 import { type LeadClassification, classifyInquiry } from '../../lib/lead-classifier';
 import { verifyTurnstile } from '../../lib/turnstile';
 
 export const prerender = false;
 
-const TYPE_LABELS: Record<string, string> = {
-  consultation: 'まずは相談したい',
-  web: 'Webアプリ開発について',
-  mobile: 'モバイルアプリ開発について',
-  prototype: '15分で開発方針を整理したい',
-  estimate: '見積もり妥当性・概算費用を聞きたい',
-  requirements: '作りたいもの・依頼内容を整理したい',
-  ai: '社内資料や業務データをAIで使いたい',
-  cdp: '顧客データを整理・活用したい',
-  dx: '業務改善・AI導入について',
-  tech_review: '社内データ・既存システムの不安を相談したい',
-  mvp_poc: 'MVP・PoC・新規事業検証について',
-  // legacy: サービス終了済みだが、キャッシュされた旧フォームからの送信をラベル不明にしないため残す
-  global: '海外向けサービス開発について',
-  partner: '開発パートナー・協業のご相談（開発会社・SIer様）',
-  other: 'その他',
-  download_zero_start: '【資料DL】ゼロスタート開発サービスデック',
-};
-
-const ContactSchema = z.object({
-  email: z.string().trim().email('メールアドレスを正しく入力してください'),
-  message: z.string().trim().max(5000, 'お問い合わせ内容が長すぎます').optional().default(''),
-  type: z.string().optional().default(''),
-  name: z.string().trim().min(1, 'お名前を入力してください').max(255, 'お名前が長すぎます'),
-  company: z.string().optional().default(''),
-  phone: z.string().optional().default(''),
-  source: z.string().optional().default(''),
-  intent: z.string().optional().default(''),
-  phase: z.string().optional().default(''),
-  // 購買プロセス上の現在地 (tasks-v3 TASK-P0-03 / [B2B-1])。任意入力
-  buyingStage: z.string().trim().max(40).optional().default(''),
-  turnstileToken: z.string().optional().default(''),
-  // flow-interview など、開始時に既に Turnstile を通したセッション経由の送信
-  sessionId: z.string().optional().default(''),
-  // 流入アトリビューション（src/lib/attribution.ts が付与）。クライアント由来なので長さ制限のみ。
-  clientId: z.string().trim().max(120).optional().default(''),
-  landingPage: z.string().trim().max(400).optional().default(''),
-  lastPage: z.string().trim().max(400).optional().default(''),
-  referrer: z.string().trim().max(400).optional().default(''),
-  utmSource: z.string().trim().max(120).optional().default(''),
-  utmMedium: z.string().trim().max(120).optional().default(''),
-  utmCampaign: z.string().trim().max(160).optional().default(''),
-});
+const ContactSchema = z
+  .object({
+    email: z.string().trim().email('メールアドレスを正しく入力してください'),
+    message: z.string().trim().max(5000, 'お問い合わせ内容が長すぎます').optional().default(''),
+    type: z.string().optional().default(''),
+    name: z.string().trim().min(1, 'お名前を入力してください').max(255, 'お名前が長すぎます'),
+    company: z.string().trim().max(255, '会社名が長すぎます').optional().default(''),
+    phone: z.string().optional().default(''),
+    source: z.string().optional().default(''),
+    intent: z.string().optional().default(''),
+    phase: z.string().optional().default(''),
+    // 購買プロセス上の現在地 (tasks-v3 TASK-P0-03 / [B2B-1])。任意入力
+    buyingStage: z.string().trim().max(40).optional().default(''),
+    turnstileToken: z.string().optional().default(''),
+    // flow-interview など、開始時に既に Turnstile を通したセッション経由の送信
+    sessionId: z.string().optional().default(''),
+    // 流入アトリビューション（src/lib/attribution.ts が付与）。クライアント由来なので長さ制限のみ。
+    clientId: z.string().trim().max(120).optional().default(''),
+    landingPage: z.string().trim().max(400).optional().default(''),
+    lastPage: z.string().trim().max(400).optional().default(''),
+    referrer: z.string().trim().max(400).optional().default(''),
+    utmSource: z.string().trim().max(120).optional().default(''),
+    utmMedium: z.string().trim().max(120).optional().default(''),
+    utmCampaign: z.string().trim().max(160).optional().default(''),
+  })
+  .superRefine((data, ctx) => {
+    if (requiresCompanyName(data.type) && !data.company) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['company'],
+        message: '会社名を入力してください',
+      });
+    }
+  });
 
 const WEBHOOK_TIMEOUT_MS = 8000;
 const MAX_RETRIES = 2;
@@ -199,7 +195,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     const typeStr = type;
-    const typeLabel = TYPE_LABELS[typeStr] || typeStr || '未選択';
+    const typeLabel = contactTypeLabel(typeStr);
+    const recruitment = isRecruitmentInquiry(typeStr);
     const BUYING_STAGE_LABELS: Record<string, string> = {
       problem_recognition: '課題を整理している',
       research: '情報収集中',
@@ -247,9 +244,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     // 営業メールを CRM に入れないための LLM 判定。Slack には判定結果に関わらず全件通知する。
     // CRM 連携が無効なら判定自体を省く（無駄なコストを掛けない）。
+    // 採用は営業パイプラインに載せない。
     const crmConfigured = !!(crmWebhookUrl && crmWebhookToken);
     let classification: LeadClassification = { verdict: 'unknown', reason: 'AI判定は未実行' };
-    if (crmConfigured) {
+    if (recruitment) {
+      classification = { verdict: 'unknown', reason: '採用のお問い合わせのためCRM対象外' };
+    } else if (crmConfigured) {
       if (openrouterApiKey) {
         classification = await classifyInquiry(
           openrouterApiKey,
@@ -275,9 +275,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
     // 判定不能（キー未設定・タイムアウト・パース失敗）は CRM に通す。
     // 営業を1件通す損失より、本物のリードを1件落とす損失の方が大きいため。
-    const syncToCrm = crmConfigured && classification.verdict !== 'sales';
-    const crmStatusText =
-      classification.verdict === 'sales'
+    const syncToCrm = !recruitment && crmConfigured && classification.verdict !== 'sales';
+    const crmStatusText = recruitment
+      ? '対象外（採用）'
+      : classification.verdict === 'sales'
         ? `見送り（営業と判定: ${escapeSlack(classification.reason)}）`
         : classification.verdict === 'lead'
           ? '実施（問い合わせと判定）'
@@ -285,26 +286,39 @@ export const POST: APIRoute = async ({ request, locals }) => {
             ? `実施（AI判定できず: ${escapeSlack(classification.reason)}）`
             : '未設定';
 
+    const slackHeader = recruitment ? '採用のお問い合わせ' : '新しいお問い合わせ';
+    const slackFields = [
+      {
+        type: 'mrkdwn',
+        text: `*種別:*\n${escapeSlack(typeLabel)}`,
+      },
+      { type: 'mrkdwn', text: `*メール:*\n${escapeSlack(email)}` },
+      { type: 'mrkdwn', text: `*お名前:*\n${escapeSlack(name) || '未記入'}` },
+      {
+        type: 'mrkdwn',
+        text: recruitment
+          ? `*現所属:*\n${escapeSlack(company) || '未記入'}`
+          : `*会社名:*\n${escapeSlack(company) || '未記入'}`,
+      },
+      { type: 'mrkdwn', text: `*電話番号:*\n${escapeSlack(phone) || '未記入'}` },
+    ];
+    if (!recruitment) {
+      slackFields.push({
+        type: 'mrkdwn',
+        text: `*検討状況:*\n${escapeSlack(buyingStageLabel)}`,
+      });
+    }
+
     const slackMessage = {
-      text: '新しいお問い合わせが届きました',
+      text: recruitment ? '採用のお問い合わせが届きました' : '新しいお問い合わせが届きました',
       blocks: [
         {
           type: 'header',
-          text: { type: 'plain_text', text: '新しいお問い合わせ' },
+          text: { type: 'plain_text', text: slackHeader },
         },
         {
           type: 'section',
-          fields: [
-            {
-              type: 'mrkdwn',
-              text: `*種別:*\n${escapeSlack(typeLabel)}`,
-            },
-            { type: 'mrkdwn', text: `*メール:*\n${escapeSlack(email)}` },
-            { type: 'mrkdwn', text: `*お名前:*\n${escapeSlack(name) || '未記入'}` },
-            { type: 'mrkdwn', text: `*会社名:*\n${escapeSlack(company) || '未記入'}` },
-            { type: 'mrkdwn', text: `*電話番号:*\n${escapeSlack(phone) || '未記入'}` },
-            { type: 'mrkdwn', text: `*検討状況:*\n${escapeSlack(buyingStageLabel)}` },
-          ],
+          fields: slackFields,
         },
         {
           type: 'section',

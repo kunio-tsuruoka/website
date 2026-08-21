@@ -12,7 +12,13 @@ const FROM_CONFIGS: Record<
     downloadUrl: '/downloads/beekle-zero-start-sales-deck.pdf',
     downloadFileName: 'beekle-zero-start-sales-deck.pdf',
   },
+  careers: {
+    title: '採用のお問い合わせを受け付けました',
+    lead: 'ご連絡ありがとうございます。通常1〜2営業日以内に採用担当よりご返信いたします。',
+  },
 };
+
+const thanksFrom = Astro.url.searchParams.get('from') || '';
 ---
 
 <Layout
@@ -94,7 +100,7 @@ const FROM_CONFIGS: Record<
             </svg>
           </div>
 
-          {Astro.url.searchParams.get('from') === 'zero-start' && FROM_CONFIGS['zero-start'] ? (
+          {thanksFrom === 'zero-start' && FROM_CONFIGS['zero-start'] ? (
             <>
               <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-6">
                 {FROM_CONFIGS['zero-start'].title}
@@ -123,6 +129,22 @@ const FROM_CONFIGS: Record<
                   資料に関するご質問は <a href="mailto:support@beekle.jp" class="text-primary-500 underline">support@beekle.jp</a> まで。
                 </p>
               </div>
+            </>
+          ) : thanksFrom === 'careers' ? (
+            <>
+              <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-6">
+                {FROM_CONFIGS.careers.title}
+              </h1>
+              <p class="text-lg text-foreground/80 leading-relaxed mb-4">
+                {FROM_CONFIGS.careers.lead}
+              </p>
+              <p class="text-base text-muted-foreground mb-12">
+                返信が届かない場合は、迷惑メールフォルダのご確認、または
+                <a href="mailto:support@beekle.jp" class="text-primary-500 underline mx-1"
+                  >support@beekle.jp</a
+                >
+                まで直接ご連絡ください。
+              </p>
             </>
           ) : (
             <>

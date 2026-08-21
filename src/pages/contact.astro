@@ -1,9 +1,18 @@
 ---
+export const prerender = false;
+
 import ContactForm from '../components/contact-form';
 import { Header } from '../components/header';
 import JsonLd from '../components/seo/json-ld.astro';
 import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
+
+const source = Astro.url.searchParams.get('source');
+if (source === 'careers') {
+  const next = new URL('/careers/contact', Astro.url);
+  next.search = Astro.url.search;
+  return Astro.redirect(next.pathname + next.search);
+}
 
 const runtime = (Astro.locals as { runtime?: { env?: { TURNSTILE_SITE_KEY?: string } } }).runtime;
 const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
@@ -52,7 +61,7 @@ const trustPoints = [
   <main class="pt-20">
     <PageHero
       title="お問い合わせ"
-      subtitle="お名前・メールアドレス・相談種別だけで送れます。通常1〜2営業日以内に、想定構成・概算レンジ・進め方の候補を返信します。"
+      subtitle="企業のご担当者様からのご相談を受け付けています。会社名必須。通常1〜2営業日以内に、想定構成・概算レンジ・進め方の候補を返信します。"
     />
 
     <section class="py-20 md:py-28">
@@ -80,6 +89,12 @@ const trustPoints = [
               もご利用ください。実例や対象企業がまとまっています。
             </p>
           </div>
+
+          <p class="mb-6 text-sm text-foreground/75 leading-relaxed">
+            採用・カジュアル面談のご連絡は
+            <a href="/careers/contact" class="text-primary-600 font-medium underline hover:no-underline">採用のお問い合わせ</a>
+            からお願いします。
+          </p>
 
           <ContactForm client:load sitekey={sitekey} />
 
