@@ -1,0 +1,80 @@
+name: Inspect blog CTA markup once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/inspect-blog-cta-once.yml
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Compare working column CTA markup with target blog
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+        run: |
+          cat > /tmp/inspect-cta.mjs <<'EOF'
+          import { createClient } from 'microcms-js-sdk';
+
+          const client = createClient({
+            serviceDomain: process.env.MICROCMS_SERVICE_DOMAIN,
+            apiKey: process.env.MICROCMS_API_KEY,
+          });
+
+          const markers = ['AI_DEV_SERVICE_BRIDGE', 'CONTACT_CTA'];
+          const tokens = Object.fromEntries(markers.map((m) => [m, `{{${m}}}`]));
+
+          const snippets = (value, token) => {
+            if (typeof value !== 'string') return [];
+            const out = [];
+            let start = 0;
+            while (true) {
+              const i = value.indexOf(token, start);
+              if (i < 0) break;
+              out.push(value.slice(Math.max(0, i - 100), Math.min(value.length, i + token.length + 100)).replace(/\n/g, '\\n'));
+              start = i + token.length;
+            }
+            return out;
+          };
+
+          let offset = 0;
+          const working = {};
+          while (Object.keys(working).length < markers.length) {
+            const page = await client.get({ endpoint: 'columns', queries: { limit: 100, offset, fields: 'id,content' } });
+            for (const article of page.contents) {
+              for (const marker of markers) {
+                if (working[marker]) continue;
+                const token = tokens[marker];
+                if (typeof article.content === 'string' && article.content.includes(token)) {
+                  working[marker] = { id: article.id, snippets: snippets(article.content, token) };
+                }
+              }
+            }
+            offset += page.contents.length;
+            if (offset >= page.totalCount || page.contents.length === 0) break;
+          }
+
+          const target = await client.get({ endpoint: 'blogs', contentId: 'dto3f38226f' });
+          const targetHits = {};
+          for (const [field, value] of Object.entries(target)) {
+            const serialized = typeof value === 'string' ? value : JSON.stringify(value);
+            for (const marker of markers) {
+              const token = tokens[marker];
+              if (serialized?.includes(token)) {
+                targetHits[marker] ??= [];
+                targetHits[marker].push({ field, snippets: snippets(serialized, token) });
+              }
+            }
+          }
+
+          console.log('WORKING_MARKUP=' + JSON.stringify(working));
+          console.log('TARGET_MARKUP=' + JSON.stringify(targetHits));
+          EOF
+          bun /tmp/inspect-cta.mjs
