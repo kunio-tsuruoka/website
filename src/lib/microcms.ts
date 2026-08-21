@@ -61,6 +61,51 @@ export type Column = {
   revisedAt?: string;
 };
 
+export type MicroCMSImage = {
+  url: string;
+  height?: number;
+  width?: number;
+};
+
+export type BlogTag =
+  | string
+  | {
+      id?: string;
+      name?: string;
+      title?: string;
+    };
+
+// 雑記ブログの型定義
+export type Blog = {
+  id: string;
+  title: string;
+  content?: string;
+  body?: string;
+  description?: string;
+  eyecatch?: MicroCMSImage;
+  thumbnail?: MicroCMSImage;
+  cover?: MicroCMSImage;
+  image?: MicroCMSImage;
+  tags?: BlogTag[] | string;
+  publishedAt: string;
+  updatedAt: string;
+  revisedAt?: string;
+};
+
+const BLOG_ENDPOINT = 'blogs';
+export const BLOGS_PER_PAGE = 10;
+
+export type PaginatedBlogs = {
+  contents: Blog[];
+  totalCount: number;
+  currentPage: number;
+  totalPages: number;
+  limit: number;
+  offset: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+};
+
 // カテゴリー一覧を取得
 export async function getCategories(env?: MicroCMSEnv) {
   try {
@@ -73,6 +118,102 @@ export async function getCategories(env?: MicroCMSEnv) {
     return data.contents as Category[];
   } catch (error) {
     console.error('Failed to fetch categories:', error);
+    return [];
+  }
+}
+
+// ブログ一覧を取得
+export async function getBlogs(env?: MicroCMSEnv) {
+  try {
+    const client = getClient(env);
+    const limit = 100;
+    const all: Blog[] = [];
+    let offset = 0;
+
+    while (true) {
+      const data = await client.get({
+        endpoint: BLOG_ENDPOINT,
+        queries: {
+          orders: '-publishedAt',
+          limit,
+          offset,
+        },
+      });
+      all.push(...(data.contents as Blog[]));
+
+      if (all.length >= data.totalCount || data.contents.length === 0) {
+        break;
+      }
+      offset += limit;
+    }
+
+    return all;
+  } catch (error) {
+    console.error('Failed to fetch blogs:', error);
+    return [];
+  }
+}
+
+// ブログ一覧の1ページ分を取得
+export async function getBlogsPage(
+  page = 1,
+  limit = BLOGS_PER_PAGE,
+  env?: MicroCMSEnv
+): Promise<PaginatedBlogs> {
+  const currentPage = Math.max(1, Math.trunc(page));
+  const pageSize = Math.min(100, Math.max(1, Math.trunc(limit)));
+  const offset = (currentPage - 1) * pageSize;
+  const data = await getClient(env).get({
+    endpoint: BLOG_ENDPOINT,
+    queries: {
+      orders: '-publishedAt',
+      limit: pageSize,
+      offset,
+    },
+  });
+  const totalCount = typeof data.totalCount === 'number' ? data.totalCount : 0;
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+
+  return {
+    contents: data.contents as Blog[],
+    totalCount,
+    currentPage,
+    totalPages,
+    limit: pageSize,
+    offset,
+    hasPrevPage: currentPage > 1,
+    hasNextPage: currentPage < totalPages,
+  };
+}
+
+// 特定のブログ記事を取得
+export async function getBlog(id: string, env?: MicroCMSEnv) {
+  try {
+    const data = await getClient(env).get({
+      endpoint: BLOG_ENDPOINT,
+      contentId: id,
+    });
+    return data as Blog;
+  } catch (error) {
+    console.error(`Failed to fetch blog ${id}:`, error);
+    return null;
+  }
+}
+
+// 関連ブログ記事を取得
+export async function getRelatedBlogs(currentId: string, limit = 4, env?: MicroCMSEnv) {
+  try {
+    const data = await getClient(env).get({
+      endpoint: BLOG_ENDPOINT,
+      queries: {
+        filters: `id[not_equals]${currentId}`,
+        orders: '-publishedAt',
+        limit,
+      },
+    });
+    return data.contents as Blog[];
+  } catch (error) {
+    console.error('Failed to fetch related blogs:', error);
     return [];
   }
 }

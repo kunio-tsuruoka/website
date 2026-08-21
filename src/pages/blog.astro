@@ -1,0 +1,128 @@
+---
+import BlogListing from '../components/blog/blog-listing.astro';
+import { Header } from '../components/header';
+import JsonLd from '../components/seo/json-ld.astro';
+import { PageHero } from '../components/ui/page-hero';
+import Layout from '../layouts/layout.astro';
+import {
+  BLOGS_PER_PAGE,
+  type Blog,
+  type MicroCMSEnv,
+  type PaginatedBlogs,
+  getBlogsPage,
+} from '../lib/microcms';
+
+export const prerender = false;
+
+const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
+const env = runtime?.env;
+
+let blogs: Blog[] = [];
+let pagination: PaginatedBlogs = {
+  contents: [],
+  totalCount: 0,
+  currentPage: 1,
+  totalPages: 1,
+  limit: BLOGS_PER_PAGE,
+  offset: 0,
+  hasPrevPage: false,
+  hasNextPage: false,
+};
+let apiError = false;
+
+try {
+  pagination = await getBlogsPage(1, BLOGS_PER_PAGE, env);
+  blogs = pagination.contents;
+} catch (error) {
+  console.error('Failed to load blogs:', error);
+  apiError = true;
+}
+
+function stripContent(value?: string): string {
+  if (!value) return '';
+  return value
+    .replace(/<[^>]*>/g, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/[#*_`>]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getBlogBody(blog: Blog): string {
+  return blog.content || blog.body || '';
+}
+
+function getExcerpt(blog: Blog): string {
+  const text = blog.description || stripContent(getBlogBody(blog));
+  return text.length > 120 ? `${text.slice(0, 120)}...` : text;
+}
+
+const pageDescription =
+  '株式会社Beekleのブログ。開発、AI、自社プロダクト、経営、日々の試行錯誤について、コラムとは別に雑記として発信します。';
+const pageUrl = 'https://beekle.jp/blog';
+---
+
+<Layout title="ブログ | Beekle" description={pageDescription} canonical={pageUrl}>
+  {
+    pagination.hasNextPage && (
+      <Fragment slot="head">
+        <link rel="next" href={`${pageUrl}/page/2`} />
+      </Fragment>
+    )
+  }
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: 'ブログ', url: '/blog' },
+      ],
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="webPage"
+    data={{
+      pageType: 'CollectionPage',
+      name: 'ブログ | Beekle',
+      description: pageDescription,
+      url: pageUrl,
+    }}
+  />
+  {blogs.length > 0 && (
+    <JsonLd
+      slot="head"
+      type="itemList"
+      data={{
+        name: 'Beekle ブログ一覧',
+        url: pageUrl,
+        itemType: 'BlogPosting',
+        items: blogs.map((blog) => ({
+          name: blog.title,
+          description: getExcerpt(blog),
+          url: `https://beekle.jp/blog/${blog.id}`,
+        })),
+      }}
+    />
+  )}
+  <Header client:idle />
+  <main class="pt-20">
+    <PageHero
+      title="ブログ"
+      subtitle="開発、AI、自社プロダクト、経営、日々の試行錯誤を、コラムとは別の雑記として書いていきます。"
+      badge="Blog"
+    />
+
+    <section class="bg-white py-16 md:py-24">
+      <BlogListing
+        blogs={blogs}
+        apiError={apiError}
+        currentPage={pagination.currentPage}
+        totalPages={pagination.totalPages}
+        totalCount={pagination.totalCount}
+        pageSize={pagination.limit}
+      />
+    </section>
+  </main>
+</Layout>

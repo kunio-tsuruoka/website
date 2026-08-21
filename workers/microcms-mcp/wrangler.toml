@@ -1,0 +1,6 @@
+name = "beekle-microcms-mcp"
+main = "src/index.ts"
+compatibility_date = "2025-04-01"
+
+[vars]
+ALLOWED_ENDPOINTS = "blogs,columns,categories,qas,qa-categories"

@@ -4,10 +4,32 @@ import { defineMiddleware } from 'astro:middleware';
 // cf-cache-status: DYNAMIC で毎リクエスト MicroCMS を叩いていた TTFB 対策。
 // 注意: MicroCMS の更新は最大 TTL 秒遅れて反映される。
 const EDGE_TTL_SECONDS = 300;
+const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS'];
+const FORM_CONTENT_TYPES = [
+  'application/x-www-form-urlencoded',
+  'multipart/form-data',
+  'text/plain',
+];
+const CROSS_ORIGIN_FORM_ALLOWED_PATHS = new Set(['/authorize', '/token']);
 
 function isCacheablePath(pathname: string): boolean {
   // API は絶対にキャッシュしない。その他の GET ページは匿名コンテンツのみ。
   return !pathname.startsWith('/api/');
+}
+
+function shouldRejectCrossOriginForm(request: Request, url: URL): boolean {
+  if (SAFE_METHODS.includes(request.method)) return false;
+  if (CROSS_ORIGIN_FORM_ALLOWED_PATHS.has(url.pathname)) return false;
+
+  const isSameOrigin = request.headers.get('origin') === url.origin;
+  if (isSameOrigin) return false;
+
+  const contentType = request.headers.get('content-type');
+  if (!contentType) return true;
+
+  return FORM_CONTENT_TYPES.some((formContentType) =>
+    contentType.toLowerCase().includes(formContentType)
+  );
 }
 
 type RuntimeLocals = {
@@ -28,6 +50,12 @@ function resolveCache(locals: RuntimeLocals): Cache | undefined {
 export const onRequest = defineMiddleware(async (context, next) => {
   const { request } = context;
   const url = new URL(request.url);
+
+  if (shouldRejectCrossOriginForm(request, url)) {
+    return new Response(`Cross-site ${request.method} form submissions are forbidden`, {
+      status: 403,
+    });
+  }
 
   if (request.method !== 'GET' || !isCacheablePath(url.pathname)) {
     return next();
