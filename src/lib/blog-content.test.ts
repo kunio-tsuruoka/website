@@ -16,4 +16,14 @@ describe('renderBlogContentVisuals', () => {
     expect(result).toContain('/contact?source=blog-dto3f38226f&intent=article-final');
     expect(result).toContain('data-cta-source="blog-dto3f38226f"');
   });
+
+  it('groups generated CTA cards in a blog article CTA stack', () => {
+    const result = renderBlogContentVisuals(
+      '<p>{{AI_DEV_SERVICE_BRIDGE}}</p><p>{{CONTACT_CTA}}</p>',
+      'dto3f38226f'
+    );
+
+    expect(result).toContain('<aside class="blog-cta-stack" aria-label="Beekleへの相談導線">');
+    expect(result.indexOf('blog-cta-stack')).toBeLessThan(result.indexOf('cv-card cv-card-cta'));
+  });
 });
