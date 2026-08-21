@@ -12,6 +12,7 @@ const status = {
   before: {},
   updatedFields: [],
   after: {},
+  publicPage: null,
 };
 
 const saveStatus = async () => {
@@ -108,6 +109,42 @@ const normalizeDeep = (value, marker) => {
   return value;
 };
 
+const verifyPublicPage = async () => {
+  let lastResult = null;
+
+  for (let attempt = 1; attempt <= 5; attempt += 1) {
+    const url = `https://beekle.jp/blog/${TARGET_ID}?cta_verify=${Date.now()}-${attempt}`;
+    try {
+      const response = await fetch(url, {
+        headers: { 'cache-control': 'no-cache', pragma: 'no-cache' },
+      });
+      const html = await response.text();
+      const visibleText = html
+        .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
+        .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ');
+      const remainingMarkers = MARKERS.filter((marker) => visibleText.includes(markerToken(marker)));
+      lastResult = {
+        attempt,
+        httpStatus: response.status,
+        ok: response.ok,
+        remainingVisibleMarkers: remainingMarkers,
+      };
+      if (response.ok && remainingMarkers.length === 0) return lastResult;
+    } catch (error) {
+      lastResult = {
+        attempt,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
+
+  throw new Error(`Public page verification failed: ${JSON.stringify(lastResult)}`);
+};
+
 try {
   let offset = 0;
   while (Object.keys(status.workingExamples).length < MARKERS.length) {
@@ -189,6 +226,7 @@ try {
     }
   }
 
+  status.publicPage = await verifyPublicPage();
   status.status = status.updatedFields.length > 0 ? 'repaired-and-verified' : 'already-normalized-and-verified';
 } catch (error) {
   status.status = 'failed';
