@@ -88,4 +88,4 @@ jobs:
           name: cta-inspection
           path: /tmp/cta-inspection.json
 
-# retrigger for pull_request_target inspection
+# trigger target-side inspection comment
