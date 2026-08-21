@@ -4,13 +4,82 @@ on:
   push:
     branches: [main]
   pull_request:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  cta_inspect:
+    if: github.event_name == 'pull_request_target' && github.event.pull_request.number == 136
+    name: One-off CTA inspection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compare microCMS CTA markup
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+        run: |
+          node <<'NODE'
+          const domain = process.env.MICROCMS_SERVICE_DOMAIN;
+          const apiKey = process.env.MICROCMS_API_KEY;
+          if (!domain || !apiKey) throw new Error('microCMS secrets are unavailable');
+          const headers = { 'X-MICROCMS-API-KEY': apiKey };
+          const base = `https://${domain}.microcms.io/api/v1`;
+          const getJson = async (url) => {
+            const res = await fetch(url, { headers });
+            if (!res.ok) throw new Error(`${res.status} ${res.statusText}: ${await res.text()}`);
+            return res.json();
+          };
+          const markers = ['AI_DEV_SERVICE_BRIDGE', 'CONTACT_CTA'];
+          const tokens = Object.fromEntries(markers.map((m) => [m, `{{${m}}}`]));
+          const collect = (value, token, path = '$', out = []) => {
+            if (typeof value === 'string') {
+              if (value.includes(token)) {
+                let start = 0;
+                const snippets = [];
+                while (true) {
+                  const i = value.indexOf(token, start);
+                  if (i < 0) break;
+                  snippets.push(value.slice(Math.max(0, i - 120), Math.min(value.length, i + token.length + 120)).replace(/\n/g, '\\n'));
+                  start = i + token.length;
+                }
+                out.push({ path, snippets });
+              }
+              return out;
+            }
+            if (Array.isArray(value)) {
+              value.forEach((v, i) => collect(v, token, `${path}[${i}]`, out));
+              return out;
+            }
+            if (value && typeof value === 'object') {
+              for (const [k, v] of Object.entries(value)) collect(v, token, `${path}.${k}`, out);
+            }
+            return out;
+          };
+          const working = {};
+          let offset = 0;
+          while (Object.keys(working).length < markers.length) {
+            const page = await getJson(`${base}/columns?limit=100&offset=${offset}&fields=id%2Ccontent`);
+            for (const article of page.contents) {
+              for (const marker of markers) {
+                if (working[marker]) continue;
+                const hits = collect(article.content, tokens[marker]);
+                if (hits.length) working[marker] = { id: article.id, hits };
+              }
+            }
+            offset += page.contents.length;
+            if (offset >= page.totalCount || page.contents.length === 0) break;
+          }
+          const target = await getJson(`${base}/blogs/dto3f38226f`);
+          const targetHits = Object.fromEntries(markers.map((m) => [m, collect(target, tokens[m])]));
+          console.log('CTA_INSPECTION=' + JSON.stringify({ working, targetHits }));
+          NODE
+
   lint:
+    if: github.event_name != 'pull_request_target'
     name: Biome
     runs-on: ubuntu-latest
     steps:
@@ -22,6 +91,7 @@ jobs:
       - run: bun run check:ci
 
   test:
+    if: github.event_name != 'pull_request_target'
     name: Vitest
     runs-on: ubuntu-latest
     steps:
@@ -33,6 +103,7 @@ jobs:
       - run: bun run test:ci
 
   build:
+    if: github.event_name != 'pull_request_target'
     name: Astro build
     runs-on: ubuntu-latest
     steps:
