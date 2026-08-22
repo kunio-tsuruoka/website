@@ -8,18 +8,48 @@ on:
       - .github/workflows/content-process-migration.yml
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   migrate:
     if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'content: align published process with Beekle standard'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       - run: bun install --frozen-lockfile
       - name: Apply MicroCMS content migration
-        run: bun scripts/migrate-beekle-process-standard.mjs --apply
+        id: migrate
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          bun scripts/migrate-beekle-process-standard.mjs --apply 2>&1 | tee /tmp/content-migration.log
         env:
           MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
           MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+      - name: Persist migration result
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p .ops
+          {
+            echo "commit=${GITHUB_SHA}"
+            echo "outcome=${{ steps.migrate.outcome }}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "---"
+            cat /tmp/content-migration.log 2>/dev/null || true
+          } > .ops/content-process-migration-last-run.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .ops/content-process-migration-last-run.txt
+          git diff --cached --quiet || git commit -m "chore: record content migration result"
+          git push origin HEAD:main
+      - name: Fail when migration failed
+        if: steps.migrate.outcome == 'failure'
+        run: exit 1
