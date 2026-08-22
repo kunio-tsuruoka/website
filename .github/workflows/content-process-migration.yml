@@ -1,0 +1,25 @@
+name: Content Process Migration
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/migrate-beekle-process-standard.mjs
+      - .github/workflows/content-process-migration.yml
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'content: align published process with Beekle standard'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Apply MicroCMS content migration
+        run: bun scripts/migrate-beekle-process-standard.mjs --apply
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
