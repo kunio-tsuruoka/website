@@ -12,8 +12,10 @@ import { featuredConsultationSituations } from '../data/consultation-situations'
 import Layout from '../layouts/layout.astro';
 import { type MicroCMSEnv, getColumns } from '../lib/microcms';
 
-const runtime = (Astro.locals as { runtime?: { env?: MicroCMSEnv } }).runtime;
+type HomeEnv = MicroCMSEnv & { TURNSTILE_SITE_KEY?: string };
+const runtime = (Astro.locals as { runtime?: { env?: HomeEnv } }).runtime;
 const env = runtime?.env;
+const sitekey = env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
 
 const FEATURED_COLUMN_IDS = [
   'requirements-definition-complete-guide',
@@ -356,7 +358,7 @@ try {
           </div>
         </div>
         <div class="max-w-2xl mx-auto">
-          <ContactForm client:visible={{ rootMargin: '600px' }} />
+          <ContactForm client:visible={{ rootMargin: '600px' }} sitekey={sitekey} />
         </div>
       </div>
     </section>
@@ -396,6 +398,11 @@ try {
       </div>
     </section>
   </main>
+
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer></script>
 </Layout>
 
 <style></style>

@@ -31,4 +31,11 @@ describe('Header', () => {
     expect(html).not.toContain('開発方法');
     expect(html).toContain('進行管理と仕様の見える化');
   });
+
+  it('keeps the desktop dropdown hover path connected to the trigger', () => {
+    const html = renderToStaticMarkup(<Header />);
+
+    expect(html).toContain('top-full z-50 w-72 pt-2');
+    expect(html).not.toContain('top-full z-50 mt-2');
+  });
 });

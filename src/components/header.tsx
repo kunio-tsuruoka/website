@@ -69,17 +69,19 @@ function Dropdown({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      <div className="invisible absolute left-0 top-full z-50 mt-2 w-72 rounded-lg border border-neutral-200 bg-white py-2 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-        {items.map((item) => (
-          <a
-            key={`${item.href}-${item.label}`}
-            href={item.href}
-            {...(item.href.startsWith('http') ? { rel: 'noopener' } : {})}
-            className="block px-4 py-2.5 text-sm text-gray-700 transition-colors hover:bg-neutral-100 hover:text-primary-600"
-          >
-            {item.label}
-          </a>
-        ))}
+      <div className="invisible absolute left-0 top-full z-50 w-72 pt-2 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+        <div className="rounded-lg border border-neutral-200 bg-white py-2">
+          {items.map((item) => (
+            <a
+              key={`${item.href}-${item.label}`}
+              href={item.href}
+              {...(item.href.startsWith('http') ? { rel: 'noopener' } : {})}
+              className="block px-4 py-2.5 text-sm text-gray-700 transition-colors hover:bg-neutral-100 hover:text-primary-600"
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
       </div>
     </li>
   );
