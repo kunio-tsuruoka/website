@@ -34,10 +34,16 @@ function replaceRegex(content, re, replacement, changes, label) {
 
 function removeWorkflowLinks(content, changes) {
   const before = content;
-  content = content.replace(/<li[^>]*>[\s\S]*?href=["']\/column\/ears-gherkin-workflow["'][\s\S]*?<\/li>/gi, '');
-  content = content.replace(/<a[^>]*href=["']\/column\/ears-gherkin-workflow["'][^>]*>[\s\S]*?<\/a>/gi, '');
-  if (content !== before) changes.push('旧EARS×Gherkin主要導線を削除');
-  return content;
+  let nextContent = content.replace(
+    /<li[^>]*>[\s\S]*?href=["']\/column\/ears-gherkin-workflow["'][\s\S]*?<\/li>/gi,
+    ''
+  );
+  nextContent = nextContent.replace(
+    /<a[^>]*href=["']\/column\/ears-gherkin-workflow["'][^>]*>[\s\S]*?<\/a>/gi,
+    ''
+  );
+  if (nextContent !== before) changes.push('旧EARS×Gherkin主要導線を削除');
+  return nextContent;
 }
 
 const gherkinExampleSection = `
@@ -245,25 +251,79 @@ function transformColumn(id, article) {
   const changes = [];
 
   if (id === 'gherkin-bdd-introduction') {
-    content = replaceSection(content, 'Gherkin と EARS の関係', 'Gherkin を実行する：主要フレームワーク', gherkinExampleSection, changes, 'EARS変換節 → 具体例起点へ');
-    content = replaceSection(content, 'Gherkin を導入するステップ', 'Gherkin を使う／使わない場面', gherkinStepsSection, changes, '導入ステップをBeekle標準へ');
-    content = replaceSection(content, 'まとめ', '関連記事', gherkinSummary, changes, 'まとめをBeekle標準へ');
+    content = replaceSection(
+      content,
+      'Gherkin と EARS の関係',
+      'Gherkin を実行する：主要フレームワーク',
+      gherkinExampleSection,
+      changes,
+      'EARS変換節 → 具体例起点へ'
+    );
+    content = replaceSection(
+      content,
+      'Gherkin を導入するステップ',
+      'Gherkin を使う／使わない場面',
+      gherkinStepsSection,
+      changes,
+      '導入ステップをBeekle標準へ'
+    );
+    content = replaceSection(
+      content,
+      'まとめ',
+      '関連記事',
+      gherkinSummary,
+      changes,
+      'まとめをBeekle標準へ'
+    );
     content = removeWorkflowLinks(content, changes);
-    content = replaceRegex(content, /EARS記法やGherkinを実際のプロジェクトで使うには/g, 'User StoryやGherkinを実際のプロジェクトで使うには', changes, 'CTAの旧EARS標準表現を修正');
+    content = replaceRegex(
+      content,
+      /EARS記法やGherkinを実際のプロジェクトで使うには/g,
+      'User StoryやGherkinを実際のプロジェクトで使うには',
+      changes,
+      'CTAの旧EARS標準表現を修正'
+    );
   }
 
   if (id === 'project-management-complete-guide') {
-    content = replaceSection(content, 'STEP 5: ユーザーストーリー＋EARS＋Gherkin で「作る」要件を仕様化する', 'STEP 6: Laravel + Inertia でプロトタイプを実装する', projectStep5, changes, 'STEP 5をBeekle標準へ');
-    content = replaceRegex(content, /STEP 5 ユーザーストーリー＋EARS＋Gherkin/g, 'STEP 5 User Story → 具体例 → Gherkin → レビュー', changes, 'まとめのSTEP 5表記を修正');
+    content = replaceSection(
+      content,
+      'STEP 5: ユーザーストーリー＋EARS＋Gherkin で「作る」要件を仕様化する',
+      'STEP 6: Laravel + Inertia でプロトタイプを実装する',
+      projectStep5,
+      changes,
+      'STEP 5をBeekle標準へ'
+    );
+    content = replaceRegex(
+      content,
+      /STEP 5 ユーザーストーリー＋EARS＋Gherkin/g,
+      'STEP 5 User Story → 具体例 → Gherkin → レビュー',
+      changes,
+      'まとめのSTEP 5表記を修正'
+    );
     content = removeWorkflowLinks(content, changes);
   }
 
   if (id === 'requirements-definition-complete-guide') {
-    content = replaceSection(content, '要件の書き方ルール：EARS記法', '要件定義のスコープ管理', requirementsExamplesSection, changes, 'EARS標準節 → 具体例/Gherkinへ');
+    content = replaceSection(
+      content,
+      '要件の書き方ルール：EARS記法',
+      '要件定義のスコープ管理',
+      requirementsExamplesSection,
+      changes,
+      'EARS標準節 → 具体例/Gherkinへ'
+    );
   }
 
   if (id === 'ai-development-speed') {
-    content = replaceSection(content, 'STEP 3: 残った要件を Gherkin に変換する', 'STEP 4: Laravel Inertia でプロトタイプを実装する', aiStep3, changes, 'STEP 3を具体例/Gherkinレビューへ');
+    content = replaceSection(
+      content,
+      'STEP 3: 残った要件を Gherkin に変換する',
+      'STEP 4: Laravel Inertia でプロトタイプを実装する',
+      aiStep3,
+      changes,
+      'STEP 3を具体例/Gherkinレビューへ'
+    );
     content = removeWorkflowLinks(content, changes);
   }
 
@@ -279,20 +339,71 @@ function transformColumn(id, article) {
 
   if (id === 'requirements-definition-template') {
     if (title?.includes('EARS記法とユーザーストーリー')) {
-      title = '要件定義書のテンプレート・サンプル｜User Story・具体例・Gherkinの実例＋Word/Markdown無料DL';
+      title =
+        '要件定義書のテンプレート・サンプル｜User Story・具体例・Gherkinの実例＋Word/Markdown無料DL';
       changes.push('タイトルを現行標準へ');
     }
-    content = replaceRegex(content, /その書き方の核となる2つの記法（EARS／ユーザーストーリー）を、サンプル付きで公開します。/g, 'その書き方の核となる「User Story → 具体例 → Gherkin」の流れを、サンプル付きで公開します。', changes, '導入文を現行標準へ');
-    content = replaceRegex(content, /4\. 機能要件（EARS記法）/g, '4. 具体例・受け入れ条件（Gherkin）', changes, 'テンプレート章立てを現行標準へ');
-    content = replaceSection(content, 'EARS記法の5パターン（実例付き）', 'テンプレート無料ダウンロード', requirementsTemplateExamples, changes, 'EARS標準節 → 具体例/Gherkinへ');
-    content = replaceRegex(content, /「作る」と判定した要求をユーザーストーリー化し、EARS記法で機能要件[^<]*/g, '「作る」と判定した要求をUser Story化し、正常系・異常系・境界値の具体例を出してGherkinで完成条件を固定する', changes, '進め方のSTEP 4を修正');
-    content = replaceSection(content, 'まとめ：要件定義は「ストーリー＋EARS」で曖昧さを潰す', 'Beekleの進め方', requirementsTemplateSummary, changes, 'まとめを現行標準へ');
-    content = replaceRegex(content, /Beekleでは、要件定義フェーズで[^<]*ユーザーストーリーとEARS要件を書き起こすワークショップ[^<]*。/g, `Beekleでは、要件定義フェーズで発注側と共同し、要求（Why）からUser Story、具体例、Gherkinまでをつなげてレビューするワークショップを行います。`, changes, 'Beekleの進め方を修正');
+    content = replaceRegex(
+      content,
+      /その書き方の核となる2つの記法（EARS／ユーザーストーリー）を、サンプル付きで公開します。/g,
+      'その書き方の核となる「User Story → 具体例 → Gherkin」の流れを、サンプル付きで公開します。',
+      changes,
+      '導入文を現行標準へ'
+    );
+    content = replaceRegex(
+      content,
+      /4\. 機能要件（EARS記法）/g,
+      '4. 具体例・受け入れ条件（Gherkin）',
+      changes,
+      'テンプレート章立てを現行標準へ'
+    );
+    content = replaceSection(
+      content,
+      'EARS記法の5パターン（実例付き）',
+      'テンプレート無料ダウンロード',
+      requirementsTemplateExamples,
+      changes,
+      'EARS標準節 → 具体例/Gherkinへ'
+    );
+    content = replaceRegex(
+      content,
+      /「作る」と判定した要求をユーザーストーリー化し、EARS記法で機能要件[^<]*/g,
+      '「作る」と判定した要求をUser Story化し、正常系・異常系・境界値の具体例を出してGherkinで完成条件を固定する',
+      changes,
+      '進め方のSTEP 4を修正'
+    );
+    content = replaceSection(
+      content,
+      'まとめ：要件定義は「ストーリー＋EARS」で曖昧さを潰す',
+      'Beekleの進め方',
+      requirementsTemplateSummary,
+      changes,
+      'まとめを現行標準へ'
+    );
+    content = replaceRegex(
+      content,
+      /Beekleでは、要件定義フェーズで[^<]*ユーザーストーリーとEARS要件を書き起こすワークショップ[^<]*。/g,
+      'Beekleでは、要件定義フェーズで発注側と共同し、要求（Why）からUser Story、具体例、Gherkinまでをつなげてレビューするワークショップを行います。',
+      changes,
+      'Beekleの進め方を修正'
+    );
   }
 
   if (id === 'engineer-communication') {
-    content = replaceRegex(content, /ユーザーストーリー＋EARS＋Gherkin/g, 'User Story → 具体例 → Gherkin', changes, '旧3層表記を修正');
-    content = replaceRegex(content, /ユーザーストーリー＋EARS/g, 'User Story → 具体例', changes, '旧2層表記を修正');
+    content = replaceRegex(
+      content,
+      /ユーザーストーリー＋EARS＋Gherkin/g,
+      'User Story → 具体例 → Gherkin',
+      changes,
+      '旧3層表記を修正'
+    );
+    content = replaceRegex(
+      content,
+      /ユーザーストーリー＋EARS/g,
+      'User Story → 具体例',
+      changes,
+      '旧2層表記を修正'
+    );
     content = removeWorkflowLinks(content, changes);
   }
 
@@ -307,20 +418,25 @@ function transformColumn(id, article) {
 
 const qaUpdates = {
   'requirements-8': {
-    answer: '<p><strong>EARS（Easy Approach to Requirements Syntax）は、条件とシステムの振る舞いを一定の型で書くための要件記法です。</strong></p><p>安全性・規制対応などで要件文の形式を揃えたい場合や、大量の条件付き要件をレビューしたい場合には有効です。ただし、現在のBeekleではEARSを標準工程の必須ステップにはしていません。</p><p>Beekleの標準は「要求（Why） → User Story → 具体例 → Gherkin → レビュー → 実装・検証」です。EARSは必要な案件で補助的に使います。EARSそのものの5パターンと書き方は<a href="/column/ears-requirements-syntax-guide">EARS入門</a>を参照してください。</p>',
+    answer:
+      '<p><strong>EARS（Easy Approach to Requirements Syntax）は、条件とシステムの振る舞いを一定の型で書くための要件記法です。</strong></p><p>安全性・規制対応などで要件文の形式を揃えたい場合や、大量の条件付き要件をレビューしたい場合には有効です。ただし、現在のBeekleではEARSを標準工程の必須ステップにはしていません。</p><p>Beekleの標準は「要求（Why） → User Story → 具体例 → Gherkin → レビュー → 実装・検証」です。EARSは必要な案件で補助的に使います。EARSそのものの5パターンと書き方は<a href="/column/ears-requirements-syntax-guide">EARS入門</a>を参照してください。</p>',
   },
   'requirements-9': {
-    answer: '<p><strong>Gherkinは、関係者で合意した具体例をGiven / When / Thenで「これが動けば完成」という形に固定したい場面で使います。</strong></p><p>BeekleではUser Storyを書いた後、いきなりGherkinへ変換せず、正常系・異常系・境界値などの具体例を先に出します。決まった例だけをGherkinにし、実装前に抜け漏れ・矛盾をレビューします。</p><p>そのScenarioをCucumber、pytest-bdd、Playwright BDDなどのstep definitionへ接続すると、同じ記述を受入テスト・回帰テストとしてCIで継続実行できます。詳しくは<a href="/column/gherkin-bdd-introduction">Gherkin入門</a>と<a href="/column/requirements-definition-template">要件定義書テンプレート</a>を参照してください。</p>',
+    answer:
+      '<p><strong>Gherkinは、関係者で合意した具体例をGiven / When / Thenで「これが動けば完成」という形に固定したい場面で使います。</strong></p><p>BeekleではUser Storyを書いた後、いきなりGherkinへ変換せず、正常系・異常系・境界値などの具体例を先に出します。決まった例だけをGherkinにし、実装前に抜け漏れ・矛盾をレビューします。</p><p>そのScenarioをCucumber、pytest-bdd、Playwright BDDなどのstep definitionへ接続すると、同じ記述を受入テスト・回帰テストとしてCIで継続実行できます。詳しくは<a href="/column/gherkin-bdd-introduction">Gherkin入門</a>と<a href="/column/requirements-definition-template">要件定義書テンプレート</a>を参照してください。</p>',
   },
   'requirements-14': {
     question: 'User StoryからGherkinへはどうつなげますか？',
-    answer: '<p><strong>User Storyを書いたら、いきなりGherkinへ変換せず、まず具体例を出します。</strong></p><p>正常系・異常系・境界値について「実際に何が起きれば完成なのか」を業務担当者と確認し、決まった例だけをGiven / When / Thenへ落とします。Gherkinを書いた後は、実装前に抜け漏れ・矛盾・未確定事項をレビューします。</p><p>実装後はScenarioをstep definitionへ接続し、受入テスト・回帰テストとしてCIで継続実行します。流れは「要求（Why） → User Story → 具体例 → Gherkin → レビュー → 実装・検証」です。</p>',
+    answer:
+      '<p><strong>User Storyを書いたら、いきなりGherkinへ変換せず、まず具体例を出します。</strong></p><p>正常系・異常系・境界値について「実際に何が起きれば完成なのか」を業務担当者と確認し、決まった例だけをGiven / When / Thenへ落とします。Gherkinを書いた後は、実装前に抜け漏れ・矛盾・未確定事項をレビューします。</p><p>実装後はScenarioをstep definitionへ接続し、受入テスト・回帰テストとしてCIで継続実行します。流れは「要求（Why） → User Story → 具体例 → Gherkin → レビュー → 実装・検証」です。</p>',
   },
   'project-management-15': {
-    answer: '<p><strong>要件定義は「ベンダー任せ」では失敗します。発注者が担うのは、文書を大量に書くことではなく、業務上のWhyと優先順位、完成条件の意思決定です。</strong></p><p>進め方は、(1) ステークホルダー特定 → (2) 業務目的とKPI → (3) As-Is / To-Be → (4) 要求をUser Storyへ整理 → (5) FM法で作る／後回し／作らないを決定 → (6) 正常系・異常系・境界値の具体例を出す → (7) Gherkinで完成条件を固定し、実装前レビュー → プロトタイプ／実装、という流れです。</p><p>記法を埋めることよりも、「誰が何のために使い、どの例が動けば受け入れられるか」を合意することが重要です。詳しくは<a href="/column/project-management-01">要件定義の進め方</a>を参照してください。</p>',
+    answer:
+      '<p><strong>要件定義は「ベンダー任せ」では失敗します。発注者が担うのは、文書を大量に書くことではなく、業務上のWhyと優先順位、完成条件の意思決定です。</strong></p><p>進め方は、(1) ステークホルダー特定 → (2) 業務目的とKPI → (3) As-Is / To-Be → (4) 要求をUser Storyへ整理 → (5) FM法で作る／後回し／作らないを決定 → (6) 正常系・異常系・境界値の具体例を出す → (7) Gherkinで完成条件を固定し、実装前レビュー → プロトタイプ／実装、という流れです。</p><p>記法を埋めることよりも、「誰が何のために使い、どの例が動けば受け入れられるか」を合意することが重要です。詳しくは<a href="/column/project-management-01">要件定義の進め方</a>を参照してください。</p>',
   },
   'project-management-16': {
-    answer: '<p><strong>「今どの工程の話をしているか」を最初に揃え、そのうえで「もし◯◯が起きたら？」という具体例を聞くと抜け漏れが減ります。</strong></p><p>Beekleでは「アクター → As-Is / To-Be → 要求（Why） → User Story → 具体例 → Gherkin／レビュー → 実装」のどこを議論しているかを明示します。場所のない依頼は、仕様なのか要望なのか実装案なのかが混ざるためです。</p><p>具体例では「ネットが不安定だったら？」「権限が違ったら？」「0件だったら？」「同じ操作を2回したら？」「外部サービスが落ちたら？」などを確認します。すぐ答えが出ないものは未確定事項として残し、Gherkinへ勝手に埋めません。詳しくは<a href="/column/engineer-communication">エンジニアとのコミュニケーション基礎</a>と<a href="/column/gherkin-bdd-introduction">Gherkin入門</a>を参照してください。</p>',
+    answer:
+      '<p><strong>「今どの工程の話をしているか」を最初に揃え、そのうえで「もし◯◯が起きたら？」という具体例を聞くと抜け漏れが減ります。</strong></p><p>Beekleでは「アクター → As-Is / To-Be → 要求（Why） → User Story → 具体例 → Gherkin／レビュー → 実装」のどこを議論しているかを明示します。場所のない依頼は、仕様なのか要望なのか実装案なのかが混ざるためです。</p><p>具体例では「ネットが不安定だったら？」「権限が違ったら？」「0件だったら？」「同じ操作を2回したら？」「外部サービスが落ちたら？」などを確認します。すぐ答えが出ないものは未確定事項として残し、Gherkinへ勝手に埋めません。詳しくは<a href="/column/engineer-communication">エンジニアとのコミュニケーション基礎</a>と<a href="/column/gherkin-bdd-introduction">Gherkin入門</a>を参照してください。</p>',
   },
 };
 
@@ -337,34 +453,58 @@ const columnIds = [
 
 const planned = [];
 for (const id of columnIds) {
-  const article = await client.get({ endpoint: 'columns', contentId: id, queries: { fields: 'id,title,content' } });
+  const article = await client.get({
+    endpoint: 'columns',
+    contentId: id,
+    queries: { fields: 'id,title,content' },
+  });
   const next = transformColumn(id, article);
   if (next.title !== article.title || next.content !== article.content) {
-    planned.push({ endpoint: 'columns', id, content: { title: next.title, content: next.content }, changes: next.changes });
+    planned.push({
+      endpoint: 'columns',
+      id,
+      content: { title: next.title, content: next.content },
+      changes: next.changes,
+    });
   }
 }
 
 for (const [id, patch] of Object.entries(qaUpdates)) {
-  const qa = await client.get({ endpoint: 'qas', contentId: id, queries: { fields: 'id,question,answer' } });
+  const qa = await client.get({
+    endpoint: 'qas',
+    contentId: id,
+    queries: { fields: 'id,question,answer' },
+  });
   const content = {};
   if (patch.question && patch.question !== qa.question) content.question = patch.question;
   if (patch.answer && patch.answer !== qa.answer) content.answer = patch.answer;
-  if (Object.keys(content).length) planned.push({ endpoint: 'qas', id, content, changes: ['QAを現行Beekle標準へ'] });
+  if (Object.keys(content).length)
+    planned.push({ endpoint: 'qas', id, content, changes: ['QAを現行Beekle標準へ'] });
 }
 
 const forbiddenChecks = [
-  ['gherkin-bdd-introduction', /ユーザーストーリーと\s*EARS\s*で要件を整える|EARS\s*と組み合わせることで/],
+  [
+    'gherkin-bdd-introduction',
+    /ユーザーストーリーと\s*EARS\s*で要件を整える|EARS\s*と組み合わせることで/,
+  ],
   ['project-management-complete-guide', /ユーザーストーリー＋EARS＋Gherkin|EARSで分解した受入条件/],
   ['requirements-definition-complete-guide', /要件の書き方ルール：EARS記法/],
   ['ai-development-speed', /EARS記法[^<]{0,80}ワンクッション/],
-  ['user-story-template-examples', /EARS\s*で受入条件と非機能要件を書く[^<]{0,80}ベストプラクティス/],
-  ['requirements-definition-template', /まとめ：要件定義は「ストーリー＋EARS」|共同でユーザーストーリーとEARS要件/],
+  [
+    'user-story-template-examples',
+    /EARS\s*で受入条件と非機能要件を書く[^<]{0,80}ベストプラクティス/,
+  ],
+  [
+    'requirements-definition-template',
+    /まとめ：要件定義は「ストーリー＋EARS」|共同でユーザーストーリーとEARS要件/,
+  ],
 ];
 
 for (const [id, re] of forbiddenChecks) {
   const candidate = planned.find((x) => x.endpoint === 'columns' && x.id === id);
   const content = candidate?.content?.content;
-  if (content && re.test(content)) throw new Error(`preflight failed: old standard wording remains in ${id}: ${re}`);
+  if (content && re.test(content))
+    throw new Error(`preflight failed: old standard wording remains in ${id}: ${re}`);
 }
 
 console.log(`[mode] ${APPLY ? 'APPLY' : 'DRY-RUN'}`);
@@ -384,9 +524,14 @@ for (const item of planned) {
 
 for (const item of planned) {
   const fields = item.endpoint === 'columns' ? 'id,title,content' : 'id,question,answer';
-  const verify = await client.get({ endpoint: item.endpoint, contentId: item.id, queries: { fields } });
+  const verify = await client.get({
+    endpoint: item.endpoint,
+    contentId: item.id,
+    queries: { fields },
+  });
   for (const [key, value] of Object.entries(item.content)) {
-    if (verify[key] !== value) throw new Error(`verify failed: ${item.endpoint}/${item.id} field=${key}`);
+    if (verify[key] !== value)
+      throw new Error(`verify failed: ${item.endpoint}/${item.id} field=${key}`);
   }
 }
 

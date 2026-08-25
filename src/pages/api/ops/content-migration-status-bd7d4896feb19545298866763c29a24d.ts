@@ -16,17 +16,36 @@ export const GET: APIRoute = async ({ locals }) => {
 
   if (!serviceDomain || !apiKey) {
     return new Response(
-      JSON.stringify({ ok: false, hasServiceDomain: Boolean(serviceDomain), hasApiKey: Boolean(apiKey) }),
-      { status: 503, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } }
+      JSON.stringify({
+        ok: false,
+        hasServiceDomain: Boolean(serviceDomain),
+        hasApiKey: Boolean(apiKey),
+      }),
+      {
+        status: 503,
+        headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
+      }
     );
   }
 
   try {
     const client = createClient({ serviceDomain, apiKey });
     const [gherkin, workflow, qa] = await Promise.all([
-      client.get({ endpoint: 'columns', contentId: 'gherkin-bdd-introduction', queries: { fields: 'id,title,content' } }),
-      client.get({ endpoint: 'columns', contentId: 'ears-gherkin-workflow', queries: { fields: 'id,title,content' } }),
-      client.get({ endpoint: 'qas', contentId: 'requirements-14', queries: { fields: 'id,question,answer' } }),
+      client.get({
+        endpoint: 'columns',
+        contentId: 'gherkin-bdd-introduction',
+        queries: { fields: 'id,title,content' },
+      }),
+      client.get({
+        endpoint: 'columns',
+        contentId: 'ears-gherkin-workflow',
+        queries: { fields: 'id,title,content' },
+      }),
+      client.get({
+        endpoint: 'qas',
+        contentId: 'requirements-14',
+        queries: { fields: 'id,question,answer' },
+      }),
     ]);
 
     const gherkinContent = String(gherkin.content ?? '');
@@ -50,12 +69,21 @@ export const GET: APIRoute = async ({ locals }) => {
           question: qa.question,
         },
       }),
-      { status: 200, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } }
+      {
+        status: 200,
+        headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
+      }
     );
   } catch (error) {
     return new Response(
-      JSON.stringify({ ok: false, error: error instanceof Error ? error.message : 'unknown error' }),
-      { status: 500, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } }
+      JSON.stringify({
+        ok: false,
+        error: error instanceof Error ? error.message : 'unknown error',
+      }),
+      {
+        status: 500,
+        headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
+      }
     );
   }
 };
