@@ -18,13 +18,14 @@ interface Props {
     metrics: readonly Metric[];
     contactIntent?: string;
     contactLabel?: string;
+    showZeroStartLink?: boolean;
   };
 }
 
 const { service, config } = Astro.props;
 const benefits = service.benefits.slice(0, 3);
 const contactIntent = config?.contactIntent ?? 'consult';
-const contactLabel = config?.contactLabel ?? '無料相談する';
+const contactLabel = config?.contactLabel ?? '発注前に相談する';
 const heroVisualItems = config?.visualItems ?? config?.illustration?.stages ?? benefits;
 ---
 
@@ -85,12 +86,16 @@ const heroVisualItems = config?.visualItems ?? config?.illustration?.stages ?? b
                 d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
           </a>
-          <a
-            href="/prooffirst"
-            class="inline-flex min-h-[44px] w-full items-center justify-center text-center text-sm font-bold leading-snug text-primary-700 transition hover:text-primary-600 sm:w-auto"
-          >
-            初期費用0円の条件を見る
-          </a>
+          {
+            config?.showZeroStartLink !== false && (
+              <a
+                href="/prooffirst"
+                class="inline-flex min-h-[44px] w-full items-center justify-center text-center text-sm font-bold leading-snug text-primary-700 transition hover:text-primary-600 sm:w-auto"
+              >
+                簡易デモとPoCの違いを見る
+              </a>
+            )
+          }
         </div>
       </div>
 

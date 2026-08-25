@@ -20,48 +20,64 @@ function getSummaryText(text: string) {
   return firstSentence.length > 72 ? `${firstSentence.slice(0, 70)}…` : firstSentence;
 }
 
-const graphRagStorySteps = [
+const ragFitOptions = [
   {
-    label: 'RAGの課題 1',
-    title: '必要な情報が複数資料に分散する',
-    text: '回答に必要な根拠が、仕様書・議事録・障害報告・問い合わせ履歴に分かれていると、通常RAGでは拾い切れないことがあります。',
+    label: '通常RAGを中心に検証',
+    title: '意味・全文検索で、必要な根拠へ届く',
+    rows: [
+      {
+        label: '向いている質問',
+        value: '似た事例や説明を探し、取得した原文を根拠に回答する質問',
+      },
+      {
+        label: '検索の条件',
+        value: 'メタデータ・全文・ベクトル・リランキングで、必要な根拠を十分に再現できる',
+      },
+      {
+        label: '構築・運用',
+        value: '文書の正本と版を管理し、変更を検索インデックスへ反映する',
+      },
+    ],
+    example: '「この障害コードに近い、過去の対応事例は？」',
   },
   {
-    label: 'RAGの課題 2',
-    title: '全体の流れを見落としやすい',
-    text: 'チャンク単位で検索するため、文書全体の流れや背景を踏まえた判断が苦手です。',
-  },
-  {
-    label: 'RAGの課題 3',
-    title: '似た資料が多いとノイズが増える',
-    text: '文書量が増えるほど似た内容の資料も増え、本当に必要な情報が検索結果に埋もれやすくなります。',
-  },
-  {
-    label: 'GraphRAG',
-    title: '情報のつながりから全体像を整理する',
-    text: '資料同士の関係をたどることで、分散した根拠、背景、必要な確認先をまとめて見つけやすくします。',
+    label: 'GraphRAG・KGを加えて検証',
+    title: '関係・経路・全体像が、回答の一部になる',
+    rows: [
+      {
+        label: '向いている質問',
+        value: '変更の影響、決定の経緯、階層、関連する主体や全体傾向をたどる質問',
+      },
+      {
+        label: '検索の条件',
+        value: '意味の近さだけではなく、業務上の関係を使った絞り込みや展開が必要',
+      },
+      {
+        label: '構築・運用',
+        value: 'スキーマ・同一性・出典を定め、ノードとエッジの更新・品質を監視する',
+      },
+    ],
+    example: '「この仕様変更は、どの要件・テスト・判断へ影響する？」',
   },
 ];
 
-const graphRagAnswerItems = [
+const ragFitQuestions = [
   {
-    label: '原因候補',
-    value: '3月の請求API変更後、月次締めの差分が増えています。',
+    label: '質問',
+    value: '意味の近さで探すのか、関係・経路・全体像を問うのか',
   },
   {
-    label: '影響範囲',
-    value: '請求承認、月次締め、顧客別レポートに関係しています。',
+    label: '検索ノイズ',
+    value: '旧版・別案件・類似文書と、誤った関係のどこで混入するか',
   },
   {
-    label: '確認先',
-    value: '業務システム部Aさんと、3月12日の議事録を確認してください。',
+    label: '正本と更新',
+    value: 'どこを正本にし、派生データへ何分で反映すべきか',
   },
-];
-
-const graphRagReasons = [
-  '分散した情報をたどりやすい',
-  '文書全体の流れを踏まえやすい',
-  '大規模な資料群でも文脈で絞り込みやすい',
+  {
+    label: '評価',
+    value: '精度・根拠性・更新遅延・応答時間・運用コストに見合うか',
+  },
 ];
 
 const storySectionConfigs = [
@@ -238,119 +254,121 @@ function getStorySectionConfig(title: string) {
             section.cards && section.cards.length > 0
               ? section.cards.slice(0, 3).map((card) => card.title)
               : section.paragraphs.slice(0, 3).map(getSummaryText);
-          const isGraphRagComparison = section.title.includes('通常のRAG');
+          const isGraphRagComparison = section.title.includes('RAGで十分か');
           const storyConfig = getStorySectionConfig(section.title);
 
           return (
             <article class="rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
               <header>
                 <h2 class="text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
-                  {isGraphRagComparison
-                    ? 'GraphRAGなら、資料をまたいだ全体像までわかる'
-                    : storyConfig
-                      ? storyConfig.heading
-                      : section.title}
+                  {storyConfig ? storyConfig.heading : section.title}
                 </h2>
                 {section.subtitle && (
                   <p class="mt-3 text-base font-bold leading-relaxed text-primary-500 md:text-lg">
-                    {isGraphRagComparison
-                      ? '「資料を探すAI」と「状況を整理するAI」の違い'
-                      : storyConfig
-                        ? storyConfig.subtitle
-                        : section.subtitle}
+                    {storyConfig ? storyConfig.subtitle : section.subtitle}
                   </p>
                 )}
               </header>
 
               {isGraphRagComparison ? (
                 <div class="mt-7 space-y-6">
-                  <div class="rounded-lg border border-primary-100 bg-primary-50 p-5 md:p-7">
-                    <p class="text-sm font-bold text-primary-600">具体例</p>
-                    <h3 class="mt-2 text-2xl font-bold leading-tight text-accent-950 md:text-3xl">
-                      「請求金額が合わない。何が原因で、誰に確認すべき？」
-                    </h3>
-                    <p class="mt-4 text-base leading-relaxed text-neutral-800">
-                      この質問は、1つの資料だけでは答えにくいです。仕様書、議事録、障害報告、問い合わせ履歴をまたいで、情報のつながりを見る必要があります。
-                    </p>
+                  <div class="rounded-lg border border-primary-100 bg-primary-50 p-5 md:p-6">
+                    <p class="text-sm font-bold text-primary-600">方式選定の前提</p>
+                    <p class="mt-3 text-base leading-relaxed text-neutral-800">{lead}</p>
                   </div>
 
-                  <div class="rounded-lg border border-neutral-200 bg-white p-5 md:p-6">
-                    <p class="text-sm font-bold text-primary-600">精度が上がりやすい条件</p>
-                    <h3 class="mt-2 text-2xl font-bold leading-tight text-accent-950">
-                      必要な情報が複数資料・複数チャンクに分かれているとき
-                    </h3>
-                    <p class="mt-4 text-base leading-relaxed text-neutral-700">
-                      通常RAGは、少数の資料に答えがまとまっている質問では強力です。一方で、答えに必要な情報が複数資料に分散している場合や、大量の資料から関係する情報だけを絞りたい場合、GraphRAGは部署・案件・時期・出来事などの文脈でたどれるため、より網羅的で判断しやすい回答になりやすいです。
-                    </p>
-                  </div>
+                  {body[2] && (
+                    <div class="rounded-lg border-2 border-accent-950 bg-white p-5 md:p-6">
+                      <p class="text-sm font-bold text-primary-600">最初に決めること</p>
+                      <h3 class="mt-2 text-2xl font-bold leading-tight text-accent-950">
+                        検索方式より先に、正本と更新経路を決める
+                      </h3>
+                      <p class="mt-4 text-base leading-relaxed text-neutral-800">{body[2]}</p>
+                    </div>
+                  )}
 
-                  <div class="grid gap-4 md:grid-cols-4">
-                    {graphRagStorySteps.map((step, index) => (
-                      <div class="rounded-lg border border-neutral-200 bg-white p-5">
-                        <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary-500 text-sm font-bold text-white">
-                          {index + 1}
-                        </span>
-                        <p class="mt-4 text-xs font-bold tracking-wide text-primary-600">
-                          {step.label}
+                  <div class="grid gap-4 md:grid-cols-2">
+                    {ragFitOptions.map((option, index) => (
+                      <section
+                        class={`rounded-lg border bg-white p-5 md:p-6 ${
+                          index === 0 ? 'border-neutral-300' : 'border-primary-400'
+                        }`}
+                      >
+                        <p
+                          class={`text-sm font-bold ${
+                            index === 0 ? 'text-neutral-600' : 'text-primary-600'
+                          }`}
+                        >
+                          {option.label}
                         </p>
-                        <h3 class="mt-2 text-lg font-bold leading-snug text-accent-950">
-                          {step.title}
+                        <h3 class="mt-2 text-2xl font-bold leading-tight text-accent-950">
+                          {option.title}
                         </h3>
-                        <p class="mt-3 text-sm leading-relaxed text-neutral-700">{step.text}</p>
-                      </div>
+                        {body[index] && (
+                          <p class="mt-4 text-sm leading-relaxed text-neutral-700">
+                            {body[index]}
+                          </p>
+                        )}
+                        <dl class="mt-5 divide-y divide-neutral-200 border-y border-neutral-200">
+                          {option.rows.map((row) => (
+                            <div class="py-4">
+                              <dt class="text-xs font-bold text-primary-600">{row.label}</dt>
+                              <dd class="mt-1 text-sm leading-relaxed text-neutral-700">
+                                {row.value}
+                              </dd>
+                            </div>
+                          ))}
+                        </dl>
+                        <div class="mt-5 rounded-md bg-neutral-50 p-4">
+                          <p class="text-xs font-bold text-neutral-500">質問例</p>
+                          <p class="mt-1 text-sm font-bold leading-relaxed text-accent-950">
+                            {option.example}
+                          </p>
+                        </div>
+                      </section>
                     ))}
                   </div>
 
-                  <div class="grid gap-4 md:grid-cols-[0.95fr_1.05fr]">
-                    <div class="rounded-lg border border-neutral-200 bg-neutral-50 p-5 md:p-6">
-                      <p class="text-sm font-bold text-neutral-600">通常のRAGの回答</p>
-                      <h3 class="mt-2 text-2xl font-bold leading-tight text-accent-950">
-                        関連資料の一覧で止まりやすい
-                      </h3>
-                      <div class="mt-5 rounded-lg border border-neutral-200 bg-white p-4">
-                        <p class="text-sm leading-relaxed text-neutral-700">
-                          関連資料は「請求API仕様書」「3月12日の議事録」「障害報告」です。
-                          それぞれ確認してください。
-                        </p>
-                      </div>
-                      <p class="mt-4 text-sm leading-relaxed text-neutral-700">
-                        資料は見つかります。ただし、資料同士がどう関係しているかは利用者が読み解く必要があります。
-                      </p>
-                    </div>
-
-                    <div class="rounded-lg border border-primary-500 bg-white p-5 md:p-6">
-                      <p class="text-sm font-bold text-primary-600">GraphRAGの回答</p>
-                      <h3 class="mt-2 text-2xl font-bold leading-tight text-accent-950">
-                        状況を整理して、次の確認先まで出せる
-                      </h3>
-                      <div class="mt-5 space-y-3">
-                        {graphRagAnswerItems.map((item) => (
-                          <div class="rounded-lg border border-primary-100 bg-primary-50 p-4">
-                            <p class="text-xs font-bold text-primary-600">{item.label}</p>
-                            <p class="mt-1 text-sm font-bold leading-relaxed text-accent-950">
-                              {item.value}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
                   <div class="rounded-lg bg-accent-950 p-5 md:p-6">
-                    <p class="text-sm font-bold text-white">なぜ通常のRAGより強いのか</p>
-                    <div class="mt-4 grid gap-3 md:grid-cols-3">
-                      {graphRagReasons.map((reason) => (
+                    <p class="text-sm font-bold text-white">選定前に確認する4つの判断軸</p>
+                    <div class="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+                      {ragFitQuestions.map((question, index) => (
                         <div class="rounded-lg border border-white/10 bg-white p-4">
                           <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary-500 text-sm font-bold text-white">
-                            ✓
+                            {index + 1}
                           </span>
-                          <p class="mt-3 text-sm font-bold leading-relaxed text-accent-950">
-                            {reason}
+                          <p class="mt-3 text-xs font-bold text-primary-600">{question.label}</p>
+                          <p class="mt-1 text-sm font-bold leading-relaxed text-accent-950">
+                            {question.value}
                           </p>
                         </div>
                       ))}
                     </div>
                   </div>
+
+                  {body[3] && (
+                    <div class="rounded-lg border border-neutral-200 bg-neutral-50 p-5 md:p-6">
+                      <p class="text-sm font-bold text-primary-600">PM on Railsでの使い分け</p>
+                      <p class="mt-3 text-base leading-relaxed text-neutral-800">{body[3]}</p>
+                    </div>
+                  )}
+
+                  {body[4] && (
+                    <div class="rounded-lg border border-primary-200 bg-primary-50 p-5 md:p-6">
+                      <p class="text-sm font-bold text-primary-600">実務ではハイブリッドも候補</p>
+                      <p class="mt-3 text-base leading-relaxed text-neutral-800">{body[4]}</p>
+                    </div>
+                  )}
+
+                  {body[5] && (
+                    <div class="rounded-lg bg-primary-500 p-6 text-white md:p-8">
+                      <p class="text-sm font-bold text-white/80">方式選定からお任せください</p>
+                      <h3 class="mt-2 text-2xl font-bold leading-tight text-white md:text-3xl">
+                        NDA締結後、実データで最適な構成を判断します
+                      </h3>
+                      <p class="mt-4 text-base leading-relaxed text-white">{body[5]}</p>
+                    </div>
+                  )}
                 </div>
               ) : storyConfig ? (
                 <div class="mt-7 space-y-6">

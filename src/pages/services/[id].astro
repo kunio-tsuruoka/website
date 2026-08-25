@@ -54,6 +54,10 @@ const finalCtaLead = servicePageConfig
   ? '業務内容と現在のデータを伺い、最初に検証すべき範囲をご案内します。'
   : '業務・データ・既存システムを伺い、小さく検証できる範囲と概算費用の考え方をご案内します。';
 const isAiDevelopment = service.id === 'ai-development';
+const middleAdditionalSections =
+  service.additionalSections?.filter((section) => section.placement === 'middle') ?? [];
+const trailingAdditionalSections =
+  service.additionalSections?.filter((section) => section.placement !== 'middle') ?? [];
 const relatedColumns = isAiDevelopment
   ? service.relatedColumns?.slice(0, 3)
   : service.relatedColumns;
@@ -179,6 +183,9 @@ const featuresCopy = sectionCopy[service.id]?.features;
     <ServicePainPoints painPoints={service.painPoints} number={sectionNumbers.painPoints} />
     {!isAiDevelopment && <ServiceRootCause rootCause={servicePageConfig?.rootCause} />}
     <ServiceBusinessFlow flow={servicePageConfig?.flow} />
+    {middleAdditionalSections.length > 0 && (
+      <ServiceAdditionalSections sections={middleAdditionalSections} />
+    )}
     {service.id !== 'ai-development' && <ServiceProductPackage serviceId={service.id} />}
     {servicePageConfig && !isAiDevelopment && <ServiceAiDesignStrength serviceId={service.id} />}
     {servicePageConfig && !isAiDevelopment && <ServiceAiRiskManagement serviceId={service.id} />}
@@ -205,8 +212,8 @@ const featuresCopy = sectionCopy[service.id]?.features;
       subtitle={featuresCopy?.subtitle}
     />
 
-    {!isAiDevelopment && service.additionalSections && service.additionalSections.length > 0 && (
-      <ServiceAdditionalSections sections={service.additionalSections} />
+    {!isAiDevelopment && trailingAdditionalSections.length > 0 && (
+      <ServiceAdditionalSections sections={trailingAdditionalSections} />
     )}
 
     {servicePageConfig && !isAiDevelopment && <ServiceEngagementFlow />}
@@ -227,7 +234,7 @@ const featuresCopy = sectionCopy[service.id]?.features;
                 効きそうかを、0円デモで先に確かめる
               </h3>
               <p class="mt-3 flex-1 text-sm leading-relaxed text-neutral-700 md:text-base">
-                費用対効果の大きい一業務に絞って、初期費用0円で試作します。上長や情シスに見せられる「動くもの」から始められるので、大きく投資する前に判断できます。
+                費用対効果の大きい一業務に絞って、発注前に動く確認材料を作ります。上長や情シスに見せられる「動くもの」から始められるので、大きく投資する前に判断できます。
               </p>
               <a
                 href="/contact?source=services-rag-system-development-persona-owner&intent=zero-start"

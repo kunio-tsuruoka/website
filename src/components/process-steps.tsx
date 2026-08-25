@@ -2,7 +2,7 @@ import { CheckCircle, Lightbulb, PhoneCall, Rocket, TestTube } from 'lucide-reac
 import type React from 'react';
 
 // 各Stepは「Beekleがすること」「お客様にお願いすること」「この段階で決まること」の3列で見せる。
-// 金銭負担がないことと「リスクがない」ことは同義ではないため、リスクゼロ系の表現は使わない
+// 金銭負担がないことと「リスクがない」ことは同義ではないため、断定的な安全表現は使わない
 // (tasks-v3 TASK-P0-05 / [VALUE-1] 総コスト = 価格 + 金銭以外の負担)。
 interface ProcessStep {
   icon: React.ComponentType<{ className?: string }>;
@@ -21,10 +21,10 @@ const processSteps: ProcessStep[] = [
     icon: PhoneCall,
     title: 'お問い合わせ・業務理解',
     duration: '初回整理',
-    condition: '1-2時間',
+    condition: '初回相談・簡易デモは無料',
     description:
-      '作りたいものが決まっていなくても、業務、利用者、現行資料、判断者を確認し、何を検証すれば発注判断に近づくかを整理します。',
-    beekle: ['業務フロー・利用者・課題の整理', '検証すべき問いのご提案'],
+      '作りたいものが決まっていなくても、業務、利用者、現行資料、判断者を確認します。必要に応じて既存デモまたは簡易デモを見せながら、何を検証すれば発注判断に近づくかを整理します。',
+    beekle: ['業務フロー・利用者・課題の整理', '既存デモまたは簡易デモの提示'],
     customer: ['現行業務・資料・関係者の共有', '判断者と利用者の整理'],
     decision: '発注前に何を確かめるべきか',
   },
@@ -32,9 +32,9 @@ const processSteps: ProcessStep[] = [
     icon: Lightbulb,
     title: '条件が合う案件の初期検証',
     duration: '1-2週間（目安）',
-    condition: '当社負担で行う場合があります',
+    condition: 'PoCは別途範囲定義',
     description:
-      'Beekle側でも検証価値があると判断した案件では、初期検証を当社負担で行う場合があります。本開発へ進む前の判断材料を作るための限定的な検証です。',
+      '実データ連携や個別業務に合わせたPoCが必要な場合は、目的・範囲・判断基準を整理したうえで別途ご提案します。条件が合う案件では、その手前の初期検証を当社負担で行う場合があります。本開発へ進む前の判断材料を作るための限定的な検証です。',
     beekle: ['コア機能に絞った検証用プロトタイプ開発', '成立条件と技術リスクの整理'],
     customer: ['検証用データ・サンプルの用意', '検証担当者の参加'],
     decision: '実物で何を確認し、何を判断するか',

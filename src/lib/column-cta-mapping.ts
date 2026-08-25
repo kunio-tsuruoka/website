@@ -23,7 +23,7 @@ export type CategoryCta = {
 const PROOFFIRST: CtaItem = {
   href: '/prooffirst',
   label: 'ゼロスタートを詳しく見る',
-  description: '初期費用0円で動くプロトタイプから試せる「ゼロスタート開発」の詳細も見られます',
+  description: '動くプロトタイプで発注前に確かめる「ゼロスタート開発」の詳細も見られます',
   ctaId: 'prooffirst',
 };
 
@@ -31,7 +31,7 @@ const DOWNLOAD_DECK: CtaItem = {
   href: '/downloads/beekle-zero-start-sales-deck.pdf',
   label: 'サービス資料を無料ダウンロード',
   description:
-    'ゼロスタート開発（初期費用0円で動くプロトタイプ）のサービス資料を直接ダウンロードできます',
+    'ゼロスタート開発（動くプロトタイプで発注前に確かめる進め方）のサービス資料を直接ダウンロードできます',
   ctaId: 'pdf-zero-start-sales-deck',
 };
 

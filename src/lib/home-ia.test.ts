@@ -71,6 +71,8 @@ describe('home page information architecture', () => {
     expect(mainSource).toContain('数百万円を発注する前に');
     expect(mainSource).toContain('作る価値が薄い場合は、作らない判断も選択肢に含めます');
     expect(mainSource).toContain('条件が合う案件では、初期検証を当社負担で行う場合があります');
+    expect(mainSource).toContain('初回相談・簡易デモは無料');
+    expect(mainSource).toContain('PoCは別途範囲定義');
     expect(mainSource).toContain('発注前に相談する');
     expect(mainSource).not.toContain('初期費用0円');
     expect(mainSource).not.toContain('無料相談');

@@ -369,6 +369,9 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
           <p className="text-sm font-bold leading-relaxed text-primary-800">
             まだ要件がまとまっていなくても構いません。NDA締結後に詳細を伺い、「開発すべきか分からない」という段階から整理します。
           </p>
+          <p className="mt-2 text-sm leading-relaxed text-primary-800">
+            初回相談・簡易デモは費用をいただきません。実データ連携や個別業務に合わせたPoCは別途範囲を定義します。
+          </p>
         </div>
 
         {intentGuide && (

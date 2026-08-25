@@ -16,7 +16,11 @@ describe('HeroSection', () => {
     expect(html).toContain('text-4xl font-bold leading-[1.05] text-accent-950 sm:text-5xl');
     expect(html).toContain('発注前に相談する');
     expect(html).toContain('開発する・見送る・範囲を変える判断材料を作ります。');
+    expect(html).toContain('初回相談・簡易デモは無料');
+    expect(html).toContain('PoCが必要な場合は、目的・範囲・判断基準を別途整理します。');
     expect(html).toContain('見送り条件がある場合も、開発前に理由を残します。');
+    expect(html).not.toContain('初期費用0円');
+    expect(html).not.toContain('無料相談');
     expect(html).toContain('この要件で発注していいか');
     expect(html).not.toContain('進めない方がよい場合');
     expect(html).not.toContain('opacity:0');

@@ -47,6 +47,7 @@ interface FAQ {
 interface AdditionalSection {
   title: string;
   subtitle?: string;
+  placement?: 'middle';
   paragraphs: string[];
   cards?: {
     title: string;

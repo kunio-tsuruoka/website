@@ -517,7 +517,7 @@ function buildBridgeCta(source: string): string {
       <li><a href="/column/requirements-vs-requests">要求定義と要件定義の違い</a> -- 混同が手戻りを招く3つの判別軸</li>
       <li><a href="/column/how-to-write-rfp">失敗しないRFPの作り方</a> -- ベンダー選定に必要な提案依頼書の書き方</li>
     </ul>
-    <p>要件定義から開発まで一気通貫で進めたい場合は、初期費用0円で動くプロトタイプから始められる<a href="/prooffirst?source=${encodeURIComponent(source)}&intent=bridge-engineer">ゼロスタート開発</a>もご検討ください。</p>
+    <p>要件定義から開発まで一気通貫で進めたい場合は、動くプロトタイプで発注前に確かめる<a href="/prooffirst?source=${encodeURIComponent(source)}&intent=bridge-engineer">ゼロスタート開発</a>もご検討ください。</p>
   </div>
 </figure>`;
 }
@@ -757,7 +757,7 @@ function buildZeroStartCta(source: string, intent: string): string {
     source,
     ctaId: `pdf-zero-start-${intent}`,
     title: '発注前に、まず動く試作品で確かめる',
-    body: 'Beekleの「ゼロスタート開発」は、初期費用0円で動く試作品を体験してから本契約を判断できるサービスです。提案書だけで判断するのではなく、実際に触って「現場で使えるか」「投資に見合うか」を確認したうえで進められます。',
+    body: 'Beekleの「ゼロスタート開発」は、動く試作品で本契約前に判断できるサービスです。提案書だけで判断するのではなく、実際に触って「現場で使えるか」「投資に見合うか」を確認したうえで進められます。',
     label: 'サービス資料を直接ダウンロード',
   });
 }
@@ -932,7 +932,7 @@ const SERVICE_BRIDGES: Record<string, ServiceBridge> = {
   AI_DEV_SERVICE_BRIDGE: {
     href: '/services/ai-development',
     title: 'Beekleの生成AI受託開発',
-    body: '「何にAIを使うべきか」の整理から、動くプロトタイプでの検証、現場で使われる本番運用まで。初期費用0円で試せるゼロスタート開発にも対応しています。',
+    body: '「何にAIを使うべきか」の整理から、動くプロトタイプでの検証、現場で使われる本番運用まで。発注前に実物で確かめるゼロスタート開発にも対応しています。',
     label: 'サービス内容を見る',
   },
   RAG_SERVICE_BRIDGE: {
@@ -956,7 +956,7 @@ const SERVICE_BRIDGES: Record<string, ServiceBridge> = {
   WEB_MOBILE_SERVICE_BRIDGE: {
     href: '/services/web-mobile-development',
     title: 'BeekleのWEBアプリ・モバイルアプリ開発',
-    body: '要件定義から実装・運用まで一気通貫。費用が読みにくい段階でも、初期費用0円の検証用プロトタイプで範囲を確定させてから、内訳つきの見積もりを提示します。',
+    body: '要件定義から実装・運用まで一気通貫。費用が読みにくい段階でも、検証用プロトタイプで範囲を確定させてから、内訳つきの見積もりを提示します。',
     label: 'サービス内容を見る',
   },
   REQUIREMENTS_SERVICE_BRIDGE: {

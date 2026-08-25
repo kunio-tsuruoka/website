@@ -65,8 +65,8 @@ export const HeroSection = () => (
           </a>
         </div>
 
-        <p className="mt-5 max-w-xl text-sm leading-relaxed text-neutral-600">
-          NDA可。要件未確定でも可。見送り条件がある場合も、開発前に理由を残します。
+        <p className="mt-5 max-w-2xl text-sm leading-relaxed text-neutral-600">
+          初回相談・簡易デモは無料。NDA可。要件未確定でも可。PoCが必要な場合は、目的・範囲・判断基準を別途整理します。見送り条件がある場合も、開発前に理由を残します。
         </p>
 
         <div className="mt-6 border-y border-neutral-300 bg-white px-4 py-4 md:hidden">

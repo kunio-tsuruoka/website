@@ -529,8 +529,13 @@ try {
           <p class="text-lg text-neutral-600">
             まだ要件がまとまっていなくても構いません。NDA締結後に詳細を伺い、通常1〜2営業日以内に確認したい前提と次に見るべきリスクを返信します。
           </p>
-          <div class="mt-6 grid gap-3 sm:grid-cols-3">
-            {['NDA締結後に詳細共有可', '要件未確定でも可', '作らない判断も整理'].map((item) => (
+          <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              '初回相談・簡易デモは無料',
+              'PoCは別途範囲定義',
+              'NDA締結後に詳細共有可',
+              '作らない判断も整理',
+            ].map((item) => (
               <div class="border-l-4 border-primary-500 bg-white px-4 py-3 text-sm font-bold text-primary-700">
                 {item}
               </div>

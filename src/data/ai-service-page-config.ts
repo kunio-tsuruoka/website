@@ -65,7 +65,7 @@ export const aiServicePageConfig = {
       ],
     },
     metrics: [
-      { label: '始め方', value: '初期費用0円で試作' },
+      { label: '始め方', value: '簡易デモから確認' },
       { label: '判断', value: '実物を見て決める' },
       { label: '運用', value: '費用と品質を監視' },
     ],
@@ -182,7 +182,8 @@ export const aiServicePageConfig = {
       '社内資料、製品仕様、過去対応、議事録を横断し、質問へ根拠付きで答えるAI検索を構築します。誰に聞くべきかではなく、どの資料のどこを見ればよいかを返します。',
     primaryOutcome: '資料を探す仕事を減らし、誰でも根拠付きで判断できる状態にします。',
     contactIntent: 'rag-system-development',
-    contactLabel: '社内資料で、根拠付きAI検索ができるか相談する',
+    contactLabel: '自社のデータでRAGが成立するか相談する',
+    showZeroStartLink: false,
     visualTitle: '探す仕事がどう変わるか',
     visualSubtitle: 'お客さま側の変化',
     visualItems: [
