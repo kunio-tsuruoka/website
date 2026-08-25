@@ -9,16 +9,15 @@ describe('HeroSection', () => {
     const html = renderToStaticMarkup(<HeroSection />);
     const text = visibleText(html);
 
-    expect(text).toContain('新規事業・AI導入・社内システム化の相談');
+    expect(text).toContain('要件が固まる前のAI・DX・業務システム相談');
     expect(text).not.toContain('社内システム化の発注前相談');
-    expect(text).toContain('作る前に、発注判断まで。');
-    expect(html).toContain('発注判断まで。');
+    expect(text).toContain('数百万円を発注する前に、本当に作るべきか確かめる。');
+    expect(text).toContain('本当に作るべきか確かめる。');
     expect(html).toContain('text-4xl font-bold leading-[1.05] text-accent-950 sm:text-5xl');
-    expect(html).toContain('実現可否を相談する');
-    expect(html).toContain(
-      '相談内容を、判断シート、検証用プロトタイプ、受入条件に落とし込みます。'
-    );
+    expect(html).toContain('発注前に相談する');
+    expect(html).toContain('開発する・見送る・範囲を変える判断材料を作ります。');
     expect(html).toContain('見送り条件がある場合も、開発前に理由を残します。');
+    expect(html).toContain('この要件で発注していいか');
     expect(html).not.toContain('進めない方がよい場合');
     expect(html).not.toContain('opacity:0');
     expect(html).not.toContain('translateY(20px)');
@@ -33,7 +32,7 @@ describe('HeroSection', () => {
     expect(html).toContain('見送り条件');
     expect(html).not.toContain('No-Go条件');
     expect(html).toContain('受入条件');
-    expect(html).toContain('概算レンジ');
+    expect(html).toContain('投資レンジ');
     expect(html).not.toContain('GO');
     expect(html).not.toContain('HOLD');
     expect(html).not.toContain('STOP');

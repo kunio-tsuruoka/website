@@ -30,21 +30,48 @@ type ColumnCard = {
   categoryTitle?: string;
 };
 
+const preOrderConcerns = [
+  '何を作るべきか分からない',
+  'この要件で発注していいか判断できない',
+  '数百万円払って失敗したくない',
+  '見積もりの妥当性を社内で説明しにくい',
+  '作ったあと使われるか確信がない',
+  'そもそもシステム開発が必要か分からない',
+];
+
 const caseLogs = [
   {
-    situation: '難航案件の立て直し',
-    result: '3ヶ月停滞 → 3週間',
-    material: '要件、実装、インフラを読み直し、再開できる単位へ整理',
+    theme: '難航案件の立て直し',
+    before: '先行ベンダーで約3ヶ月停滞',
+    did: '要件、既存実装、インフラ、優先順位を読み直し、再開できる単位へ整理',
+    after: '3週間で動作状態へ。外部セキュリティ確認も通過',
   },
   {
-    situation: '発注前の認識合わせ',
-    result: '議事録 → デモ1日',
-    material: 'ヒアリング内容を画面で確認できる検証用プロトタイプへ',
+    theme: '発注前の認識合わせ',
+    before: '議事録だけでは完成イメージが揃わない',
+    did: 'ヒアリング内容を画面と操作に変換し、認識のズレを確認できる状態へ',
+    after: '1日でデモ化し、次に確認する要件を具体化',
   },
   {
-    situation: '新規事業の検証',
-    result: '1週間で触れる形へ',
-    material: '構想、画面、API、インフラを分断せず判断可能な状態へ',
+    theme: '新規事業の検証',
+    before: '構想はあるが、投資判断に使える材料がない',
+    did: '画面、API、データ、インフラを分断せず、最小限の利用体験へ集約',
+    after: '1週間程度で触れる形にし、本開発の範囲を議論できる状態へ',
+  },
+];
+
+const decisionMessages = [
+  {
+    title: '要件が固まっていなくても相談できる',
+    text: '最初に作る範囲を決め切る必要はありません。業務、利用者、既存資料、判断者を整理し、何を確認すれば発注判断に近づくかを決めます。',
+  },
+  {
+    title: '本開発前に、動くもので判断できる',
+    text: '文章だけで合意せず、検証用プロトタイプや画面でズレを見つけます。作ったあとに「思っていたものと違う」を減らすためです。',
+  },
+  {
+    title: '課題整理から本番開発まで同じ会社が担当する',
+    text: '整理した要件、受入条件、検証結果を本開発へ引き継ぎます。上流で決めたことが、別会社への伝言で薄まらないようにします。',
   },
 ];
 
@@ -59,7 +86,46 @@ const decisionSheetRows = [
   },
   {
     label: '返す資料',
-    text: '検証用プロトタイプ、受入条件、概算レンジ、次に確認するリスクを残します。',
+    text: '検証用プロトタイプ、受入条件、投資レンジ、次に確認するリスクを残します。',
+  },
+];
+
+const comparisonRows = [
+  {
+    axis: '課題整理',
+    consulting: '強い傾向',
+    development: '要件受領後が中心になりやすい',
+    beekle: '業務課題から整理',
+  },
+  {
+    axis: '要件定義',
+    consulting: '強い傾向',
+    development: '対応範囲に含まれることが多い',
+    beekle: '受入条件まで具体化',
+  },
+  {
+    axis: '動くものによる検証',
+    consulting: 'ケースによる',
+    development: '開発後の確認になりやすい',
+    beekle: '発注前から早期に実施',
+  },
+  {
+    axis: '技術リスク確認',
+    consulting: 'ケースによる',
+    development: '本開発後に見えやすい',
+    beekle: '成立条件を先に確認',
+  },
+  {
+    axis: '本開発',
+    consulting: '別会社になる場合がある',
+    development: '強い傾向',
+    beekle: '同じチームで継続',
+  },
+  {
+    axis: '見送り判断',
+    consulting: '選択肢に含められる',
+    development: '発注前提になりやすい',
+    beekle: '作らない判断も選択肢',
   },
 ];
 
@@ -82,14 +148,40 @@ try {
 ---
 
 <Layout
-  title="要件が曖昧でも、発注判断の材料まで作る | Beekle株式会社"
-  description={`Beekle株式会社は、${companyPositioning.short}${companyPositioning.long}${companyPositioning.zeroStart}`}
+  title="数百万円を発注する前に、本当に作るべきか確かめる | Beekle株式会社"
+  description={`Beekle株式会社は、${companyPositioning.short}要件が固まる前から業務課題を整理し、本開発前に動くものと判断材料を作ります。`}
 >
   <JsonLd slot="head" type="website" />
   <Header />
   <main class="">
     {/* メインビジュアル */}
     <HeroSection />
+
+    {/* 発注前の不安 */}
+    <section class="relative overflow-hidden bg-neutral-50 py-12 md:py-14">
+      <div class="container mx-auto px-8 lg:px-12 relative">
+        <div class="grid gap-8 border-b border-neutral-200 pb-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+          <div>
+            <span class="section-label">発注前の不安</span>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
+              数百万円の発注前に、
+              <br class="hidden lg:block" />
+              立ち止まるべき問いがあります。
+            </h2>
+            <p class="mt-4 text-base leading-relaxed text-neutral-700">
+              数百万円を発注する前に、AIを使うかどうかより先に、そもそも何を作るべきか、この要件で発注していいか、社内で説明できる投資根拠があるかを確認します。
+            </p>
+          </div>
+          <div class="grid gap-3 md:grid-cols-2">
+            {preOrderConcerns.map((concern) => (
+              <div class="border-l-4 border-primary-500 bg-white px-4 py-3 text-base font-bold leading-snug text-accent-950">
+                {concern}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
 
     {/* 実案件による証明 */}
     <section class="relative overflow-hidden bg-neutral-50 py-14 md:py-16">
@@ -98,10 +190,10 @@ try {
           <div>
             <span class="section-label">実案件の変化</span>
             <h2 class="mt-3 text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
-              先に、実案件ログを見てください。
+              先に、発注判断が前に進んだ例を見てください。
             </h2>
             <p class="mt-4 text-base leading-relaxed text-neutral-600">
-              工程説明よりも、発注判断に使える変化を先に出します。
+              速さだけを売るための数字ではありません。止まっていた判断を、何で動かしたかまで見せます。
             </p>
             <a href="/case-studies" class="mt-5 inline-flex min-h-[44px] items-center border-b border-primary-500 text-sm font-bold text-primary-500 hover:text-primary-600">
               実案件をすべて見る
@@ -109,10 +201,20 @@ try {
           </div>
           <div class="case-log-table border-t border-neutral-300">
             {caseLogs.map((item) => (
-              <a href="/case-studies" class="grid gap-3 border-b border-neutral-300 py-5 transition hover:bg-neutral-50 md:grid-cols-[0.72fr_0.68fr_1fr] md:px-2">
-                <p class="text-sm font-bold text-primary-700">{item.situation}</p>
-                <p class="font-Poppins text-3xl font-bold leading-tight text-primary-600">{item.result}</p>
-                <p class="text-sm leading-relaxed text-neutral-700">{item.material}</p>
+              <a href="/case-studies" class="grid gap-4 border-b border-neutral-300 py-5 transition-colors hover:bg-white md:grid-cols-[0.54fr_1fr_1.1fr_1fr] md:px-2">
+                <p class="text-sm font-bold text-primary-700">{item.theme}</p>
+                <div>
+                  <p class="font-Poppins text-xs font-bold text-neutral-500">Before</p>
+                  <p class="mt-1 text-sm font-bold leading-relaxed text-accent-950">{item.before}</p>
+                </div>
+                <div>
+                  <p class="font-Poppins text-xs font-bold text-neutral-500">Beekleがしたこと</p>
+                  <p class="mt-1 text-sm leading-relaxed text-neutral-700">{item.did}</p>
+                </div>
+                <div>
+                  <p class="font-Poppins text-xs font-bold text-neutral-500">After</p>
+                  <p class="mt-1 text-sm font-bold leading-relaxed text-primary-700">{item.after}</p>
+                </div>
               </a>
             ))}
           </div>
@@ -128,20 +230,29 @@ try {
             <span class="number-label">01</span>
             <span class="section-label ml-4">Beekleの判断支援</span>
             <h2 class="mt-4 text-4xl font-bold leading-tight text-navy-950 lg:text-5xl">
-              業務課題を、
+              作るものを決める前から、
               <br class="hidden lg:block" />
-              <span class="text-primary-500">発注判断に使える実物</span>へ。
+              <span class="text-primary-500">相談できます。</span>
             </h2>
             <p class="mt-6 text-lg leading-relaxed text-neutral-700">
-              「何を作るべきか」が曖昧なまま見積もりや開発に入ると、作った後に認識のズレが出ます。
-              Beekleは、業務の困りごとを聞き、検証すべき範囲を絞り、動くものを見ながら社内で説明できる判断材料へ変えます。
+              「何を作るべきか」が曖昧なまま見積もりや開発に入ると、作った後に認識のズレが出ます。Beekleは、業務の困りごとを聞き、検証すべき範囲を絞り、動くものを見ながら社内で説明できる判断材料へ変えます。
             </p>
             <p class="mt-4 text-lg leading-relaxed text-neutral-700">
-              口頭の合意やチャットの断片で進めず、受入条件、確認結果、次に見るべきリスクまで残します。社内説明や見積もり比較に使える材料へ変えるためです。
+              作る価値が薄い場合は、作らない判断も選択肢に含めます。開発契約を取ることより先に、成立可能性と投資範囲を確認するためです。
             </p>
-            <p class="mt-6 text-xl font-bold leading-relaxed text-navy-950">
-              まず決めるのは、作る範囲ではなく、確かめるべき問いです。
-            </p>
+            <div class="mt-7 grid gap-4">
+              {decisionMessages.map((message, index) => (
+                <div class="border-l-4 border-primary-500 bg-white px-5 py-4">
+                  <p class="font-Poppins text-xs font-bold text-neutral-500">
+                    MESSAGE {String(index + 1).padStart(2, '0')}
+                  </p>
+                  <h3 class="mt-1 text-xl font-bold leading-snug text-accent-950">
+                    {message.title}
+                  </h3>
+                  <p class="mt-2 text-sm leading-relaxed text-neutral-700">{message.text}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div class="decision-sheet-table border-y border-neutral-300 bg-white">
@@ -169,11 +280,80 @@ try {
       </div>
     </section>
 
+    {/* 提供範囲の比較 */}
+    <section class="relative overflow-hidden bg-neutral-50 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12 relative">
+        <div class="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+          <div>
+            <span class="number-label">02</span>
+            <span class="section-label ml-4">一般的な傾向として比較</span>
+            <h2 class="mt-4 text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
+              課題整理と実装が、
+              <br class="hidden lg:block" />
+              途中で分断されにくい。
+            </h2>
+            <p class="mt-4 text-base leading-relaxed text-neutral-700">
+              コンサル会社、一般的な開発会社、Beekleの違いは、どこまで同じチームで判断材料を作れるかです。下記はあくまで一般的な傾向としての比較です。
+            </p>
+          </div>
+
+          <div class="border-y border-neutral-300 bg-white md:hidden">
+            {comparisonRows.map((row) => (
+              <section class="border-b border-neutral-200 px-4 py-4 last:border-b-0">
+                <h3 class="text-base font-bold text-accent-950">{row.axis}</h3>
+                <dl class="mt-3 grid gap-3 text-sm leading-relaxed">
+                  <div>
+                    <dt class="font-bold text-neutral-500">コンサル会社</dt>
+                    <dd class="mt-1 text-neutral-700">{row.consulting}</dd>
+                  </div>
+                  <div>
+                    <dt class="font-bold text-neutral-500">一般的な開発会社</dt>
+                    <dd class="mt-1 text-neutral-700">{row.development}</dd>
+                  </div>
+                  <div class="border-l-4 border-primary-500 pl-3">
+                    <dt class="font-bold text-primary-700">Beekle</dt>
+                    <dd class="mt-1 font-bold text-primary-700">{row.beekle}</dd>
+                  </div>
+                </dl>
+              </section>
+            ))}
+          </div>
+
+          <div class="hidden border-y border-neutral-300 bg-white md:block">
+            <table class="w-full text-left">
+              <thead>
+                <tr class="border-b border-neutral-300 bg-neutral-50">
+                  <th class="w-[18%] px-4 py-4 text-sm font-bold text-primary-700">判断軸</th>
+                  <th class="w-[24%] px-4 py-4 text-sm font-bold text-neutral-600">コンサル会社</th>
+                  <th class="w-[28%] px-4 py-4 text-sm font-bold text-neutral-600">一般的な開発会社</th>
+                  <th class="w-[30%] border-l-4 border-primary-500 px-4 py-4 text-sm font-bold text-accent-950">
+                    Beekle
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-neutral-200">
+                {comparisonRows.map((row) => (
+                  <tr>
+                    <th class="px-4 py-4 text-sm font-bold text-accent-950">{row.axis}</th>
+                    <td class="px-4 py-4 text-sm leading-relaxed text-neutral-700">{row.consulting}</td>
+                    <td class="px-4 py-4 text-sm leading-relaxed text-neutral-700">{row.development}</td>
+                    <td class="border-l-4 border-primary-500 px-4 py-4 text-sm font-bold leading-relaxed text-primary-700">
+                      {row.beekle}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
     {/* 相談内容の整理 */}
     <section class="relative overflow-hidden bg-neutral-100 py-16 md:py-20">
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center mb-12">
-          <span class="number-label">02</span>
+          <span class="number-label">03</span>
           <span class="section-label ml-4">相談が始まる場面</span>
           <h2 class="mt-4 text-4xl font-bold text-navy-950 lg:text-5xl">
             発注前に止まりやすい場面から選べます。
@@ -226,7 +406,7 @@ try {
         {/* Number Label */}
         <div class="container mx-auto px-8 lg:px-12 mb-8">
           <div class="text-center">
-            <span class="number-label">03</span>
+            <span class="number-label">04</span>
             <span class="section-label ml-4">進め方</span>
           </div>
         </div>
@@ -244,7 +424,7 @@ try {
                 実物で確かめてから、次の投資条件を決めてください
               </h3>
               <p class="text-lg text-neutral-700 mb-8 leading-relaxed relative">
-                検証用プロトタイプで、業務に合うか・次に投資すべきかを判断できます。
+                条件が合う案件では、初期検証を当社負担で行う場合があります。開発契約を急がず、業務に合うか・次に投資すべきか・範囲を変えるべきかを先に確認します。
               </p>
               <div class="flex flex-col sm:flex-row gap-4 relative">
                 <a
@@ -253,7 +433,7 @@ try {
                   data-cta-id="contact"
                   class="page-cta inline-flex min-h-[52px] items-center justify-center rounded-md bg-primary-500 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-primary-600"
                 >
-                  実現可否を相談する
+                  発注前に相談する
                   <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
@@ -262,7 +442,7 @@ try {
                   href="/prooffirst"
                   class="inline-flex min-h-[52px] items-center justify-center border-b border-accent-950 text-base font-semibold text-accent-950 hover:border-primary-500 hover:text-primary-500"
                 >
-                  初期費用0円の条件を見る
+                  検証の進め方を見る
                 </a>
               </div>
             </div>
@@ -276,7 +456,7 @@ try {
     <section class="py-16 md:py-20 bg-neutral-50 relative overflow-hidden">
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center mb-10">
-          <span class="number-label">04</span>
+          <span class="number-label">05</span>
           <span class="section-label ml-4">発注前の判断材料</span>
           <h2 class="text-4xl lg:text-5xl font-bold text-navy-950 mb-4 mt-4">
             発注前に読む<span class="text-primary-500">コラム</span>
@@ -328,7 +508,7 @@ try {
     <section id="faq" class="py-16 md:py-20 bg-neutral-100">
       <div class="container mx-auto px-8 lg:px-12 mb-8">
         <div class="text-center">
-          <span class="number-label">05</span>
+          <span class="number-label">06</span>
           <span class="section-label ml-4">よくあるご不安</span>
         </div>
       </div>
@@ -340,17 +520,17 @@ try {
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center mb-12">
           {/* Number Label */}
-          <span class="number-label">06</span>
+          <span class="number-label">07</span>
           <span class="section-label ml-4">相談前の安心材料</span>
 
           <h2 class="text-4xl lg:text-5xl font-bold text-navy-950 mb-4 mt-4">
-            業務課題を<span class="text-primary-500">相談</span>する
+            発注前の不安を<span class="text-primary-500">相談</span>する
           </h2>
           <p class="text-lg text-neutral-600">
-            NDA可・要件未確定でも可。通常1〜2営業日以内に、概算レンジと進め方の候補を返信します。
+            まだ要件がまとまっていなくても構いません。NDA締結後に詳細を伺い、通常1〜2営業日以内に確認したい前提と次に見るべきリスクを返信します。
           </p>
           <div class="mt-6 grid gap-3 sm:grid-cols-3">
-            {['NDA締結可', '要件未確定でも可', '見送り条件も整理'].map((item) => (
+            {['NDA締結後に詳細共有可', '要件未確定でも可', '作らない判断も整理'].map((item) => (
               <div class="border-l-4 border-primary-500 bg-white px-4 py-3 text-sm font-bold text-primary-700">
                 {item}
               </div>
@@ -370,10 +550,10 @@ try {
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center">
           <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">
-            まず「動くもの」で確かめてから、次の投資条件を決めてください。
+            この会社と話してから、発注を決めた方が安全かもしれない。
           </h2>
           <p class="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-            NDA可。要件未確定でも構いません。合わない場合は、開発を勧めず見送り理由をお伝えします。
+            要件、見積もり、技術リスク、見送り条件を整理します。NDA可。要件未確定でも構いません。
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a
@@ -382,7 +562,7 @@ try {
               data-cta-id="contact"
               class="page-cta inline-flex min-h-[52px] items-center justify-center rounded-md bg-white px-8 py-4 text-lg font-semibold text-accent-950 transition-colors hover:bg-neutral-100"
             >
-              実現可否を相談する
+              発注前に相談する
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>

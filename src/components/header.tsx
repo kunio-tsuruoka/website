@@ -160,7 +160,7 @@ export function Header() {
                   data-cta-id="contact"
                   className="inline-flex min-h-[48px] w-full max-w-xs items-center justify-center rounded-md bg-primary-500 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-600"
                 >
-                  実現可否を相談する
+                  発注前に相談する
                 </a>
               </li>
             </ul>
@@ -187,7 +187,7 @@ export function Header() {
               data-cta-id="contact"
               className="inline-flex min-h-[44px] items-center rounded-md bg-primary-500 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-600 sm:min-h-0 sm:py-2"
             >
-              実現可否を相談する
+              発注前に相談する
             </a>
           </li>
         </ul>

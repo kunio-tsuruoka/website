@@ -367,7 +367,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="rounded-lg border border-primary-100 bg-primary-50 px-4 py-3">
           <p className="text-sm font-bold leading-relaxed text-primary-800">
-            NDA締結可。要件が固まっていなくても送れます。通常1〜2営業日以内に、判断に必要な不足情報と進め方の候補を返します。
+            まだ要件がまとまっていなくても構いません。NDA締結後に詳細を伺い、「開発すべきか分からない」という段階から整理します。
           </p>
         </div>
 
@@ -591,11 +591,11 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
                 送信中...
               </>
             ) : (
-              '実現可否の相談を送る'
+              '発注前の相談を送る'
             )}
           </button>
           <p className="text-sm text-muted-foreground mt-4">
-            通常1〜2営業日以内に担当者からご返信します。
+            通常1〜2営業日以内に、確認したい前提と次に見るべきリスクを返信します。
           </p>
         </div>
       </form>

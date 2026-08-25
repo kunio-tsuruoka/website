@@ -2,8 +2,8 @@ import { ArrowRight } from 'lucide-react';
 
 const sheetRows = [
   {
-    label: '相談内容',
-    value: '社内検索 / AI導入候補の整理',
+    label: '最初の不安',
+    value: 'この要件で発注していいか',
   },
   {
     label: '判断の根拠',
@@ -19,7 +19,7 @@ const sheetRows = [
   },
 ];
 
-const outputItems = ['受入条件', '概算レンジ', '次に確認するリスク'];
+const outputItems = ['受入条件', '投資レンジ', '見送り条件'];
 
 export const HeroSection = () => (
   <section className="relative overflow-hidden border-b border-neutral-300 bg-neutral-100 pt-20 text-accent-950">
@@ -28,17 +28,21 @@ export const HeroSection = () => (
     <div className="container relative mx-auto grid gap-10 px-8 py-10 md:py-14 lg:min-h-[640px] lg:grid-cols-[0.9fr_0.85fr] lg:items-center lg:gap-16 lg:px-12">
       <div className="max-w-3xl">
         <p className="border-l-8 border-primary-500 pl-5 text-sm font-bold text-primary-700">
-          新規事業・AI導入・社内システム化の相談
+          要件が固まる前のAI・DX・業務システム相談
         </p>
 
         <h1 className="mt-6 text-4xl font-bold leading-[1.05] text-accent-950 sm:text-5xl md:text-6xl xl:text-7xl">
-          作る前に、
+          数百万円を
           <br />
-          <span className="text-primary-500">発注判断まで。</span>
+          発注する前に、
+          <br />
+          <span className="text-primary-500">本当に作るべきか</span>
+          <br />
+          <span className="text-primary-500">確かめる。</span>
         </h1>
 
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-700 md:text-xl">
-          相談内容を、判断シート、検証用プロトタイプ、受入条件に落とし込みます。
+          要件が固まっていなくても構いません。業務課題を整理し、動く形で確認してから、開発する・見送る・範囲を変える判断材料を作ります。
         </p>
 
         <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -46,9 +50,9 @@ export const HeroSection = () => (
             href="/contact?source=home-hero"
             data-cta-source="home-hero"
             data-cta-id="contact"
-            className="page-cta group inline-flex items-center justify-center rounded-md bg-primary-500 px-8 py-4 text-lg font-semibold text-white transition-all hover:bg-primary-600"
+            className="page-cta group inline-flex items-center justify-center rounded-md bg-primary-500 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-primary-600"
           >
-            実現可否を相談する
+            発注前に相談する
             <span className="transition-transform duration-200 group-hover:translate-x-1">
               <ArrowRight className="ml-2 h-5 w-5" />
             </span>
@@ -57,7 +61,7 @@ export const HeroSection = () => (
             href="/case-studies"
             className="inline-flex min-h-[52px] items-center justify-center border-b border-accent-950 text-base font-semibold text-accent-950 transition hover:border-primary-500 hover:text-primary-500"
           >
-            実案件を見る
+            実案件の判断材料を見る
           </a>
         </div>
 
@@ -68,7 +72,7 @@ export const HeroSection = () => (
         <div className="mt-6 border-y border-neutral-300 bg-white px-4 py-4 md:hidden">
           <p className="text-sm font-bold text-primary-500">発注判断シート</p>
           <p className="mt-2 text-base font-bold leading-relaxed text-accent-950">
-            判断の根拠 / 受入条件 / 概算レンジ
+            判断の根拠 / 受入条件 / 投資レンジ
           </p>
         </div>
       </div>

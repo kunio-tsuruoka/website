@@ -27,7 +27,7 @@ const faqs = [
   {
     question: '費用はどのくらいかかりますか？',
     answer:
-      '費用は「何を作るか」と「どの段階か」で変わります。検証用プロトタイプは初期費用0円から始められる場合があります。PoCは数百万円、本開発は規模により変動します。初回返信で、概算レンジと前提条件をできるだけ具体的にお返しします。',
+      '費用は「何を作るか」と「どの段階か」で変わります。条件が合う案件では、初期検証を当社負担で行う場合があります。PoCは数百万円、本開発は規模により変動します。初回返信で、投資レンジと前提条件をできるだけ具体的にお返しします。',
   },
 ];
 
@@ -39,7 +39,7 @@ export const ProcessFAQ = () => {
           <h2 className="text-4xl lg:text-5xl font-bold text-navy-950 mb-4">
             よくある<span className="text-primary-500">ご質問</span>
           </h2>
-          <p className="text-xl text-neutral-600">導入に関するご質問にお答えします</p>
+          <p className="text-xl text-neutral-600">発注前に不安になりやすい点を先に整理します</p>
         </div>
         <div className="space-y-6">
           {faqs.map((faq, index) => (

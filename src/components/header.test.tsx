@@ -7,7 +7,7 @@ describe('Header', () => {
     const html = renderToStaticMarkup(<Header />);
 
     expect(html).toContain('<header');
-    expect(html).toContain('実現可否を相談する');
+    expect(html).toContain('発注前に相談する');
     expect(html).toContain('<details');
     expect(html).toContain('<summary');
   });

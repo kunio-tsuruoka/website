@@ -8,7 +8,7 @@ interface ProcessStep {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   duration: string;
-  cost: string;
+  condition: string;
   description: string;
   beekle: string[];
   customer: string[];
@@ -20,31 +20,31 @@ const processSteps: ProcessStep[] = [
   {
     icon: PhoneCall,
     title: 'お問い合わせ・業務理解',
-    duration: '1-2時間',
-    cost: '無料',
+    duration: '初回整理',
+    condition: '1-2時間',
     description:
-      '課題や実現したいことをお聞かせください。オンラインまたは訪問でのヒアリングで、何を検証すべきかを一緒に決めます。',
-    beekle: ['業務フロー・利用者・課題の整理', '検証すべき仮説のご提案'],
-    customer: ['現行業務・資料・関係者の共有'],
-    decision: '何を検証するべきか（検証仮説）',
+      '作りたいものが決まっていなくても、業務、利用者、現行資料、判断者を確認し、何を検証すれば発注判断に近づくかを整理します。',
+    beekle: ['業務フロー・利用者・課題の整理', '検証すべき問いのご提案'],
+    customer: ['現行業務・資料・関係者の共有', '判断者と利用者の整理'],
+    decision: '発注前に何を確かめるべきか',
   },
   {
     icon: Lightbulb,
-    title: 'ゼロスタート開発（検証用プロトタイプ）',
+    title: '条件が合う案件の初期検証',
     duration: '1-2週間（目安）',
-    cost: '初期費用0円',
+    condition: '当社負担で行う場合があります',
     description:
-      '最重要の仮説を確認できる検証用プロトタイプを開発します（成果物の譲渡を伴う納品ではありません）。',
-    beekle: ['コア機能に絞った検証用プロトタイプ開発', '実業務で試せる形でのお試し提供（検証用）'],
+      'Beekle側でも検証価値があると判断した案件では、初期検証を当社負担で行う場合があります。本開発へ進む前の判断材料を作るための限定的な検証です。',
+    beekle: ['コア機能に絞った検証用プロトタイプ開発', '成立条件と技術リスクの整理'],
     customer: ['検証用データ・サンプルの用意', '検証担当者の参加'],
-    decision: '実物で何を確認するか',
+    decision: '実物で何を確認し、何を判断するか',
     highlight: true,
   },
   {
     icon: TestTube,
     title: '実業務での確認・効果検証',
     duration: '1-2週間（目安）',
-    cost: '無料',
+    condition: '代表ケースで確認',
     description:
       '実際の業務環境で試用いただき、業務適合・要件のズレ・データ・利用者の反応を確認します。',
     beekle: ['代表ケースでの効果確認', '効果の方向性・改善余地の整理'],
@@ -55,7 +55,7 @@ const processSteps: ProcessStep[] = [
     icon: CheckCircle,
     title: '投資条件の整理',
     duration: '応相談',
-    cost: '見積提示',
+    condition: '見積・見送り条件',
     description:
       '検証結果をもとに、次に投資する条件と見送り条件を整理します。見送りの場合、開発費用の負担はありません。動く実物があるため、投資する場合の見積もり精度が高くなります。',
     beekle: ['検証結果の整理', '本開発の見積・進め方のご提案'],
@@ -66,7 +66,7 @@ const processSteps: ProcessStep[] = [
     icon: Rocket,
     title: '本開発・運用改善',
     duration: '継続的に対応',
-    cost: '個別見積・保守契約',
+    condition: '個別見積・保守契約',
     description:
       '検証で作ったものと学びをそのまま引き継いで本開発へ。公開後も保守サポートと継続改善を行います。',
     beekle: ['本番品質での開発・公開', '保守サポート・継続的な改善提案'],
@@ -116,7 +116,7 @@ export const ProcessSteps = () => {
                     <h2 className="text-xl font-bold text-gray-900">{step.title}</h2>
                     {step.highlight && (
                       <span className="inline-flex items-center rounded-md bg-primary-500 px-3 py-1 text-xs font-semibold text-white">
-                        初期費用0円
+                        共同でリスクを見る
                       </span>
                     )}
                   </div>
@@ -138,14 +138,8 @@ export const ProcessSteps = () => {
                       </svg>
                       {step.duration}
                     </span>
-                    <span
-                      className={`inline-flex items-center rounded-md px-3 py-1 text-sm font-medium ${
-                        step.cost === '初期費用0円' || step.cost === '無料'
-                          ? 'text-secondary-500 bg-secondary-50'
-                          : 'text-gray-600 bg-gray-100'
-                      }`}
-                    >
-                      {step.cost}
+                    <span className="inline-flex items-center rounded-md bg-gray-100 px-3 py-1 text-sm font-medium text-gray-600">
+                      {step.condition}
                     </span>
                   </div>
                   <p className="mt-2 text-gray-700 leading-relaxed">{step.description}</p>

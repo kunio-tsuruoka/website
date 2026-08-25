@@ -186,13 +186,15 @@ describe('site-wide editorial design foundations', () => {
   });
 
   it('keeps home and materials CTAs aligned with the rectangular CTA system', () => {
-    const sources = [readSource('../pages/index.astro'), readSource('../pages/materials.astro')];
+    const home = readSource('../pages/index.astro');
+    const materials = readSource('../pages/materials.astro');
 
-    for (const source of sources) {
+    for (const source of [home, materials]) {
       expect(source).not.toContain('rounded-full');
       expect(source).not.toContain('transition-all transform');
-      expect(source).toContain('実現可否を相談する');
     }
+    expect(home).toContain('発注前に相談する');
+    expect(materials).toContain('実現可否を相談する');
   });
 
   it('keeps the global Header server-rendered without React hydration directives', () => {

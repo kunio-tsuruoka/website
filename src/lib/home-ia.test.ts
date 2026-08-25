@@ -21,9 +21,12 @@ describe('home page information architecture', () => {
     expect(mainSource).not.toContain('CONTACT');
 
     const positions = [
+      indexOfCopy('発注前の不安'),
       indexOfCopy('実案件の変化'),
       indexOfCopy('Beekleの判断支援'),
+      indexOfCopy('一般的な傾向として比較'),
       indexOfCopy('相談が始まる場面'),
+      indexOfCopy('進め方'),
       indexOfCopy('発注前の判断材料'),
       indexOfCopy('よくあるご不安'),
       indexOfCopy('相談前の安心材料'),
@@ -33,7 +36,7 @@ describe('home page information architecture', () => {
   });
 
   it('does not explain PM on Rails in the first decision sections', () => {
-    const earlyDecisionEnd = indexOfCopy('相談が始まる場面');
+    const earlyDecisionEnd = indexOfCopy('一般的な傾向として比較');
     const earlySource = mainSource.slice(0, earlyDecisionEnd);
 
     expect(earlySource).not.toContain('PM on Rails');
@@ -41,7 +44,7 @@ describe('home page information architecture', () => {
   });
 
   it('uses case logs and ruled sections instead of repeating rounded marketing cards up front', () => {
-    const earlyDecisionEnd = indexOfCopy('相談が始まる場面');
+    const earlyDecisionEnd = indexOfCopy('一般的な傾向として比較');
     const earlySource = mainSource.slice(0, earlyDecisionEnd);
 
     expect(earlySource).toContain('case-log-table');
@@ -52,7 +55,7 @@ describe('home page information architecture', () => {
   });
 
   it('uses editorial brand accents instead of generated-looking purple surfaces', () => {
-    const earlyDecisionEnd = indexOfCopy('相談が始まる場面');
+    const earlyDecisionEnd = indexOfCopy('一般的な傾向として比較');
     const earlySource = mainSource.slice(0, earlyDecisionEnd);
 
     expect(earlySource).toContain('case-log-table border-t border-neutral-300');
@@ -62,5 +65,15 @@ describe('home page information architecture', () => {
     expect(earlySource).not.toContain('bg-primary-500 px-3 py-1 text-white');
     expect(earlySource).not.toContain('bg-primary-100');
     expect(earlySource).not.toContain('shadow-soft');
+  });
+
+  it('frames the home page around decision risk instead of price anchoring', () => {
+    expect(mainSource).toContain('数百万円を発注する前に');
+    expect(mainSource).toContain('作る価値が薄い場合は、作らない判断も選択肢に含めます');
+    expect(mainSource).toContain('条件が合う案件では、初期検証を当社負担で行う場合があります');
+    expect(mainSource).toContain('発注前に相談する');
+    expect(mainSource).not.toContain('初期費用0円');
+    expect(mainSource).not.toContain('無料相談');
+    expect(mainSource).not.toContain('効果検証無料');
   });
 });
