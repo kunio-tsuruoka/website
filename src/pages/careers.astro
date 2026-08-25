@@ -147,9 +147,9 @@ const workItems = [
     type="application/ld+json"
     set:html={JSON.stringify(jobPostingJsonLd)}
   />
-  <Header client:idle />
+  <Header />
 
-  <main class="pt-20">
+  <main class="bg-neutral-100 pt-20">
     <!-- Hero -->
     <PageHero
       badge="Careers"
@@ -170,7 +170,7 @@ const workItems = [
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 max-w-5xl mx-auto">
           {appealCards.map((card) => (
-            <div class="bg-white rounded-2xl p-6 md:p-7 shadow-soft hover:shadow-medium transition-all hover:-translate-y-1 border border-neutral-100">
+            <div class="bg-white rounded-lg p-6 md:p-7 transition-all border border-neutral-100">
               <div class={`w-12 h-12 md:w-14 md:h-14 rounded-xl ${card.iconBg} flex items-center justify-center ${card.iconColor} mb-4`}>
                 <svg class="w-6 h-6 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d={card.icon} />
@@ -200,7 +200,7 @@ const workItems = [
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 max-w-5xl mx-auto">
           {workItems.map((item) => (
-            <div class="bg-white rounded-2xl p-6 shadow-soft border border-neutral-100">
+            <div class="bg-white rounded-lg p-6 border border-neutral-100">
               <div class="flex items-start gap-4">
                 <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 flex-shrink-0">
                   <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -230,7 +230,7 @@ const workItems = [
         </div>
 
         <div class="max-w-3xl mx-auto">
-          <div class="bg-white rounded-2xl shadow-soft border border-neutral-100 overflow-hidden">
+          <div class="bg-white rounded-lg border border-neutral-100 overflow-hidden">
             <div class="divide-y divide-neutral-100">
               {recruitmentDetails.map((row) => (
                 <div class="flex flex-col sm:flex-row py-4 px-6">
@@ -258,7 +258,7 @@ const workItems = [
         <div class="max-w-2xl mx-auto">
           <ul class="space-y-4">
             {desiredTraits.map((trait) => (
-              <li class="flex items-start gap-3 bg-white rounded-xl p-4 shadow-soft border border-neutral-100">
+              <li class="flex items-start gap-3 bg-white rounded-xl p-4 border border-neutral-100">
                 <span class="w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -286,7 +286,7 @@ const workItems = [
             href="/careers/contact?source=careers"
             data-cta-source="careers-bottom"
             data-cta-id="careers-contact"
-            class="inline-flex items-center gap-2 px-8 py-4 bg-primary-500 hover:bg-primary-600 text-white rounded-full text-base font-semibold shadow-soft hover:shadow-medium transition-all"
+            class="inline-flex items-center gap-2 px-8 py-4 bg-primary-500 hover:bg-primary-600 text-white rounded-md text-base font-semibold transition-all"
           >
             採用のお問い合わせはこちら
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">

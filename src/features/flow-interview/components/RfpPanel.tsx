@@ -39,7 +39,7 @@ export function RfpPanel({ onGenerate }: { onGenerate: () => void }) {
 
   if (!rfpMarkdown) {
     return (
-      <div className="mt-4 rounded-2xl border border-gray-200 bg-white p-5">
+      <div className="mt-4 rounded-lg border border-gray-200 bg-white p-5">
         <h3 className="text-sm font-bold text-navy-950 mb-1">発注用のRFP下書きを作る</h3>
         <p className="text-xs text-gray-600 leading-relaxed mb-4">
           ここまでの内容から、ユーザーストーリー付きのRFP（提案依頼書）ドラフトを生成します。そのままベンダー比較や社内共有に使えます。
@@ -57,7 +57,7 @@ export function RfpPanel({ onGenerate }: { onGenerate: () => void }) {
   }
 
   return (
-    <div className="mt-4 rounded-2xl border border-gray-200 bg-white p-5">
+    <div className="mt-4 rounded-lg border border-gray-200 bg-white p-5">
       <div className="flex items-center justify-between mb-3 gap-2">
         <h3 className="text-sm font-bold text-navy-950">RFPドラフト（ユーザーストーリー付き）</h3>
         <div className="flex gap-2">

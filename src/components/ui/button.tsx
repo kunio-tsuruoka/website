@@ -5,7 +5,7 @@ import * as React from 'react';
 /**
  * Button コンポーネント
  *
- * Beekle Pop Style Design System
+ * Beekle Editorial Design System
  * Primary: Beekle Purple (#3D4DB7)
  * Accent: Dark Navy (#001738)
  * Secondary: Cyan (#00c4cc)
@@ -15,42 +15,38 @@ import * as React from 'react';
  * サイズ: sm, md, lg, xl
  */
 const buttonVariants = cva(
-  // ベーススタイル（ブランドガイドライン準拠：rounded-full）
-  'inline-flex items-center justify-center font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+  // 編集面に合わせた小さめ角丸と色変化中心のボタン。
+  'inline-flex items-center justify-center font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
   {
     variants: {
       variant: {
         // プライマリ: Beekle Purple（メインカラー）
-        primary:
-          'bg-primary-500 text-white shadow-soft hover:shadow-medium hover:bg-primary-600 focus:ring-primary-500',
+        primary: 'bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500',
 
         // アクセント: Dark Navy
-        accent:
-          'bg-accent-950 text-white shadow-soft hover:shadow-medium hover:bg-accent-900 focus:ring-accent-950',
+        accent: 'bg-accent-950 text-white hover:bg-accent-900 focus:ring-accent-950',
 
         // セカンダリ: Cyan
-        secondary:
-          'bg-secondary-500 text-white shadow-soft hover:shadow-medium hover:bg-secondary-600 focus:ring-secondary-500',
+        secondary: 'bg-secondary-500 text-white hover:bg-secondary-600 focus:ring-secondary-500',
 
         // ハイライト: Yellow
         highlight:
-          'bg-highlight-500 text-accent-950 shadow-soft hover:shadow-medium hover:bg-highlight-400 focus:ring-highlight-500',
+          'bg-highlight-500 text-accent-950 hover:bg-highlight-400 focus:ring-highlight-500',
 
         // ホワイト: 白背景（ダーク背景用）
-        white:
-          'bg-white text-primary-500 shadow-soft hover:shadow-medium hover:bg-gray-50 focus:ring-primary-500',
+        white: 'bg-white text-primary-500 hover:bg-gray-50 focus:ring-primary-500',
 
         // アウトライン: 透明背景、白ボーダー（ダーク背景用）
         outline:
-          'bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary-500 focus:ring-white',
+          'bg-transparent border border-white text-white hover:bg-white hover:text-primary-500 focus:ring-white',
 
         // アウトライン（プライマリ）: 透明背景、パープルボーダー
         outlinePrimary:
-          'bg-transparent border-2 border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white focus:ring-primary-500',
+          'bg-transparent border border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white focus:ring-primary-500',
 
         // アウトライン（ネイビー）: 透明背景、ネイビーボーダー
         outlineNavy:
-          'bg-transparent border-2 border-accent-950 text-accent-950 hover:bg-accent-950 hover:text-white focus:ring-accent-950',
+          'bg-transparent border border-accent-950 text-accent-950 hover:bg-accent-950 hover:text-white focus:ring-accent-950',
 
         // ゴースト: 透明、ホバー時に背景
         ghost: 'text-primary-500 hover:bg-primary-50 focus:ring-primary-500',
@@ -66,10 +62,10 @@ const buttonVariants = cva(
         muted: 'bg-muted text-muted-foreground cursor-not-allowed',
       },
       size: {
-        sm: 'px-4 py-2 text-sm rounded-full',
-        md: 'px-6 py-3 text-base rounded-full',
-        lg: 'px-8 py-4 text-lg rounded-full',
-        xl: 'px-10 py-5 text-xl font-semibold rounded-full',
+        sm: 'rounded-md px-4 py-2 text-sm',
+        md: 'rounded-md px-6 py-3 text-base',
+        lg: 'rounded-md px-8 py-4 text-lg',
+        xl: 'rounded-md px-10 py-5 text-xl font-semibold',
       },
       fullWidth: {
         true: 'w-full',

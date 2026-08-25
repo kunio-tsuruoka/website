@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { consultationHub, consultationSituations } from '../data/consultation-situations';
 import { services } from '../data/service';
 import { redirectedColumnIds } from '../lib/column-redirects';
 import {
@@ -21,6 +22,12 @@ type SitemapPage = {
 // 静的ページ一覧
 const staticPages: SitemapPage[] = [
   { url: '/', priority: '1.0', changefreq: 'weekly' },
+  { url: consultationHub.href, priority: '0.9', changefreq: 'weekly' },
+  ...consultationSituations.map((situation) => ({
+    url: situation.href,
+    priority: '0.8',
+    changefreq: 'monthly',
+  })),
   { url: '/prooffirst', priority: '0.9', changefreq: 'weekly' },
   { url: '/services/ai-adoption', priority: '0.9', changefreq: 'monthly' },
   { url: '/contact', priority: '0.9', changefreq: 'monthly' },

@@ -1,28 +1,21 @@
-import { trackCtaClick } from '@/lib/analytics';
-import { useEffect, useRef, useState } from 'react';
+import { consultationNavigationItems } from '@/data/consultation-situations';
 
-// グローバルナビは「課題から探す」を起点に、開発方法 → サービス → 事例 → ナレッジの順で辿れる構成 (tasks.md TASK-008)。
+// グローバルナビは「課題から探す」を起点に、進め方 → サービス → 事例 → 判断材料の順で辿れる構成。
 // 検索ランディングページ (OCR/チャットボット等のSEO LP) はナビに全部載せず、footerと本文導線で内部リンクを保つ。
-const problemItems = [
-  { label: '新規事業を早く検証したい', href: '/services/mvp-poc-development' },
-  { label: 'AIで業務を効率化したい', href: '/services/ai-development' },
-  { label: '属人業務をシステム化したい', href: '/services/web-mobile-development' },
-  { label: '社内情報をAI活用したい', href: '/services/rag-system-development' },
-  { label: 'データを活用したい', href: '/services/cdp-development' },
-];
+const problemItems = consultationNavigationItems;
 
 const methodItems = [
-  { label: 'Beekleの開発方法', href: '/strengths' },
-  { label: 'Proof-first・ゼロスタート', href: '/prooffirst' },
+  { label: '進め方の全体像', href: '/strengths' },
+  { label: '動くもので判断するゼロスタート', href: '/prooffirst' },
   { label: '要件定義から伴走する開発', href: '/services/requirements-definition-support' },
-  { label: 'PM on Rails（自社開発のPM基盤）', href: 'https://pmonrails.com' },
+  { label: '進行管理と仕様の見える化', href: '/strengths' },
 ];
 
 const serviceItems = [
   { label: 'MVP・PoC・プロトタイプ開発', href: '/services/mvp-poc-development' },
   { label: '生成AI受託開発', href: '/services/ai-development' },
   { label: 'RAGシステム構築', href: '/services/rag-system-development' },
-  { label: 'WEBアプリ・モバイルアプリ開発', href: '/services/web-mobile-development' },
+  { label: 'Webアプリ・モバイルアプリ開発', href: '/services/web-mobile-development' },
   { label: 'CDP構築・顧客データ基盤開発', href: '/services/cdp-development' },
 ];
 
@@ -46,9 +39,9 @@ const aboutItems = [
 
 const mobileSections: { heading: string; items: { label: string; href: string }[] }[] = [
   { heading: '課題から探す', items: problemItems },
-  { heading: 'Beekleの開発方法', items: methodItems },
+  { heading: '進め方', items: methodItems },
   { heading: 'サービス', items: serviceItems },
-  { heading: 'ナレッジ', items: knowledgeItems },
+  { heading: '判断材料', items: knowledgeItems },
   { heading: 'Beekleについて', items: aboutItems },
 ];
 
@@ -59,30 +52,15 @@ function Dropdown({
   label: string;
   items: { label: string; href: string }[];
 }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLLIElement>(null);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
-
   return (
-    <li ref={ref} className="relative">
+    <li className="group relative">
       <button
         type="button"
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-        className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium inline-flex items-baseline gap-1"
+        className="inline-flex cursor-pointer items-baseline gap-1 text-sm font-medium text-neutral-600 transition-colors hover:text-accent-600"
       >
         {label}
         <svg
-          className={`w-2.5 h-2.5 transition-transform ${open ? 'rotate-180' : ''}`}
+          className="h-2.5 w-2.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -91,42 +69,34 @@ function Dropdown({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {open && (
-        <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
-          {items.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              {...(item.href.startsWith('http') ? { rel: 'noopener' } : {})}
-              className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-500 transition-colors"
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-      )}
+      <div className="invisible absolute left-0 top-full z-50 mt-2 w-72 rounded-lg border border-neutral-200 bg-white py-2 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+        {items.map((item) => (
+          <a
+            key={`${item.href}-${item.label}`}
+            href={item.href}
+            {...(item.href.startsWith('http') ? { rel: 'noopener' } : {})}
+            className="block px-4 py-2.5 text-sm text-gray-700 transition-colors hover:bg-neutral-100 hover:text-primary-600"
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
     </li>
   );
 }
 
 export function Header() {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
-    <header
-      className={`fixed w-full bg-white/90 backdrop-blur-sm shadow-sm z-50 ${isOpen ? 'min-h-screen' : 'h-auto'}`}
-    >
-      <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" className="flex-shrink-0 flex items-center space-x-2 min-h-[44px]">
+    <header className="fixed z-50 w-full border-b border-neutral-200 bg-white/90 backdrop-blur-sm">
+      <nav className="container mx-auto flex items-center justify-between px-4 py-4">
+        <a href="/" className="flex min-h-[44px] flex-shrink-0 items-center space-x-2">
           <img src="/logo.png" alt="logo" width={640} height={166} className="h-9 w-auto" />
         </a>
 
-        <div className="lg:hidden">
-          <button
-            type="button"
-            onClick={() => setIsOpen(!isOpen)}
+        <details className="group lg:hidden">
+          <summary
             aria-label="メニューを開閉"
-            className="text-neutral-600 hover:text-accent-600 focus:outline-none p-3 -m-3"
+            className="-m-3 cursor-pointer list-none p-3 text-neutral-600 hover:text-accent-600 focus:outline-none [&::-webkit-details-marker]:hidden"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -137,28 +107,67 @@ export function Header() {
             >
               <title>メニュー</title>
               <path
+                className="group-open:hidden"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
                 d="M4 6h16M4 12h16M4 18h16"
               />
+              <path
+                className="hidden group-open:block"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18 18 6M6 6l12 12"
+              />
             </svg>
-          </button>
-        </div>
+          </summary>
+          <div className="fixed inset-x-0 top-[76px] max-h-[calc(100vh-76px)] overflow-y-auto bg-navy-950 px-8 py-8 text-white">
+            <h2 className="mb-5 text-center text-2xl font-bold">メニュー</h2>
+            <ul className="mx-auto flex w-full max-w-sm flex-col items-center space-y-4 pb-6">
+              <li>
+                <a href="/case-studies" className="text-lg transition-colors hover:text-accent-300">
+                  導入事例
+                </a>
+              </li>
+              {mobileSections.map((section) => (
+                <li
+                  key={section.heading}
+                  className="w-full border-t border-white/20 pt-4 text-center"
+                >
+                  <p className="mb-2 text-sm text-white/60">{section.heading}</p>
+                  <ul className="space-y-2">
+                    {section.items.map((item) => (
+                      <li key={`${section.heading}-${item.href}-${item.label}`}>
+                        <a
+                          href={item.href}
+                          {...(item.href.startsWith('http') ? { rel: 'noopener' } : {})}
+                          className="text-base transition-colors hover:text-accent-300"
+                        >
+                          {item.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+              <li className="flex w-full flex-col items-center gap-3 pt-2">
+                <a
+                  href="/contact?source=header-mobile"
+                  data-cta-source="header-mobile"
+                  data-cta-id="contact"
+                  className="inline-flex min-h-[48px] w-full max-w-xs items-center justify-center rounded-md bg-primary-500 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-600"
+                >
+                  実現可否を相談する
+                </a>
+              </li>
+            </ul>
+          </div>
+        </details>
 
-        <ul
-          className={`lg:flex flex-col lg:flex-row items-center gap-5 lg:gap-3 xl:gap-5 lg:mt-0 mt-4 transition-all duration-300 whitespace-nowrap ${isOpen ? 'block' : 'hidden'}`}
-        >
-          <li>
-            <a
-              href="/"
-              className="text-neutral-600 hover:text-accent-600 transition-colors text-sm font-medium"
-            >
-              HOME
-            </a>
-          </li>
-          <Dropdown label="課題から探す" items={problemItems} />
-          <Dropdown label="Beekleの開発方法" items={methodItems} />
+        <ul className="hidden items-center gap-5 whitespace-nowrap transition-all duration-300 lg:flex lg:flex-row lg:gap-3 lg:mt-0 xl:gap-5">
+          <Dropdown label="課題別" items={problemItems} />
+          <Dropdown label="進め方" items={methodItems} />
           <Dropdown label="サービス" items={serviceItems} />
           <li>
             <a
@@ -168,88 +177,19 @@ export function Header() {
               導入事例
             </a>
           </li>
-          <Dropdown label="ナレッジ" items={knowledgeItems} />
-          <Dropdown label="Beekleについて" items={aboutItems} />
+          <Dropdown label="判断材料" items={knowledgeItems} />
           <li>
             <a
               href="/contact?source=header-desktop"
-              onClick={() => trackCtaClick({ source: 'header-desktop', cta: 'contact' })}
-              className="inline-flex items-center px-4 py-3 sm:py-2 min-h-[44px] sm:min-h-0 bg-primary-500 text-white rounded-full text-sm font-semibold hover:bg-primary-600 transition-colors shadow-soft hover:shadow-medium"
+              data-cta-source="header-desktop"
+              data-cta-id="contact"
+              className="inline-flex min-h-[44px] items-center rounded-md bg-primary-500 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-600 sm:min-h-0 sm:py-2"
             >
-              業務課題を相談する
+              実現可否を相談する
             </a>
           </li>
         </ul>
       </nav>
-
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-navy-950 text-white p-8 rounded-[32px] w-full h-full flex flex-col items-center overflow-y-auto">
-            <h2 className="text-3xl font-bold mb-4 mt-8">メニュー</h2>
-            <ul className="flex flex-col items-center space-y-4 w-full max-w-sm pb-12">
-              <li>
-                <a
-                  href="/"
-                  className="hover:text-accent-300 transition-colors text-lg"
-                  onClick={() => setIsOpen(false)}
-                >
-                  HOME
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/case-studies"
-                  className="hover:text-accent-300 transition-colors text-lg"
-                  onClick={() => setIsOpen(false)}
-                >
-                  導入事例
-                </a>
-              </li>
-              {mobileSections.map((section) => (
-                <li
-                  key={section.heading}
-                  className="border-t border-white/20 pt-4 w-full text-center"
-                >
-                  <p className="text-white/60 text-sm mb-2">{section.heading}</p>
-                  <ul className="space-y-2">
-                    {section.items.map((item) => (
-                      <li key={item.href}>
-                        <a
-                          href={item.href}
-                          {...(item.href.startsWith('http') ? { rel: 'noopener' } : {})}
-                          className="hover:text-accent-300 transition-colors text-base"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {item.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-              <li className="pt-2 flex flex-col items-center gap-3 w-full">
-                <a
-                  href="/contact?source=header-mobile"
-                  className="inline-flex items-center justify-center w-full max-w-xs px-6 py-3 min-h-[48px] bg-primary-500 rounded-full text-white text-base font-semibold hover:bg-primary-600 transition-colors shadow-soft"
-                  onClick={() => {
-                    trackCtaClick({ source: 'header-mobile', cta: 'contact' });
-                    setIsOpen(false);
-                  }}
-                >
-                  業務課題を相談する
-                </a>
-              </li>
-            </ul>
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 text-white text-3xl"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-      )}
     </header>
   );
 }

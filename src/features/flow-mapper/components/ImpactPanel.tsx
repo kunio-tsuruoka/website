@@ -42,7 +42,7 @@ export function ImpactPanel({
   );
 
   return (
-    <section className="mt-4 border border-primary-300 rounded-xl bg-gradient-to-br from-primary-50 to-white overflow-hidden">
+    <section className="mt-4 border border-primary-300 rounded-xl bg-white overflow-hidden">
       <div className="px-4 py-3 border-b border-primary-200 bg-primary-100/50 flex items-center justify-between flex-wrap gap-2">
         <div>
           <h3 className="text-sm font-bold text-primary-900">経営インパクト（年間換算）</h3>

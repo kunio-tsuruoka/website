@@ -129,7 +129,7 @@ export function ExportMenu({
             className="fixed inset-0 z-10 bg-transparent"
             onClick={() => setOpen(false)}
           />
-          <div className="absolute right-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-medium z-20 overflow-hidden">
+          <div className="absolute right-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg z-20 overflow-hidden">
             <button
               type="button"
               onClick={exportPng}

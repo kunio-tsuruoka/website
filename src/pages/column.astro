@@ -96,18 +96,18 @@ const columnCategories = categories
       }}
     />
   )}
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     {/* Hero Section */}
     <PageHero
       title="コラムで学ぶシステム発注の知識"
       subtitle="「開発って、正直よくわからない」という不安を解消。失敗しないための実践的な知識を、体系的にお届けします。"
       badge="Knowledge Base"
     >
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <div class="flex flex-col sm:flex-row gap-3">
         <a
           href="#categories"
-          class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+          class="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-primary-500 border border-primary-500 rounded-md hover:bg-primary-600 hover:border-primary-600 transition-colors"
         >
           記事を読む
           <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@ const columnCategories = categories
         </a>
         <a
           href="/prooffirst"
-          class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
+          class="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-accent-950 bg-white border border-neutral-300 rounded-md hover:border-primary-500 hover:text-primary-600 transition-colors"
         >
           ゼロスタートを見る
         </a>
@@ -127,7 +127,7 @@ const columnCategories = categories
     {apiError && (
       <section class="py-8">
         <div class="container mx-auto px-6 md:px-8">
-          <div class="bg-gray-50 rounded-xl p-8 text-center">
+          <div class="rounded-lg border border-neutral-200 bg-neutral-50 p-8 text-center">
             <p class="text-gray-600">現在コンテンツを読み込めません。しばらくしてから再度お試しください。</p>
           </div>
         </div>
@@ -135,7 +135,7 @@ const columnCategories = categories
     )}
 
     {/* Column Categories */}
-    <section id="categories" class="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-white">
+    <section id="categories" class="border-b border-neutral-300 bg-neutral-100 py-16 md:py-24">
       <div class="container mx-auto px-6 md:px-8">
         {columnCategories.map((category) => (
           <div id={category.id} class="mb-20 scroll-mt-24">
@@ -143,7 +143,7 @@ const columnCategories = categories
             <div class="mb-12">
               <div class="flex items-center gap-4 mb-4">
                 {/* Category Icon */}
-                <div class="w-16 h-16 flex-shrink-0 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg text-white font-Poppins text-2xl font-bold">
+                <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-accent-950 font-Poppins text-2xl font-bold text-white">
                   {String(columnCategories.indexOf(category) + 1).padStart(2, '0')}
                 </div>
 
@@ -163,9 +163,9 @@ const columnCategories = categories
             {category.pillarSlug && (
               <a
                 href={`/column/${category.pillarSlug}`}
-                class="group flex items-center gap-4 mb-8 p-5 bg-gradient-to-r from-primary-50 to-primary-100 hover:from-primary-100 hover:to-primary-200 rounded-2xl border border-primary-200 transition-all"
+                class="group mb-8 flex items-center gap-4 rounded-lg border border-primary-200 bg-white p-5 transition-colors hover:border-primary-400"
               >
-                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center">
+                <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-primary-500">
                   <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
@@ -190,12 +190,12 @@ const columnCategories = categories
                 {category.articles.map((article) => (
                   <a
                     href={`/column/${article.slug}`}
-                    class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all p-6 md:p-8 border border-gray-100 hover:border-primary-200"
+                    class="group rounded-lg border border-neutral-200 bg-white p-6 transition-colors hover:border-primary-300 md:p-8"
                   >
                     <div class="flex items-start gap-6">
                       {/* Article Number */}
                       <div class="flex-shrink-0">
-                        <div class="w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-br from-primary-100 to-primary-200 text-primary-600 font-bold text-lg">
+                        <div class="flex h-14 w-14 items-center justify-center rounded-md bg-neutral-100 text-lg font-bold text-primary-600">
                           {article.number}
                         </div>
                       </div>
@@ -219,7 +219,7 @@ const columnCategories = categories
                 ))}
               </div>
             ) : (
-              <div class="text-center py-12 bg-gray-50 rounded-xl">
+              <div class="rounded-lg border border-neutral-200 bg-neutral-50 py-12 text-center">
                 <p class="text-gray-500">このカテゴリーの記事はまだありません</p>
               </div>
             )}
@@ -243,14 +243,14 @@ const columnCategories = categories
     </section>
 
     {/* Quick Navigation */}
-    <section class="py-12 bg-white border-y border-gray-200">
+    <section class="border-y border-neutral-300 bg-neutral-50 py-12">
       <div class="container mx-auto px-6 md:px-8">
         <h3 class="text-xl font-bold text-gray-900 mb-6 text-center">カテゴリーから探す</h3>
         <div class="flex flex-wrap justify-center gap-4">
           {columnCategories.map((category) => (
             <a
               href={`#${category.id}`}
-              class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-50 to-primary-100 hover:from-primary-100 hover:to-primary-200 text-primary-600 rounded-full font-medium transition-all shadow-sm hover:shadow-md"
+              class="inline-flex items-center gap-2 rounded-md border border-neutral-300 bg-white px-6 py-3 font-medium text-primary-600 transition-colors hover:border-primary-400"
             >
               <span>{category.title}</span>
             </a>
@@ -261,11 +261,10 @@ const columnCategories = categories
 
     {/* Templates & Checklists */}
     <section class="relative py-20 md:py-28 bg-accent-950 text-white overflow-hidden">
-      <div class="absolute inset-0 bg-grid-pattern opacity-20"></div>
 
       <div class="container mx-auto px-6 md:px-8 relative">
         <div class="max-w-3xl mx-auto text-center mb-16">
-          <span class="inline-flex items-center px-4 py-2 mb-6 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium">
+          <span class="mb-6 inline-flex items-center rounded-md border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium">
             Templates & Checklists
           </span>
           <h2 class="text-3xl md:text-4xl font-bold mb-4">型・テンプレート・チェックリスト</h2>
@@ -279,7 +278,7 @@ const columnCategories = categories
           <a
             href="/docs/user-stories-sample.md"
             download="user-stories-sample.md"
-            class="group relative block rounded-2xl bg-white/15 hover:bg-white/25 transition-all p-8 shadow-xl hover:shadow-2xl border border-white/20"
+            class="group relative block rounded-lg border border-white/20 bg-white/10 p-8 transition-colors hover:bg-white/15"
           >
             <div class="flex items-start justify-between mb-6">
               <span class="px-3 py-1 text-xs font-semibold rounded-full bg-highlight-500 text-accent-950 border border-highlight-500">
@@ -303,7 +302,7 @@ const columnCategories = categories
               </svg>
             </span>
 
-            <div class="absolute inset-0 rounded-2xl border border-white/0 group-hover:border-white/40 transition-colors"></div>
+            <div class="absolute inset-0 rounded-lg border border-white/0 transition-colors group-hover:border-white/40"></div>
           </a>
 
           <a
@@ -311,7 +310,7 @@ const columnCategories = categories
             download="beekle-zero-start-sales-deck.pdf"
             data-cta-source="column-list-kit"
             data-cta-id="pdf-zero-start-sales-deck"
-            class="group relative block rounded-2xl bg-white/15 hover:bg-white/25 transition-all p-8 shadow-xl hover:shadow-2xl border border-white/20"
+            class="group relative block rounded-lg border border-white/20 bg-white/10 p-8 transition-colors hover:bg-white/15"
           >
             <div class="flex items-start justify-between mb-6">
               <span class="px-3 py-1 text-xs font-semibold rounded-full bg-highlight-500 text-accent-950 border border-highlight-500">
@@ -335,12 +334,12 @@ const columnCategories = categories
               </svg>
             </span>
 
-            <div class="absolute inset-0 rounded-2xl border border-white/0 group-hover:border-white/40 transition-colors"></div>
+            <div class="absolute inset-0 rounded-lg border border-white/0 transition-colors group-hover:border-white/40"></div>
           </a>
 
           <a
             href="/checklists/dev-process"
-            class="group relative block rounded-2xl bg-white/15 hover:bg-white/25 transition-all p-8 shadow-xl hover:shadow-2xl border border-white/20"
+            class="group relative block rounded-lg border border-white/20 bg-white/10 p-8 transition-colors hover:bg-white/15"
           >
             <div class="flex items-start justify-between mb-6">
               <span class="px-3 py-1 text-xs font-semibold rounded-full bg-highlight-500 text-accent-950 border border-highlight-500">
@@ -364,21 +363,20 @@ const columnCategories = categories
               </svg>
             </span>
 
-            <div class="absolute inset-0 rounded-2xl border border-white/0 group-hover:border-white/40 transition-colors"></div>
+            <div class="absolute inset-0 rounded-lg border border-white/0 transition-colors group-hover:border-white/40"></div>
           </a>
         </div>
       </div>
     </section>
 
     {/* CTA Section - Zero Start */}
-    <section class="relative py-20 md:py-32 overflow-hidden bg-gradient-to-br from-primary-500 to-primary-600">
-      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+    <section class="relative overflow-hidden bg-navy-950 py-20 md:py-28">
 
       <div class="container mx-auto px-6 md:px-8 relative">
         <div class="max-w-4xl mx-auto text-center">
           <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">
             知識を得たら、次は<br class="md:hidden" />
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-pink-200">実際に体験しませんか？</span>
+            <span class="text-highlight-100">実際に体験しませんか？</span>
           </h2>
 
           <p class="text-xl text-white/90 mb-10 leading-relaxed">
@@ -386,7 +384,7 @@ const columnCategories = categories
             初期費用0円で、動くプロトタイプを体験できます。
           </p>
 
-          <div class="bg-white/10 backdrop-blur-sm rounded-3xl p-8 mb-10">
+          <div class="mb-10 rounded-lg border border-white/20 bg-white/10 p-8">
             <div class="grid md:grid-cols-3 gap-6 text-white">
               <div>
                 <div class="text-4xl font-bold mb-2">0円</div>
@@ -407,7 +405,7 @@ const columnCategories = categories
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/prooffirst"
-              class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
+              class="inline-flex items-center justify-center rounded-md bg-white px-8 py-4 text-lg font-semibold text-accent-950 transition-colors hover:bg-neutral-100"
             >
               ゼロスタートについて詳しく見る
               <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -418,7 +416,7 @@ const columnCategories = categories
               href="/contact?source=column-list-final"
               data-cta-source="column-list-final"
               data-cta-id="contact"
-              class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
+              class="inline-flex items-center justify-center rounded-md border border-white bg-transparent px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-white hover:text-accent-950"
             >
               無料相談を予約する
             </a>
@@ -430,26 +428,6 @@ const columnCategories = categories
 </Layout>
 
 <style>
-  @keyframes float {
-    0%, 100% { transform: translateY(0) }
-    50% { transform: translateY(-20px) }
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .animate-float-delay {
-    animation: float 8s ease-in-out infinite;
-    animation-delay: 1s;
-  }
-
-  .bg-grid-pattern {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
   .scroll-mt-24 {
     scroll-margin-top: 6rem;
   }

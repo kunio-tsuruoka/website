@@ -4,64 +4,41 @@ import * as React from 'react';
 
 /**
  * Card コンポーネント
- *
- * Beekle Pop Style Design System
- * Primary: Beekle Purple (#3D4DB7)
- * Accent: Dark Navy (#001738)
- * Secondary: Cyan (#00c4cc)
- * Highlight: Yellow (#ffd600)
  */
 const cardVariants = cva('relative overflow-hidden transition-all duration-300', {
   variants: {
     variant: {
-      // 白背景（デフォルト）
-      white: 'bg-white rounded-[32px] shadow-soft',
+      white: 'bg-white rounded-lg border border-neutral-200',
 
-      // ライト背景
-      light: 'bg-neutral-50 rounded-[32px]',
+      light: 'bg-neutral-50 rounded-lg border border-neutral-200',
 
-      // ライトパープル背景
-      lightPurple: 'bg-gradient-to-br from-primary-50 via-white to-primary-50/30 rounded-[32px]',
+      lightPurple: 'bg-neutral-50 rounded-lg border border-neutral-200',
 
-      // ライトシアン背景
-      lightCyan: 'bg-gradient-to-br from-secondary-50 via-white to-secondary-50/30 rounded-[32px]',
+      lightCyan: 'bg-neutral-50 rounded-lg border border-neutral-200',
 
-      // プライマリ背景: Beekle Purple
-      primary: 'bg-primary-500 text-white rounded-[32px]',
+      primary: 'bg-primary-500 text-white rounded-lg border border-primary-500',
 
-      // ネイビー背景
-      navy: 'bg-accent-950 text-white rounded-[32px]',
+      navy: 'bg-accent-950 text-white rounded-lg border border-accent-950',
 
-      // シアン背景
-      cyan: 'bg-secondary-500 text-white rounded-[32px]',
+      cyan: 'bg-secondary-500 text-white rounded-lg border border-secondary-500',
 
-      // イエロー背景
-      yellow: 'bg-highlight-500 text-accent-950 rounded-[32px]',
+      yellow: 'bg-highlight-500 text-accent-950 rounded-lg border border-highlight-500',
 
-      // グラデーション（パープル系）
-      gradientPurple: 'bg-gradient-to-br from-primary-500 to-primary-600 text-white rounded-[32px]',
+      gradientPurple: 'bg-primary-500 text-white rounded-lg border border-primary-500',
 
-      // グラデーション（パープル → シアン）
-      gradientMix:
-        'bg-gradient-to-br from-primary-500 via-primary-400 to-secondary-500 text-white rounded-[32px]',
+      gradientMix: 'bg-accent-950 text-white rounded-lg border border-accent-950',
 
-      // アウトライン
-      outlined: 'bg-white rounded-[32px] border-2 border-neutral-200',
+      outlined: 'bg-white rounded-lg border border-neutral-200',
 
-      // アウトライン（プライマリ）
-      outlinedPrimary: 'bg-white rounded-[32px] border-2 border-primary-500',
+      outlinedPrimary: 'bg-white rounded-lg border border-primary-500',
 
-      // アウトライン（セカンダリ）
-      outlinedSecondary: 'bg-white rounded-[32px] border-2 border-secondary-500',
+      outlinedSecondary: 'bg-white rounded-lg border border-secondary-500',
 
-      // ガラス効果
-      glass: 'bg-white/80 backdrop-blur-sm border border-white/20 rounded-[32px]',
+      glass: 'bg-white border border-neutral-200 rounded-lg',
 
-      // ガラス効果（ダーク背景用）
-      glassDark: 'bg-white/10 backdrop-blur-md border border-white/30 rounded-[32px]',
+      glassDark: 'bg-white/10 border border-white/30 rounded-lg',
 
-      // 旧スタイル（後方互換）
-      legacy: 'rounded-xl border bg-card text-card-foreground shadow',
+      legacy: 'rounded-lg border bg-card text-card-foreground',
     },
 
     padding: {
@@ -73,10 +50,10 @@ const cardVariants = cva('relative overflow-hidden transition-all duration-300',
 
     hover: {
       none: '',
-      shadow: 'hover:shadow-medium',
-      lift: 'hover:-translate-y-1 hover:shadow-medium',
-      scale: 'hover:scale-[1.02]',
-      glow: 'hover:shadow-[0_0_20px_rgba(61,77,183,0.3)]',
+      shadow: 'hover:border-primary-300',
+      lift: 'hover:border-primary-300',
+      scale: 'hover:border-primary-300',
+      glow: 'hover:border-primary-300',
       border: 'hover:border-primary-500',
     },
   },
@@ -87,32 +64,12 @@ const cardVariants = cva('relative overflow-hidden transition-all duration-300',
   },
 });
 
-// Pop装飾要素
+// 旧装飾名は互換性のため残し、現行デザインでは描画しない。
 const cardDecorations = {
-  // 斜めバー（パープル）
-  barPurple: (
-    <div className="absolute -top-10 -right-10 w-24 h-48 bg-gradient-to-b from-primary-500/20 to-transparent rounded-full rotate-[25deg]" />
-  ),
-  // 斜めバー（シアン）
-  barCyan: (
-    <div className="absolute -top-10 -right-10 w-24 h-48 bg-gradient-to-b from-secondary-500/20 to-transparent rounded-full rotate-[25deg]" />
-  ),
-  // ドット群
-  dots: (
-    <>
-      <div className="absolute top-4 right-4 w-3 h-3 bg-secondary-500 rounded-full opacity-50" />
-      <div className="absolute top-8 right-10 w-2 h-2 bg-primary-500 rounded-full opacity-40" />
-      <div className="absolute bottom-6 left-6 w-2 h-2 bg-highlight-500 rounded-full opacity-50" />
-    </>
-  ),
-  // ダーク背景用ドット
-  dotsDark: (
-    <>
-      <div className="absolute top-4 right-4 w-3 h-3 bg-secondary-400 rounded-full opacity-60" />
-      <div className="absolute top-8 right-10 w-2 h-2 bg-white rounded-full opacity-30" />
-      <div className="absolute bottom-6 left-6 w-2 h-2 bg-highlight-500 rounded-full opacity-50" />
-    </>
-  ),
+  barPurple: null,
+  barCyan: null,
+  dots: null,
+  dotsDark: null,
   none: null,
 };
 
@@ -153,9 +110,8 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
     const content = (
       <>
-        {/* Pop装飾要素 */}
-        {decoration !== 'none' && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[32px]">
+        {decoration !== 'none' && cardDecorations[decoration] && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
             {cardDecorations[decoration]}
           </div>
         )}
@@ -308,7 +264,7 @@ const CardIcon = React.forwardRef<HTMLDivElement, CardIconProps>(
       <div
         ref={ref}
         className={cn(
-          'w-14 h-14 rounded-2xl flex items-center justify-center mb-6',
+          'w-14 h-14 rounded-lg flex items-center justify-center mb-6',
           styles[variant],
           className
         )}

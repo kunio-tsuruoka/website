@@ -25,34 +25,23 @@ const { service, config } = Astro.props;
 const benefits = service.benefits.slice(0, 3);
 const contactIntent = config?.contactIntent ?? 'consult';
 const contactLabel = config?.contactLabel ?? '無料相談する';
+const heroVisualItems = config?.visualItems ?? config?.illustration?.stages ?? benefits;
 ---
 
 <!-- ライト基調ヒーロー（2026-07-07 ユーザー指定）。
      ワーキングメモリ配慮: 左=バッジ/見出し/リード/CTAの4要素、右=ビジュアル1点のみ。
      旧: 紺背景+右パネル11要素（チップ・メトリクス・紺ボックス）は情報過多のため撤去 -->
-<section class="relative overflow-hidden bg-white pt-14 pb-12 md:pt-24 md:pb-20">
-  <div
-    class="pointer-events-none absolute -right-32 -top-24 h-96 w-96 rounded-full bg-primary-100/60 blur-3xl"
-    aria-hidden="true"
-  >
-  </div>
-  <div
-    class="pointer-events-none absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-primary-50 blur-3xl"
-    aria-hidden="true"
-  >
-  </div>
-
+<section class="relative overflow-hidden border-b border-neutral-300 bg-neutral-100 pt-14 pb-12 md:pt-24 md:pb-20">
   <div class="container relative mx-auto px-6 lg:px-12">
     <div class="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
       <div>
         <span
-          class="inline-flex items-center gap-2 rounded-full bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-700"
+          class="inline-flex items-center gap-2 border-l-8 border-primary-500 bg-white px-4 py-2 text-sm font-semibold text-primary-700"
         >
-          <span class="h-2 w-2 rounded-full bg-primary-500" aria-hidden="true"></span>
           {config?.eyebrow ?? 'Beekle のサービス'}
         </span>
         <h1
-          class="mt-6 max-w-4xl text-3xl font-bold leading-tight text-navy-950 md:text-5xl lg:text-6xl"
+          class="mt-6 max-w-4xl text-balance text-3xl font-bold leading-tight text-navy-950 [word-break:keep-all] md:text-5xl lg:text-5xl"
         >
           {config?.headline ?? service.title}
         </h1>
@@ -67,35 +56,10 @@ const contactLabel = config?.contactLabel ?? '無料相談する';
           )
         }
         {
-          config?.illustration && (
-            <figure class="mt-6 overflow-hidden rounded-3xl bg-white shadow-medium lg:hidden">
-              <img
-                src={config.illustration.src}
-                alt={config.illustration.alt}
-                class="aspect-[1.9/1] w-full object-cover"
-                width="950"
-                height="500"
-                loading="eager"
-                decoding="async"
-              />
-              <figcaption class="grid grid-cols-2 gap-2 border border-t-0 border-neutral-100 bg-white p-3">
-                {config.illustration.stages.map((stage, index) => (
-                  <div class="flex items-center gap-2 rounded-full bg-neutral-50 px-3 py-2">
-                    <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-500 font-Poppins text-xs font-bold text-white">
-                      {index + 1}
-                    </span>
-                    <span class="text-xs font-bold leading-snug text-navy-950">{stage}</span>
-                  </div>
-                ))}
-              </figcaption>
-            </figure>
-          )
-        }
-        {
           config?.metrics && (
             <div class="mt-6 grid max-w-2xl gap-3 sm:grid-cols-3">
               {config.metrics.map((metric) => (
-                <div class="rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3">
+                <div class="rounded-md border border-neutral-200 bg-neutral-50 px-4 py-3">
                   <p class="text-xs font-bold text-neutral-500">{metric.label}</p>
                   <p class="mt-1 text-base font-bold leading-snug text-navy-950">
                     {metric.value}
@@ -105,12 +69,12 @@ const contactLabel = config?.contactLabel ?? '無料相談する';
             </div>
           )
         }
-        <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
           <a
             href={`/contact?source=services-${service.id}-hero&intent=${contactIntent}`}
             data-cta-source={`services-${service.id}-hero`}
             data-cta-id="contact"
-            class="inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-center text-base font-bold leading-snug text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium sm:w-auto sm:px-8"
+            class="inline-flex min-h-[52px] w-full items-center justify-center rounded-md bg-primary-500 px-6 py-3 text-center text-base font-bold leading-snug text-white transition hover:bg-primary-600 sm:w-auto sm:px-8"
           >
             {contactLabel}
             <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,49 +87,33 @@ const contactLabel = config?.contactLabel ?? '無料相談する';
           </a>
           <a
             href="/prooffirst"
-            class="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-2 border-primary-200 px-6 py-3 text-center text-base font-bold leading-snug text-primary-700 transition hover:border-primary-400 hover:bg-primary-50 sm:w-auto sm:px-8"
+            class="inline-flex min-h-[44px] w-full items-center justify-center text-center text-sm font-bold leading-snug text-primary-700 transition hover:text-primary-600 sm:w-auto"
           >
-            初期費用0円で始める
+            初期費用0円の条件を見る
           </a>
         </div>
       </div>
 
-      {
-        config?.illustration ? (
-          <figure class="hidden overflow-hidden rounded-3xl bg-white shadow-strong lg:block">
-            <img
-              src={config.illustration.src}
-              alt={config.illustration.alt}
-              class="aspect-[1.9/1] w-full object-cover"
-              width="950"
-              height="500"
-              loading="eager"
-              decoding="async"
-            />
-            <figcaption class="grid grid-cols-2 gap-2 border border-t-0 border-neutral-100 bg-white p-4 sm:grid-cols-4">
-              {config.illustration.stages.map((stage, index) => (
-                <div class="flex items-center gap-2 rounded-full bg-neutral-50 px-3 py-2">
-                  <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-500 font-Poppins text-xs font-bold text-white">
-                    {index + 1}
-                  </span>
-                  <span class="text-xs font-bold leading-snug text-navy-950">{stage}</span>
-                </div>
-              ))}
-            </figcaption>
-          </figure>
-        ) : (
-          <div class="grid gap-3">
-            {(config?.visualItems ?? benefits).map((item, index) => (
-              <div class="flex items-center gap-3 rounded-2xl border border-neutral-100 bg-white px-5 py-4 shadow-soft">
-                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-500 font-Poppins text-sm font-bold text-white">
-                  {index + 1}
-                </span>
-                <span class="font-bold text-navy-950">{item}</span>
-              </div>
-            ))}
-          </div>
-        )
-      }
+      <aside class="border-y border-neutral-300 bg-white">
+        <div class="border-b border-neutral-300 border-l-8 border-primary-500 px-5 py-4">
+          <p class="text-sm font-bold text-primary-700">
+            {config?.visualTitle ?? '判断メモ'}
+          </p>
+          <p class="mt-1 text-2xl font-bold leading-tight text-navy-950">
+            {config?.visualSubtitle ?? 'お客さま側の変化'}
+          </p>
+        </div>
+        <div class="divide-y divide-neutral-300">
+          {heroVisualItems.map((item, index) => (
+            <div class="grid gap-3 px-5 py-4 md:grid-cols-[72px_1fr]">
+              <p class="font-Poppins text-sm font-bold text-primary-600">
+                {String(index + 1).padStart(2, '0')}
+              </p>
+              <p class="text-base font-bold leading-relaxed text-navy-950">{item}</p>
+            </div>
+          ))}
+        </div>
+      </aside>
     </div>
   </div>
 </section>

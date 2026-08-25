@@ -157,9 +157,9 @@ const tags = normalizeTags(blog.tags);
       ],
     }}
   />
-  <Header client:idle />
-  <main class="pt-20">
-    <section class="border-b border-gray-200 bg-gray-50 py-6">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
+    <section class="border-b border-neutral-300 bg-neutral-100 py-6">
       <div class="container mx-auto max-w-4xl px-6 md:px-8">
         <nav class="flex min-h-[44px] items-center gap-2 text-sm text-gray-600">
           <a href="/" class="px-1 py-3 transition-colors hover:text-primary-500">ホーム</a>
@@ -171,8 +171,8 @@ const tags = normalizeTags(blog.tags);
       </div>
     </section>
 
-    <article class="bg-white">
-      <header class="border-b border-gray-100 py-12 md:py-16">
+    <article class="bg-neutral-50">
+      <header class="border-b border-neutral-300 py-12 md:py-16">
         <div class="container mx-auto max-w-3xl px-6 md:px-8">
           <div class="mb-5">
             <span class="inline-flex rounded-full bg-primary-50 px-3 py-1 text-xs font-bold text-primary-600">
@@ -210,9 +210,9 @@ const tags = normalizeTags(blog.tags);
       </header>
 
       {toc.length > 0 && (
-        <section class="border-b border-gray-100 bg-white py-8">
+        <section class="border-b border-neutral-300 bg-neutral-100 py-8">
           <div class="container mx-auto max-w-3xl px-6 md:px-8">
-            <nav class="rounded-lg border border-gray-200 bg-gray-50 p-5">
+            <nav class="rounded-lg border border-neutral-200 bg-white p-5">
               <h2 class="mb-3 text-sm font-bold text-gray-900">目次</h2>
               <ul class="space-y-1">
                 {toc.map((item) => (
@@ -241,14 +241,14 @@ const tags = normalizeTags(blog.tags);
     </article>
 
     {relatedBlogs.length > 0 && (
-      <section class="border-t border-gray-100 bg-gray-50 py-14 md:py-16">
+      <section class="border-t border-neutral-300 bg-neutral-100 py-14 md:py-16">
         <div class="container mx-auto max-w-4xl px-6 md:px-8">
           <h2 class="text-2xl font-bold text-gray-900">最近のブログ</h2>
           <div class="mt-6 grid gap-4 md:grid-cols-2">
             {relatedBlogs.map((related) => (
               <a
                 href={`/blog/${related.id}`}
-                class="group rounded-lg border border-gray-200 bg-white p-5 transition-all hover:border-primary-200 hover:shadow-soft"
+                class="group rounded-lg border border-neutral-200 bg-white p-5 transition-colors hover:border-primary-300"
               >
                 <time class="text-sm text-gray-500">
                   {formatJaDate(related.publishedAt, related.updatedAt)}
@@ -268,7 +268,7 @@ const tags = normalizeTags(blog.tags);
       </section>
     )}
 
-    <section class="bg-white py-12">
+    <section class="border-t border-neutral-300 bg-neutral-50 py-12">
       <div class="container mx-auto max-w-3xl px-6 md:px-8">
         <a
           href="/blog"
@@ -281,6 +281,11 @@ const tags = normalizeTags(blog.tags);
         </a>
       </div>
     </section>
+
+    <script>
+      import { initChatGptEvaluationCtas } from '../../lib/chatgpt-evaluation-cta';
+      initChatGptEvaluationCtas();
+    </script>
   </main>
 </Layout>
 
@@ -316,7 +321,7 @@ const tags = normalizeTags(blog.tags);
   }
 
   .blog-content :global(a.cv-card-cta) {
-    @apply block rounded-lg border border-gray-200 bg-white p-5 text-left no-underline shadow-soft transition-all;
+    @apply block rounded-lg border border-neutral-200 bg-white p-5 text-left no-underline transition-colors;
     border-bottom: 0;
     color: inherit;
     font-weight: 400;
@@ -329,7 +334,7 @@ const tags = normalizeTags(blog.tags);
   }
 
   .blog-content :global(a.cv-card-cta:hover) {
-    @apply -translate-y-0.5 border-primary-200 shadow-medium;
+    @apply border-primary-300;
   }
 
   .blog-content :global(a.cv-card-cta[data-cta-id^='bridge']) {
@@ -353,7 +358,7 @@ const tags = normalizeTags(blog.tags);
   }
 
   .blog-content :global(a.cv-card-cta .cv-cta-button) {
-    @apply mt-4 inline-flex min-h-[44px] items-center rounded-full bg-primary-500 px-5 text-sm font-bold text-white transition-colors;
+    @apply mt-4 inline-flex min-h-[44px] items-center rounded-md bg-primary-500 px-5 text-sm font-bold text-white transition-colors;
   }
 
   .blog-content :global(a.cv-card-cta:hover .cv-cta-button) {
@@ -363,6 +368,38 @@ const tags = normalizeTags(blog.tags);
   .blog-content :global(a.cv-card-cta .cv-cta-button)::after {
     content: '→';
     margin-left: 0.5rem;
+  }
+
+  .blog-content :global(.cv-chatgpt-cta) {
+    @apply my-10 rounded-lg border border-primary-200 bg-primary-50/60 p-5 md:p-6;
+  }
+  .blog-content :global(.cv-chatgpt-cta-kicker) {
+    @apply mb-2 text-xs font-bold uppercase tracking-wide text-primary-600;
+  }
+  .blog-content :global(.cv-chatgpt-cta-title) {
+    @apply text-xl font-bold leading-snug text-gray-900 md:text-2xl;
+  }
+  .blog-content :global(.cv-chatgpt-cta-description) {
+    @apply mt-3 text-base leading-relaxed text-gray-700;
+  }
+  .blog-content :global(.cv-chatgpt-cta-button) {
+    @apply mt-5 inline-flex min-h-[48px] w-full items-center justify-center rounded-md bg-primary-500 px-6 py-3 text-base font-bold text-white transition-colors hover:bg-primary-600 md:w-auto;
+  }
+  .blog-content :global(.cv-chatgpt-cta-note) {
+    @apply mt-3 text-sm leading-relaxed text-gray-600;
+  }
+  .blog-content :global(.cv-chatgpt-cta-status) {
+    @apply mt-4 rounded-md bg-white px-4 py-3 text-sm font-semibold text-primary-700;
+  }
+  .blog-content :global(.cv-chatgpt-cta-fallback) {
+    @apply mt-4 rounded-md border border-gray-200 bg-white p-4;
+  }
+  .blog-content :global(.cv-chatgpt-cta-fallback summary) {
+    @apply cursor-pointer text-sm font-bold text-gray-900;
+  }
+  .blog-content :global(.cv-chatgpt-cta-prompt) {
+    @apply mt-3 min-h-[220px] w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-sm leading-relaxed text-gray-800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
   }
 
   .blog-content :global(strong) {

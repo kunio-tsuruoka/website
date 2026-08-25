@@ -13,27 +13,26 @@ interface PageHeroProps {
 
 export function PageHero({ title, subtitle, badge, children }: PageHeroProps) {
   return (
-    <section className="relative bg-primary-500 py-20 overflow-hidden">
-      {/* Grid pattern decoration */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-
-      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative">
-        <div className="text-center">
+    <section className="relative overflow-hidden border-b border-neutral-300 bg-neutral-100 py-14 md:py-20">
+      <div className="mx-auto max-w-7xl px-8 lg:px-12">
+        <div className="max-w-4xl">
           {/* バッジ */}
           {badge && (
-            <div className="inline-block mb-6">
-              <span className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-full text-sm font-medium">
-                {badge}
-              </span>
-            </div>
+            <p className="border-l-8 border-primary-500 pl-5 text-sm font-bold text-primary-700">
+              {badge}
+            </p>
           )}
 
           {/* タイトル */}
-          <h1 className="text-4xl font-bold text-white sm:text-5xl mb-6">{title}</h1>
+          <h1 className="mt-6 text-4xl font-bold leading-tight text-accent-950 sm:text-5xl">
+            {title}
+          </h1>
 
           {/* サブタイトル */}
           {subtitle && (
-            <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">{subtitle}</p>
+            <p className="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-700 md:text-xl">
+              {subtitle}
+            </p>
           )}
 
           {/* 追加コンテンツ（CTAボタンなど） */}

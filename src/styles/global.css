@@ -17,7 +17,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-neutral-100 text-foreground;
   }
 
   /* 見出しのデフォルトスタイル。
@@ -37,22 +37,18 @@
    Components Layer
    =========================== */
 @layer components {
-  /* グラデーションテキスト（アクセントカラー） */
+  /* 旧グラデーションテキスト互換。新規UIでは単色で扱う。 */
   .gradient-text {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-accent-600 to-accent-700;
+    @apply text-accent-950;
   }
 
-  /* グリッドパターン背景 */
+  /* 旧グリッド背景互換。現行UIでは装飾を描画しない。 */
   .bg-grid-pattern {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background-image: none;
   }
 
   .bg-grid-pattern-light {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background-image: none;
   }
 
   /* コンテナ */
@@ -71,40 +67,40 @@
 
   /* カードベーススタイル（ブランドガイドライン準拠） */
   .card-base {
-    @apply bg-white rounded-[32px] shadow-soft transition-all;
+    @apply rounded-lg border border-neutral-200 bg-white transition-colors;
   }
 
   .card-hover {
-    @apply hover:shadow-medium;
+    @apply hover:border-primary-300;
   }
 
   .card-lift {
-    @apply hover:-translate-y-1 transform transition-transform;
+    @apply transition-colors;
   }
 
-  /* ボタンベーススタイル（ブランドガイドライン準拠：rounded-full） */
+  /* ボタンベーススタイル（編集面に合わせた小さめ角丸） */
   .btn-base {
-    @apply inline-flex items-center justify-center font-semibold transition-all rounded-full;
+    @apply inline-flex items-center justify-center rounded-md border border-transparent font-semibold transition-colors;
   }
 
-  /* Primary Button - Beets Purple */
+  /* Primary Button - Beekle Purple */
   .btn-primary {
-    @apply bg-accent-600 text-white shadow-soft hover:shadow-medium hover:bg-accent-700;
+    @apply border-primary-500 bg-primary-500 text-white hover:border-primary-600 hover:bg-primary-600;
   }
 
   /* Accent Button - Dark Navy */
   .btn-accent {
-    @apply bg-navy-950 text-white shadow-soft hover:shadow-medium hover:bg-navy-800;
+    @apply border-navy-950 bg-navy-950 text-white hover:border-navy-800 hover:bg-navy-800;
   }
 
   /* Secondary Button - Vivid Cyan */
   .btn-secondary {
-    @apply bg-secondary-500 text-white shadow-soft hover:shadow-medium hover:bg-secondary-600;
+    @apply border-secondary-500 bg-secondary-500 text-white hover:border-secondary-600 hover:bg-secondary-600;
   }
 
   /* White Button */
   .btn-white {
-    @apply bg-white text-accent-600 shadow-soft hover:shadow-medium hover:bg-gray-50;
+    @apply border-neutral-200 bg-white text-accent-950 hover:border-primary-300 hover:text-primary-500;
   }
 
   /* Outline Button（ダーク背景用） */
@@ -117,7 +113,7 @@
     @apply bg-transparent border-2 border-accent-600 text-accent-600 hover:bg-accent-600 hover:text-white;
   }
 
-  /* グラデーション背景 */
+  /* 旧グラデーション背景互換。現行UIでは単色にする。 */
   .gradient-navy {
     @apply bg-navy-950;
   }
@@ -127,36 +123,36 @@
   }
 
   .gradient-light-purple {
-    @apply bg-gradient-to-br from-accent-50 via-white to-accent-50/30;
+    @apply bg-neutral-100;
   }
 
   .gradient-light-cyan {
-    @apply bg-gradient-to-br from-secondary-50 via-white to-secondary-50/30;
+    @apply bg-neutral-100;
   }
 
   /* ==========================
-     Pop Decorations（ブランドガイドライン）
+     Legacy Decorations（互換用）
      ========================== */
 
-  /* 斜めバー - Beekle Purple */
+  /* 旧斜めバー - Beekle Purple */
   .decoration-bar-purple {
-    background: linear-gradient(135deg, #3d4db7, #a0b0ff);
+    background: #3d4db7;
     border-radius: 9999px;
-    transform: rotate(-25deg);
+    transform: none;
   }
 
-  /* 斜めバー - Cyan */
+  /* 旧斜めバー - Cyan */
   .decoration-bar-cyan {
-    background: linear-gradient(135deg, #00c4cc, #26c6da);
+    background: #00c4cc;
     border-radius: 9999px;
-    transform: rotate(25deg);
+    transform: none;
   }
 
-  /* 斜めバー - Yellow */
+  /* 旧斜めバー - Yellow */
   .decoration-bar-yellow {
-    background: linear-gradient(135deg, #ffd600, #fff176);
+    background: #ffd600;
     border-radius: 9999px;
-    transform: rotate(-15deg);
+    transform: none;
   }
 
   /* ドットベース */
@@ -176,19 +172,17 @@
     background: #ffd600;
   }
 
-  /* フロートアニメーション */
+  /* 旧フロートアニメーション互換。現行UIでは動かさない。 */
   .animate-float {
-    animation: float 6s ease-in-out infinite;
+    animation: none;
   }
 
   .animate-float-delay {
-    animation: float 8s ease-in-out infinite;
-    animation-delay: 1s;
+    animation: none;
   }
 
   .animate-float-slow {
-    animation: float 10s ease-in-out infinite;
-    animation-delay: 2s;
+    animation: none;
   }
 
   /* セクションラベル */

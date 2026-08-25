@@ -39,7 +39,7 @@ export function MessageList({ onPickSuggestion, suggestionsDisabled }: Props) {
       ))}
       {loading && (
         <div className="flex justify-start">
-          <div className="px-4 py-3 rounded-2xl bg-white border border-gray-200 text-gray-500 text-sm">
+          <div className="px-4 py-3 rounded-lg bg-white border border-gray-200 text-gray-500 text-sm">
             考え中...
           </div>
         </div>
@@ -71,7 +71,7 @@ function MessageBubble({ message }: { message: Message }) {
     <div className={cn('flex flex-col', isUser ? 'items-end' : 'items-start')}>
       <div
         className={cn(
-          'max-w-[80%] px-4 py-3 rounded-2xl whitespace-pre-wrap',
+          'max-w-[80%] px-4 py-3 rounded-lg whitespace-pre-wrap',
           isUser
             ? 'bg-primary-500 text-white rounded-br-sm'
             : 'bg-white border border-gray-200 text-gray-900 rounded-bl-sm'

@@ -20,7 +20,7 @@ type RiskConfig = {
 const commonGate = {
   title: '検証で基準を満たさなければ、本開発へ進めません',
   description:
-    'AIは実データを当てるまで精度・速度・費用を完全には読めません。最初に成功基準と中止基準を合意し、実データで評価します。基準を満たさない場合は、無理に本開発へ進めず、原因・検証結果・代替案を成果物として残します。No-Goを早く判断できることも、検証の成果です。',
+    'AIは実データを当てるまで精度・速度・費用を完全には読めません。最初に成功基準と中止基準を合意し、実データで評価します。基準を満たさない場合は、無理に本開発へ進めず、原因・検証結果・代替案を成果物として残します。見送りを早く判断できることも、検証の成果です。',
 };
 
 const configs: Record<string, RiskConfig> = {
@@ -38,7 +38,7 @@ const configs: Record<string, RiskConfig> = {
         risk: '実データで精度が出るか読めない',
         control:
           'ダミーデータだけで判断せず、可能な範囲で実業務に近いデータを使って早期検証します。',
-        gate: '対象業務のデータ量・品質で成立するか。成立しなければ対象業務を変えるかNo-Goにします。',
+        gate: '対象業務のデータ量・品質で成立するか。成立しなければ対象業務を変えるか見送りにします。',
       },
       {
         risk: 'API費用・速度・モデル仕様が変わる',
@@ -213,15 +213,15 @@ const config = configs[serviceId];
         <div class="mt-8 grid gap-4 md:grid-cols-2">
           {config.risks.map((item) => (
             <article
-              class="rounded-3xl border border-neutral-200 bg-white p-5 shadow-soft md:p-6"
+              class="rounded-lg border border-neutral-200 bg-white p-5 md:p-6"
             >
               <p class="text-xs font-bold tracking-wide text-amber-700">RISK</p>
               <h3 class="mt-2 text-xl font-bold leading-snug text-accent-950">{item.risk}</h3>
-              <div class="mt-4 rounded-2xl bg-primary-50 p-4">
+              <div class="mt-4 rounded-lg border border-primary-100 bg-primary-50 p-4">
                 <p class="text-xs font-bold tracking-wide text-primary-700">どう抑えるか</p>
                 <p class="mt-2 text-sm leading-relaxed text-neutral-700">{item.control}</p>
               </div>
-              <div class="mt-3 rounded-2xl bg-neutral-50 p-4">
+              <div class="mt-3 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
                 <p class="text-xs font-bold tracking-wide text-neutral-600">GO / NO-GO</p>
                 <p class="mt-2 text-sm leading-relaxed text-neutral-700">{item.gate}</p>
               </div>
@@ -229,7 +229,7 @@ const config = configs[serviceId];
           ))}
         </div>
 
-        <div class="mt-6 rounded-3xl border border-amber-200 bg-amber-50 p-5 md:p-7">
+        <div class="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-5 md:p-7">
           <p class="text-xs font-bold tracking-wide text-amber-800">STOP RULE</p>
           <h3 class="mt-2 text-xl font-bold text-accent-950 md:text-2xl">{commonGate.title}</h3>
           <p class="mt-3 text-sm leading-relaxed text-neutral-700 md:text-base">

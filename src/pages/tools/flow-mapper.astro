@@ -32,8 +32,8 @@ import Layout from '../../layouts/layout.astro';
       ],
     }}
   />
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <PageHero
       title="業務フロー可視化ツール"
       subtitle="AI／DX を導入する前に、まずは現状の業務を整理。「どこをDXすべきか」を判断してから、改善後の姿を関係者で合意形成する。失敗しないAI／DX導入のための、業務整理ツールです。"
@@ -54,26 +54,26 @@ import Layout from '../../layouts/layout.astro';
       </div>
     </div>
 
-    <section class="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
+    <section class="border-b border-neutral-300 bg-neutral-100 py-12 md:py-16">
       <div class="container mx-auto px-6 md:px-8 max-w-7xl">
         {/* このツールでできること（コンセプトはヒーローで言及済みなので3カードに集約） */}
         <div class="mb-10 grid md:grid-cols-3 gap-4">
-          <div class="p-5 bg-white rounded-2xl border border-gray-200 shadow-soft">
-            <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-3">1</div>
+          <div class="rounded-lg border border-neutral-200 bg-white p-5">
+            <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-primary-100 font-bold text-primary-600">1</div>
             <h3 class="font-bold text-gray-900 mb-1">現状業務を担当別に整理</h3>
             <p class="text-sm text-gray-600 leading-relaxed">
               横軸＝工程、縦軸＝担当で「誰が・何を・どのツールで」を図にする。
             </p>
           </div>
-          <div class="p-5 bg-white rounded-2xl border border-gray-200 shadow-soft">
-            <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-3">2</div>
+          <div class="rounded-lg border border-neutral-200 bg-white p-5">
+            <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-primary-100 font-bold text-primary-600">2</div>
             <h3 class="font-bold text-gray-900 mb-1">時間・コストを自動算出</h3>
             <p class="text-sm text-gray-600 leading-relaxed">
               担当に時給を設定すると、人件費とリードタイムを自動集計。ボトルネックが一目で分かる。
             </p>
           </div>
-          <div class="p-5 bg-white rounded-2xl border border-gray-200 shadow-soft">
-            <div class="w-10 h-10 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-3">3</div>
+          <div class="rounded-lg border border-neutral-200 bg-white p-5">
+            <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-primary-100 font-bold text-primary-600">3</div>
             <h3 class="font-bold text-gray-900 mb-1">改善ヒントを自動提案</h3>
             <p class="text-sm text-gray-600 leading-relaxed">
               「自動化候補」「AI適用候補」「並行化」など改善箇所をタグ付けして議論の起点に。
@@ -82,14 +82,14 @@ import Layout from '../../layouts/layout.astro';
         </div>
 
         {/* 比較イメージ */}
-        <div class="mb-10 p-6 md:p-8 bg-white rounded-2xl border border-gray-200 shadow-soft">
+        <div class="mb-10 rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
           <div class="flex items-baseline justify-between flex-wrap gap-2 mb-4">
             <h2 class="text-lg font-bold text-gray-900">こんな比較ができます</h2>
             <span class="text-xs text-gray-500">サンプル：受注〜出荷業務（紙運用 → DX後）</span>
           </div>
 
           <div class="grid md:grid-cols-3 gap-3 mb-5">
-            <div class="p-4 bg-white border border-gray-200 rounded-xl">
+            <div class="rounded-md border border-neutral-200 bg-neutral-50 p-4">
               <p class="text-xs text-gray-500 mb-1">想定リードタイム</p>
               <div class="flex items-baseline gap-2">
                 <span class="text-xs text-gray-400">As-Is</span>
@@ -100,7 +100,7 @@ import Layout from '../../layouts/layout.astro';
               </div>
               <p class="mt-2 text-xs font-bold text-emerald-600">↓改善 −1時間28分</p>
             </div>
-            <div class="p-4 bg-white border border-gray-200 rounded-xl">
+            <div class="rounded-md border border-neutral-200 bg-neutral-50 p-4">
               <p class="text-xs text-gray-500 mb-1">ステップ数</p>
               <div class="flex items-baseline gap-2">
                 <span class="text-xs text-gray-400">As-Is</span>
@@ -111,7 +111,7 @@ import Layout from '../../layouts/layout.astro';
               </div>
               <p class="mt-2 text-xs font-bold text-gray-500">±0（質的に置換）</p>
             </div>
-            <div class="p-4 bg-white border border-gray-200 rounded-xl">
+            <div class="rounded-md border border-neutral-200 bg-neutral-50 p-4">
               <p class="text-xs text-gray-500 mb-1">関与する担当</p>
               <div class="flex items-baseline gap-2">
                 <span class="text-xs text-gray-400">As-Is</span>
@@ -125,7 +125,7 @@ import Layout from '../../layouts/layout.astro';
           </div>
 
           <div class="grid md:grid-cols-2 gap-3">
-            <div class="p-4 bg-red-50/40 border border-red-200 rounded-xl">
+            <div class="rounded-md border border-red-200 bg-red-50/40 p-4">
               <h3 class="text-sm font-bold text-red-900 mb-2">現状（As-Is）の課題</h3>
               <ul class="space-y-1 text-xs text-red-900">
                 <li>メールFAX注文を Excel に手で転記（月3〜5件のミス）</li>
@@ -134,7 +134,7 @@ import Layout from '../../layouts/layout.astro';
                 <li>送り状を手書き（宛名ミス）</li>
               </ul>
             </div>
-            <div class="p-4 bg-emerald-50/40 border border-emerald-200 rounded-xl">
+            <div class="rounded-md border border-emerald-200 bg-emerald-50/40 p-4">
               <h3 class="text-sm font-bold text-emerald-900 mb-2">改善後（To-Be）のポイント</h3>
               <ul class="space-y-1 text-xs text-emerald-900">
                 <li>Webフォーム＋入力規則で誤注文を未然防止</li>
@@ -151,7 +151,7 @@ import Layout from '../../layouts/layout.astro';
         </div>
 
         {/* 使い方 */}
-        <div class="mb-8 p-6 bg-white rounded-2xl border border-gray-200 shadow-soft">
+        <div class="mb-8 rounded-lg border border-neutral-200 bg-white p-6">
           <h2 class="text-lg font-bold text-gray-900 mb-3">使い方（3ステップ）</h2>
           <ol class="space-y-3 text-sm text-gray-700 leading-relaxed">
             <li class="flex gap-3">
@@ -181,7 +181,7 @@ import Layout from '../../layouts/layout.astro';
         <FlowMapper client:load />
 
         {/* 関連リンク */}
-        <div class="mt-10 p-6 bg-white rounded-2xl border border-gray-200 shadow-soft">
+        <div class="mt-10 rounded-lg border border-neutral-200 bg-white p-6">
           <h2 class="text-lg font-bold text-gray-900 mb-3">あわせて使うと便利なもの</h2>
           <ul class="space-y-2 text-sm text-gray-700">
             <li>
@@ -217,13 +217,13 @@ import Layout from '../../layouts/layout.astro';
             href="/contact?source=tool-flow-mapper&intent=review-request&phase=complete"
             data-cta-source="tool-flow-mapper"
             data-cta-id="contact-review-complete"
-            class="tool-escape-cta inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg"
+            class="tool-escape-cta inline-flex items-center justify-center rounded-md bg-white px-8 py-3 text-base font-semibold text-accent-950 transition-colors hover:bg-neutral-100"
           >
             このフローをレビューしてもらう
           </a>
           <a
             href="/column"
-            class="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-accent-950 transition-all"
+            class="inline-flex items-center justify-center rounded-md border border-white bg-transparent px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-white hover:text-accent-950"
           >
             コラムで学ぶ
           </a>

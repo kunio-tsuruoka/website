@@ -66,7 +66,7 @@ export function StepEditorDrawer({
           'lg:static lg:inset-auto lg:z-auto lg:rounded-none lg:bg-gray-50 lg:shadow-none lg:border-t-0 lg:border-l lg:border-gray-200',
           fullscreen && 'lg:overflow-y-auto',
           // <lg ボトムドロワー
-          'fixed inset-x-0 bottom-0 z-40 max-h-[85vh] overflow-y-auto bg-white shadow-2xl border-t border-gray-200 rounded-t-2xl'
+          'fixed inset-x-0 bottom-0 z-40 max-h-[85vh] overflow-y-auto bg-white border-t border-gray-200 rounded-t-lg'
         )}
       >
         <StepEditor

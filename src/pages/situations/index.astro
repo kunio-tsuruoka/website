@@ -1,0 +1,143 @@
+---
+import { Header } from '@/components/header';
+import JsonLd from '@/components/seo/json-ld.astro';
+import { consultationHub, consultationSituations } from '@/data/consultation-situations';
+import Layout from '@/layouts/layout.astro';
+
+const siteUrl = 'https://beekle.jp';
+const pageUrl = `${siteUrl}${consultationHub.href}`;
+---
+
+<Layout
+  title="相談が始まる場面一覧 | Beekle株式会社"
+  description="Beekleへの相談が始まる場面を、CEP別に整理。要件未確定、AI導入、属人業務、社内資料検索、顧客データ、止まった開発ごとに判断材料と実案件ログを確認できます。"
+  canonical={pageUrl}
+>
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '相談が始まる場面', url: consultationHub.href },
+      ],
+    }}
+  />
+  <Header />
+  <main class="bg-neutral-100 pt-20">
+    <section class="border-b border-neutral-300 bg-neutral-100 py-14 md:py-20">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="grid gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
+          <div>
+            <p class="border-l-8 border-primary-500 pl-5 text-sm font-bold text-primary-700">
+              相談が始まる場面
+            </p>
+            <h1 class="mt-6 text-4xl font-bold leading-tight text-accent-950 md:text-5xl">
+              サービス名ではなく、
+              <br class="hidden lg:block" />
+              いま起きている場面から選ぶ。
+            </h1>
+            <p class="mt-6 text-lg leading-relaxed text-neutral-700">
+              「AIを入れたい」「システムを作りたい」より前に、社内ではもっと具体的な詰まり方があります。
+              各場面ごとに、初回相談で見る判断材料、見送り条件、実案件ログを置いています。
+            </p>
+          </div>
+
+          <div class="border-y border-neutral-300 bg-white">
+            <div class="grid gap-2 border-b border-neutral-300 border-l-8 border-primary-500 px-5 py-4 md:grid-cols-[0.55fr_1fr]">
+              <p class="text-sm font-bold text-primary-700">CEP別RTB</p>
+              <p class="text-sm font-bold text-accent-950">
+                自分の状況に近い入口で、成果物サンプルと実案件ログを確認できます。
+              </p>
+            </div>
+            <div class="divide-y divide-neutral-300">
+              {['判断材料', '成果物サンプル', '実案件ログ', '見送り条件'].map((item, index) => (
+                <div class="grid gap-3 px-5 py-5 md:grid-cols-[96px_1fr]">
+                  <p class="font-Poppins text-sm font-bold text-primary-600">
+                    {String(index + 1).padStart(2, '0')}
+                  </p>
+                  <p class="text-base font-bold text-navy-950">{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="mb-8 flex flex-col gap-4 border-b border-neutral-300 pb-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p class="section-label">CEP INDEX</p>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
+              相談前の状態から探す
+            </h2>
+          </div>
+          <p class="max-w-xl text-sm leading-relaxed text-neutral-700">
+            各ページでは、相談で返す資料、判断の前提、今すぐ着手しない条件まで確認できます。
+          </p>
+        </div>
+
+        <div class="grid gap-5 lg:grid-cols-2">
+          {consultationSituations.map((situation, index) => (
+            <a href={situation.href} class="group block">
+              <article class="card-base card-hover h-full p-6">
+                <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                  <p class="font-Poppins text-sm font-bold text-primary-600">
+                    {String(index + 1).padStart(2, '0')}
+                  </p>
+                  <p class="border-l-4 border-primary-500 pl-3 text-xs font-bold text-primary-700">
+                    相談が始まる場面
+                  </p>
+                </div>
+                <h3 class="mt-4 text-2xl font-bold leading-snug text-navy-950 group-hover:text-primary-600">
+                  {situation.cardTitle}
+                </h3>
+                <p class="mt-4 leading-relaxed text-neutral-700">{situation.description}</p>
+                <div class="mt-5 grid gap-3 border-t border-neutral-200 pt-5 sm:grid-cols-3">
+                  {situation.rtbItems.map((item) => (
+                    <div>
+                      <p class="text-xs font-bold text-primary-700">{item.label}</p>
+                      <p class="mt-1 text-sm font-bold leading-snug text-accent-950">{item.value}</p>
+                    </div>
+                  ))}
+                </div>
+                <p class="mt-5 text-sm font-bold text-primary-500 group-hover:text-primary-600">
+                  場面別に判断材料を見る
+                </p>
+              </article>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t border-neutral-300 bg-neutral-50 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div>
+            <p class="section-label">CONTACT</p>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
+              場面が曖昧でも、そのまま相談できます。
+            </h2>
+          </div>
+          <div class="border-l-8 border-primary-500 bg-white p-6">
+            <p class="text-lg leading-relaxed text-neutral-700">
+              どの入口に近いか迷う場合は、現状のメモや既存資料の断片だけで構いません。
+              Beekle側で、確認すべき問い、必要な資料、次に取れる選択肢へ整理します。
+            </p>
+            <a
+              href="/contact?source=situations-index"
+              data-cta-source="situations-index"
+              data-cta-id="contact"
+              class="mt-6 inline-flex min-h-[52px] items-center justify-center rounded-md bg-primary-500 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-primary-600"
+            >
+              実現可否を相談する
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

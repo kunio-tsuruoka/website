@@ -29,7 +29,7 @@ export const DevelopmentIssuesList = () => {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
                 selectedCategory === category
                   ? 'bg-primary-500 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -44,10 +44,7 @@ export const DevelopmentIssuesList = () => {
       {/* ケーススタディカード */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredIssues.map((issue) => (
-          <div
-            key={issue.id}
-            className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow"
-          >
+          <div key={issue.id} className="rounded-lg border border-neutral-200 bg-white">
             <div className="p-6">
               {/* カテゴリーバッジ */}
               <div className="mb-4">

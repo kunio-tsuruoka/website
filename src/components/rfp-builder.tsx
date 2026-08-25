@@ -97,7 +97,7 @@ export function RfpBuilder() {
 
   return (
     <div className="space-y-6">
-      <section className="bg-white rounded-2xl shadow-soft border border-gray-200 p-6 md:p-8">
+      <section className="rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
         <h2 className="text-xl font-bold text-gray-900 mb-1">1. プロジェクトの基本情報を入力</h2>
         <p className="text-sm text-gray-600 mb-4">
           発注先に渡す RFP
@@ -189,7 +189,7 @@ export function RfpBuilder() {
         </label>
       </section>
 
-      <section className="bg-white rounded-2xl shadow-soft border border-gray-200 p-6 md:p-8">
+      <section className="rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
         <h2 className="text-xl font-bold text-gray-900 mb-1">2. RFPドラフトを生成</h2>
         <p className="text-sm text-gray-600 mb-4">
           このボタンを押すと、業務フロー可視化ツール（現状／改善後）と
@@ -200,7 +200,7 @@ export function RfpBuilder() {
           <button
             type="button"
             onClick={regenerate}
-            className="px-5 py-3 min-h-[44px] text-sm font-semibold text-white bg-primary-500 rounded-lg hover:bg-primary-600 shadow-soft"
+            className="px-5 py-3 min-h-[44px] text-sm font-semibold text-white bg-primary-500 rounded-lg hover:bg-primary-600"
           >
             RFPドラフトを生成
           </button>
@@ -253,7 +253,7 @@ export function RfpBuilder() {
         )}
       </section>
 
-      <section className="bg-blue-50 border border-blue-200 rounded-2xl p-5 text-sm text-blue-900 leading-relaxed">
+      <section className="rounded-lg border border-blue-200 bg-blue-50 p-5 text-sm leading-relaxed text-blue-900">
         <strong>ヒント</strong>: 業務フローやスコープがまだ埋まっていない場合は、
         <a href="/tools/flow-mapper" className="underline mx-1">
           業務フロー可視化ツール

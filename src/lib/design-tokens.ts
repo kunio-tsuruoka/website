@@ -1,12 +1,12 @@
 /**
  * Beekle Design System - デザイントークン
  *
- * ブランドガイドライン Pop Style に基づいた統一デザインシステム
+ * 編集面の可読性と発注判断のしやすさを優先した統一デザインシステム
  * 全ページ・コンポーネントでこれらの定数を使用する
  *
  * カラーパレット:
- * - Primary: Dark Navy (#001738)
- * - Accent: Beets Purple (#9333ea)
+ * - Primary: Beekle Purple (#3D4DB7)
+ * - Accent: Dark Navy (#001738)
  * - Secondary: Vivid Cyan (#00c4cc)
  * - Highlight: Yellow (#ffd600)
  */
@@ -15,7 +15,7 @@
 // ブランドカラー（Hex）
 // ===========================
 export const brandColors = {
-  // Primary - Dark Navy
+  // Accent - Dark Navy
   navy: {
     50: '#e6eaf0',
     100: '#c0c9d9',
@@ -23,13 +23,13 @@ export const brandColors = {
     800: '#183263',
     950: '#001738',
   },
-  // Accent - Beets Purple
+  // Primary - Beekle Purple
   purple: {
-    50: '#f5f0ff',
-    100: '#ece0ff',
-    300: '#c9a0ff',
-    600: '#9333ea',
-    700: '#7e22ce',
+    50: '#f0f1fb',
+    100: '#e0e3f6',
+    300: '#a2abe4',
+    600: '#3D4DB7',
+    700: '#2d3a8a',
   },
   // Secondary - Vivid Cyan
   cyan: {
@@ -55,31 +55,31 @@ export const brandColors = {
 } as const;
 
 // ===========================
-// グラデーション
+// グラデーション（既存互換。新規UIでは単色面と境界線を優先）
 // ===========================
 export const gradients = {
-  // プライマリ（CTAボタン、強調セクション背景）
+  // 既存互換
   primary: 'from-navy-950 to-navy-800',
   primaryHover: 'from-navy-800 to-navy-500',
 
-  // アクセント（パープル）
+  // 既存互換
   accent: 'from-accent-600 to-accent-700',
   accentLight: 'from-accent-300 to-accent-600',
 
-  // セカンダリ（シアン）
+  // 既存互換
   secondary: 'from-secondary-500 to-secondary-600',
 
-  // 装飾バー用
+  // 既存互換
   barPurple: 'from-accent-600 to-accent-300',
   barCyan: 'from-secondary-500 to-secondary-400',
   barYellow: 'from-highlight-500 to-yellow-200',
 
-  // 背景用（ライト）
+  // 既存互換
   lightGray: 'from-neutral-50 to-white',
   lightPurple: 'from-accent-50 to-white',
   lightCyan: 'from-secondary-50 to-white',
 
-  // テキストグラデーション
+  // 既存互換
   textAccent: 'from-accent-600 to-accent-700',
 } as const;
 
@@ -204,32 +204,34 @@ export const typography = {
 } as const;
 
 // ===========================
-// ボーダー半径（ブランドガイドライン準拠）
+// ボーダー半径（編集面の可読性優先）
 // ===========================
 export const radius = {
-  full: 'rounded-full', // ボタン、バッジ
-  '3xl': 'rounded-[40px]', // 大きなセクション
-  '2xl': 'rounded-[32px]', // カード
-  xl: 'rounded-[24px]', // 小さいカード
-  lg: 'rounded-lg',
+  full: 'rounded-full', // ステータス点・円形番号など形状に意味がある要素
+  md: 'rounded-md', // ボタン
+  lg: 'rounded-lg', // カード、フォーム、情報面
+  xl: 'rounded-xl', // 画像など、やや広い面に限定
+  '2xl': 'rounded-lg', // 互換用。新規では使わない
+  '3xl': 'rounded-lg', // 互換用。新規では使わない
+  '[32px]': 'rounded-lg', // 互換用。新規では使わない
+  '[40px]': 'rounded-lg', // 互換用。新規では使わない
 } as const;
 
 // ===========================
-// シャドウ（ブランドガイドライン準拠）
+// シャドウ（原則使わず、境界線と面の階層で分ける）
 // ===========================
 export const shadows = {
-  soft: 'shadow-soft', // カード: 0 4px 20px -4px rgba(0, 23, 56, 0.08)
-  medium: 'shadow-medium', // ホバー: 0 8px 30px -8px rgba(0, 23, 56, 0.12)
-  strong: 'shadow-strong', // モーダル: 0 16px 50px -12px rgba(0, 23, 56, 0.18)
-  // Tailwindデフォルト
-  sm: 'shadow-sm',
-  md: 'shadow-md',
-  lg: 'shadow-lg',
-  xl: 'shadow-xl',
-  '2xl': 'shadow-2xl',
-  // ホバー時
-  hoverMedium: 'hover:shadow-medium',
-  hoverXl: 'hover:shadow-xl',
+  none: 'shadow-none',
+  soft: 'shadow-none',
+  medium: 'shadow-none',
+  strong: 'shadow-none',
+  sm: 'shadow-none',
+  md: 'shadow-none',
+  lg: 'shadow-none',
+  xl: 'shadow-none',
+  '2xl': 'shadow-none',
+  hoverMedium: 'hover:border-primary-300',
+  hoverXl: 'hover:border-primary-300',
 } as const;
 
 // ===========================
@@ -238,7 +240,7 @@ export const shadows = {
 export const transitions = {
   default: 'transition-all',
   colors: 'transition-colors',
-  shadow: 'transition-shadow',
+  shadow: 'transition-colors',
   transform: 'transition-transform',
   // 期間
   fast: 'duration-150',
@@ -250,17 +252,17 @@ export const transitions = {
 // ホバーエフェクト
 // ===========================
 export const hover = {
-  lift: 'hover:-translate-y-1 transform transition-transform',
-  scale: 'hover:scale-105 transition-transform',
-  shadow: 'hover:shadow-medium transition-shadow',
+  lift: 'hover:border-primary-300 transition-colors',
+  scale: 'hover:border-primary-300 transition-colors',
+  shadow: 'hover:border-primary-300 transition-colors',
   opacity: 'hover:opacity-80 transition-opacity',
 } as const;
 
 // ===========================
-// 装飾要素（Pop Decorations）
+// 装飾要素（旧互換。新規UIでは使わない）
 // ===========================
 export const decorations = {
-  // 斜めバー
+  // 旧斜めバー
   bar: {
     purple: 'decoration-bar-purple',
     cyan: 'decoration-bar-cyan',
@@ -278,8 +280,8 @@ export const decorations = {
 // 共通スタイルの組み合わせ
 // ===========================
 export const presets = {
-  // グラデーションテキスト（アクセント）
-  gradientText: `text-transparent bg-clip-text bg-gradient-to-r ${gradients.textAccent}`,
+  // 旧グラデーションテキスト互換。新規UIでは単色で扱う。
+  gradientText: 'text-accent-950',
 
   // プライマリ背景（ネイビー）
   bgNavy: 'bg-navy-950 text-white',
@@ -290,7 +292,7 @@ export const presets = {
   // セカンダリ背景（シアン）
   bgSecondary: 'bg-secondary-500 text-white',
 
-  // カードベース（ブランドガイドライン準拠）
+  // カードベース（境界線中心）
   cardBase: `bg-white ${radius['2xl']} ${shadows.soft} ${hover.shadow}`,
 
   // セクションベース（白）

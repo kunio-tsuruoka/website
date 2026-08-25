@@ -2,15 +2,104 @@
 import { Header } from '../components/header';
 import JsonLd from '../components/seo/json-ld.astro';
 import { ButtonLink } from '../components/ui/button';
-import { Card, CardDescription, CardIcon, CardTitle } from '../components/ui/card';
-import { PageHero } from '../components/ui/page-hero';
-import { Section, SectionHeader } from '../components/ui/section';
 import Layout from '../layouts/layout.astro';
+
+const proofItems = [
+  {
+    label: '難航案件の立て直し',
+    value: '3ヶ月停滞 → 3週間',
+    text: '止まっていた開発を、要件・実装・インフラまで読み直して動く状態へ。',
+  },
+  {
+    label: '発注前の認識合わせ',
+    value: '議事録 → デモ1日',
+    text: 'ヒアリング内容を、画面で確認できるプロトタイプまで落とし込み。',
+  },
+  {
+    label: '新規事業の検証',
+    value: '1週間で触れる形へ',
+    text: '構想、画面、API、インフラを分断せず、判断できる状態まで前進。',
+  },
+];
+
+const decisionMaterials = [
+  {
+    title: '確かめる業務',
+    text: '要望リストではなく、誰のどの作業を軽くするかに絞ります。',
+  },
+  {
+    title: '検証用プロトタイプ',
+    text: '資料だけで合意せず、画面やデモで認識差を早く見つけます。',
+  },
+  {
+    title: '投資条件と見送り条件',
+    text: '次に投資する範囲、見送り理由、次に必要な条件を分けて残します。',
+  },
+];
+
+const methodSteps = [
+  {
+    no: '01',
+    title: '業務の問いを絞る',
+    text: '現場の困りごと、意思決定者の目的、既存データの状態を分けます。',
+  },
+  {
+    no: '02',
+    title: '動くものにする',
+    text: '画面、デモ、受入条件へ落とし、文章だけでは出ないズレを見ます。',
+  },
+  {
+    no: '03',
+    title: '要件へ戻す',
+    text: 'フィードバックを口頭で終わらせず、優先順位と完成条件へ戻します。',
+  },
+  {
+    no: '04',
+    title: '次の投資判断へつなぐ',
+    text: '本開発へ投資する、追加検証する、いったん見送る、を決められる材料にします。',
+  },
+];
+
+const fitItems = [
+  '要件が固まらず、見積もりや社内合意が進まない',
+  'AI導入を任されたが、どの業務から始めるか決められない',
+  'Excel、メール、担当者の記憶に業務が散らばっている',
+  '他社で進まなくなった開発を立て直したい',
+];
+
+const cautionItems = [
+  '24時間監視や大規模常駐体制が最初から必須',
+  '作るものが完全に決まっており、単純な人月比較だけをしたい',
+  '社内で触れるデータや決裁者をまったく出せない',
+];
+
+const faqItems = [
+  {
+    question: 'まだ要件が決まっていなくても相談できますか？',
+    answer:
+      'できます。むしろ要件が固まる前に、業務・利用者・受入条件を整理して、何を確かめるべきかを決めます。',
+  },
+  {
+    question: '開発しない方がよい場合もありますか？',
+    answer:
+      'あります。データが足りない、対象業務が狭すぎる、投資判断の根拠が弱い場合は、先に見送り理由を出します。',
+  },
+  {
+    question: '仕様変更の影響はどう追いますか？',
+    answer:
+      '要求、受入条件、実装タスク、確認結果を同じ流れで残します。裏側ではPM on Railsを使い、なぜその仕様になったか、変更時にどこへ影響するかを追えるようにしています。',
+  },
+  {
+    question: 'PM on Railsとは何ですか？',
+    answer:
+      'Beekleが自社開発しているPM基盤です。要求、受入条件、実装タスク、確認結果をつなぎ、仕様変更やフィードバックがどの画面・タスク・確認観点に影響するかを追えるようにするために使います。名前を覚えてもらうためではなく、発注後に説明し直しが起きにくい進め方の土台です。',
+  },
+];
 ---
 
 <Layout
-  title="Beekleの開発方法｜要件定義からAI駆動開発まで | Beekle"
-  description="なぜBeekleは、速く作っても仕様が崩れにくいのか。業務理解→ユースケース→受入条件→テスト→AI駆動実装まで、自社開発のPM基盤「PM on Rails」で要求と実装をつないで進めるBeekleの開発方法を、仕組みと証拠つきで説明します。"
+  title="Beekleの進め方｜発注判断の材料まで作る | Beekle"
+  description="Beekleの進め方。要件が曖昧な相談を、検証用プロトタイプ、受入条件、投資条件と見送り条件まで整理します。"
 >
   <JsonLd
     slot="head"
@@ -18,7 +107,7 @@ import Layout from '../layouts/layout.astro';
     data={{
       items: [
         { name: 'ホーム', url: '/' },
-        { name: 'Beekleの強み', url: '/strengths' },
+        { name: 'Beekleの進め方', url: '/strengths' },
       ],
     }}
   />
@@ -27,1237 +116,206 @@ import Layout from '../layouts/layout.astro';
     type="webPage"
     data={{
       pageType: 'AboutPage',
-      name: 'Beekleの開発方法｜要件定義からAI駆動開発まで | Beekle',
+      name: 'Beekleの進め方｜発注判断の材料まで作る | Beekle',
       description:
-        'なぜBeekleは、速く作っても仕様が崩れにくいのか。業務理解→ユースケース→受入条件→テスト→AI駆動実装まで、自社開発のPM基盤「PM on Rails」で要求と実装をつないで進めるBeekleの開発方法を、仕組みと証拠つきで説明します。',
+        'Beekleの進め方。要件が曖昧な相談を、検証用プロトタイプ、受入条件、投資条件と見送り条件まで整理します。',
       url: 'https://beekle.jp/strengths',
     }}
   />
-  <Header client:idle />
-  <main class="pt-20">
-    <!-- Hero Section -->
-    <PageHero
-      title="なぜBeekleは、速く作っても仕様が崩れにくいのか"
-      subtitle="Beekleの開発方法。要求から実装・テストまでを一つながりに管理する進め方を、仕組みと実際の声・事例つきで説明します。"
-    />
+  <Header />
 
-    <!-- 要求→実装のトレーサビリティ -->
-    <section class="bg-white py-10 md:py-14">
-      <div class="container mx-auto px-8 lg:px-12">
-        <div class="rounded-3xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
-          <p class="text-sm font-bold text-primary-500">要求から実装までのトレーサビリティ</p>
-          <div class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-3">
-            {
-              [
-                '業務理解',
-                'ユースケース',
-                'Gherkin / BDD',
-                '受入条件',
-                'DB・API設計',
-                '非機能要件',
-                'テスト',
-                'AI駆動実装',
-              ].map((step, i, arr) => (
-                <>
-                  <span class="rounded-full bg-white border border-neutral-200 px-4 py-2 text-sm font-semibold text-navy-950">
-                    {step}
-                  </span>
-                  {i < arr.length - 1 && (
-                    <svg class="h-4 w-4 flex-none text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                  )}
-                </>
-              ))
-            }
-          </div>
-          <p class="mt-4 text-sm leading-relaxed text-neutral-600">
-            この一連の流れを、自社開発のPM基盤「PM on Rails」の上で管理しながら、実際の開発プロジェクトで毎日運用しています。だから、AIエージェントで速く実装しても、要求と実装のつながりが切れません。
+  <main class="bg-neutral-100 pt-20">
+    <section class="border-b border-neutral-300 bg-neutral-100 py-14 md:py-20">
+      <div class="container mx-auto grid gap-10 px-8 lg:grid-cols-[0.9fr_0.85fr] lg:items-end lg:px-12">
+        <div>
+          <p class="border-l-8 border-primary-500 pl-5 text-sm font-bold text-primary-700">
+            Beekleの進め方
           </p>
+          <h1 class="mt-6 max-w-4xl text-4xl font-bold leading-[1.08] text-accent-950 sm:text-5xl md:text-6xl">
+            要件が曖昧でも、<br />
+            発注判断の材料まで<br />
+            作ります。
+          </h1>
+          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-700">
+            動くプロトタイプ、受入条件、概算レンジを揃え、開発前に社内で判断できる状態にします。
+          </p>
+          <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <ButtonLink
+              href="/contact?source=strengths-hero"
+              data-cta-source="strengths-hero"
+              data-cta-id="contact"
+              variant="primary"
+              size="lg"
+            >
+              実現可否を相談する
+            </ButtonLink>
+            <a href="/case-studies" class="inline-flex min-h-[48px] items-center border-b border-accent-950 text-sm font-semibold text-accent-950 hover:border-primary-500 hover:text-primary-500">
+              実案件の変化を見る
+            </a>
+          </div>
+          <p class="mt-5 text-sm leading-relaxed text-neutral-600">
+            NDA可。要件未確定でも可。見送り条件がある場合も、開発前に理由を残します。
+          </p>
+          <div class="mt-6 border-y border-neutral-300 bg-white px-4 py-4 md:hidden">
+            <p class="text-sm font-bold text-primary-500">実案件ログ</p>
+            <p class="mt-2 text-base font-bold leading-relaxed text-accent-950">
+              3ヶ月停滞 → 3週間 / 議事録 → デモ1日
+            </p>
+          </div>
+        </div>
+
+        <div class="case-log-table hidden border-t border-neutral-300 md:block">
+          <p class="border-b border-neutral-300 py-3 text-sm font-bold text-primary-700">実案件ログ</p>
+          {proofItems.map((item) => (
+            <a href="/case-studies" class="grid gap-2 border-b border-neutral-300 py-4 transition hover:bg-neutral-50 md:grid-cols-[0.7fr_0.8fr] md:px-2">
+              <p class="text-sm font-bold text-primary-700">{item.label}</p>
+              <div>
+                <p class="text-2xl font-bold leading-tight text-primary-500">{item.value}</p>
+                <p class="mt-2 text-sm leading-relaxed text-neutral-700">{item.text}</p>
+              </div>
+            </a>
+          ))}
         </div>
       </div>
     </section>
 
-    <!-- 強み1: 要件定義力 -->
-    <Section variant="white" padding="lg" decoration="blursPurple">
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="relative">
-          <span
-            class="font-Poppins text-[120px] lg:text-[180px] font-bold text-primary-500/10 absolute -top-16 -left-8 select-none"
-          >
-            01
-          </span>
-          <div class="relative z-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-accent-950 mb-4">
-              PM on Railsによる<br /><span class="text-primary-500">再現性ある要件定義</span>
+    <section class="bg-neutral-50 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div>
+            <p class="text-sm font-bold text-primary-500">発注前に残すもの</p>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+              発注判断シート
             </h2>
-            <span
-              class="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-sm font-medium mb-8"
-            >
-              Strength
-            </span>
-            <p class="text-xl text-neutral-700 leading-relaxed">
-              ヒアリング・議事録・既存資料から要求を整理し、ユーザーストーリー・受入条件・開発タスクまで構造化する。要件の整理方法を共通化し、担当者ごとの差を減らします。
-            </p>
-            <p class="mt-5">
-              <a href="/testimonial" class="inline-flex min-h-[44px] items-center text-base font-semibold text-primary-500 hover:text-primary-600">
-                要件定義を評価いただいた、お客様の声を見る
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
+            <p class="mt-4 text-base leading-relaxed text-neutral-700">
+              サービス名や技術名を決める前に、社内で合意しやすい材料へ変換します。
             </p>
           </div>
-        </div>
 
-        <div>
-          <Card variant="outlinedPrimary" padding="lg" hover="none">
-            <h3
-              class="text-2xl font-bold text-accent-950 mb-6 flex items-center"
-            >
-              <span class="w-2 h-8 bg-primary-500 rounded-full mr-4"></span>
-              なぜ要件定義が重要なのか
-            </h3>
-            <p class="text-neutral-700 mb-4 leading-relaxed">
-              プロジェクトの失敗は、多くの場合、下流工程ではなく上流工程のミスに起因します。
-            </p>
-            <p class="text-neutral-700 mb-6 leading-relaxed">
-              AIでコーディングが速くなった今はなおさらです。仕様が曖昧なまま作り始めると、ビジネス価値のないシステムを速く作ってしまうことになります。
-            </p>
-            <div class="bg-primary-50 rounded-xl p-6">
-              <p class="font-bold text-primary-500 text-lg">
-                Beekleは、要求・要件・ユーザーストーリー・受入条件・タスクを一つながりに管理し、「なぜこの要件なのか」を後から追える状態で開発します。
+          <div class="decision-sheet-table border-y border-neutral-300 bg-white">
+            <div class="border-b border-neutral-300 border-l-8 border-primary-500 px-5 py-4">
+              <p class="text-sm font-bold text-primary-700">BEEKLE / 発注判断</p>
+              <p class="mt-1 text-xl font-bold leading-snug text-accent-950">
+                投資条件と見送り条件を同じ紙面に置く
               </p>
             </div>
-          </Card>
-
-          <Card variant="light" padding="md" hover="none" className="mt-8">
-            <p class="text-neutral-700">
-              <a href="https://pmonrails.com" rel="noopener" class="font-bold text-primary-500 hover:text-primary-600">PM on Rails</a>は、Beekleが自社開発し、実際の開発プロジェクトで使っているプロジェクト管理基盤です。要求から実装タスクまでのつながりを記録し、仕様が変わったときにどこへ影響するかを確認しながら進められます。
-            </p>
-          </Card>
-        </div>
-      </div>
-    </Section>
-
-    <!-- 強み2: 問題解決能力 -->
-    <Section variant="lightPurple" padding="lg" decoration="blursMix">
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="order-2 lg:order-1">
-          <Card variant="outlinedPrimary" padding="lg" hover="none">
-            <h3
-              class="text-2xl font-bold text-accent-950 mb-6 flex items-center"
-            >
-              <span class="w-2 h-8 bg-primary-500 rounded-full mr-4"></span>
-              AIの速度を、開発の速度に変える
-            </h3>
-            <p class="text-neutral-700 mb-8 leading-relaxed">
-              AIコーディングツールは、どの開発会社でも使えます。差が出るのは「AIへ何を渡すか」です。仕様が曖昧なままでは、AIの実装が速くても手戻りが増えるだけです。
-            </p>
-
-            <div class="space-y-6">
-              <div class="flex items-start gap-4 group">
-                <div
-                  class="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"
-                >
-                  <svg
-                    class="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 13l4 4L19 7"></path>
-                  </svg>
-                </div>
-                <p class="text-neutral-700">
-                  PM on Railsで構造化した要件・受入条件を、そのままAIエージェントへ渡す
+            {decisionMaterials.map((item, index) => (
+              <div class="grid gap-3 border-b border-neutral-300 px-5 py-5 last:border-b-0 md:grid-cols-[112px_1fr]">
+                <p class="font-Poppins text-sm font-bold text-primary-600">
+                  {String(index + 1).padStart(2, '0')}
                 </p>
-              </div>
-              <div class="flex items-start gap-4 group">
-                <div
-                  class="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"
-                >
-                  <svg
-                    class="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 13l4 4L19 7"></path>
-                  </svg>
+                <div>
+                  <h3 class="text-xl font-bold leading-snug text-accent-950">{item.title}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-neutral-700">{item.text}</p>
                 </div>
-                <p class="text-neutral-700">
-                  実装結果はテストと動くデモで確認する
-                </p>
               </div>
-              <div class="flex items-start gap-4 group">
-                <div
-                  class="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"
-                >
-                  <svg
-                    class="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 13l4 4L19 7"></path>
-                  </svg>
-                </div>
-                <p class="text-neutral-700">
-                  フィードバックを要件に書き戻し、更新された仕様で再実装する
-                </p>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        <div class="order-1 lg:order-2 relative">
-          <span
-            class="font-Poppins text-[120px] lg:text-[180px] font-bold text-primary-500/10 absolute -top-16 -right-8 select-none"
-          >
-            02
-          </span>
-          <div class="relative z-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-accent-950 mb-4">
-              仕様をつなぐ<br /><span class="text-primary-500">AI駆動開発</span>
-            </h2>
-            <span
-              class="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-sm font-medium mb-8"
-            >
-              Strength
-            </span>
-            <p class="text-xl text-neutral-700 leading-relaxed mb-8">
-              AIにコードを書かせるのではなく、AIが迷わず実装できる状態を作ってからコードを書かせる。これがBeekleのAI駆動開発です。
-            </p>
-            <Card variant="lightPurple" padding="md" hover="none">
-              <p class="text-neutral-700">
-                要件定義→実装→確認→要件更新を短いサイクルで回すので、最初に巨大な仕様書を完成させる必要がありません。要件の精度と開発スピードを両立できます。
-              </p>
-            </Card>
-            <p class="mt-5">
-              <a href="/case-studies" class="inline-flex min-h-[44px] items-center text-base font-semibold text-primary-500 hover:text-primary-600">
-                実案件の例: 議事録から1日で動くデモ、他社3ヶ月停滞を3週間で完成
-                <svg class="w-4 h-4 ml-1 flex-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
-            </p>
+            ))}
           </div>
         </div>
       </div>
-    </Section>
+    </section>
 
-    <!-- 強み3: 学習意欲の高いチーム -->
-    <Section variant="white" padding="lg" decoration="bars">
-      <div class="text-center mb-16 relative">
-        <span
-          class="font-Poppins text-[120px] lg:text-[180px] font-bold text-primary-500/10 absolute -top-16 right-1/4 select-none"
-        >
-          03
-        </span>
-        <span
-          class="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-sm font-medium mb-4"
-        >
-          Strength
-        </span>
-        <h2 class="text-3xl md:text-4xl font-bold text-accent-950 mb-4">
-          フロントエンドからインフラまで<br /><span class="text-primary-500">横断する実装力</span>
-        </h2>
-        <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
-          仕様を正確に作れても、実装を一体で持てなければ開発は速くなりません。Beekleはフロントエンド・バックエンド・インフラを一つの体制で担当します。
-        </p>
+    <section class="bg-neutral-100 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+          <div>
+            <p class="text-sm font-bold text-primary-500">Beekleの作り方</p>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+              変更に強い理由
+            </h2>
+            <p class="mt-4 text-base leading-relaxed text-neutral-700">
+              要件定義を先に完成させようとせず、短く動くものを出し、そこで見えたズレを要件へ戻します。
+            </p>
+            <p class="mt-6 border-l-4 border-primary-500 pl-5 text-sm leading-relaxed text-neutral-700">
+              <a href="https://pmonrails.com" rel="noopener" class="font-bold text-primary-500 hover:text-primary-600">PM on Rails</a>で、要求・受入条件・実装タスク・確認結果をつなげています。名前を覚えてもらうためではなく、仕様が変わったときに影響を追うための基盤です。
+            </p>
+          </div>
+
+          <div class="border-t border-neutral-300">
+            {methodSteps.map((step) => (
+              <div class="grid gap-4 border-b border-neutral-300 py-5 md:grid-cols-[72px_1fr]">
+                <p class="font-Poppins text-2xl font-bold text-primary-500">{step.no}</p>
+                <div>
+                  <h3 class="text-xl font-bold leading-snug text-accent-950">{step.title}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-neutral-700">{step.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+    </section>
 
-      <div class="max-w-4xl mx-auto mb-16">
-        <Card variant="lightPurple" padding="lg" hover="none">
-          <p class="text-lg text-accent-950 leading-relaxed">
-            会社をまたぐ調整や責任範囲の押し付け合いが発生しないので、動くものへのフィードバックがそのまま実装に反映されます。他社が難航した案件を引き継ぎ、バックエンド・フロントエンド・インフラまで一貫して立て直した実績もあります。
+    <section class="bg-neutral-50 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="max-w-3xl">
+          <p class="text-sm font-bold text-primary-500">相談の相性</p>
+          <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+            この進め方が向いている相談
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-neutral-700">
+            何でも作る前提ではなく、判断材料が足りない段階の相談に向いています。
           </p>
-        </Card>
-      </div>
-
-      <div class="grid lg:grid-cols-3 gap-8">
-        <Card variant="white" padding="lg" hover="lift" decoration="barPurple">
-          <CardIcon variant="purple">
-            <svg
-              class="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-              ></path>
-            </svg>
-          </CardIcon>
-          <CardTitle className="text-xl mb-3">フロントエンド</CardTitle>
-          <CardDescription>
-            Web・モバイルの画面と操作性を、業務の流れに合わせて設計・実装します。触って確認できるデモを早い段階で出せます。
-          </CardDescription>
-        </Card>
-
-        <Card variant="white" padding="lg" hover="lift" decoration="barPurple">
-          <CardIcon variant="purple">
-            <svg
-              class="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              ></path>
-            </svg>
-          </CardIcon>
-          <CardTitle className="text-xl mb-3">バックエンド</CardTitle>
-          <CardDescription>
-            API、データベース、外部システム連携まで、業務ロジックを支える基盤を実装します。AI連携もこの層で設計します。
-          </CardDescription>
-        </Card>
-
-        <Card variant="white" padding="lg" hover="lift" decoration="barPurple">
-          <CardIcon variant="purple">
-            <svg
-              class="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-              ></path>
-            </svg>
-          </CardIcon>
-          <CardTitle className="text-xl mb-3">インフラ</CardTitle>
-          <CardDescription>
-            クラウド構成、監視、セキュリティまで、公開後も動き続ける環境を整えます。運用・保守も同じ体制で続けられます。
-          </CardDescription>
-        </Card>
-      </div>
-    </Section>
-
-    <!-- 強み4: シナリオ設計力 -->
-    <Section variant="lightPurple" padding="lg" decoration="blursMix">
-      <!-- タイトル部分：中央配置 -->
-      <div class="text-center mb-16 relative">
-        <span
-          class="font-Poppins text-[120px] lg:text-[180px] font-bold text-primary-500/10 absolute -top-16 left-1/4 select-none"
-        >
-          04
-        </span>
-        <span
-          class="inline-block px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-sm font-medium mb-4"
-        >
-          Strength
-        </span>
-        <h2 class="text-3xl md:text-4xl font-bold text-accent-950 mb-4">
-          動くものを確認しながら<br /><span class="text-primary-500"
-            >要件を更新する反復型開発</span
-          >
-        </h2>
-        <p class="text-lg text-neutral-600 max-w-3xl mx-auto">
-          ビジネス上の目的から逆算し、システムの振る舞いを受入条件まで定義。<br
-          />
-          動くものを確認するたびに要件を更新するので、<span class="font-bold text-accent-950"
-            >無駄な開発をせず、納得感を持ってプロジェクトを進められます</span
-          >。
-        </p>
-      </div>
-
-      <!-- 具体的な手法：2カラム -->
-      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
-        <Card variant="white" padding="lg" hover="lift" decoration="barPurple">
-          <CardIcon variant="purple">
-            <svg
-              class="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
-              ></path>
-            </svg>
-          </CardIcon>
-          <CardTitle className="text-xl mb-3">Figmaプロトタイプ</CardTitle>
-          <CardDescription>
-            実際の画面イメージを見ながらヒアリング。認識のズレを早期に解消し、手戻りを防ぎます。
-          </CardDescription>
-        </Card>
-
-        <Card variant="white" padding="lg" hover="lift" decoration="barPurple">
-          <CardIcon variant="purple">
-            <svg
-              class="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              ></path>
-            </svg>
-          </CardIcon>
-          <CardTitle className="text-xl mb-3">BDD（振る舞い駆動開発）</CardTitle
-          >
-          <CardDescription>
-            システムの「振る舞い」をビジネス視点で定義。全員が読める「生きた仕様書」を作成します。
-          </CardDescription>
-        </Card>
-      </div>
-
-      <!-- BDD解説セクション -->
-      <div class="max-w-5xl mx-auto mb-12">
-        <Card variant="outlinedPrimary" padding="lg" hover="none">
-          <h3 class="text-xl font-bold text-accent-950 mb-6 flex items-center">
-            <svg
-              class="w-6 h-6 text-primary-500 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              ></path>
-            </svg>
-            BDDで「生きた仕様書」を作成
-          </h3>
-
-          <div class="grid lg:grid-cols-3 gap-6 mb-6">
-            <div class="bg-primary-50 rounded-lg p-4">
-              <p class="text-xs text-primary-600 mb-2 font-bold">
-                1. ユースケース定義
-              </p>
-              <p class="text-sm text-neutral-700">
-                ビジネス価値の高い順に機能を整理し、優先度・工数・シナリオ数を明確化
-              </p>
-            </div>
-            <div class="bg-primary-50 rounded-lg p-4">
-              <p class="text-xs text-primary-600 mb-2 font-bold">
-                2. シナリオ詳細化
-              </p>
-              <p class="text-sm text-neutral-700">
-                Given-When-Then形式で全員が読める振る舞いを定義
-              </p>
-            </div>
-            <div class="bg-primary-50 rounded-lg p-4">
-              <p class="text-xs text-primary-600 mb-2 font-bold">
-                3. 受け入れ基準
-              </p>
-              <p class="text-sm text-neutral-700">
-                チェックリスト形式で「完了」の定義を明確化
-              </p>
-            </div>
-          </div>
-
-          <div class="grid lg:grid-cols-2 gap-6 items-start">
-            <!-- Gherkin記法の例 -->
-            <div>
-              <p class="text-xs text-neutral-500 mb-2 font-medium">
-                Gherkin記法でシナリオを記述
-              </p>
-              <div class="bg-accent-950 rounded-lg p-4 font-mono text-xs">
-                <p class="text-primary-400">
-                  Feature: <span class="text-white">ログイン機能</span>
-                </p>
-                <p class="text-primary-400 mt-2">
-                  Scenario: <span class="text-white"
-                    >正しい認証情報でログイン</span
-                  >
-                </p>
-                <p class="text-green-400 mt-2 ml-2">
-                  Given<span class="text-neutral-500 text-[10px]">（前提）</span
-                  >
-                  <span class="text-white">ログインページが表示されている</span>
-                </p>
-                <p class="text-yellow-400 ml-2">
-                  When<span class="text-neutral-500 text-[10px]">（操作）</span>
-                  <span class="text-white"
-                    >正しいID/PWでログインボタンを押す</span
-                  >
-                </p>
-                <p class="text-blue-400 ml-2">
-                  Then<span class="text-neutral-500 text-[10px]">（結果）</span>
-                  <span class="text-white"
-                    >ホームページにリダイレクトされる</span
-                  >
-                </p>
-              </div>
-              <p class="text-xs text-neutral-500 mt-2">
-                開発者・QA・ビジネス担当者など<span class="font-bold"
-                  >全員が読める</span
-                >ため、認識の齟齬を埋めます。
-              </p>
-            </div>
-
-            <!-- 実装設計書の構成 -->
-            <div>
-              <p class="text-xs text-neutral-500 mb-2 font-medium">
-                さらに実装設計書として詳細化
-              </p>
-              <div class="bg-neutral-50 rounded-lg p-4 text-sm space-y-2">
-                <div class="flex items-center gap-2">
-                  <span
-                    class="w-5 h-5 bg-primary-500 text-white rounded text-xs flex items-center justify-center"
-                    >1</span
-                  >
-                  <span class="text-neutral-700"
-                    >ユースケース一覧と優先度マップ</span
-                  >
-                </div>
-                <div class="flex items-center gap-2">
-                  <span
-                    class="w-5 h-5 bg-primary-500 text-white rounded text-xs flex items-center justify-center"
-                    >2</span
-                  >
-                  <span class="text-neutral-700"
-                    >各ユースケースの詳細シナリオ</span
-                  >
-                </div>
-                <div class="flex items-center gap-2">
-                  <span
-                    class="w-5 h-5 bg-primary-500 text-white rounded text-xs flex items-center justify-center"
-                    >3</span
-                  >
-                  <span class="text-neutral-700"
-                    >技術仕様（DB設計・API設計）</span
-                  >
-                </div>
-                <div class="flex items-center gap-2">
-                  <span
-                    class="w-5 h-5 bg-primary-500 text-white rounded text-xs flex items-center justify-center"
-                    >4</span
-                  >
-                  <span class="text-neutral-700"
-                    >非機能要件（パフォーマンス・エラー処理）</span
-                  >
-                </div>
-                <div class="flex items-center gap-2">
-                  <span
-                    class="w-5 h-5 bg-primary-500 text-white rounded text-xs flex items-center justify-center"
-                    >5</span
-                  >
-                  <span class="text-neutral-700"
-                    >テスト戦略とカバレッジ目標</span
-                  >
-                </div>
-                <div class="flex items-center gap-2">
-                  <span
-                    class="w-5 h-5 bg-primary-500 text-white rounded text-xs flex items-center justify-center"
-                    >6</span
-                  >
-                  <span class="text-neutral-700">実装計画とリスク管理</span>
-                </div>
-              </div>
-              <p class="text-xs text-neutral-500 mt-2">
-                ここまで設計すれば、<span class="font-bold"
-                  >実装前に期待する挙動と受入条件が明文化</span
-                >されます。
-              </p>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <!-- 実装設計書の例 -->
-      <div class="max-w-4xl mx-auto">
-        <p class="text-center text-sm text-neutral-500 mb-4">
-          ▼ 実装設計書の例（イメージ）
-        </p>
-
-        <!-- ドキュメント風カード -->
-        <div
-          class="bg-white rounded-2xl shadow-medium overflow-hidden border border-neutral-200"
-        >
-          <!-- ドキュメントヘッダー -->
-          <div
-            class="bg-neutral-100 px-6 py-3 border-b border-neutral-200 flex items-center gap-3"
-          >
-            <div class="flex gap-1.5">
-              <div class="w-3 h-3 rounded-full bg-red-400"></div>
-              <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-              <div class="w-3 h-3 rounded-full bg-green-400"></div>
-            </div>
-            <span class="text-xs text-neutral-500 font-mono"
-              >実装設計書_ツイート投稿機能.md</span
-            >
-          </div>
-
-          <!-- ドキュメント本文 -->
-          <div
-            class="p-6 font-mono text-sm leading-relaxed space-y-4 max-h-[480px] overflow-y-auto"
-          >
-            <!-- タイトル -->
-            <div>
-              <p class="text-xl font-bold text-accent-950">
-                # ツイート投稿機能 実装設計書
-              </p>
-            </div>
-
-            <!-- 概要テーブル -->
-            <div class="bg-neutral-50 rounded-lg p-4 not-italic">
-              <p class="text-xs text-neutral-500 mb-2">## 概要</p>
-              <div class="grid grid-cols-4 gap-2 text-center text-xs">
-                <div class="bg-white rounded p-2">
-                  <p class="text-neutral-400">工数</p>
-                  <p class="font-bold text-accent-950">5営業日</p>
-                </div>
-                <div class="bg-white rounded p-2">
-                  <p class="text-neutral-400">UC数</p>
-                  <p class="font-bold text-accent-950">6件</p>
-                </div>
-                <div class="bg-white rounded p-2">
-                  <p class="text-neutral-400">シナリオ</p>
-                  <p class="font-bold text-accent-950">19件</p>
-                </div>
-                <div class="bg-white rounded p-2">
-                  <p class="text-neutral-400">カバレッジ</p>
-                  <p class="font-bold text-accent-950">100%</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- 目次 -->
-            <div>
-              <p class="text-neutral-500 text-xs mb-2">## 目次</p>
-              <div class="text-xs text-primary-600 space-y-1 ml-2">
-                <p>1. ユースケース一覧</p>
-                <p>2. ユースケース詳細</p>
-                <p>3. 技術仕様（DB設計・API設計）</p>
-                <p>4. 非機能要件</p>
-                <p>5. テスト戦略</p>
-                <p>6. 実装計画とリスク管理</p>
-              </div>
-            </div>
-
-            <!-- ユースケース一覧 -->
-            <div>
-              <p class="text-neutral-500 text-xs mb-2">
-                ## 1. ユースケース一覧
-              </p>
-              <div class="text-xs space-y-1 ml-2">
-                <p class="text-neutral-700">
-                  | ID | ユースケース | 優先度 | 工数 |
-                </p>
-                <p class="text-neutral-400">
-                  |------|------------|------|-----|
-                </p>
-                <p class="text-neutral-700">
-                  | UC-01 | ツイートを投稿する | <span class="text-red-500"
-                    >最高</span
-                  > | 1日 |
-                </p>
-                <p class="text-neutral-700">
-                  | UC-02 | ツイートを削除する | <span class="text-red-500"
-                    >最高</span
-                  > | 0.5日 |
-                </p>
-                <p class="text-neutral-700">
-                  | UC-03 | ツイートにいいねする | <span class="text-orange-500"
-                    >高</span
-                  > | 0.5日 |
-                </p>
-                <p class="text-neutral-400">| ... | 他3件 | | |</p>
-              </div>
-            </div>
-
-            <!-- ユースケース詳細 -->
-            <div>
-              <p class="text-neutral-500 text-xs mb-2">
-                ## 2. ユースケース詳細
-              </p>
-              <p class="text-neutral-500 text-xs ml-2 mb-1">
-                ### UC-01: ツイートを投稿する
-              </p>
-              <!-- メタ情報 -->
-              <div class="ml-2 mb-2 text-[9px] space-y-0.5">
-                <p class="text-neutral-600">
-                  <span class="text-neutral-400">アクター:</span> ログイン済みユーザー
-                </p>
-                <p class="text-neutral-600">
-                  <span class="text-neutral-400">ビジネス価値:</span> UGC増加 → エンゲージメント向上
-                </p>
-                <p class="text-neutral-600">
-                  <span class="text-neutral-400">前提条件:</span> ユーザーがログイン済み
-                </p>
-              </div>
-              <!-- 正常系 -->
-              <p class="text-[10px] ml-2 mb-1 text-green-600 font-bold">
-                ✓ 正常系
-              </p>
-              <div class="bg-accent-950 rounded-lg p-2 ml-2 text-[10px] mb-2">
-                <p class="text-primary-400">
-                  Scenario: <span class="text-white">ツイートを投稿する</span>
-                </p>
-                <p class="text-green-400 mt-1 ml-2">
-                  Given<span class="text-neutral-500">（前提）</span>
-                  <span class="text-white">投稿画面を表示している</span>
-                </p>
-                <p class="text-yellow-400 ml-2">
-                  When<span class="text-neutral-500">（操作）</span>
-                  <span class="text-white">「こんにちは」と入力して投稿</span>
-                </p>
-                <p class="text-blue-400 ml-2">
-                  Then<span class="text-neutral-500">（結果）</span>
-                  <span class="text-white">タイムラインに表示される</span>
-                </p>
-              </div>
-              <!-- 異常系（複数シナリオ） -->
-              <p class="text-[10px] ml-2 mb-1 text-red-500 font-bold">
-                ✗ 異常系（想定されるエラーを網羅）
-              </p>
-              <div class="bg-accent-950 rounded-lg p-2 ml-2 text-[10px] mb-1">
-                <p class="text-primary-400">
-                  Scenario 1: <span class="text-white"
-                    >文字数オーバーの場合</span
-                  >
-                </p>
-                <p class="text-yellow-400 ml-2">
-                  When<span class="text-neutral-500">（操作）</span>
-                  <span class="text-white">141文字以上を入力</span>
-                </p>
-                <p class="text-blue-400 ml-2">
-                  Then<span class="text-neutral-500">（結果）</span>
-                  <span class="text-white">投稿ボタンが無効化される</span>
-                </p>
-              </div>
-              <div class="bg-accent-950 rounded-lg p-2 ml-2 text-[10px] mb-1">
-                <p class="text-primary-400">
-                  Scenario 2: <span class="text-white">API接続エラー時</span>
-                </p>
-                <p class="text-yellow-400 ml-2">
-                  When<span class="text-neutral-500">（操作）</span>
-                  <span class="text-white">サーバーがタイムアウト</span>
-                </p>
-                <p class="text-blue-400 ml-2">
-                  Then<span class="text-neutral-500">（結果）</span>
-                  <span class="text-white">下書き保存し、リトライを促す</span>
-                </p>
-              </div>
-              <div class="bg-accent-950 rounded-lg p-2 ml-2 text-[10px] mb-1">
-                <p class="text-primary-400">
-                  Scenario 3: <span class="text-white"
-                    >冪等性（何度実行しても同じ結果）</span
-                  >
-                </p>
-                <p class="text-yellow-400 ml-2">
-                  When<span class="text-neutral-500">（操作）</span>
-                  <span class="text-white"
-                    >通信不安定で同一リクエストが3回届く</span
-                  >
-                </p>
-                <p class="text-blue-400 ml-2">
-                  Then<span class="text-neutral-500">（結果）</span>
-                  <span class="text-white">冪等キーで識別し、1件のみ登録</span>
-                </p>
-              </div>
-              <div class="bg-accent-950 rounded-lg p-2 ml-2 text-[10px] mb-1">
-                <p class="text-primary-400">
-                  Scenario 4: <span class="text-white"
-                    >重複コンテンツ（スパム防止）</span
-                  >
-                </p>
-                <p class="text-yellow-400 ml-2">
-                  When<span class="text-neutral-500">（操作）</span>
-                  <span class="text-white">同じ文面を意図的に連続投稿</span>
-                </p>
-                <p class="text-blue-400 ml-2">
-                  Then<span class="text-neutral-500">（結果）</span>
-                  <span class="text-white"
-                    >「先ほど同じ内容を投稿しました」エラー</span
-                  >
-                </p>
-              </div>
-              <div class="bg-accent-950 rounded-lg p-2 ml-2 text-[10px] mb-1">
-                <p class="text-primary-400">
-                  Scenario 5: <span class="text-white">不正な文字列（XSS）</span
-                  >
-                </p>
-                <p class="text-yellow-400 ml-2">
-                  When<span class="text-neutral-500">（操作）</span>
-                  <span class="text-white">scriptタグを含む投稿</span>
-                </p>
-                <p class="text-blue-400 ml-2">
-                  Then<span class="text-neutral-500">（結果）</span>
-                  <span class="text-white">サニタイズして安全に保存</span>
-                </p>
-              </div>
-              <div class="bg-accent-950 rounded-lg p-2 ml-2 text-[10px] mb-1">
-                <p class="text-primary-400">
-                  Scenario 6: <span class="text-white">セッション切れ</span>
-                </p>
-                <p class="text-yellow-400 ml-2">
-                  When<span class="text-neutral-500">（操作）</span>
-                  <span class="text-white">ログアウト状態で投稿試行</span>
-                </p>
-                <p class="text-blue-400 ml-2">
-                  Then<span class="text-neutral-500">（結果）</span>
-                  <span class="text-white">下書き保存後、ログイン画面へ</span>
-                </p>
-              </div>
-              <div class="bg-accent-950 rounded-lg p-2 ml-2 text-[10px]">
-                <p class="text-primary-400">
-                  Scenario 7: <span class="text-white"
-                    >トラフィックスパイク</span
-                  >
-                </p>
-                <p class="text-yellow-400 ml-2">
-                  When<span class="text-neutral-500">（操作）</span>
-                  <span class="text-white">バズ発生で100倍のアクセス</span>
-                </p>
-                <p class="text-blue-400 ml-2">
-                  Then<span class="text-neutral-500">（結果）</span>
-                  <span class="text-white">Rate Limit適用、キュー処理</span>
-                </p>
-              </div>
-              <p class="text-[8px] ml-2 mt-1 text-neutral-400 italic">
-                ※ 想定エラーを事前にシナリオ化 → トラブル防止 & 品質担保
-              </p>
-            </div>
-
-            <!-- 技術仕様 -->
-            <div>
-              <p class="text-neutral-500 text-xs mb-2">## 3. 技術仕様</p>
-              <p class="text-neutral-500 text-xs ml-2 mb-1">### ER図</p>
-              <!-- ER図風 -->
-              <div class="ml-2 mb-3 flex gap-2 items-center text-[10px]">
-                <div
-                  class="border border-neutral-300 rounded bg-white p-2 text-center"
-                >
-                  <p class="font-bold border-b border-neutral-200 pb-1 mb-1">
-                    users
-                  </p>
-                  <p class="text-neutral-600">id, name, email</p>
-                </div>
-                <span class="text-neutral-400">1 ─── *</span>
-                <div
-                  class="border border-neutral-300 rounded bg-white p-2 text-center"
-                >
-                  <p class="font-bold border-b border-neutral-200 pb-1 mb-1">
-                    tweets
-                  </p>
-                  <p class="text-neutral-600">id, content, user_id</p>
-                </div>
-              </div>
-              <p class="text-neutral-500 text-xs ml-2 mb-1">
-                ### API設計（OpenAPI）
-              </p>
-              <div class="bg-accent-950 rounded-lg p-3 ml-2 text-[10px]">
-                <p class="text-yellow-400">
-                  openapi: <span class="text-white">3.0.0</span>
-                </p>
-                <p class="text-yellow-400">paths:</p>
-                <p class="text-white ml-2">/tweets:</p>
-                <p class="text-green-400 ml-4">post:</p>
-                <p class="text-white ml-6">
-                  summary: <span class="text-cyan-300">ツイートを投稿</span>
-                </p>
-                <p class="text-white ml-6">requestBody:</p>
-                <p class="text-white ml-8">
-                  content: <span class="text-cyan-300">string</span>
-                </p>
-              </div>
-            </div>
-
-            <!-- 非機能要件 -->
-            <div>
-              <p class="text-neutral-500 text-xs mb-2">## 4. 非機能要件</p>
-              <div class="text-xs ml-2 space-y-1">
-                <p class="text-neutral-700">- スループット: 50万件/秒</p>
-                <p class="text-neutral-700">- データ量: 1日5億件想定</p>
-                <p class="text-neutral-700">
-                  - 整合性: 結果整合性（シャーディング）
-                </p>
-              </div>
-            </div>
-
-            <!-- テスト戦略 -->
-            <div>
-              <p class="text-neutral-500 text-xs mb-2">## 5. テスト戦略</p>
-              <div class="text-xs ml-2">
-                <p class="text-neutral-700">| レベル | カバレッジ目標 |</p>
-                <p class="text-neutral-400">|------|------------|</p>
-                <p class="text-neutral-700">| 単体テスト | 80%以上 |</p>
-                <p class="text-neutral-700">| 統合テスト | 全UC |</p>
-                <p class="text-neutral-700">| E2Eテスト | 全19シナリオ |</p>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <p class="text-xs text-neutral-500 mt-4 text-center">
-          ※ 実際のプロジェクトでは、このような設計書を作成してから実装に入ります
-        </p>
-      </div>
-
-      <!-- ドキュメント管理の考え方 -->
-      <div class="max-w-2xl mx-auto mt-12 mb-8 text-center">
-        <p class="text-neutral-600 leading-relaxed">
-          エクセルでドキュメントを大量に作る会社が結構ありますが、ドキュメントは<span
-            class="text-red-500 font-medium">作りすぎても形骸化</span
-          >、<span class="text-red-500 font-medium">作らなさすぎても曖昧</span
-          >になります。<br />
-          大切なのは<span class="font-bold text-accent-950"
-            >「残すもの」と「捨てるもの」を分ける</span
-          >こと。<br />
-          <span class="text-sm text-neutral-500"
-            >ユースケース・ユーザーシナリオ実装設計書やAPI仕様は常に最新化。議事録や検討メモは役目を終えたら途中までの情報として履歴としての参照だけにする。
-          </span>
-        </p>
-      </div>
-
-      <!-- 結論 -->
-      <div class="max-w-3xl mx-auto">
-        <Card variant="lightPurple" padding="lg" hover="none">
-          <div class="text-center">
-            <p class="text-neutral-700 mb-4">
-              ここまで仕様が構造化されていれば、<span class="font-bold"
-                >AIエージェントに直接つないで、コードを高速に書かせることができます</span
-              >。<br />
-              コードを書くだけなら多くの開発会社ができます。
-            </p>
-            <p class="text-lg font-bold text-accent-950 mb-4">
-              しかし、要求整理から受入条件、AI実装、テスト、要件更新までを一つのプロセスとして仕組み化し、チームで実践できる会社は多くありません。
-            </p>
-            <div class="inline-block bg-white rounded-xl px-6 py-4 shadow-soft">
-              <p class="text-lg font-bold text-primary-500">
-                だから他社が頓挫した案件も立て直せるのです。
-              </p>
-            </div>
-            <p class="mt-6">
-              <a href="/case-studies" class="inline-flex min-h-[44px] items-center font-semibold text-primary-500 hover:text-primary-600">
-                この進め方で作った導入事例を見る
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
-            </p>
+        <div class="mt-8 grid gap-8 border-y border-neutral-300 py-6 lg:grid-cols-2">
+          <div>
+            <h3 class="text-2xl font-bold text-accent-950">向いています</h3>
+            <ul class="mt-5 space-y-3">
+              {fitItems.map((item) => (
+                <li class="border-l-2 border-secondary-500 pl-4 text-sm leading-relaxed text-neutral-700">
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
-        </Card>
+
+          <div>
+            <h3 class="text-2xl font-bold text-accent-950">先に確認します</h3>
+            <ul class="mt-5 space-y-3">
+              {cautionItems.map((item) => (
+                <li class="border-l-2 border-highlight-500 pl-4 text-sm leading-relaxed text-neutral-700">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
-    </Section>
+    </section>
 
-    <!-- よくある不安・質問セクション -->
-    <Section variant="light" padding="lg" decoration="blursPurple">
-      <SectionHeader
-        number="Q&A"
-        label="FAQ"
-        title="よくあるご不安にお答えします"
-        subtitle="お客様からよくいただくご質問について、率直にお答えいたします"
-      />
-
-      <div class="max-w-4xl mx-auto space-y-12">
-        <!-- Q1 -->
-        <Card variant="outlinedPrimary" padding="lg" hover="none">
-          <div class="flex items-start gap-6">
-            <div class="flex-shrink-0">
-              <div
-                class="w-16 h-16 bg-primary-500 rounded-2xl flex items-center justify-center"
-              >
-                <span class="text-2xl font-bold text-white">Q</span>
-              </div>
-            </div>
-            <div class="flex-grow">
-              <h3 class="text-2xl font-bold text-accent-950 mb-6">
-                会社の規模が小さいけど大丈夫？
-              </h3>
-
-              <div class="space-y-6">
-                <p class="text-lg text-neutral-700 leading-relaxed">
-                  <span class="font-bold text-primary-500"
-                    >結論：むしろ小規模だからこその強みがあります。</span
-                  >
-                </p>
-
-                <Card variant="lightPurple" padding="md" hover="none">
-                  <h4
-                    class="text-xl font-bold text-accent-950 mb-3 flex items-center"
-                  >
-                    <span class="w-2 h-6 bg-primary-500 rounded-full mr-3"
-                    ></span>
-                    大手案件の実態
-                  </h4>
-                  <p class="text-neutral-700 leading-relaxed">
-                    実は大手企業が受注した案件も、最終的には複数の協力会社を経由して、私たちのような専門会社が実装を担当することがほとんどです。
-                  </p>
-                </Card>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                  <Card variant="white" padding="md" hover="lift">
-                    <h5
-                      class="font-bold text-accent-950 mb-3 flex items-center"
-                    >
-                      <svg
-                        class="w-6 h-6 text-primary-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        ></path>
-                      </svg>
-                      コスト面のメリット
-                    </h5>
-                    <p class="text-neutral-700 text-sm">
-                      中間マージンが発生しない分、同じ品質のシステムをより適正な価格で提供できます。
-                    </p>
-                  </Card>
-
-                  <Card variant="white" padding="md" hover="lift">
-                    <h5
-                      class="font-bold text-accent-950 mb-3 flex items-center"
-                    >
-                      <svg
-                        class="w-6 h-6 text-primary-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                        ></path>
-                      </svg>
-                      コミュニケーション
-                    </h5>
-                    <p class="text-neutral-700 text-sm">
-                      お客様と開発チームが直接やり取りできるため、要望が正確に伝わり、迅速な対応が可能です。
-                    </p>
-                  </Card>
-                </div>
-
-                <div class="border-l-4 border-primary-500 pl-6">
-                  <p class="text-lg font-semibold text-accent-950">
-                    小規模だからこそ、お客様に寄り添い、<br />
-                    真に価値のあるシステムを共に創ることができます。
-                  </p>
-                </div>
-              </div>
-            </div>
+    <section class="bg-neutral-100 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <p class="text-sm font-bold text-primary-500">FAQ</p>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+              よくあるご不安
+            </h2>
           </div>
-        </Card>
-
-        <!-- Q2 -->
-        <Card variant="outlinedPrimary" padding="lg" hover="none">
-          <div class="flex items-start gap-6">
-            <div class="flex-shrink-0">
-              <div
-                class="w-16 h-16 bg-primary-500 rounded-2xl flex items-center justify-center"
-              >
-                <span class="text-2xl font-bold text-white">Q</span>
-              </div>
-            </div>
-            <div class="flex-grow">
-              <h3 class="text-2xl font-bold text-accent-950 mb-6">
-                システムのことがよくわからないけど、ちゃんと相談できる？
-              </h3>
-
-              <div class="space-y-6">
-                <p class="text-lg text-neutral-700 leading-relaxed">
-                  <span class="font-bold text-primary-500"
-                    >もちろんです。むしろ「わからない」と言っていただける方が助かります。</span
-                  >
-                </p>
-
-                <Card variant="lightPurple" padding="md" hover="none">
-                  <h4
-                    class="text-xl font-bold text-accent-950 mb-3 flex items-center"
-                  >
-                    <span class="w-2 h-6 bg-primary-500 rounded-full mr-3"
-                    ></span>
-                    専門用語を使わない説明
-                  </h4>
-                  <p class="text-neutral-700 leading-relaxed">
-                    私たちは、お客様の業務を理解することから始めます。システムの話ではなく、「今、どんなことにお困りですか？」という会話から始めさせていただきます。
-                  </p>
-                </Card>
-
-                <div class="space-y-4">
-                  <div class="flex items-start gap-4">
-                    <div
-                      class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0"
-                    >
-                      <span class="text-primary-600 font-bold">1</span>
-                    </div>
-                    <div>
-                      <h5 class="font-bold text-accent-950 mb-1">
-                        まずは業務の課題をお聞きします
-                      </h5>
-                      <p class="text-neutral-700 text-sm">
-                        「在庫管理が大変」「顧客情報がバラバラ」など、日常の困りごとをそのままお話しください。
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="flex items-start gap-4">
-                    <div
-                      class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0"
-                    >
-                      <span class="text-primary-600 font-bold">2</span>
-                    </div>
-                    <div>
-                      <h5 class="font-bold text-accent-950 mb-1">
-                        解決策を一緒に考えます
-                      </h5>
-                      <p class="text-neutral-700 text-sm">
-                        システムありきではなく、エクセルで十分な部分、システム化すべき部分を整理してご提案します。
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="flex items-start gap-4">
-                    <div
-                      class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0"
-                    >
-                      <span class="text-primary-600 font-bold">3</span>
-                    </div>
-                    <div>
-                      <h5 class="font-bold text-accent-950 mb-1">
-                        段階的な導入をサポート
-                      </h5>
-                      <p class="text-neutral-700 text-sm">
-                        いきなり大きなシステムではなく、小さく始めて効果を確認しながら拡張していくことも可能です。
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="border-t border-neutral-300">
+            {faqItems.map((item) => (
+              <details class="border-b border-neutral-300 py-5">
+                <summary class="cursor-pointer list-none text-lg font-bold text-accent-950 [&::-webkit-details-marker]:hidden">
+                  {item.question}
+                </summary>
+                <p class="mt-3 text-sm leading-relaxed text-neutral-700">{item.answer}</p>
+              </details>
+            ))}
           </div>
-        </Card>
-
-        <!-- Q3 -->
-        <Card variant="outlinedPrimary" padding="lg" hover="none">
-          <div class="flex items-start gap-6">
-            <div class="flex-shrink-0">
-              <div
-                class="w-16 h-16 bg-primary-500 rounded-2xl flex items-center justify-center"
-              >
-                <span class="text-2xl font-bold text-white">Q</span>
-              </div>
-            </div>
-            <div class="flex-grow">
-              <h3 class="text-2xl font-bold text-accent-950 mb-6">
-                どこに頼めばいいか判断基準がわからない
-              </h3>
-
-              <div class="space-y-6">
-                <p class="text-lg text-neutral-700 leading-relaxed">
-                  <span class="font-bold text-primary-500"
-                    >選ぶ基準は「話を聞いてくれるか」と「実績があるか」です。</span
-                  >
-                </p>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                  <Card variant="light" padding="md" hover="none">
-                    <h4
-                      class="font-bold text-accent-950 mb-3 flex items-center"
-                    >
-                      <svg
-                        class="w-6 h-6 text-green-600 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        ></path>
-                      </svg>
-                      良い開発会社の特徴
-                    </h4>
-                    <ul class="space-y-2 text-neutral-700 text-sm">
-                      <li>• 業務内容を詳しく聞いてくれる</li>
-                      <li>• 予算に合わせた提案ができる</li>
-                      <li>• 小さく始める提案をしてくれる</li>
-                      <li>• 運用後のサポートが明確</li>
-                    </ul>
-                  </Card>
-
-                  <Card variant="light" padding="md" hover="none">
-                    <h4
-                      class="font-bold text-accent-950 mb-3 flex items-center"
-                    >
-                      <svg
-                        class="w-6 h-6 text-red-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        ></path>
-                      </svg>
-                      避けるべき会社の特徴
-                    </h4>
-                    <ul class="space-y-2 text-neutral-700 text-sm">
-                      <li>• いきなり大規模な提案をする</li>
-                      <li>• 技術の話ばかりする</li>
-                      <li>• 「なんでもできます」と言う</li>
-                      <li>• 見積もりの内訳が不明確</li>
-                    </ul>
-                  </Card>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
+        </div>
       </div>
-    </Section>
+    </section>
 
-    <!-- CTA Section: Primary背景でブランドカラーを強調 -->
-    <Section variant="primary" padding="lg" decoration="fullDark">
-      <div class="text-center">
-        <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">
-          Beekleの強みを活かして、<br />
-          ビジネスを成功へ
+    <section class="bg-primary-500 py-16 md:py-20">
+      <div class="container mx-auto px-8 text-center lg:px-12">
+        <h2 class="text-3xl font-bold leading-tight text-white md:text-5xl">
+          作る前に、ズレと進め方を確認しませんか
         </h2>
-        <p class="text-xl text-white/90 mb-12 max-w-3xl mx-auto">
-          PM on Railsによる要件定義、仕様をつなぐAI駆動開発、<br />
-          そして横断的な実装力が、お客様のプロジェクトを成功に導きます。
+        <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/90">
+          要件が固まりきっていない段階でも、業務・利用者・受入条件を整理し、社内判断に使える材料を作れます。
         </p>
-        <div class="flex flex-col sm:flex-row gap-6 justify-center">
+        <div class="mt-8 flex flex-col items-center gap-4">
           <ButtonLink
             href="/contact?source=strengths-final"
             data-cta-source="strengths-final"
@@ -1265,25 +323,13 @@ import Layout from '../layouts/layout.astro';
             variant="white"
             size="lg"
           >
-            業務課題を相談する
-            <svg
-              class="w-5 h-5 ml-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-            </svg>
+            実現可否を相談する
           </ButtonLink>
-          <ButtonLink href="/prooffirst" variant="outline" size="lg">
-            ゼロスタートを見る
-          </ButtonLink>
+          <a href="/case-studies" class="inline-flex min-h-[44px] items-center text-sm font-semibold text-white underline-offset-4 hover:underline">
+            実案件の変化を見る
+          </a>
         </div>
       </div>
-    </Section>
+    </section>
   </main>
 </Layout>

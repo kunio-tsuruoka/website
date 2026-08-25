@@ -43,7 +43,7 @@ export function TemplatePicker({
       aria-label="フローのテンプレートを選択"
     >
       <div
-        className="bg-white rounded-2xl shadow-strong max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
@@ -79,7 +79,7 @@ export function TemplatePicker({
                   }}
                   className={cn(
                     'text-left bg-white border-2 border-gray-200 rounded-xl p-4',
-                    'hover:border-primary-400 hover:bg-primary-50/40 hover:shadow-medium',
+                    'hover:border-primary-400 hover:bg-primary-50/40',
                     'transition-all focus:outline-none focus:ring-2 focus:ring-primary-400'
                   )}
                 >
@@ -111,7 +111,7 @@ export function TemplatePicker({
                 onClick={onLoadSample}
                 className={cn(
                   'text-left bg-white border-2 border-secondary-200 rounded-xl p-4',
-                  'hover:border-secondary-400 hover:bg-secondary-50/40 hover:shadow-medium',
+                  'hover:border-secondary-400 hover:bg-secondary-50/40',
                   'transition-all focus:outline-none focus:ring-2 focus:ring-secondary-400'
                 )}
               >
@@ -127,7 +127,7 @@ export function TemplatePicker({
                 onClick={onStartBlank}
                 className={cn(
                   'text-left bg-white border-2 border-gray-200 rounded-xl p-4',
-                  'hover:border-gray-400 hover:bg-gray-50 hover:shadow-medium',
+                  'hover:border-gray-400 hover:bg-gray-50',
                   'transition-all focus:outline-none focus:ring-2 focus:ring-gray-400'
                 )}
               >

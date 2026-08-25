@@ -14,7 +14,7 @@ export function Metric({
   good: boolean;
 }) {
   return (
-    <div className="p-4 bg-white border border-gray-200 rounded-xl shadow-soft">
+    <div className="p-4 bg-white border border-gray-200 rounded-xl">
       <p className="text-xs text-gray-500 mb-1">{label}</p>
       <div className="flex items-baseline gap-2">
         <span className="text-xs text-gray-400">As-Is</span>

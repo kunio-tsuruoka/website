@@ -36,8 +36,8 @@ const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
       url: 'https://beekle.jp/careers/contact',
     }}
   />
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <PageHero
       title="採用のお問い合わせ"
       subtitle="カジュアル面談・応募のご連絡はこちら。会社名は不要です。通常1〜2営業日以内に採用担当から返信します。"
@@ -46,7 +46,7 @@ const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
     <section class="py-20 md:py-28">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl mx-auto">
-          <div class="mb-8 rounded-2xl bg-primary-50 border border-primary-100 p-5">
+          <div class="mb-8 rounded-lg bg-primary-50 border border-primary-100 p-5">
             <p class="text-sm text-foreground/85 leading-relaxed">
               業務のご相談は
               <a href="/contact" class="text-primary-600 font-medium underline hover:no-underline">お問い合わせ</a>

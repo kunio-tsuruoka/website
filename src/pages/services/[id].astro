@@ -53,6 +53,10 @@ const finalCtaHeading = servicePageConfig
 const finalCtaLead = servicePageConfig
   ? '業務内容と現在のデータを伺い、最初に検証すべき範囲をご案内します。'
   : '業務・データ・既存システムを伺い、小さく検証できる範囲と概算費用の考え方をご案内します。';
+const isAiDevelopment = service.id === 'ai-development';
+const relatedColumns = isAiDevelopment
+  ? service.relatedColumns?.slice(0, 3)
+  : service.relatedColumns;
 
 type RtbConfig = {
   eyebrow: string;
@@ -169,16 +173,16 @@ const featuresCopy = sectionCopy[service.id]?.features;
       }}
     />
   )}
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <ServiceHero service={service} config={servicePageConfig} />
     <ServicePainPoints painPoints={service.painPoints} number={sectionNumbers.painPoints} />
-    <ServiceRootCause rootCause={servicePageConfig?.rootCause} />
+    {!isAiDevelopment && <ServiceRootCause rootCause={servicePageConfig?.rootCause} />}
     <ServiceBusinessFlow flow={servicePageConfig?.flow} />
     {service.id !== 'ai-development' && <ServiceProductPackage serviceId={service.id} />}
-    {servicePageConfig && <ServiceAiDesignStrength serviceId={service.id} />}
-    {servicePageConfig && <ServiceAiRiskManagement serviceId={service.id} />}
-    {rtb && <ServiceWhyBeekle rtb={rtb} number={sectionNumbers.whyBeekle} />}
+    {servicePageConfig && !isAiDevelopment && <ServiceAiDesignStrength serviceId={service.id} />}
+    {servicePageConfig && !isAiDevelopment && <ServiceAiRiskManagement serviceId={service.id} />}
+    {rtb && !isAiDevelopment && <ServiceWhyBeekle rtb={rtb} number={sectionNumbers.whyBeekle} />}
 
     <ServiceCaseStudies
       caseStudies={service.caseStudies}
@@ -201,11 +205,11 @@ const featuresCopy = sectionCopy[service.id]?.features;
       subtitle={featuresCopy?.subtitle}
     />
 
-    {service.additionalSections && service.additionalSections.length > 0 && (
+    {!isAiDevelopment && service.additionalSections && service.additionalSections.length > 0 && (
       <ServiceAdditionalSections sections={service.additionalSections} />
     )}
 
-    {servicePageConfig && <ServiceEngagementFlow />}
+    {servicePageConfig && !isAiDevelopment && <ServiceEngagementFlow />}
 
     {service.id === 'rag-system-development' && (
       <Section variant="light" padding="lg" decoration="none">
@@ -215,8 +219,8 @@ const featuresCopy = sectionCopy[service.id]?.features;
             subtitle="小さく試したい担当者にも、事故らせたくない情シスにも"
           />
           <div class="grid md:grid-cols-2 gap-6">
-            <div class="flex flex-col rounded-3xl border border-primary-200 bg-white p-6 shadow-soft md:p-8">
-              <span class="inline-flex w-fit items-center gap-2 rounded-full bg-primary-50 px-3 py-1 text-xs font-bold text-primary-700">
+            <div class="flex flex-col rounded-lg border border-primary-200 bg-white p-6 md:p-8">
+              <span class="inline-flex w-fit items-center gap-2 rounded-md bg-primary-50 px-3 py-1 text-xs font-bold text-primary-700">
                 推進担当の方へ
               </span>
               <h3 class="mt-4 text-xl font-bold leading-snug text-navy-950 md:text-2xl">
@@ -229,16 +233,16 @@ const featuresCopy = sectionCopy[service.id]?.features;
                 href="/contact?source=services-rag-system-development-persona-owner&intent=zero-start"
                 data-cta-source="services-rag-system-development-persona-owner"
                 data-cta-id="contact-zero-start"
-                class="mt-6 inline-flex min-h-[52px] items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-base font-bold text-white shadow-soft transition hover:bg-primary-600 hover:shadow-medium"
+                class="mt-6 inline-flex min-h-[52px] items-center justify-center rounded-md bg-primary-500 px-6 py-3 text-base font-bold text-white transition-colors hover:bg-primary-600"
               >
-                0円デモから相談する
+                社内資料で、根拠付きAI検索ができるか相談する
                 <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                 </svg>
               </a>
             </div>
-            <div class="flex flex-col rounded-3xl border border-neutral-200 bg-white p-6 shadow-soft md:p-8">
-              <span class="inline-flex w-fit items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 text-xs font-bold text-neutral-700">
+            <div class="flex flex-col rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
+              <span class="inline-flex w-fit items-center gap-2 rounded-md bg-neutral-100 px-3 py-1 text-xs font-bold text-neutral-700">
                 情シス・技術部門の方へ
               </span>
               <h3 class="mt-4 text-xl font-bold leading-snug text-navy-950 md:text-2xl">
@@ -251,9 +255,9 @@ const featuresCopy = sectionCopy[service.id]?.features;
                 href="/contact?source=services-rag-system-development-persona-it&intent=rag-system-development"
                 data-cta-source="services-rag-system-development-persona-it"
                 data-cta-id="contact-rag-system-development"
-                class="mt-6 inline-flex min-h-[52px] items-center justify-center rounded-full border-2 border-primary-300 px-6 py-3 text-base font-bold text-primary-700 transition hover:border-primary-500 hover:bg-primary-50"
+                class="mt-6 inline-flex min-h-[52px] items-center justify-center rounded-md border border-primary-300 px-6 py-3 text-base font-bold text-primary-700 transition-colors hover:border-primary-500 hover:bg-primary-50"
               >
-                要件・構成から相談する
+                権限・構成・評価基準を相談する
                 <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                 </svg>
@@ -276,7 +280,7 @@ const featuresCopy = sectionCopy[service.id]?.features;
           <div class="grid md:grid-cols-2 gap-6 mb-8">
             <a
               href="/demos/it-advisor"
-              class="group block p-6 bg-white rounded-2xl border border-gray-200 shadow-soft hover:shadow-medium hover:border-primary-300 transition"
+              class="group block rounded-lg border border-neutral-200 bg-white p-6 transition-colors hover:border-primary-300"
             >
               <span class="inline-block px-2 py-1 text-xs font-bold bg-primary-50 text-primary-700 rounded-md mb-3">
                 社内資料検索
@@ -293,7 +297,7 @@ const featuresCopy = sectionCopy[service.id]?.features;
             </a>
             <a
               href="/demos/ocr"
-              class="group block p-6 bg-white rounded-2xl border border-gray-200 shadow-soft hover:shadow-medium hover:border-primary-300 transition"
+              class="group block rounded-lg border border-neutral-200 bg-white p-6 transition-colors hover:border-primary-300"
             >
               <span class="inline-block px-2 py-1 text-xs font-bold bg-secondary-50 text-secondary-600 rounded-md mb-3">
                 書類読み取り
@@ -323,7 +327,7 @@ const featuresCopy = sectionCopy[service.id]?.features;
       </Section>
     )}
 
-    {service.relatedColumns && service.relatedColumns.length > 0 && (
+    {relatedColumns && relatedColumns.length > 0 && (
       <Section variant="lightPurple" padding="lg" decoration="blursPurple">
         <div class="max-w-5xl mx-auto relative z-10">
           <SectionHeader
@@ -333,10 +337,10 @@ const featuresCopy = sectionCopy[service.id]?.features;
             label="RELATED COLUMNS"
           />
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {service.relatedColumns.map((rc) => (
+            {relatedColumns.map((rc) => (
               <a
                 href={`/column/${rc.slug}`}
-                class="group block bg-white rounded-2xl p-6 shadow-soft hover:shadow-medium hover:border-primary-300 border border-gray-100 transition-all"
+                class="group block rounded-lg border border-neutral-200 bg-white p-6 transition-colors hover:border-primary-300"
               >
                 <h3 class="text-base font-bold text-navy-950 mb-2 group-hover:text-primary-600 font-Montserrat leading-snug">
                   {rc.title}
@@ -359,9 +363,6 @@ const featuresCopy = sectionCopy[service.id]?.features;
     <ServiceFaq faq={service.faq} number={faqNumber} />
 
     <section class="relative py-20 md:py-32 overflow-hidden bg-navy-950">
-      <div class="absolute inset-0 bg-grid-pattern-light opacity-30"></div>
-      <div class="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary-500/25 blur-3xl" aria-hidden="true"></div>
-      <div class="pointer-events-none absolute -right-20 bottom-8 h-64 w-64 rounded-full bg-secondary-500/15 blur-3xl" aria-hidden="true"></div>
       <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center relative z-10">
         <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 font-Montserrat">
           {finalCtaHeading}
@@ -369,12 +370,12 @@ const featuresCopy = sectionCopy[service.id]?.features;
         <p class="text-xl text-white/90 mb-10 leading-relaxed">
           {finalCtaLead}
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="flex flex-col items-center gap-4 justify-center">
           <a
             href={`/contact?source=services-${service.id}-final&intent=${contactIntent}`}
             data-cta-source={`services-${service.id}-final`}
             data-cta-id="contact"
-            class="inline-flex min-h-[56px] items-center justify-center rounded-full bg-white px-6 py-4 text-center text-base font-semibold leading-snug text-accent-950 shadow-strong transition-all hover:scale-105 hover:bg-gray-100 md:px-10 md:py-5 md:text-xl"
+            class="inline-flex min-h-[56px] items-center justify-center rounded-md bg-white px-6 py-4 text-center text-base font-semibold leading-snug text-accent-950 transition-colors hover:bg-neutral-100 md:px-10 md:py-5 md:text-xl"
           >
             {finalCtaLabel}
             <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -386,7 +387,7 @@ const featuresCopy = sectionCopy[service.id]?.features;
             download="beekle-zero-start-sales-deck.pdf"
             data-cta-source={`services-${service.id}-final`}
             data-cta-id="pdf-zero-start-sales-deck"
-            class="inline-flex min-h-[56px] items-center justify-center rounded-full bg-primary-500 px-6 py-4 text-center text-base font-semibold leading-snug text-white shadow-strong transition-all hover:scale-105 hover:bg-primary-600 md:px-10 md:py-5 md:text-xl"
+            class="inline-flex min-h-[44px] items-center justify-center text-sm font-semibold leading-snug text-white underline-offset-4 transition hover:underline"
           >
             サービス資料をダウンロード
             <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -399,10 +400,4 @@ const featuresCopy = sectionCopy[service.id]?.features;
   </main>
 </Layout>
 
-<style>
-  .bg-grid-pattern {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-</style>
+<style></style>

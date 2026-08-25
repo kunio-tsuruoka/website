@@ -14,7 +14,7 @@ const { href, label, source, ctaId } = Astro.props as Props;
   class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 max-w-[calc(100vw-2rem)] sm:max-w-sm hidden"
 >
   <div
-    class="flex items-stretch gap-2 bg-primary-500 text-white rounded-full shadow-2xl pl-5 pr-2 py-2 ring-1 ring-primary-600/30 hover:bg-primary-600 transition-colors"
+    class="flex items-stretch gap-2 rounded-lg bg-primary-500 py-2 pl-5 pr-2 text-white ring-1 ring-primary-600/30 transition-colors hover:bg-primary-600"
   >
     <a
       href={href}
@@ -36,7 +36,7 @@ const { href, label, source, ctaId } = Astro.props as Props;
       type="button"
       data-floating-cta-close
       aria-label="閉じる"
-      class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-primary-700 transition-colors flex-shrink-0"
+      class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md transition-colors hover:bg-primary-700"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

@@ -5,6 +5,7 @@ import {
   isRecruitmentInquiry,
   requiresCompanyName,
 } from '../../lib/contact-inquiry';
+import { createContactSubmissionId } from '../../lib/contact-submission';
 import { readSession } from '../../lib/flow-interview/session';
 import { type LeadClassification, classifyInquiry } from '../../lib/lead-classifier';
 import { verifyTurnstile } from '../../lib/turnstile';
@@ -22,6 +23,13 @@ const ContactSchema = z
     source: z.string().optional().default(''),
     intent: z.string().optional().default(''),
     phase: z.string().optional().default(''),
+    submissionId: z
+      .string()
+      .trim()
+      .max(80)
+      .regex(/^[a-zA-Z0-9_-]*$/, '送信IDの形式が不正です')
+      .optional()
+      .default(''),
     // 購買プロセス上の現在地 (tasks-v3 TASK-P0-03 / [B2B-1])。任意入力
     buyingStage: z.string().trim().max(40).optional().default(''),
     turnstileToken: z.string().optional().default(''),
@@ -87,7 +95,8 @@ function postToCrm(
   webhookUrl: string,
   token: string,
   authHeaderName: string,
-  payload: unknown
+  payload: unknown,
+  submissionId: string
 ): Promise<void> {
   return postJsonWithRetry(
     webhookUrl,
@@ -95,6 +104,8 @@ function postToCrm(
     {
       'Content-Type': 'application/json',
       [authHeaderName]: token,
+      'Idempotency-Key': submissionId,
+      'X-Submission-Id': submissionId,
     },
     'CRM'
   );
@@ -165,6 +176,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       source,
       intent,
       phase,
+      submissionId: parsedSubmissionId,
       buyingStage,
       turnstileToken,
       sessionId,
@@ -176,6 +188,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       utmMedium,
       utmCampaign,
     } = parsed.data;
+    const submissionId = parsedSubmissionId || createContactSubmissionId();
 
     // 既存の AI セッション（開始時に Turnstile 検証済み）からの送信は再検証を免除する。
     // セッションが KV に実在し active であることを確認し、なりすましを防ぐ。
@@ -351,6 +364,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     };
 
     const crmPayload = {
+      submission_id: submissionId,
       name,
       company: company || null,
       email,
@@ -361,8 +375,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
         source: source || null,
         intent: intent || null,
         phase: phase || null,
+        submission_id: submissionId,
         buying_stage: buyingStage || null,
         landing_page: landingPage || null,
+        last_page: lastPage || null,
         referrer: referrer || null,
         ga_cid: clientId || null,
         utm_source: utmSource || null,
@@ -374,7 +390,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     const deliveries: Promise<void>[] = [postToSlack(webhookUrl, slackMessage)];
     if (syncToCrm && crmWebhookUrl && crmWebhookToken) {
-      deliveries.push(postToCrm(crmWebhookUrl, crmWebhookToken, crmWebhookAuthHeader, crmPayload));
+      deliveries.push(
+        postToCrm(crmWebhookUrl, crmWebhookToken, crmWebhookAuthHeader, crmPayload, submissionId)
+      );
     } else if (crmConfigured) {
       console.info('[contact] CRM sync skipped as sales outreach:', classification.reason);
     } else if (crmWebhookUrl || crmWebhookToken) {
@@ -389,7 +407,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       console.error('[contact] CRM sync failed:', detail);
     }
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, submissionId }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });

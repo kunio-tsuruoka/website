@@ -93,7 +93,7 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({ testimonial }
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="bg-white rounded-[32px] shadow-soft p-6 md:p-8 flex flex-col h-full hover:shadow-medium transition-shadow">
+    <div className="bg-white rounded-lg p-6 md:p-8 flex flex-col h-full transition-colors">
       <div className="flex flex-wrap gap-2 mb-4">
         {testimonial.categories.map((c) => (
           <span

@@ -133,7 +133,7 @@ const CareersContactForm = ({ sitekey }: CareersContactFormProps) => {
   const submitDisabled = isSubmitting || (turnstileEnabled && !turnstileToken);
 
   return (
-    <div className="bg-white rounded-[32px] shadow-soft p-8 md:p-12">
+    <div className="rounded-lg border border-neutral-200 bg-white p-8 md:p-12">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-base font-medium text-foreground/80 mb-2" htmlFor="type">
@@ -247,7 +247,7 @@ const CareersContactForm = ({ sitekey }: CareersContactFormProps) => {
           <div
             role="alert"
             aria-live="assertive"
-            className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl"
+            className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg"
           >
             <p className="text-destructive font-medium mb-1">送信できませんでした</p>
             <p className="text-sm text-foreground/80">{errorMessage}</p>
@@ -271,10 +271,10 @@ const CareersContactForm = ({ sitekey }: CareersContactFormProps) => {
           <button
             type="submit"
             disabled={submitDisabled}
-            className={`inline-flex justify-center items-center w-full md:w-auto px-10 py-4 rounded-full font-semibold text-white text-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+            className={`inline-flex justify-center items-center w-full md:w-auto px-10 py-4 rounded-md font-semibold text-white text-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
               submitDisabled
                 ? 'bg-neutral-400 cursor-not-allowed'
-                : 'bg-primary-500 hover:bg-primary-600 shadow-soft hover:shadow-medium focus:ring-primary-500'
+                : 'bg-primary-500 hover:bg-primary-600 focus:ring-primary-500'
             }`}
           >
             {isSubmitting ? '送信中...' : 'この内容で送る'}

@@ -1,5 +1,5 @@
 import { CheckCircle, Lightbulb, PhoneCall, Rocket, TestTube } from 'lucide-react';
-import React from 'react';
+import type React from 'react';
 
 // 各Stepは「Beekleがすること」「お客様にお願いすること」「この段階で決まること」の3列で見せる。
 // 金銭負担がないことと「リスクがない」ことは同義ではないため、リスクゼロ系の表現は使わない
@@ -53,14 +53,14 @@ const processSteps: ProcessStep[] = [
   },
   {
     icon: CheckCircle,
-    title: 'Go / No-Go 判断',
+    title: '投資条件の整理',
     duration: '応相談',
     cost: '見積提示',
     description:
-      '検証結果をもとに、先へ進むか・見送るかを判断いただきます。見送りの場合、開発費用の負担はありません。動く実物があるため、進む場合の見積もり精度が高くなります。',
+      '検証結果をもとに、次に投資する条件と見送り条件を整理します。見送りの場合、開発費用の負担はありません。動く実物があるため、投資する場合の見積もり精度が高くなります。',
     beekle: ['検証結果の整理', '本開発の見積・進め方のご提案'],
     customer: ['社内での投資判断'],
-    decision: 'Go / No-Go。進む場合はPoC・MVP・本開発のどこからか',
+    decision: '次に投資する条件。PoC・MVP・本開発のどこから始めるか',
   },
   {
     icon: Rocket,
@@ -82,61 +82,23 @@ const COLUMN_LABELS = {
 } as const;
 
 export const ProcessSteps = () => {
-  const [visibleSteps, setVisibleSteps] = React.useState<Set<number>>(new Set());
-
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const idx = Number.parseInt(entry.target.getAttribute('data-step-index') || '0');
-            setVisibleSteps((prev) => new Set(prev).add(idx));
-          }
-        }
-      },
-      { threshold: 0.2, rootMargin: '0px 0px -100px 0px' }
-    );
-
-    const elements = document.querySelectorAll('[data-step-index]');
-    for (const el of elements) {
-      observer.observe(el);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <div className="bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="space-y-16">
           {processSteps.map((step, idx) => (
-            <div
-              key={step.title}
-              className="relative pb-8"
-              data-step-index={idx}
-              style={{
-                opacity: visibleSteps.has(idx) ? 1 : 0,
-                transform: visibleSteps.has(idx) ? 'translateY(0)' : 'translateY(30px)',
-                transition: `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${idx * 0.15}s`,
-              }}
-            >
+            <div key={step.title} className="relative pb-8" data-step-index={idx}>
               {idx !== processSteps.length - 1 && (
                 <div
-                  className="absolute left-8 top-8 h-full w-0.5 bg-gradient-to-b from-primary-300 to-transparent"
-                  style={{
-                    opacity: visibleSteps.has(idx) ? 1 : 0,
-                    transition: `opacity 0.8s ease ${idx * 0.15 + 0.3}s`,
-                  }}
+                  className="absolute left-8 top-8 h-full w-px bg-neutral-200"
                   aria-hidden="true"
                 />
               )}
               <div className="relative flex items-start">
                 <span
-                  className={`flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full transition-all duration-500 ${
-                    step.highlight
-                      ? 'bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg'
-                      : 'bg-primary-500'
-                  } ${visibleSteps.has(idx) ? 'scale-100 rotate-0' : 'scale-75 rotate-180'}`}
+                  className={`flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-md transition-colors duration-500 ${
+                    step.highlight ? 'bg-primary-500 ring-2 ring-primary-100' : 'bg-primary-500'
+                  }`}
                   style={{
                     transitionDelay: `${idx * 0.15 + 0.1}s`,
                   }}
@@ -144,22 +106,22 @@ export const ProcessSteps = () => {
                   <step.icon className="h-8 w-8 text-white" />
                 </span>
                 <div
-                  className={`ml-6 flex-1 rounded-2xl p-6 shadow-lg transition-all hover:shadow-xl hover:-translate-y-1 ${
+                  className={`ml-6 flex-1 rounded-lg border p-6 transition-colors ${
                     step.highlight
-                      ? 'bg-gradient-to-br from-primary-50 to-primary-100 border-2 border-primary-200'
-                      : 'bg-white'
+                      ? 'border-primary-200 bg-primary-50/60'
+                      : 'border-neutral-200 bg-white'
                   }`}
                 >
                   <div className="flex flex-wrap items-center gap-3 mb-2">
                     <h2 className="text-xl font-bold text-gray-900">{step.title}</h2>
                     {step.highlight && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-primary-500 to-primary-600 text-white">
+                      <span className="inline-flex items-center rounded-md bg-primary-500 px-3 py-1 text-xs font-semibold text-white">
                         初期費用0円
                       </span>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-3 mb-3">
-                    <span className="inline-flex items-center text-sm text-primary-500 font-medium bg-primary-50 px-3 py-1 rounded-full">
+                    <span className="inline-flex items-center rounded-md bg-primary-50 px-3 py-1 text-sm font-medium text-primary-500">
                       <svg
                         className="w-4 h-4 mr-1"
                         fill="none"
@@ -177,7 +139,7 @@ export const ProcessSteps = () => {
                       {step.duration}
                     </span>
                     <span
-                      className={`inline-flex items-center text-sm font-medium px-3 py-1 rounded-full ${
+                      className={`inline-flex items-center rounded-md px-3 py-1 text-sm font-medium ${
                         step.cost === '初期費用0円' || step.cost === '無料'
                           ? 'text-secondary-500 bg-secondary-50'
                           : 'text-gray-600 bg-gray-100'
@@ -189,33 +151,33 @@ export const ProcessSteps = () => {
                   <p className="mt-2 text-gray-700 leading-relaxed">{step.description}</p>
 
                   <div className="mt-5 grid gap-4 md:grid-cols-3">
-                    <div className="rounded-xl bg-gray-50 p-4">
+                    <div className="rounded-md bg-gray-50 p-4">
                       <p className="text-xs font-bold text-primary-500 mb-2">
                         {COLUMN_LABELS.beekle}
                       </p>
                       <ul className="space-y-1.5">
                         {step.beekle.map((item) => (
                           <li key={item} className="flex items-start text-sm text-gray-600">
-                            <span className="mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary-500" />
+                            <span className="mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-sm bg-primary-500" />
                             <span>{item}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-xl bg-gray-50 p-4">
+                    <div className="rounded-md bg-gray-50 p-4">
                       <p className="text-xs font-bold text-primary-500 mb-2">
                         {COLUMN_LABELS.customer}
                       </p>
                       <ul className="space-y-1.5">
                         {step.customer.map((item) => (
                           <li key={item} className="flex items-start text-sm text-gray-600">
-                            <span className="mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary-500" />
+                            <span className="mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-sm bg-primary-500" />
                             <span>{item}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-xl border border-primary-200 bg-primary-50 p-4">
+                    <div className="rounded-md border border-primary-200 bg-primary-50 p-4">
                       <p className="text-xs font-bold text-primary-600 mb-2">
                         {COLUMN_LABELS.decision}
                       </p>
