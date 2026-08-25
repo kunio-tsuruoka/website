@@ -10,7 +10,7 @@ const pageUrl = `${siteUrl}${consultationHub.href}`;
 
 <Layout
   title="相談が始まる場面一覧 | Beekle株式会社"
-  description="Beekleへの相談が始まる場面を、CEP別に整理。要件未確定、AI導入、属人業務、社内資料検索、顧客データ、止まった開発ごとに判断材料と実案件ログを確認できます。"
+  description="要件が固まらない、AI導入、属人業務、社内資料検索、顧客データ、止まった開発。Beekleへの相談が始まる場面ごとに、初回で見る判断材料と見送り条件をまとめています。"
   canonical={pageUrl}
 >
   <JsonLd
@@ -39,19 +39,19 @@ const pageUrl = `${siteUrl}${consultationHub.href}`;
             </h1>
             <p class="mt-6 text-lg leading-relaxed text-neutral-700">
               「AIを入れたい」「システムを作りたい」より前に、社内ではもっと具体的な詰まり方があります。
-              各場面ごとに、初回相談で見る判断材料、見送り条件、実案件ログを置いています。
+              各場面ごとに、初回相談で何を見るか、今はやらない条件まで置いています。
             </p>
           </div>
 
           <div class="border-y border-neutral-300 bg-white">
             <div class="grid gap-2 border-b border-neutral-300 border-l-8 border-primary-500 px-5 py-4 md:grid-cols-[0.55fr_1fr]">
-              <p class="text-sm font-bold text-primary-700">CEP別RTB</p>
+              <p class="text-sm font-bold text-primary-700">相談前に分かること</p>
               <p class="text-sm font-bold text-accent-950">
-                自分の状況に近い入口で、成果物サンプルと実案件ログを確認できます。
+                近い場面を選ぶと、初回で何を見るか、どこまで返すか、今はやらない条件まで分かります。
               </p>
             </div>
             <div class="divide-y divide-neutral-300">
-              {['判断材料', '成果物サンプル', '実案件ログ', '見送り条件'].map((item, index) => (
+              {['判断材料', '初回で返す資料', '似た相談の実例', '見送り条件'].map((item, index) => (
                 <div class="grid gap-3 px-5 py-5 md:grid-cols-[96px_1fr]">
                   <p class="font-Poppins text-sm font-bold text-primary-600">
                     {String(index + 1).padStart(2, '0')}
@@ -69,13 +69,13 @@ const pageUrl = `${siteUrl}${consultationHub.href}`;
       <div class="container mx-auto px-8 lg:px-12">
         <div class="mb-8 flex flex-col gap-4 border-b border-neutral-300 pb-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <p class="section-label">CEP INDEX</p>
+            <p class="section-label">場面一覧</p>
             <h2 class="mt-3 text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
               相談前の状態から探す
             </h2>
           </div>
           <p class="max-w-xl text-sm leading-relaxed text-neutral-700">
-            各ページでは、相談で返す資料、判断の前提、今すぐ着手しない条件まで確認できます。
+            判断材料と見送り条件は、場面ごとのページにあります。
           </p>
         </div>
 
