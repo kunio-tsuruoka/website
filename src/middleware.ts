@@ -1,4 +1,5 @@
 import { defineMiddleware } from 'astro:middleware';
+import { type EdgeCacheEnv, resolveEdgeCacheKeyUrl } from '@/lib/edge-cache';
 
 // SSR HTML をエッジ（Cloudflare PoP 単位）でキャッシュする。
 // cf-cache-status: DYNAMIC で毎リクエスト MicroCMS を叩いていた TTFB 対策。
@@ -36,6 +37,7 @@ type RuntimeLocals = {
   runtime?: {
     caches?: { default?: Cache };
     ctx?: { waitUntil?: (p: Promise<unknown>) => void };
+    env?: EdgeCacheEnv;
   };
 };
 
@@ -64,7 +66,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const cache = resolveCache(context.locals as RuntimeLocals);
   if (!cache) return next();
 
-  const cacheKey = new Request(url.toString(), { method: 'GET' });
+  const runtime = (context.locals as RuntimeLocals).runtime;
+  const cacheKey = new Request(resolveEdgeCacheKeyUrl(url, runtime?.env), { method: 'GET' });
 
   try {
     const hit = await cache.match(cacheKey);
@@ -101,7 +104,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const putPromise = cache.put(cacheKey, outgoing.clone()).catch(() => {
     // cache.put 失敗（プレビュー環境等）はレスポンス配信に影響させない
   });
-  const waitUntil = (context.locals as RuntimeLocals).runtime?.ctx?.waitUntil;
+  const waitUntil = runtime?.ctx?.waitUntil;
   if (waitUntil) {
     waitUntil(putPromise);
   } else {
