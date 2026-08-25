@@ -25,7 +25,7 @@ export const consultationHub = {
   title: '相談が始まる場面',
   href: '/situations',
   description:
-    'サービス名ではなく、社内で相談が始まった場面から選べます。各CEPごとに、判断材料、見送り条件、成果物サンプル、実案件ログ、次に確認することを整理します。',
+    'サービス名ではなく、社内で相談が始まった場面から選べます。各場面ごとに、判断材料、見送り条件、初回で返す資料、似た相談の実例、次に確認することを整理します。',
 };
 
 export const consultationSituations: ConsultationSituation[] = [

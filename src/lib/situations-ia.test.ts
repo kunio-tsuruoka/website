@@ -25,7 +25,22 @@ describe('consultation situation IA', () => {
     expect(existsSync(pathFor('src/pages/situations/[slug].astro'))).toBe(true);
   });
 
-  it('defines each CEP with buyer-sided judgment language and contextual RTB', () => {
+  it('keeps buyer-facing situation copy free of internal CEP/RTB jargon', () => {
+    const indexPage = readSource('src/pages/situations/index.astro');
+    const detailPage = readSource('src/pages/situations/[slug].astro');
+    const home = readSource('src/pages/index.astro');
+    const data = readSource('src/data/consultation-situations.ts');
+
+    expect(indexPage).not.toContain('CEP別RTB');
+    expect(indexPage).not.toContain('CEP INDEX');
+    expect(indexPage).not.toContain('自分の状況に近い入口');
+    expect(indexPage).not.toContain('CEP別に');
+    expect(detailPage).not.toContain('03 RTB');
+    expect(home).not.toContain('各入口で');
+    expect(data).not.toContain('各CEPごとに');
+  });
+
+  it('defines each situation with buyer-sided judgment language and contextual proof', () => {
     const source = readSource('src/data/consultation-situations.ts');
 
     for (const slug of situationSlugs) {
