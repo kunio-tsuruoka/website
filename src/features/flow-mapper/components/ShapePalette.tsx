@@ -9,7 +9,7 @@ export function ShapePalette({ onAdd }: { onAdd: (type: StepType) => void }) {
   const order: StepType[] = ['start', 'task', 'decision', 'system', 'wait', 'end'];
   return (
     <div
-      className="inline-flex items-center bg-white border border-gray-300 rounded-lg overflow-hidden shadow-soft"
+      className="inline-flex items-center bg-white border border-gray-300 rounded-lg overflow-hidden"
       role="toolbar"
       aria-label="図形パレット"
     >

@@ -85,8 +85,8 @@ const categories: ResourceCategory[] = [
     ],
   },
   {
-    heading: '開発方法を確認する',
-    lead: 'Beekleがどう作るのか。発注前の不確実性をどう減らすのかを確認できます。',
+    heading: '進め方を確認する',
+    lead: 'Beekleがどう進めるのか。発注前の不確実性をどう減らすのかを確認できます。',
     resources: [
       {
         title: 'ゼロスタート開発 サービスデック',
@@ -97,11 +97,11 @@ const categories: ResourceCategory[] = [
         ctaId: 'pdf-zero-start-sales-deck',
       },
       {
-        title: 'Beekleの開発方法',
+        title: 'Beekleの進め方',
         description:
           'なぜ速く作っても仕様が崩れにくいのか。要求から実装・テストまでを一つながりに管理する進め方の説明です。',
         landingUrl: '/strengths',
-        ctaLabel: '開発方法を見る',
+        ctaLabel: '進め方を見る',
         ctaId: 'strengths',
       },
       {
@@ -168,7 +168,7 @@ const categories: ResourceCategory[] = [
 ];
 
 const pageDescription =
-  'Beekleの資料・判断材料の一覧。課題整理、技術理解、開発方法の確認、比較・稟議と、検討の段階に合わせて必要な資料・記事・事例へ案内します。';
+  'Beekleの資料・判断材料の一覧。課題整理、技術理解、進め方の確認、比較・稟議と、検討の段階に合わせて必要な資料・記事・事例へ案内します。';
 ---
 
 <Layout title="資料・判断材料 | Beekle" description={pageDescription} noindex={true}>
@@ -192,11 +192,11 @@ const pageDescription =
       url: 'https://beekle.jp/materials',
     }}
   />
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <PageHero
       title="資料・判断材料"
-      subtitle="いま検討がどの段階かに合わせて、必要な材料へ案内します。課題の整理から、技術の理解、開発方法の確認、社内での比較・稟議まで。"
+      subtitle="いま検討がどの段階かに合わせて、必要な材料へ案内します。課題の整理から、技術の理解、進め方の確認、社内での比較・稟議まで。"
     />
 
     <section class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-16">
@@ -206,10 +206,10 @@ const pageDescription =
           {category.lead && <p class="text-gray-600 mb-8">{category.lead}</p>}
           <div class={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ${category.lead ? '' : 'mt-8'}`}>
             {category.resources.map((resource) => (
-              <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+              <div class="bg-white rounded-lg overflow-hidden transition-colors duration-300 flex flex-col">
                 <div class="p-8 flex flex-col flex-1">
                   <div class="mb-4">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-700">
+                    <span class="inline-flex items-center rounded-md bg-primary-100 px-3 py-1 text-sm font-medium text-primary-700">
                       {category.heading}
                     </span>
                   </div>
@@ -228,7 +228,7 @@ const pageDescription =
                       {...(resource.external ? { rel: 'noopener' } : {})}
                       data-cta-source="materials"
                       data-cta-id={resource.ctaId}
-                      class="inline-flex items-center justify-center w-full px-6 py-3 min-h-[44px] text-base font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors duration-200"
+                      class="inline-flex items-center justify-center w-full px-6 py-3 min-h-[44px] text-base font-medium text-white bg-primary-500 rounded-md hover:bg-primary-600 transition-colors duration-200"
                     >
                       {resource.ctaLabel || '詳細を見る'}
                       <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -241,7 +241,7 @@ const pageDescription =
                       download={resource.fileName}
                       data-cta-source="materials"
                       data-cta-id={resource.ctaId}
-                      class="inline-flex items-center justify-center w-full px-6 py-3 min-h-[44px] text-base font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors duration-200"
+                      class="inline-flex items-center justify-center w-full px-6 py-3 min-h-[44px] text-base font-medium text-white bg-primary-500 rounded-md hover:bg-primary-600 transition-colors duration-200"
                     >
                       <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -267,9 +267,9 @@ const pageDescription =
             href="/contact?source=materials-final"
             data-cta-source="materials-final"
             data-cta-id="contact"
-            class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-primary-500 border border-transparent rounded-full hover:bg-primary-600"
+            class="inline-flex min-h-[52px] items-center justify-center rounded-md bg-primary-500 px-8 py-4 text-lg font-medium text-white hover:bg-primary-600"
           >
-            業務課題を相談する
+            実現可否を相談する
             <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>

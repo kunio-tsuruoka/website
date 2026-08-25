@@ -106,15 +106,15 @@ const pageUrl = 'https://beekle.jp/blog';
       }}
     />
   )}
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <PageHero
       title="ブログ"
       subtitle="開発、AI、自社プロダクト、経営、日々の試行錯誤を、コラムとは別の雑記として書いていきます。"
       badge="Blog"
     />
 
-    <section class="bg-white py-16 md:py-24">
+    <section class="border-b border-neutral-300 bg-neutral-100 py-16 md:py-24">
       <BlogListing
         blogs={blogs}
         apiError={apiError}

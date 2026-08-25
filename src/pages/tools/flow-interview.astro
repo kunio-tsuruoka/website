@@ -36,32 +36,32 @@ const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
     }}
   />
 
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <PageHero
       title="話すだけ発注準備"
       subtitle="AIの質問に答えるだけで、今の業務の流れ（As-Is）がリアルタイムで図になります。テキストでも音声でも回答OK。できた図はそのまま編集したり、Beekleへの相談に進めます。"
       badge="AI Tool"
     />
 
-    <section class="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
+    <section class="border-b border-neutral-300 bg-neutral-100 py-12 md:py-16">
       <div class="container mx-auto px-6 md:px-8 max-w-6xl">
         <FlowInterview client:load sitekey={sitekey} />
 
         <div class="mt-10 grid md:grid-cols-3 gap-4 text-sm">
-          <div class="p-5 bg-white rounded-2xl border border-gray-200">
+          <div class="rounded-lg border border-neutral-200 bg-white p-5">
             <p class="font-bold mb-2">話すだけで図になる</p>
             <p class="text-gray-600">
               業務の流れを言葉で説明するだけ。AIが担当・順序・使うツールを整理して図にします。
             </p>
           </div>
-          <div class="p-5 bg-white rounded-2xl border border-gray-200">
+          <div class="rounded-lg border border-neutral-200 bg-white p-5">
             <p class="font-bold mb-2">そのまま編集できる</p>
             <p class="text-gray-600">
               できた図はフローマッパーで自由に編集。コスト試算やPNG/SVG出力にも対応します。
             </p>
           </div>
-          <div class="p-5 bg-white rounded-2xl border border-gray-200">
+          <div class="rounded-lg border border-neutral-200 bg-white p-5">
             <p class="font-bold mb-2">プライバシー</p>
             <p class="text-gray-600">
               入力内容はBeekle社内の確認用のみに使用します。会員登録は不要です。

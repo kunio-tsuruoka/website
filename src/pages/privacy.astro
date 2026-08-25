@@ -11,8 +11,8 @@ const established = '2024年1月1日';
   title="プライバシーポリシー | Beekle"
   description="株式会社Beekleのプライバシーポリシー。個人情報の取扱い、AIデモにおける入力情報の処理、業務委託先、外国にある第三者への提供、保有期間、開示請求手続について定めています。"
 >
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <PageHero title="プライバシーポリシー" subtitle={`最終改訂日: ${lastUpdated} / 制定日: ${established}`} />
 
     <section class="py-32">
@@ -183,10 +183,4 @@ const established = '2024年1月1日';
   </main>
 </Layout>
 
-<style>
-  .bg-grid-pattern {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-</style>
+<style></style>

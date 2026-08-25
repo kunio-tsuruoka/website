@@ -1,12 +1,74 @@
 ---
 import { Header } from '../components/header';
 import JsonLd from '../components/seo/json-ld.astro';
+import { ButtonLink } from '../components/ui/button';
 import Layout from '../layouts/layout.astro';
+
+const proofRows = [
+  ['確認すること', '業務適合 / データ / 利用者反応 / 投資判断'],
+  ['作るもの', 'コア機能に絞った検証用プロトタイプ'],
+  ['返すもの', '触った結果、受入条件、概算レンジ、見送り条件'],
+  ['含まないもの', '本番品質の作り込み、全データ投入、保守運用'],
+];
+
+const processRows = [
+  {
+    no: '01',
+    title: '相談・NDA確認',
+    customer: '課題、既存資料、使える範囲のデータを共有',
+    beekle: '検証すべき問いと対象業務を整理',
+    decision: '何を確かめれば社内判断できるか',
+  },
+  {
+    no: '02',
+    title: '検証用プロトタイプ',
+    customer: '代表ケースで触り、違和感や不足を共有',
+    beekle: 'コア機能に絞って動くものを作る',
+    decision: '実物でズレ、データ不足、運用負荷を見る',
+  },
+  {
+    no: '03',
+    title: '投資条件の整理',
+    customer: '社内で投資判断を行う',
+    beekle: '見積もり範囲、残るリスク、見送り理由を返す',
+    decision: 'PoC・MVP・本開発のどこから始めるか、見送り条件は何か',
+  },
+];
+
+const fitItems = [
+  '要件が固まりきらず、見積もり比較に進めない',
+  'AIや業務システムが自社に合うか実物で見たい',
+  '上長・情シス・現場へ、資料だけでは説明しきれない',
+  '本開発前に、作らない判断も含めて確認したい',
+];
+
+const faqItems = [
+  {
+    question: '本当に初期費用0円ですか？',
+    answer:
+      '検証用プロトタイプの範囲に限り、初期費用0円で始められる場合があります。成果物の譲渡や本番品質の作り込みは含まず、範囲が大きい場合は有料PoCとして提案します。',
+  },
+  {
+    question: '作ったものはそのまま本番化できますか？',
+    answer:
+      '検証用プロトタイプは判断材料です。そのまま本番運用する前提では作りません。本番化する場合は、権限、ログ、データ移行、セキュリティ、運用設計を別途確認します。',
+  },
+  {
+    question: '相談前にNDAは締結できますか？',
+    answer:
+      '可能です。初回は公開できる範囲で相談し、機密資料や顧客情報が必要になった段階でNDA締結後に確認します。',
+  },
+  {
+    question: '見送り条件が出た場合はどうなりますか？',
+    answer:
+      '開発を無理に勧めません。データ不足、利用者不在、投資根拠不足など、見送り理由と次に確認すべき条件を残します。',
+  },
+];
 ---
 
 <Layout
-  title="本開発前に動くプロトタイプで確かめる｜Zero Start | Beekle"
-  description="Zero Startは、本開発の前に検証用プロトタイプを作り、業務適合・要件・データ・利用者の反応を実物で確認するBeekleの開発入口です。確認結果をもとにGo / No-Goを判断し、必要な場合のみPoC・MVP・本開発へ進みます。"
+  title="本開発前に動くプロトタイプで確かめる｜ゼロスタート | Beekle"
+  description="ゼロスタートは、本開発の前に検証用プロトタイプを作り、業務適合・要件・データ・利用者の反応を実物で確認するBeekleの開発入口です。"
 >
   <JsonLd
     slot="head"
@@ -14,7 +76,7 @@ import Layout from '../layouts/layout.astro';
     data={{
       serviceName: 'ゼロスタート（Zero Start）',
       serviceDescription:
-        '本開発の前に検証用プロトタイプを作り、業務適合・要件・データ・利用者の反応を実物で確認する開発の入口。確認結果をもとにGo / No-Goを判断し、必要な場合のみPoC・MVP・本開発へ進みます。',
+        '本開発の前に検証用プロトタイプを作り、業務適合・要件・データ・利用者の反応を実物で確認する開発の入口。',
       url: 'https://beekle.jp/prooffirst',
       serviceType: 'システム開発プロトタイプ作成',
     }}
@@ -25,855 +87,157 @@ import Layout from '../layouts/layout.astro';
     data={{
       items: [
         { name: 'ホーム', url: '/' },
-        { name: 'プロトタイプ無料体験', url: '/prooffirst' },
+        { name: 'ゼロスタート', url: '/prooffirst' },
       ],
     }}
   />
-  <Header client:idle />
+  <Header />
 
-  <main class="bg-white">
-    {/* ============ HERO ============ */}
-    <section class="relative pt-24 md:pt-28 pb-12 md:pb-20 overflow-hidden">
-      {/* Background decorations */}
-      <div class="absolute inset-0 -z-10 pointer-events-none">
-        {/* big blue diagonal blob behind dashboard */}
-        <div class="absolute top-10 right-0 w-[55%] h-[420px] bg-gradient-to-br from-primary-500/15 via-primary-400/10 to-transparent rounded-[60%] blur-2xl"></div>
-        <div class="absolute -top-12 right-12 w-44 h-[380px] bg-primary-500/10 rounded-full -rotate-12"></div>
-        <div class="absolute top-32 right-40 w-24 h-64 bg-secondary-500/10 rounded-full rotate-12"></div>
-        <div class="absolute -bottom-10 left-20 w-32 h-32 bg-highlight-500/10 rounded-full"></div>
-        {/* Decorative dots top-left */}
-        <svg class="absolute top-32 left-4 w-20 h-20 text-primary-500/20" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
-          <circle cx="10" cy="10" r="2"/><circle cx="30" cy="10" r="2"/><circle cx="50" cy="10" r="2"/>
-          <circle cx="10" cy="30" r="2"/><circle cx="30" cy="30" r="2"/><circle cx="50" cy="30" r="2"/>
-          <circle cx="10" cy="50" r="2"/><circle cx="30" cy="50" r="2"/><circle cx="50" cy="50" r="2"/>
-        </svg>
-        {/* Yellow squiggle right */}
-        <svg class="absolute top-20 right-2 w-10 h-10 text-highlight-500/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path stroke-linecap="round" d="M3 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/>
-        </svg>
-      </div>
-
-      <div class="container mx-auto px-6 lg:px-12">
-        <div class="grid lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-12 items-center">
-          {/* LEFT: COPY */}
-          <div>
-            <span class="inline-block px-4 py-1.5 bg-primary-500/10 text-primary-500 rounded-full text-xs md:text-sm font-medium mb-5">
-              Beekle <span class="opacity-50 mx-1">×</span> techbeans <span class="opacity-50 mx-1">×</span> AmpTech
-            </span>
-
-            <h1 class="text-[1.75rem] sm:text-3xl md:text-4xl lg:text-[2.5rem] xl:text-5xl font-bold leading-[1.25] text-accent-950 mb-4 tracking-tight">
-              本開発を発注する前に、<br />動くもので確かめる。
-            </h1>
-
-            <p class="text-lg md:text-xl font-bold text-accent-950 mb-6 leading-tight">
-              話すより、<span class="text-primary-500">Proof</span><span class="text-primary-500 text-sm md:text-base align-baseline">（証拠）</span>を。
-            </p>
-
-            <p class="text-sm md:text-base text-neutral-700 leading-relaxed mb-8 max-w-xl">
-              不確実な見積もり、すれ違う認識、作ってから気づく要件のズレ。<br class="hidden md:block"/>
-              その多くは、本開発の前に「動くものを見る」ことで小さくできます。<br class="hidden md:block"/>
-              <span class="text-primary-500 font-semibold">ゼロスタート</span>は、初期費用<span class="text-primary-500 font-bold">0円</span>で検証用プロトタイプを開発。業務適合・要件・データ・利用者の反応を実物で確認し、Go / No-Goを判断してから、PoC・MVP・本開発へ進めます。
-            </p>
-
-            <a
+  <main class="bg-neutral-100 pt-20">
+    <section class="border-b border-neutral-300 bg-neutral-100 py-14 md:py-20">
+      <div class="container mx-auto grid gap-10 px-8 lg:grid-cols-[0.9fr_0.85fr] lg:items-end lg:px-12">
+        <div>
+          <p class="border-l-8 border-primary-500 pl-5 text-sm font-bold text-primary-700">
+            ゼロスタート
+          </p>
+          <h1 class="mt-6 max-w-4xl text-4xl font-bold leading-[1.08] text-accent-950 [word-break:keep-all] sm:text-5xl md:text-6xl">
+            本開発の前に、
+            <br />
+            動くもので確かめる。
+          </h1>
+          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-700 md:text-xl">
+            相談内容を検証用プロトタイプに落とし込み、業務に合うか、次に投資する条件があるかを判断できる状態にします。
+          </p>
+          <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <ButtonLink
               href="/contact?source=prooffirst-hero"
               data-cta-source="prooffirst-hero"
               data-cta-id="contact"
-              class="inline-flex items-center gap-2 px-6 py-3.5 bg-primary-500 hover:bg-primary-600 text-white rounded-full text-sm md:text-base font-semibold shadow-soft hover:shadow-medium transition-all"
+              variant="primary"
+              size="lg"
             >
-              証拠から始める開発を体験する
-              <span class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
-              </span>
+              実物で判断できるか相談する
+            </ButtonLink>
+            <a href="/case-studies" class="inline-flex min-h-[48px] items-center border-b border-accent-950 text-sm font-semibold text-accent-950 hover:border-primary-500 hover:text-primary-500">
+              実案件の変化を見る
             </a>
           </div>
-
-          {/* RIGHT: DASHBOARD MOCKUP */}
-          <div class="relative">
-            {/* glow */}
-            <div class="absolute -inset-4 bg-gradient-to-br from-primary-100/50 to-secondary-100/30 rounded-[40px] blur-2xl -z-10" aria-hidden="true"></div>
-
-            {/* Dashboard window */}
-            <div class="relative bg-white rounded-2xl shadow-strong border border-neutral-100 overflow-hidden">
-              {/* window header */}
-              <div class="flex items-center gap-1.5 px-4 py-2.5 border-b border-neutral-100 bg-neutral-50">
-                <span class="w-2.5 h-2.5 rounded-full bg-red-400/80"></span>
-                <span class="w-2.5 h-2.5 rounded-full bg-yellow-400/80"></span>
-                <span class="w-2.5 h-2.5 rounded-full bg-green-400/80"></span>
-                <span class="ml-3 text-[11px] font-semibold text-neutral-500">検証チェックリスト（イメージ）</span>
-              </div>
-
-              <div class="p-4 space-y-2.5">
-                {[
-                  { label: '業務フロー適合', note: '実際の手順に当てはめて確認', status: '確認済み', done: true },
-                  { label: '入力データ確認', note: '実データ・サンプルで動作確認', status: '確認済み', done: true },
-                  { label: '利用者レビュー', note: '現場の担当者が実際に触る', status: '進行中', done: false },
-                  { label: 'Go / No-Go 判断', note: '本開発へ進む価値があるか', status: 'これから', done: false },
-                ].map((item) => (
-                  <div class="flex items-center gap-3 rounded-lg border border-neutral-100 bg-white px-3 py-2.5">
-                    <span class={`flex h-6 w-6 flex-none items-center justify-center rounded-full ${item.done ? 'bg-primary-500' : 'border-2 border-neutral-300 bg-white'}`}>
-                      {item.done && (
-                        <svg class="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
-                        </svg>
-                      )}
-                    </span>
-                    <div class="min-w-0 flex-1">
-                      <p class="text-xs md:text-sm font-bold text-accent-950 leading-tight">{item.label}</p>
-                      <p class="text-[10px] md:text-[11px] text-neutral-500 leading-tight mt-0.5">{item.note}</p>
-                    </div>
-                    <span class={`flex-none rounded-full px-2 py-0.5 text-[10px] font-semibold ${item.done ? 'bg-primary-50 text-primary-600' : 'bg-neutral-100 text-neutral-500'}`}>
-                      {item.status}
-                    </span>
-                  </div>
-                ))}
-                <p class="text-[10px] text-neutral-400 pt-1">※ 画面はイメージです</p>
-              </div>
-            </div>
-
-            {/* Floating badge: 実物で判断 */}
-            <div class="absolute -top-3 -right-3 sm:-right-6 bg-white rounded-2xl shadow-medium px-3 py-2 border border-primary-100/80 animate-float">
-              <p class="text-[9px] text-neutral-500 leading-none mb-1">本開発の前に</p>
-              <p class="text-xs sm:text-sm font-bold text-primary-500 leading-none">実物でGo / No-Go</p>
-            </div>
-
-            {/* Floating yellow burst: 初期費用 0円 */}
-            <div class="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 w-24 h-24 sm:w-28 sm:h-28 bg-highlight-500 rounded-full flex flex-col items-center justify-center shadow-strong rotate-[-10deg] animate-float-delay z-10">
-              <span class="text-[10px] font-bold text-accent-950">初期費用</span>
-              <span class="text-2xl sm:text-3xl font-extrabold text-accent-950 leading-none">0<span class="text-base">円</span></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {/* ============ 01 PROBLEM ============ */}
-    <section class="relative bg-gradient-to-br from-primary-50/40 via-white to-primary-50/20 py-16 md:py-20 overflow-hidden">
-      <div class="absolute top-10 right-10 w-32 h-32 bg-primary-100/30 rounded-full blur-3xl -z-0"></div>
-      <div class="absolute bottom-20 left-10 w-32 h-32 bg-secondary-50/40 rounded-full blur-3xl -z-0"></div>
-
-      <div class="container mx-auto px-6 lg:px-12 relative">
-        {/* Header */}
-        <div class="flex items-baseline gap-4 mb-3">
-          <span class="font-Poppins text-3xl md:text-4xl font-bold text-primary-500">01</span>
-          <span class="text-xs md:text-sm font-semibold tracking-wider uppercase text-primary-500">Problem</span>
-          <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-accent-950 ml-auto md:ml-6">開発って、正直よくわからない。</h2>
-        </div>
-        <p class="text-sm text-neutral-600 mb-10 md:mb-12 md:ml-24">そんな声からゼロスタートは生まれました。</p>
-
-        {/* 6 cards */}
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 max-w-5xl mx-auto">
-          {[
-            { icon: 'M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 1.332-7.257 3 3 0 0 0-3.758-3.848 5.25 5.25 0 0 0-10.233 2.33A4.502 4.502 0 0 0 2.25 15Z M9 12a3 3 0 0 1 6 0', label: 'エンジニアのことは\nよくわからない' },
-            { icon: 'M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75 M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z M12 17.25h.008v.008H12v-.008Z', label: '何が正解か\nわからない' },
-            { icon: 'M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25 M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z M3.75 9h16.5m-16.5 6.75h16.5', label: '見積もりが\n当てにならない', custom: 'M8.25 8.25h7.5v7.5h-7.5z' },
-            { icon: 'M15.182 16.318A4.486 4.486 0 0 0 12.016 15a4.486 4.486 0 0 0-3.198 1.318M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z M9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z', label: '思ったのと違うものが\n出てくる' },
-            { icon: 'M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21', label: 'どこに頼んだら\nいいか不安' },
-            { icon: 'M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5', label: 'AIやPoCが自社に\n合うかわからない' },
-          ].map((item) => (
-            <div class="bg-white rounded-2xl p-4 md:p-5 shadow-soft hover:shadow-medium transition-shadow">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 flex-shrink-0">
-                  <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d={item.icon}/>
-                  </svg>
-                </div>
-                <p class="text-xs md:text-sm font-bold text-accent-950 leading-snug whitespace-pre-line">{item.label}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    {/* ============ 02 SOLUTION ============ */}
-    <section class="relative bg-white py-16 md:py-20 overflow-hidden">
-      <div class="absolute top-10 left-10 w-40 h-40 bg-primary-100/30 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-10 right-10 w-40 h-40 bg-secondary-50/40 rounded-full blur-3xl"></div>
-
-      <div class="container mx-auto px-6 lg:px-12 relative">
-        <div class="flex items-baseline gap-4 mb-10 md:mb-14 flex-wrap">
-          <span class="font-Poppins text-3xl md:text-4xl font-bold text-primary-500">02</span>
-          <span class="text-xs md:text-sm font-semibold tracking-wider uppercase text-primary-500">Solution</span>
-          <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-accent-950 md:ml-6">正解を話し込むの、やめました。</h2>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
-          {[
-            {
-              title: '実物で合意形成',
-              desc: 'まず動くプロトタイプを見て、関係者全員で実物の合意形成。認識のズレを、実装が大きくなる前に見つけます。',
-              iconBg: 'bg-primary-100', iconColor: 'text-primary-500',
-              icon: 'M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z',
-            },
-            {
-              title: 'ROIで判断',
-              desc: '実データをもとに効果を可視化、投資判断を明確にしてから、次の判断ができます。',
-              iconBg: 'bg-secondary-100', iconColor: 'text-secondary-600',
-              icon: 'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z',
-            },
-            {
-              title: '上申が実演に',
-              desc: 'プロトタイプを生で実演。上申資料の説明ジレンマを解消し、社内承認のハードルを下げます。',
-              iconBg: 'bg-highlight-100', iconColor: 'text-highlight-600',
-              icon: 'M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0 1 12 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 9.375v9c0 .621-.504 1.125-1.125 1.125M12 9.375a1.125 1.125 0 0 1 1.125-1.125h7.5c.621 0 1.125.504 1.125 1.125M12 9.375v1.5c0 .621.504 1.125 1.125 1.125m0 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m7.5-3.75c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-9.75 0h7.5',
-            },
-          ].map((c) => (
-            <div class="bg-white rounded-2xl p-5 md:p-6 shadow-soft hover:shadow-medium transition-all hover:-translate-y-1 border border-neutral-100">
-              <div class={`w-12 h-12 md:w-14 md:h-14 rounded-xl ${c.iconBg} flex items-center justify-center ${c.iconColor} mb-4`}>
-                <svg class="w-6 h-6 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d={c.icon}/>
-                </svg>
-              </div>
-              <h3 class="text-base md:text-lg font-bold text-primary-500 mb-2">{c.title}</h3>
-              <p class="text-xs md:text-sm text-neutral-700 leading-relaxed">{c.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* 本開発前に確認する4つのこと */}
-        <div class="max-w-5xl mx-auto mt-10 md:mt-12">
-          <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-accent-950 mb-5">本開発前に確認する4つのこと</h3>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            {[
-              { n: '01', title: '業務適合', desc: '実際の業務フローに当てはめ、使えるかを確認する。' },
-              { n: '02', title: '要件', desc: '画面や挙動を見ながら、要求と実装のズレを見つける。' },
-              { n: '03', title: 'データ・技術', desc: '必要なデータが揃うか、期待する処理が成立するかを確認する。' },
-              { n: '04', title: '投資判断', desc: '検証結果をもとに、本開発へ進む価値があるかを判断する。' },
-            ].map((c) => (
-              <div class="bg-white rounded-2xl p-4 md:p-5 shadow-soft border border-neutral-100">
-                <p class="text-xs font-bold text-primary-500">{c.n}</p>
-                <p class="mt-1.5 text-sm md:text-base font-bold text-accent-950">{c.title}</p>
-                <p class="mt-2 text-xs md:text-sm text-neutral-700 leading-relaxed">{c.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 要件定義との関係 */}
-        <div class="max-w-5xl mx-auto mt-10 md:mt-12 rounded-2xl border border-primary-500/15 bg-primary-50/60 p-6 md:p-8">
-          <p class="text-lg md:text-xl font-bold text-accent-950 leading-relaxed mb-3">
-            要件定義をなくすのではなく、<span class="text-primary-500">最初に巨大な仕様を固定する開発</span>をやめる。
-          </p>
-          <p class="text-sm md:text-base text-neutral-700 leading-relaxed mb-5">
-            ゼロスタートでも、要求の整理から始めます。違うのは、仕様を最初に固め切らないことです。動くものを確認するたびに要件を更新し、次のサイクルへ進みます。この高速な反復を支えているのが、Beekleが自社開発し実案件で使っているPM基盤「PM on Rails」です。要求・受入条件・開発タスクを構造化し、AIエージェントによる実装へつなぎます。
-          </p>
-          <div class="flex flex-wrap items-center gap-x-2 gap-y-2">
-            {['要件整理', 'プロトタイプ', '確認', '要件更新', '再実装'].map((step, i, arr) => (
-              <>
-                <span class="rounded-full bg-white border border-primary-500/20 px-4 py-1.5 text-xs md:text-sm font-semibold text-accent-950">
-                  {step}
-                </span>
-                {i < arr.length - 1 && (
-                  <svg class="h-3.5 w-3.5 flex-none text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
-                )}
-              </>
-            ))}
-            <span class="text-xs md:text-sm text-neutral-500 ml-1">を高速に繰り返す</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {/* ============ 03 FREEDOM ============ */}
-    <section class="relative bg-gradient-to-br from-secondary-50/30 via-white to-primary-50/20 py-16 md:py-20 overflow-hidden">
-      <div class="absolute top-0 right-0 w-64 h-64 bg-secondary-100/20 rounded-full blur-3xl"></div>
-
-      <div class="container mx-auto px-6 lg:px-12 relative">
-        <div class="flex items-baseline gap-4 mb-10 md:mb-14 flex-wrap">
-          <span class="font-Poppins text-3xl md:text-4xl font-bold text-primary-500">03</span>
-          <span class="text-xs md:text-sm font-semibold tracking-wider uppercase text-primary-500">Freedom</span>
-          <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-accent-950 md:ml-6">決める自由を、取り戻そう。</h2>
-        </div>
-
-        <div class="grid md:grid-cols-[1fr_auto_1fr] gap-4 md:gap-6 items-stretch max-w-5xl mx-auto">
-          {/* Bad: 従来の開発 */}
-          <div class="bg-white rounded-2xl p-6 md:p-7 shadow-soft border border-neutral-200 relative">
-            <div class="flex items-center justify-between mb-5">
-              <h3 class="text-base md:text-lg font-bold text-neutral-600">従来の開発</h3>
-              <span class="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
-                </svg>
-              </span>
-            </div>
-            <ul class="space-y-3">
-              {['要件定義に時間がかかる', '完成まで中身が見えない', '見積もりが不透明', '失敗しても気づきにくい'].map((t) => (
-                <li class="flex items-start gap-2 text-sm text-neutral-700">
-                  <span class="w-5 h-5 rounded-full bg-neutral-200 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <svg class="w-3 h-3 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
-                    </svg>
-                  </span>
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Arrow */}
-          <div class="hidden md:flex items-center justify-center">
-            <div class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center shadow-medium">
-              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
-              </svg>
-            </div>
-          </div>
-
-          {/* Good: ゼロスタート */}
-          <div class="bg-gradient-to-br from-secondary-500/10 via-secondary-50 to-secondary-100/40 rounded-2xl p-6 md:p-7 shadow-soft border-2 border-secondary-500/20 relative">
-            <div class="flex items-center justify-between mb-5">
-              <h3 class="text-base md:text-lg font-bold text-secondary-600">ゼロスタート</h3>
-              <span class="w-9 h-9 rounded-full bg-highlight-500 flex items-center justify-center shadow-soft">
-                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M2 9l4 6 4-6 4 8 4-6 4 8H2V9z M5 17h14v2H5z"/>
-                </svg>
-              </span>
-            </div>
-            <ul class="space-y-3">
-              {[
-                { t: '動くものを最短で確認できる', highlight: false },
-                { t: '効果を見てから判断できる', highlight: false },
-                { t: '初期費用 0円 でリスクが低い', highlight: true },
-                { t: '成功確率を高めて進められる', highlight: false },
-              ].map((item) => (
-                <li class="flex items-start gap-2 text-sm text-accent-950 font-medium">
-                  <span class="w-5 h-5 rounded-full bg-secondary-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <svg class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
-                    </svg>
-                  </span>
-                  {item.highlight ? (
-                    <span>初期費用 <span class="text-highlight-500 font-bold">0円</span> でリスクが低い</span>
-                  ) : (
-                    <span>{item.t}</span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <p class="text-center mt-10 md:mt-12 text-base md:text-lg font-semibold text-primary-500">
-          <span class="text-accent-950">Proof は、あなたの</span>意思決定の<span class="border-b-2 border-secondary-500">証拠</span><span class="text-accent-950">です。</span>
-        </p>
-      </div>
-    </section>
-
-    {/* ============ 04 WHY FREE / 私たちの本音 ============ */}
-    <section class="relative bg-white py-16 md:py-20 overflow-hidden">
-      {/* decorative dots top right */}
-      <svg class="absolute top-6 right-6 md:top-10 md:right-10 w-20 h-20 md:w-28 md:h-28 text-primary-200/60" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
-        <circle cx="10" cy="10" r="3"/><circle cx="30" cy="10" r="3"/><circle cx="50" cy="10" r="3"/><circle cx="70" cy="10" r="3"/>
-        <circle cx="10" cy="30" r="3"/><circle cx="30" cy="30" r="3"/><circle cx="50" cy="30" r="3"/><circle cx="70" cy="30" r="3"/>
-        <circle cx="10" cy="50" r="3"/><circle cx="30" cy="50" r="3"/><circle cx="50" cy="50" r="3"/><circle cx="70" cy="50" r="3"/>
-        <circle cx="10" cy="70" r="3"/><circle cx="30" cy="70" r="3"/><circle cx="50" cy="70" r="3"/><circle cx="70" cy="70" r="3"/>
-      </svg>
-
-      <div class="container mx-auto px-6 lg:px-12 relative">
-        <div class="flex items-baseline gap-3 md:gap-4 mb-10 md:mb-14 flex-wrap">
-          <span class="font-Poppins text-3xl md:text-4xl font-bold text-primary-500">04</span>
-          <span class="text-xs md:text-sm font-semibold tracking-wider uppercase text-primary-500">Why Free</span>
-          <h2 class="basis-full md:basis-auto text-3xl md:text-4xl lg:text-5xl font-bold text-accent-950 md:ml-4 mt-2 md:mt-0 leading-tight">なぜ無料なのか？</h2>
-        </div>
-
-        {/* main 2-col area */}
-        <div class="grid lg:grid-cols-[1.1fr_1fr] gap-10 md:gap-14 max-w-6xl mx-auto mb-12 md:mb-16 items-center">
-          {/* Left: text content with marker highlights */}
-          <div class="space-y-5 text-sm md:text-base text-accent-950 leading-relaxed">
-            <p>
-              言葉でごちゃごちゃやって
-              <span class="relative inline-block">
-                <span class="absolute inset-x-0 bottom-0.5 h-2 bg-highlight-400/60 -z-10"></span>
-                <span class="relative font-bold">プロジェクトが失敗したら</span>
-              </span>
-              、私たちも損をします。
-            </p>
-            <p>
-              最初に分厚い仕様書を書き上げてから作り始めても、結局「
-              <span class="relative inline-block">
-                <span class="absolute inset-x-0 bottom-0.5 h-2 bg-highlight-400/60 -z-10"></span>
-                <span class="relative font-bold">思ってたのと違う</span>
-              </span>
-              」で終わることが多い。それより数日でコア機能に絞った検証用プロトタイプを作って、そこから一緒に磨き込む方がずっと楽なのです。
-            </p>
-            <p>
-              一番大変なのは、コミュニケーションを取りつつ、プロダクトを実際に出せるレベルまで磨き込むところ。だから
-              <span class="relative inline-block">
-                <span class="absolute inset-x-0 bottom-0.5 h-2 bg-highlight-400/60 -z-10"></span>
-                <span class="relative font-bold">最初の数日分の販管費なんて、どうってことありません</span>
-              </span>
-              。
-            </p>
-          </div>
-
-          {/* Right: speech bubbles + before/after illustration */}
-          <div class="relative min-h-[300px] md:min-h-[340px]">
-            {/* Speech bubble 1 */}
-            <div class="absolute top-0 left-2 max-w-[58%] bg-primary-500 text-white rounded-2xl rounded-bl-md px-4 py-2.5 shadow-medium text-xs md:text-sm font-medium leading-snug z-10">
-              こういう機能も<br/>追加して欲しいな
-              <span class="absolute -bottom-2 left-5 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-primary-500"></span>
-            </div>
-            {/* Speech bubble 2 */}
-            <div class="absolute top-8 md:top-10 right-2 max-w-[58%] bg-accent-950 text-white rounded-2xl rounded-br-md px-4 py-2.5 shadow-medium text-xs md:text-sm font-medium leading-snug z-10">
-              動くものを見せたら<br/>一気に話が進んだ
-              <span class="absolute -bottom-2 right-5 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-accent-950"></span>
-            </div>
-
-            {/* Sparkles scattered */}
-            <svg class="absolute top-24 left-[42%] w-4 h-4 text-highlight-500 z-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 0l2.5 7.5L22 10l-7.5 2.5L12 20l-2.5-7.5L2 10l7.5-2.5z"/>
-            </svg>
-            <svg class="absolute top-32 right-[38%] w-3 h-3 text-secondary-500 z-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 0l2.5 7.5L22 10l-7.5 2.5L12 20l-2.5-7.5L2 10l7.5-2.5z"/>
-            </svg>
-            <svg class="absolute bottom-32 left-[8%] w-5 h-5 text-highlight-500 z-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 0l2.5 7.5L22 10l-7.5 2.5L12 20l-2.5-7.5L2 10l7.5-2.5z"/>
-            </svg>
-            <svg class="absolute bottom-2 right-[8%] w-4 h-4 text-primary-400 z-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 0l2.5 7.5L22 10l-7.5 2.5L12 20l-2.5-7.5L2 10l7.5-2.5z"/>
-            </svg>
-
-            {/* Sketch + Laptop dashboard row */}
-            <div class="absolute bottom-0 left-0 right-0 flex items-end justify-center gap-3 md:gap-5">
-              {/* Sketch / scribble notepad */}
-              <div class="relative w-[42%] bg-white border-2 border-neutral-300 rounded-lg p-3 md:p-3.5 shadow-medium rotate-[-4deg]">
-                <svg class="absolute -top-3 -left-3 w-5 h-5 text-highlight-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M12 0l2.5 7.5L22 10l-7.5 2.5L12 20l-2.5-7.5L2 10l7.5-2.5z"/>
-                </svg>
-                {/* messy scribble lines */}
-                <svg class="w-full h-20 md:h-24" viewBox="0 0 100 70" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" aria-hidden="true">
-                  <path d="M5 10 Q 15 5, 25 12 T 50 8 T 80 14 T 95 10" class="text-neutral-400"/>
-                  <path d="M5 22 Q 20 18, 35 24 T 70 20 T 95 22" class="text-neutral-400"/>
-                  <rect x="10" y="32" width="20" height="14" rx="2" class="text-primary-300" stroke-dasharray="2 2"/>
-                  <circle cx="50" cy="40" r="6" class="text-secondary-400" stroke-dasharray="2 2"/>
-                  <path d="M65 36 L 90 36 M 65 42 L 85 42" class="text-neutral-400"/>
-                  <path d="M5 56 L 30 56 M 35 56 L 60 56 M 65 56 L 95 56" class="text-neutral-400" stroke-dasharray="3 2"/>
-                  <path d="M75 30 L 80 25 L 85 28" class="text-primary-500" stroke-width="1.5"/>
-                </svg>
-              </div>
-
-              {/* Arrow connector */}
-              <svg class="hidden md:block w-6 h-6 text-primary-500 mb-8 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 12h14"/>
-              </svg>
-
-              {/* Laptop / dashboard */}
-              <div class="relative w-[44%] rotate-[3deg]">
-                {/* sparkles around */}
-                <svg class="absolute -top-3 -right-2 w-4 h-4 text-highlight-500 z-10" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M12 0l2.5 7.5L22 10l-7.5 2.5L12 20l-2.5-7.5L2 10l7.5-2.5z"/>
-                </svg>
-                {/* screen */}
-                <div class="bg-accent-950 rounded-t-lg p-2 md:p-2.5 shadow-strong">
-                  <div class="flex items-center gap-1 mb-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-red-400/70"></span>
-                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-400/70"></span>
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-400/70"></span>
-                  </div>
-                  <div class="bg-white rounded-md p-2">
-                    {/* mini dashboard */}
-                    <div class="flex items-center justify-between mb-1.5">
-                      <div class="h-1 bg-accent-950/80 rounded-full w-1/3"></div>
-                      <div class="flex gap-0.5">
-                        <span class="w-1 h-1 rounded-full bg-primary-500"></span>
-                        <span class="w-1 h-1 rounded-full bg-secondary-500"></span>
-                      </div>
-                    </div>
-                    {/* chart bars */}
-                    <div class="flex items-end gap-0.5 md:gap-1 h-10 md:h-12 mb-1.5">
-                      <div class="flex-1 bg-primary-200 rounded-sm" style="height: 30%"></div>
-                      <div class="flex-1 bg-primary-300 rounded-sm" style="height: 50%"></div>
-                      <div class="flex-1 bg-primary-400 rounded-sm" style="height: 40%"></div>
-                      <div class="flex-1 bg-primary-500 rounded-sm" style="height: 70%"></div>
-                      <div class="flex-1 bg-primary-600 rounded-sm" style="height: 60%"></div>
-                      <div class="flex-1 bg-primary-700 rounded-sm" style="height: 90%"></div>
-                    </div>
-                    {/* line chart */}
-                    <svg class="w-full h-4 md:h-5" viewBox="0 0 100 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                      <path d="M0 15 L 20 10 L 40 12 L 60 6 L 80 8 L 100 3" class="text-secondary-500"/>
-                    </svg>
-                  </div>
-                </div>
-                {/* keyboard base */}
-                <div class="bg-accent-950/90 h-1.5 md:h-2 rounded-b-2xl mx-[-6px]"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom light quote box */}
-        <div class="relative max-w-4xl mx-auto bg-white border-2 border-accent-950 rounded-3xl px-10 py-12 md:px-20 md:py-16 shadow-medium">
-          <span class="absolute top-2 left-4 md:top-4 md:left-8 text-7xl md:text-8xl text-accent-950 font-Poppins leading-none select-none" aria-hidden="true">&ldquo;</span>
-          <span class="absolute bottom-2 right-4 md:bottom-4 md:right-8 text-7xl md:text-8xl text-accent-950 font-Poppins leading-none select-none" aria-hidden="true">&rdquo;</span>
-          <p class="relative text-center text-base md:text-xl lg:text-2xl text-accent-950 font-bold leading-relaxed md:leading-relaxed">
-            お互いにとって、動くものから始めるのが
-            <span class="relative inline-block">
-              <span class="absolute inset-x-0 bottom-0.5 h-2.5 md:h-3 bg-highlight-400/70 -z-10"></span>
-              <span class="relative">一番リスクが少ない</span>
-            </span>
-            。<br/>
-            それが、
-            <span class="relative inline-block">
-              <span class="absolute inset-x-0 bottom-0.5 h-2.5 md:h-3 bg-highlight-400/70 -z-10"></span>
-              <span class="relative">ゼロスタート</span>
-            </span>
-            です。
+          <p class="mt-5 text-sm leading-relaxed text-neutral-600">
+            NDA可。要件未確定でも可。見送り条件がある場合も、理由を残します。
           </p>
         </div>
-      </div>
-    </section>
 
-    {/* ============ 05 FLOW ============ */}
-    <section class="relative bg-gradient-to-br from-primary-50/40 via-white to-secondary-50/30 py-16 md:py-20 overflow-hidden">
-      <div class="container mx-auto px-6 lg:px-12 relative">
-        <div class="flex items-baseline gap-4 mb-10 md:mb-14 flex-wrap">
-          <span class="font-Poppins text-3xl md:text-4xl font-bold text-primary-500">05</span>
-          <span class="text-xs md:text-sm font-semibold tracking-wider uppercase text-primary-500">Flow</span>
-          <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-accent-950 md:ml-6">導入の流れ</h2>
-        </div>
-
-        {/* 5 horizontal steps */}
-        <div class="relative max-w-6xl mx-auto mb-10 md:mb-12">
-          {/* connecting line */}
-          <div class="hidden md:block absolute top-10 left-[8%] right-[8%] h-0.5 bg-gradient-to-r from-primary-500/30 via-primary-500/40 to-primary-500/30"></div>
-
-          <div class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 relative">
-            {[
-              { n: 1, title: '業務課題整理・\n検証仮説', desc: '課題をヒアリングし、何を検証すべきかを決めます。',
-                icon: 'M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z' },
-              { n: 2, title: 'ゼロスタート開発\n（初期費用0円）', desc: '最短数週間が目安。0円でここまで体験できます。',
-                icon: 'm6.75 7.5 3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z' },
-              { n: 3, title: '実業務での確認・\n効果検証', desc: '実環境でテストし、業務適合と効果を確認。結果を整理してご提供します。',
-                icon: 'M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25Z' },
-              { n: 4, title: 'Go / No-Go\n判断', desc: '検証結果をもとに進む・見送るを判断。進む場合はPoC・MVP・本開発へ。',
-                icon: 'M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z' },
-              { n: 5, title: '運用開始・\n継続改善', desc: '安定運用に加え、事業成長をサポートします。',
-                icon: 'M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z' },
-            ].map((s) => (
-              <div class="bg-white rounded-2xl p-3 md:p-4 shadow-soft border border-primary-500/10 text-center relative">
-                <div class="relative w-14 h-14 md:w-16 md:h-16 mx-auto mb-3">
-                  <div class="absolute inset-0 bg-primary-500 rounded-full"></div>
-                  <div class="absolute inset-0 flex items-center justify-center text-white">
-                    <svg class="w-6 h-6 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d={s.icon}/>
-                    </svg>
-                  </div>
-                  <span class="absolute -top-1 -right-1 w-6 h-6 bg-white border-2 border-primary-500 rounded-full flex items-center justify-center text-[10px] font-bold text-primary-500 shadow-soft">{s.n}</span>
-                </div>
-                <h3 class="text-xs md:text-sm font-bold text-accent-950 leading-tight mb-1.5 whitespace-pre-line">{s.title}</h3>
-                <p class="text-[10px] md:text-xs text-neutral-600 leading-relaxed hidden md:block">{s.desc}</p>
+        <aside class="border-y border-neutral-300 bg-white">
+          <div class="border-b border-neutral-300 border-l-8 border-primary-500 px-5 py-4">
+            <p class="text-sm font-bold text-primary-700">検証前ドラフト</p>
+            <p class="mt-1 text-2xl font-bold leading-tight text-accent-950">
+              投資条件の判断メモ
+            </p>
+          </div>
+          <dl class="divide-y divide-neutral-300">
+            {proofRows.map(([label, value]) => (
+              <div class="grid gap-3 px-5 py-4 md:grid-cols-[112px_1fr]">
+                <dt class="text-sm font-bold text-primary-700">{label}</dt>
+                <dd class="text-base font-bold leading-relaxed text-accent-950">{value}</dd>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* 開発モデル */}
-        <div class="grid md:grid-cols-2 gap-4 md:gap-6 max-w-5xl mx-auto">
-          <div class="bg-primary-50/60 rounded-2xl p-5 md:p-6 border border-primary-500/15">
-            <div class="flex items-center gap-3 mb-3">
-              <span class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center text-white">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z"/>
-                </svg>
-              </span>
-              <h4 class="text-base md:text-lg font-bold text-primary-500">請負開発モデル</h4>
-            </div>
-            <p class="text-xs md:text-sm text-neutral-700 leading-relaxed mb-3">
-              要件定義から完成系を納品するモデル。スコープ・納期・費用を明確にしたい企業に最適。
-            </p>
-            <div class="flex flex-wrap gap-2">
-              {['成果物ベース', '固定スコープ', '品質保証'].map((tag) => (
-                <span class="text-[11px] md:text-xs px-2.5 py-1 bg-white text-primary-500 rounded-full font-medium border border-primary-500/20">
-                  ✓ {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div class="bg-secondary-50/60 rounded-2xl p-5 md:p-6 border border-secondary-500/15">
-            <div class="flex items-center gap-3 mb-3">
-              <span class="w-10 h-10 rounded-full bg-secondary-500 flex items-center justify-center text-white">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"/>
-                </svg>
-              </span>
-              <h4 class="text-base md:text-lg font-bold text-secondary-600">準委任開発モデル</h4>
-            </div>
-            <p class="text-xs md:text-sm text-neutral-700 leading-relaxed mb-3">
-              毎月チームで定額、柔軟に開発を推進するモデル。変化が多いプロジェクトに最適。
-            </p>
-            <div class="flex flex-wrap gap-2">
-              {['柔軟な体制', 'スピーディな対応', '継続改善'].map((tag) => (
-                <span class="text-[11px] md:text-xs px-2.5 py-1 bg-white text-secondary-600 rounded-full font-medium border border-secondary-500/20">
-                  ✓ {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ゼロスタート（初期費用0円）の範囲 */}
-        <div class="max-w-5xl mx-auto mt-6 md:mt-8">
-          <div class="bg-white rounded-2xl p-5 md:p-6 border border-primary-500/15 shadow-soft">
-            <h4 class="text-base md:text-lg font-bold text-accent-950 mb-4">無料（初期費用0円）で試せる範囲</h4>
-            <div class="grid md:grid-cols-2 gap-4">
-              <div class="bg-secondary-50/60 rounded-xl p-4 border border-secondary-500/15">
-                <p class="text-sm font-bold text-secondary-600 mb-2">含むもの</p>
-                <ul class="space-y-1.5 text-xs md:text-sm text-neutral-700">
-                  <li class="flex items-start gap-2"><span class="mt-1 w-1.5 h-1.5 rounded-full bg-secondary-500 flex-shrink-0"></span>コア機能を1つに絞った検証用プロトタイプ</li>
-                  <li class="flex items-start gap-2"><span class="mt-1 w-1.5 h-1.5 rounded-full bg-secondary-500 flex-shrink-0"></span>代表的なデータ数件での動作確認</li>
-                  <li class="flex items-start gap-2"><span class="mt-1 w-1.5 h-1.5 rounded-full bg-secondary-500 flex-shrink-0"></span>実際に触って方向性を判断するための試用</li>
-                </ul>
-              </div>
-              <div class="bg-neutral-50 rounded-xl p-4 border border-neutral-200">
-                <p class="text-sm font-bold text-neutral-600 mb-2">含まないもの（＝本開発）</p>
-                <ul class="space-y-1.5 text-xs md:text-sm text-neutral-700">
-                  <li class="flex items-start gap-2"><span class="mt-1 w-1.5 h-1.5 rounded-full bg-neutral-400 flex-shrink-0"></span>全データの投入・大規模データでの本格検証</li>
-                  <li class="flex items-start gap-2"><span class="mt-1 w-1.5 h-1.5 rounded-full bg-neutral-400 flex-shrink-0"></span>本番品質の作り込み・セキュリティ/運用設計</li>
-                  <li class="flex items-start gap-2"><span class="mt-1 w-1.5 h-1.5 rounded-full bg-neutral-400 flex-shrink-0"></span>確定納期での運用・保守</li>
-                </ul>
-              </div>
-            </div>
-            <p class="text-[11px] md:text-xs text-neutral-500 mt-3">※ 期間（最短数日〜数週間）は検証用プロトタイプの目安です。規模・要件により変動し、本番開発の確定納期とは異なります。</p>
-          </div>
-        </div>
-
-        {/* 向いている / 向いていない案件 */}
-        <div class="max-w-5xl mx-auto mt-6 md:mt-8">
-          <div class="grid md:grid-cols-2 gap-4">
-            <div class="bg-white rounded-2xl p-5 md:p-6 border border-secondary-500/15 shadow-soft">
-              <h4 class="text-base md:text-lg font-bold text-secondary-600 mb-3">ゼロスタートが向いている案件</h4>
-              <ul class="space-y-2 text-xs md:text-sm text-neutral-700">
-                {[
-                  '実際の業務課題がある',
-                  '検証担当者が参加できる',
-                  '検証用のデータやサンプルを用意できる',
-                  '本開発前に確かめたい仮説がある',
-                  '有料開発へ進む可能性がある',
-                ].map((t) => (
-                  <li class="flex items-start gap-2">
-                    <span class="mt-0.5 w-4 h-4 rounded-full bg-secondary-500 flex items-center justify-center flex-shrink-0">
-                      <svg class="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
-                      </svg>
-                    </span>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div class="bg-white rounded-2xl p-5 md:p-6 border border-neutral-200 shadow-soft">
-              <h4 class="text-base md:text-lg font-bold text-neutral-600 mb-3">ゼロスタートが向いていない案件</h4>
-              <ul class="space-y-2 text-xs md:text-sm text-neutral-700">
-                {[
-                  '完成品を無料で納品してほしい',
-                  '検証目的がなく、とりあえず作ってほしい',
-                  '利用者が検証に参加できない',
-                  '本開発の意思がなく、無料制作だけを希望',
-                  '本番品質を初回から要求する',
-                ].map((t) => (
-                  <li class="flex items-start gap-2">
-                    <span class="mt-0.5 w-4 h-4 rounded-full bg-neutral-300 flex items-center justify-center flex-shrink-0">
-                      <svg class="w-2.5 h-2.5 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
-                      </svg>
-                    </span>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* スムーズに進めるために発注者側にお願いすること */}
-        <div class="max-w-5xl mx-auto mt-4 md:mt-6">
-          <div class="bg-primary-50/60 rounded-2xl p-5 md:p-6 border border-primary-500/15">
-            <h4 class="text-base md:text-lg font-bold text-accent-950 mb-2">スムーズに進めるために、発注者側にお願いすること</h4>
-            <p class="text-xs md:text-sm text-neutral-600 mb-4">ゼロスタートの効果を最大化するため、次の3点にご協力をお願いしています。</p>
-            <div class="grid md:grid-cols-3 gap-3 md:gap-4">
-              <div class="bg-white rounded-xl p-4 border border-primary-500/10">
-                <p class="text-sm font-bold text-primary-500 mb-1">意思決定者の同席</p>
-                <p class="text-xs md:text-sm text-neutral-700 leading-relaxed">方向性をその場で判断できる方にご参加いただくと、検証から判断までが早く回ります。</p>
-              </div>
-              <div class="bg-white rounded-xl p-4 border border-primary-500/10">
-                <p class="text-sm font-bold text-primary-500 mb-1">データ利用権の確保</p>
-                <p class="text-xs md:text-sm text-neutral-700 leading-relaxed">検証に使うデータ・著作物の利用権は、お客様側で確保いただく前提です。</p>
-              </div>
-              <div class="bg-white rounded-xl p-4 border border-primary-500/10">
-                <p class="text-sm font-bold text-primary-500 mb-1">現実的な期間設定</p>
-                <p class="text-xs md:text-sm text-neutral-700 leading-relaxed">検証は目安期間で進めます。本番開発の確定納期は、検証後に別途すり合わせます。</p>
-              </div>
-            </div>
-          </div>
-        </div>
+          </dl>
+        </aside>
       </div>
     </section>
 
-    {/* ============ 06 CASES ============ */}
-    <section class="relative bg-white py-16 md:py-20 overflow-hidden">
-      <div class="container mx-auto px-6 lg:px-12 relative">
-        <div class="text-center mb-10 md:mb-14">
-          <div class="flex items-baseline justify-center gap-4 mb-3">
-            <span class="font-Poppins text-3xl md:text-4xl font-bold text-primary-500">06</span>
-            <span class="text-xs md:text-sm font-semibold tracking-wider uppercase text-primary-500">Cases</span>
-          </div>
-          <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-accent-950">ゼロスタートから始めて、成功した企業</h2>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-5 md:gap-6 max-w-6xl mx-auto">
-          {[
-            { tag: '医療DX企業', tagColor: 'text-primary-500', img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=70',
-              outcome: 'スムーズに買い取り完了',
-              desc: 'RFPがしっかり書かれていたため、そこからデモを作成。要件を満たしていて大きな問題もなく、ヒアリング後に多少の修正を加えてシステムをそのまま引き渡し、買い取りで終了。明確な要件定義からスムーズに実装へ。' },
-            { tag: '製造業', tagColor: 'text-secondary-600', img: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=70',
-              outcome: '最高のアプリ開発に成功',
-              desc: '複雑なドメイン知識が必要な製造業向けシステム。当初は値段重視でオフショア企業を検討されていたが、AI駆動開発でしっかり要件を詰めた方がいいと説得し契約。プロトタイプをもとに要件を話し合い、業務効率化のためのアプリ開発を実現。' },
-            { tag: '人材会社', tagColor: 'text-primary-500', img: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=70',
-              outcome: 'アジャイル開発で継続改善中',
-              desc: '現場で「どのような人を選べばいいか解像度が高くない」という悩みを抱える採用代行会社。HEXACOの心理尺度とLLMの構造化分析を組み合わせたHR AIエージェントのプロトタイプを作成。候補者レポート、採用ペルソナ適合、チーム相性まで扱える形に発展し、継続改善へ移行。' },
-          ].map((c) => (
-            <div class="bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-medium transition-shadow border border-neutral-100 flex flex-col">
-              <div class="relative h-44 md:h-48 overflow-hidden">
-                <img src={c.img} alt={c.tag} class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async"/>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                <span class={`absolute top-3 left-3 px-3 py-1 bg-white/95 backdrop-blur ${c.tagColor} rounded-full text-xs font-bold shadow-soft`}>
-                  {c.tag}
-                </span>
-              </div>
-              <div class="p-5 flex flex-col gap-4 flex-1">
-                <p class="text-xs md:text-sm text-neutral-700 leading-relaxed">{c.desc}</p>
-                <div class="mt-auto inline-flex items-center gap-2 self-start bg-highlight-500 rounded-full px-3 py-1.5 shadow-soft">
-                  <svg class="w-3.5 h-3.5 text-accent-950" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
-                  </svg>
-                  <span class="text-xs md:text-sm font-bold text-accent-950 leading-tight">{c.outcome}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <p class="text-center text-xs text-neutral-500 mt-6">※成果は一例です。効果を保証するものではありません。</p>
-      </div>
-    </section>
-
-    {/* ============ 07 FAQ ============ */}
-    <section class="relative bg-gradient-to-br from-white via-primary-50/20 to-white py-16 md:py-20">
-      <div class="container mx-auto px-6 lg:px-12 relative">
-        <div class="grid lg:grid-cols-[1.4fr_1fr] gap-8 md:gap-10 items-start max-w-6xl mx-auto">
-          {/* Left: FAQ */}
+    <section class="bg-neutral-50 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div>
-            <div class="flex items-baseline gap-4 mb-8">
-              <span class="font-Poppins text-3xl md:text-4xl font-bold text-primary-500">07</span>
-              <span class="text-xs md:text-sm font-semibold tracking-wider uppercase text-primary-500">FAQ</span>
-              <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-accent-950 ml-2">よくあるご質問</h2>
-            </div>
-
-            <div class="space-y-3">
-              {[
-                { q: '本当に初期費用はかかりませんか？', a: 'はい、ゼロスタートは初期費用0円です。動くプロトタイプの開発までは無料で、効果を確認してから本格開発の判断をいただけます。' },
-                { q: 'プロトタイプの開発期間はどのくらいですか？', a: '要件にもよりますが、検証用プロトタイプは最短数日〜2週間程度が目安です（規模により変動します）。これは検証にかかる期間の目安であり、本番開発の確定納期とは別にお見積もりします。複雑な要件はスコープを調整した上で進めます。' },
-                { q: 'どこまでの機能で作ってもらえますか？', a: '基本的な機能実装と動作確認が可能なレベルまで開発します。具体的な範囲はヒアリング時にご相談の上、決定いたします。' },
-                { q: '自社の機密情報は守られますか？', a: 'NDA(秘密保持契約)を締結した上でプロジェクトを進めますのでご安心ください。サンプルデータでの検証も可能です。' },
-                { q: '提供するデータや著作物の扱いはどうなりますか？', a: 'お客様からご提供いただくデータ・著作物の利用権は、お客様側で確保いただくことを前提としています。第三者の著作物・データを利用する場合は、利用許諾の範囲を事前にご確認ください。NDAを締結のうえ、サンプルデータでの検証も可能です。' },
-                { q: '本開発を強制されることはありますか？', a: 'いいえ、ありません。ご契約に至らない場合でも費用は一切発生しません。プロトタイプは、お客様からご提供いただいたデータ・著作物を除き、汎用的に作成した部分を当社で再利用する場合があります（秘密保持契約を締結している場合は、その内容を優先します）。' },
-              ].map((f) => (
-                <details class="group bg-primary-50/60 rounded-xl px-5 py-4 hover:bg-primary-50 transition-colors">
-                  <summary class="flex items-center justify-between gap-4 cursor-pointer list-none">
-                    <span class="flex items-center gap-3 text-sm md:text-base font-semibold text-accent-950">
-                      <span class="w-2 h-2 rounded-full bg-primary-500 flex-shrink-0"></span>
-                      {f.q}
-                    </span>
-                    <span class="flex-shrink-0 w-7 h-7 bg-white rounded-full flex items-center justify-center text-primary-500 font-bold text-base group-open:rotate-45 transition-transform">+</span>
-                  </summary>
-                  <p class="text-xs md:text-sm text-neutral-700 leading-relaxed mt-3 pl-5">{f.a}</p>
-                </details>
-              ))}
-            </div>
+            <p class="text-sm font-bold text-primary-500">向いている相談</p>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+              見積もり前に、確かめる問いを決める。
+            </h2>
           </div>
-
-          {/* Right: Sticky purple CTA card */}
-          <div class="lg:sticky lg:top-28">
-            <div class="relative bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-3xl p-7 md:p-8 shadow-strong overflow-hidden">
-              {/* decorative blobs */}
-              <div class="absolute -top-12 -right-12 w-40 h-40 bg-secondary-500/30 rounded-full blur-2xl" aria-hidden="true"></div>
-              <div class="absolute -bottom-16 -left-12 w-48 h-48 bg-highlight-500/15 rounded-full blur-2xl" aria-hidden="true"></div>
-              <svg class="absolute bottom-4 right-4 w-16 h-16 text-white/10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
-                <circle cx="10" cy="10" r="3"/><circle cx="30" cy="10" r="3"/><circle cx="50" cy="10" r="3"/>
-                <circle cx="10" cy="30" r="3"/><circle cx="30" cy="30" r="3"/><circle cx="50" cy="30" r="3"/>
-                <circle cx="10" cy="50" r="3"/><circle cx="30" cy="50" r="3"/><circle cx="50" cy="50" r="3"/>
-              </svg>
-
-              <div class="relative">
-                <h3 class="text-2xl md:text-3xl font-bold text-white mb-4 leading-snug">
-                  迷う前に、<br/>
-                  まず<span class="relative inline-block px-1">
-                    <span class="absolute inset-0 bg-highlight-500/30 rounded-md -z-0"></span>
-                    <span class="relative">"触って"</span>
-                  </span>みてください。
-                </h3>
-
-                <p class="text-sm md:text-base text-white/90 mb-7 leading-relaxed">
-                  動くものを見て、効果を確かめてから決められます。<br/>
-                  証拠が、あなたのプロジェクトを前に進めます。
-                </p>
-
-                <a
-                  href="/contact?source=prooffirst-side-cta"
-                  data-cta-source="prooffirst-side-cta"
-                  data-cta-id="contact"
-                  class="inline-flex items-center justify-center w-full gap-2 px-6 py-3.5 bg-highlight-500 hover:bg-highlight-400 text-accent-950 rounded-full text-sm md:text-base font-bold shadow-medium transition-colors"
-                >
-                  証拠から始める開発を体験する
-                  <span class="w-7 h-7 rounded-full bg-accent-950 flex items-center justify-center text-white">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                    </svg>
-                  </span>
-                </a>
-
-                <p class="text-white/60 mt-4 text-[11px] md:text-xs text-center">
-                  ※お問い合わせ後、1-2営業日以内にご連絡いたします
-                </p>
+          <div class="border-t border-neutral-300">
+            {fitItems.map((item) => (
+              <div class="border-b border-neutral-300 py-5">
+                <p class="text-lg font-bold leading-snug text-accent-950">{item}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-neutral-100 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="max-w-3xl">
+          <p class="text-sm font-bold text-primary-500">進め方</p>
+          <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+            相談から、次の投資条件の整理まで
+          </h2>
+        </div>
+
+        <div class="mt-8 border-t border-neutral-300">
+          {processRows.map((row) => (
+            <div class="grid gap-5 border-b border-neutral-300 py-6 lg:grid-cols-[80px_0.8fr_1fr_1fr_1fr]">
+              <p class="font-Poppins text-2xl font-bold text-primary-500">{row.no}</p>
+              <h3 class="text-xl font-bold leading-snug text-accent-950">{row.title}</h3>
+              <p class="text-sm leading-relaxed text-neutral-700">
+                <span class="font-bold text-primary-700">お客様: </span>{row.customer}
+              </p>
+              <p class="text-sm leading-relaxed text-neutral-700">
+                <span class="font-bold text-primary-700">Beekle: </span>{row.beekle}
+              </p>
+              <p class="text-sm font-bold leading-relaxed text-accent-950">{row.decision}</p>
             </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-neutral-50 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <p class="text-sm font-bold text-primary-500">FAQ</p>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+              始める前に確認したいこと
+            </h2>
+          </div>
+          <div class="border-t border-neutral-300">
+            {faqItems.map((item) => (
+              <details class="border-b border-neutral-300 py-5">
+                <summary class="cursor-pointer list-none text-lg font-bold text-accent-950 [&::-webkit-details-marker]:hidden">
+                  {item.question}
+                </summary>
+                <p class="mt-3 text-sm leading-relaxed text-neutral-700">{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-accent-950 py-16 md:py-20">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="max-w-3xl">
+          <h2 class="text-3xl font-bold leading-tight text-white md:text-5xl">
+            まず動くもので、次の投資条件を決めてください。
+          </h2>
+          <p class="mt-5 text-lg leading-relaxed text-white/85">
+            要件が未確定でも、検証すべき業務と見送り条件から整理できます。
+          </p>
+          <div class="mt-8">
+            <ButtonLink
+              href="/contact?source=prooffirst-final"
+              data-cta-source="prooffirst-final"
+              data-cta-id="contact"
+              variant="white"
+              size="lg"
+            >
+              実物で判断できるか相談する
+            </ButtonLink>
           </div>
         </div>
       </div>
     </section>
   </main>
 </Layout>
-
-<script>
-  import { trackEvent } from '@/lib/analytics';
-
-  // Zero Start専用の計測 (tasks-v3 TASK-P0-01 Analytics)。
-  // cta_click（layout.astroのグローバル委譲）に加えて、ファネル分析用の専用イベントを発火する。
-  trackEvent('zero_start_view', { page_path: window.location.pathname });
-  document.addEventListener('click', (event) => {
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    const el = target.closest<HTMLElement>('[data-cta-source^="prooffirst"]');
-    if (!el) return;
-    trackEvent('zero_start_cta_click', {
-      source: el.getAttribute('data-cta-source') || '',
-      cta: el.getAttribute('data-cta-id') || '',
-    });
-  });
-</script>
-
-<style>
-  @keyframes float {
-    0%, 100% { transform: translateY(0) }
-    50% { transform: translateY(-10px) }
-  }
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-float-delay { animation: float 8s ease-in-out infinite; animation-delay: 1s; }
-
-  details > summary::-webkit-details-marker { display: none; }
-</style>

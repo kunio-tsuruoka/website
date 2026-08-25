@@ -18,7 +18,7 @@ export function AiItAdvisor({ sitekey }: { sitekey: string }) {
   };
 
   return (
-    <div className="max-w-3xl mx-auto bg-white rounded-2xl border border-gray-200 shadow-soft overflow-hidden">
+    <div className="max-w-3xl mx-auto bg-white rounded-lg border border-gray-200 overflow-hidden">
       <MessageList onPickSuggestion={submit} suggestionsDisabled={!turnstile.token} />
 
       <div className="border-t border-gray-200 p-4 space-y-3">

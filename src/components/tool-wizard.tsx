@@ -57,7 +57,7 @@ export function ToolWizard() {
   const goal = GOALS.find((g) => g.id === selected);
 
   return (
-    <section className="bg-white rounded-2xl shadow-soft border-2 border-primary-200 p-6 md:p-8">
+    <section className="rounded-lg border border-primary-200 bg-white p-6 md:p-8">
       <h2 className="text-lg md:text-xl font-bold text-primary-900 mb-2">
         どこから始めるか迷ったら
       </h2>
@@ -70,7 +70,7 @@ export function ToolWizard() {
             key={g.id}
             type="button"
             onClick={() => setSelected(g.id)}
-            className={`text-left p-4 rounded-xl border-2 transition-colors min-h-[44px] ${
+            className={`min-h-[44px] rounded-md border p-4 text-left transition-colors ${
               selected === g.id
                 ? 'border-primary-500 bg-primary-50'
                 : 'border-gray-200 bg-white hover:border-primary-300 hover:bg-primary-50/30'
@@ -90,7 +90,7 @@ export function ToolWizard() {
       </div>
 
       {goal && (
-        <div className="mt-5 p-5 bg-gradient-to-br from-primary-50 to-white rounded-xl border-2 border-primary-300">
+        <div className="mt-5 rounded-lg border border-primary-300 bg-white p-5">
           <p className="text-sm text-primary-900 mb-3 leading-relaxed">{goal.reason}</p>
           <a
             href={goal.recommendedHref}
@@ -101,7 +101,7 @@ export function ToolWizard() {
                 meta: { dest: goal.recommendedHref },
               })
             }
-            className="inline-flex items-center justify-center px-5 py-3 min-h-[44px] text-sm font-semibold text-white bg-primary-500 rounded-lg hover:bg-primary-600 shadow-soft"
+            className="inline-flex items-center justify-center px-5 py-3 min-h-[44px] text-sm font-semibold text-white bg-primary-500 rounded-lg hover:bg-primary-600"
           >
             {goal.recommendedLabel} →
           </a>

@@ -29,7 +29,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
   return (
     <a href={href} className={cn('group relative block', className)}>
       {/* グラデーションオーバーレイ（ブランドカラー：パープル） */}
-      <div className="absolute inset-0 bg-accent-600 rounded-[32px] blur opacity-20 group-hover:opacity-30 transition-opacity" />
+      <div className="absolute inset-0 bg-accent-600 rounded-lg blur opacity-20 group-hover:opacity-30 transition-opacity" />
 
       <Card variant="default" padding="md" hover="shadow" className="relative h-full flex flex-col">
         <CardIcon variant={iconVariant} className="mx-auto">
@@ -76,7 +76,7 @@ export const FAQCard: React.FC<FAQCardProps> = ({
   return (
     <div className={cn('group relative', className)}>
       {/* グラデーションオーバーレイ（パープル） */}
-      <div className="absolute inset-0 rounded-[32px] bg-accent-600 blur opacity-20 group-hover:opacity-30 transition-opacity" />
+      <div className="absolute inset-0 rounded-lg bg-accent-600 blur opacity-20 group-hover:opacity-30 transition-opacity" />
 
       <Card variant="default" padding="md" hover="shadow" className="relative">
         <div className="flex items-start">
@@ -118,13 +118,13 @@ export const CTABox: React.FC<CTABoxProps> = ({
   className,
 }) => {
   return (
-    <div className={cn('bg-navy-950 rounded-[40px] p-10 shadow-strong text-center', className)}>
+    <div className={cn('bg-navy-950 rounded-lg p-10 text-center', className)}>
       <h3 className="text-3xl font-bold text-white mb-4">{title}</h3>
       <p className="text-lg text-white/90 mb-8 leading-relaxed">{description}</p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <a
           href={primaryButton.href}
-          className="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-navy-950 bg-white rounded-full hover:bg-gray-50 transition-all shadow-medium hover:shadow-strong hover:scale-105 transform"
+          className="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-navy-950 bg-white rounded-full hover:bg-gray-50 transition-all transform"
         >
           {primaryButton.text}
           <svg className="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

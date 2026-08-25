@@ -15,10 +15,10 @@ export interface Author {
 export const authors: Record<string, Author> = {
   tsuruoka: {
     id: 'tsuruoka',
-    name: '鶴岡邦夫',
-    jobTitle: '代表取締役社長 / エンジニア',
+    name: '鶴岡 邦夫',
+    jobTitle: '代表取締役',
     description:
-      'フリーランスエンジニアとしてシステム開発に従事した後、Beekle株式会社を創業。新規事業領域で要件定義からデザイン・実装まで一気通貫で担当。0-1から1-100フェーズまでのプロダクト開発、上流工程、システム設計、ITコンサルティングを得意とする。',
+      '株式会社Beekle 代表取締役。フリーランスエンジニアとしてさまざまなシステム開発を経験した後、株式会社Beekleを設立。生成AI・RAG・業務システムを中心に、企業のDX・AI活用支援、自社プロダクト開発、AIを活用した開発・経営プロセスの改善に取り組む。',
     url: 'https://beekle.jp/members#tsuruoka',
     sameAs: [
       'https://github.com/kunio-tsuruoka',
@@ -26,12 +26,16 @@ export const authors: Record<string, Author> = {
     ],
     knowsAbout: [
       'システム開発',
-      'プロダクトマネジメント',
+      'AI活用支援',
+      'RAG',
       '要件定義',
+      '事業設計',
+      'プロダクト開発',
+      'プロジェクト管理',
+      'Gherkin',
+      'GraphRAG',
+      'PM on Rails',
       'システム設計',
-      'バックエンド開発',
-      'フロントエンド開発',
-      'ITコンサルティング',
     ],
   },
   nakamura: {

@@ -41,10 +41,19 @@ const members: Member[] = [
   {
     id: 1,
     anchorId: 'tsuruoka',
-    name: '鶴岡邦夫',
-    position: '代表取締役社長',
-    description:
-      '【略歴】フリーでエンジニアとしてシステム開発をしてから起業いたしました。\n【得意分野】システム開発・プロダクトマネジメント\n【キャリア】新規事業に特化して、0からリサーチして要件定義してデザインに落とし込みアプリにするという事をしていました。営業マーケティング(プロモーション以外)ビズデブ　pmは一通り押さえています。0-1をやっていましたが、1-100も担当しています。\n【スキル・資格】速読・バックエンド開発・多少のインフラ開発・プロダクトマネジメント・フロントエンド開発・ウェブデザイン・ITコンサルティング・上流工程・システム設計・営業\n【その他】日本語と英語とロシア語が話せます。いろいろな言語を習慣的に話している影響で日本語が拙いところがあります。暖かい目で見守っていただけると幸いです。性格は好奇心が旺盛でいつも何か調べているか試してみたりしています。',
+    name: '鶴岡 邦夫',
+    position: '代表取締役',
+    description: [
+      '株式会社Beekle 代表取締役。',
+      'フリーランスエンジニアとしてさまざまなシステム開発を経験した後、株式会社Beekleを設立。',
+      'バックエンド、フロントエンド、インフラまで幅広く開発に携わってきたほか、顧客ヒアリング、要件定義、プロダクトマネジメント、営業・提案、事業設計まで一貫して担当してきた。',
+      '新規事業では、まだサービスの形が決まっていない段階から、リサーチ、課題整理、要件定義、デザイン、システム開発までを進める0→1のプロジェクトを多数経験。立ち上げ後の改善や運用、内製化支援など、1→100のフェーズにも携わっている。',
+      '現在は生成AI・RAG・業務システムを中心に、企業のDX・AI活用支援を行う一方、自社でもAIを積極的に実務へ導入している。',
+      'Cursor cloud agents、Claude CodeやCodexを使ったAI開発だけでなく、AIによるコードレビュー、Gherkinを活用した仕様・テスト管理、営業案件の分析、マーケティングデータ分析、経営・財務分析など、開発から会社経営まで幅広い領域でAIを実際に活用している。',
+      'また、自社プロダクト「PM on Rails」の開発をはじめ、AI推薦システム、GraphRAGを利用したゲーム、音声・言語系アプリケーションなど、さまざまなAIプロダクトの企画・検証にも取り組んでいる。',
+      '技術ありきではなく、「顧客が本当に解決したい問題は何か」を整理し、必要であれば既存サービスの活用も含めて、最も現実的な方法を設計することを大切にしている。',
+      '現在は、AIを活用することで少人数でも高い生産性と品質を実現できる開発・経営の仕組みづくりと、日本発のプロダクトを世界へ展開することを目指している。',
+    ].join('\n'),
   },
   {
     id: 2,
@@ -110,15 +119,15 @@ const members: Member[] = [
       url: 'https://beekle.jp/members',
     }}
   />
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <PageHero
       title="メンバー紹介"
       subtitle="Beekleの開発チームをご紹介します。多様な専門知識と経験を持つ私たちが、お客様のビジネス成長を全力でサポートします。"
     />
 
     <!-- メンバー紹介セクション -->
-    <section class="py-32 bg-gray-50">
+    <section class="border-b border-neutral-300 bg-neutral-100 py-24 md:py-28">
       <div class="container mx-auto px-8">
         <h2 class="text-3xl font-bold text-center mb-16">メンバー紹介</h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -139,7 +148,7 @@ const members: Member[] = [
     </section>
 
     <!-- お問い合わせセクション -->
-    <section class="bg-primary-50 py-24">
+    <section class="border-b border-neutral-300 bg-neutral-50 py-20 md:py-24">
       <div class="container mx-auto px-8 text-center">
         <h2 class="text-3xl font-bold text-gray-800 mb-6">
           お気軽にご相談ください
@@ -151,7 +160,7 @@ const members: Member[] = [
           href="/contact?source=members-final"
           data-cta-source="members-final"
           data-cta-id="contact"
-          class="inline-block bg-primary-500 hover:bg-primary-600 text-white font-bold py-3 px-8 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
+          class="inline-flex min-h-[48px] items-center justify-center rounded-md bg-primary-500 px-8 py-3 font-bold text-white transition-colors hover:bg-primary-600"
         >
           お問い合わせ
         </a>
@@ -160,11 +169,4 @@ const members: Member[] = [
   </main>
 </Layout>
 
-<style>
-  .bg-grid-pattern {
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-</style>
+<style></style>

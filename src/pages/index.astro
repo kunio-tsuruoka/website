@@ -7,12 +7,8 @@ import { ProcessSteps } from '@/components/process-steps';
 import { ButtonLink } from '@/components/ui/button';
 import { Header } from '../components/header';
 import JsonLd from '../components/seo/json-ld.astro';
-import { ServiceCard } from '../components/service-card';
 import { companyPositioning } from '../data/company';
-import { services } from '../data/service';
-
-const TOP_SERVICE_IDS = ['mvp-poc-development', 'ai-development', 'web-mobile-development'];
-const topServices = services.filter((s) => TOP_SERVICE_IDS.includes(s.id));
+import { featuredConsultationSituations } from '../data/consultation-situations';
 import Layout from '../layouts/layout.astro';
 import { type MicroCMSEnv, getColumns } from '../lib/microcms';
 
@@ -21,11 +17,8 @@ const env = runtime?.env;
 
 const FEATURED_COLUMN_IDS = [
   'requirements-definition-complete-guide',
-  'requirements-vs-requests',
   'web-system-cost-by-scale',
   'ai-development-cost-guide',
-  'project-management-complete-guide',
-  'ai-era-development-flow',
 ];
 
 type ColumnCard = {
@@ -34,6 +27,40 @@ type ColumnCard = {
   description?: string;
   categoryTitle?: string;
 };
+
+const caseLogs = [
+  {
+    situation: '難航案件の立て直し',
+    result: '3ヶ月停滞 → 3週間',
+    material: '要件、実装、インフラを読み直し、再開できる単位へ整理',
+  },
+  {
+    situation: '発注前の認識合わせ',
+    result: '議事録 → デモ1日',
+    material: 'ヒアリング内容を画面で確認できる検証用プロトタイプへ',
+  },
+  {
+    situation: '新規事業の検証',
+    result: '1週間で触れる形へ',
+    material: '構想、画面、API、インフラを分断せず判断可能な状態へ',
+  },
+];
+
+const decisionSheetRows = [
+  {
+    label: '判断の根拠',
+    text: '利用者、対象業務、既存データ、月間工数、制約条件を分けます。',
+  },
+  {
+    label: '検証する問い',
+    text: '何を作るかではなく、何が分かれば社内で判断できるかに絞ります。',
+  },
+  {
+    label: '返す資料',
+    text: '検証用プロトタイプ、受入条件、概算レンジ、次に確認するリスクを残します。',
+  },
+];
+
 let featuredColumns: ColumnCard[] = [];
 try {
   const all = await getColumns(undefined, env);
@@ -53,297 +80,152 @@ try {
 ---
 
 <Layout
-  title="動くプロトタイプから始めるシステム開発｜初期費用0円のゼロスタート | Beekle株式会社"
+  title="要件が曖昧でも、発注判断の材料まで作る | Beekle株式会社"
   description={`Beekle株式会社は、${companyPositioning.short}${companyPositioning.long}${companyPositioning.zeroStart}`}
 >
   <JsonLd slot="head" type="website" />
-  <Header client:idle />
+  <Header />
   <main class="">
     {/* メインビジュアル */}
-    <HeroSection client:load />
+    <HeroSection />
+
+    {/* 実案件による証明 */}
+    <section class="relative overflow-hidden bg-neutral-50 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12 relative">
+        <div class="grid gap-8 border-b border-neutral-200 pb-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+          <div>
+            <span class="section-label">実案件の変化</span>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
+              先に、実案件ログを見てください。
+            </h2>
+            <p class="mt-4 text-base leading-relaxed text-neutral-600">
+              工程説明よりも、発注判断に使える変化を先に出します。
+            </p>
+            <a href="/case-studies" class="mt-5 inline-flex min-h-[44px] items-center border-b border-primary-500 text-sm font-bold text-primary-500 hover:text-primary-600">
+              実案件をすべて見る
+            </a>
+          </div>
+          <div class="case-log-table border-t border-neutral-300">
+            {caseLogs.map((item) => (
+              <a href="/case-studies" class="grid gap-3 border-b border-neutral-300 py-5 transition hover:bg-neutral-50 md:grid-cols-[0.72fr_0.68fr_1fr] md:px-2">
+                <p class="text-sm font-bold text-primary-700">{item.situation}</p>
+                <p class="font-Poppins text-3xl font-bold leading-tight text-primary-600">{item.result}</p>
+                <p class="text-sm leading-relaxed text-neutral-700">{item.material}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
 
     {/* LP概要 */}
-    <section class="relative overflow-hidden bg-white py-20 md:py-24">
-      <div class="absolute -top-10 right-8 w-28 h-56 decoration-bar-purple opacity-10"></div>
-      <div class="absolute bottom-10 left-4 w-32 h-64 decoration-bar-purple opacity-10"></div>
-
+    <section class="relative overflow-hidden bg-neutral-50 py-14 md:py-16">
       <div class="container mx-auto px-8 lg:px-12 relative">
-        <div class="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
+        <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <div>
             <span class="number-label">01</span>
-            <span class="section-label ml-4">WHY BEEKLE</span>
+            <span class="section-label ml-4">Beekleの判断支援</span>
             <h2 class="mt-4 text-4xl font-bold leading-tight text-navy-950 lg:text-5xl">
-              要件定義から、
+              業務課題を、
               <br class="hidden lg:block" />
-              <span class="text-primary-500">AI駆動開発</span>まで。
+              <span class="text-primary-500">発注判断に使える実物</span>へ。
             </h2>
             <p class="mt-6 text-lg leading-relaxed text-neutral-700">
-              AIでコードを書くこと自体は、特別なことではなくなりました。
-              開発の速度と品質を分けるのは、「何を作るべきか」をどれだけ正確に、実装できる仕様へ変換できるかです。
+              「何を作るべきか」が曖昧なまま見積もりや開発に入ると、作った後に認識のズレが出ます。
+              Beekleは、業務の困りごとを聞き、検証すべき範囲を絞り、動くものを見ながら社内で説明できる判断材料へ変えます。
             </p>
             <p class="mt-4 text-lg leading-relaxed text-neutral-700">
-              Beekleは、自社開発のPM基盤「PM on Rails」を実際の開発プロジェクトで使い、ヒアリングや既存資料から要求を整理して、ユーザーストーリー・受入条件・開発タスクまで構造化。その仕様をAIエージェントへつなぎ、実装・テスト・改善を高速に繰り返します。
+              口頭の合意やチャットの断片で進めず、受入条件、確認結果、次に見るべきリスクまで残します。社内説明や見積もり比較に使える材料へ変えるためです。
             </p>
             <p class="mt-6 text-xl font-bold leading-relaxed text-navy-950">
-              要件定義を速く、正確に。<br />そのままAIで、速く作る。
+              まず決めるのは、作る範囲ではなく、確かめるべき問いです。
             </p>
           </div>
 
-          <div class="grid gap-4">
-            <div class="card-base p-6">
-              <p class="text-sm font-bold text-primary-500">01</p>
-              <h3 class="mt-2 text-xl font-bold leading-snug text-navy-950">
-                業務を理解し、作るべきものを絞る
-              </h3>
-              <p class="mt-3 text-sm leading-relaxed text-neutral-600">
-                要望をそのまま開発するのではなく、業務・課題・利用者を理解したうえで、本当に必要な機能を整理します。
+          <div class="decision-sheet-table border-y border-neutral-300 bg-white">
+            <div class="grid gap-2 border-b border-neutral-300 border-l-8 border-primary-500 px-5 py-4 md:grid-cols-[0.6fr_1fr]">
+              <p class="text-sm font-bold text-primary-700">発注判断シート</p>
+              <p class="text-sm font-bold text-accent-950">
+                判断の根拠、検証する問い、返す資料を社内説明と見積もり比較に使える形へ戻します。
               </p>
             </div>
-            <div class="card-base p-6">
-              <p class="text-sm font-bold text-primary-500">02</p>
-              <h3 class="mt-2 text-xl font-bold leading-snug text-navy-950">
-                PM on Railsで要件を実装可能な仕様へ
-              </h3>
-              <p class="mt-3 text-sm leading-relaxed text-neutral-600">
-                自社開発のPM on Railsで、要求・ユーザーストーリー・受入条件・タスクを構造化。なぜその要件になったのかを後から追える状態を保ちます。
-              </p>
+            <div class="divide-y divide-neutral-300">
+              {decisionSheetRows.map((row, index) => (
+                <div class="grid gap-3 px-5 py-5 md:grid-cols-[112px_1fr]">
+                  <p class="font-Poppins text-sm font-bold text-primary-600">
+                    {String(index + 1).padStart(2, '0')}
+                  </p>
+                  <div>
+                    <h3 class="text-xl font-bold leading-snug text-navy-950">{row.label}</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-neutral-700">{row.text}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div class="card-base p-6">
-              <p class="text-sm font-bold text-primary-500">03</p>
-              <h3 class="mt-2 text-xl font-bold leading-snug text-navy-950">
-                AIエージェントで高速に実装・改善
-              </h3>
-              <p class="mt-3 text-sm leading-relaxed text-neutral-600">
-                構造化された仕様をAIエージェントへ渡し、実装・テスト・修正を高速に繰り返します。仕様が明確だから、AIの速度がそのまま開発の速度になります。
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* 開発サイクル */}
-        <div class="mt-14 rounded-3xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
-          <p class="text-sm font-bold text-primary-500">BEEKLEの開発サイクル</p>
-          <div class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-3">
-            {
-              [
-                '相談・ヒアリング',
-                'PM on Railsで要求・要件を構造化',
-                'ユーザーストーリー・受入条件・タスク',
-                'AIエージェントが実装・テスト',
-                '動くものを確認',
-                'フィードバックで要件を更新',
-              ].map((step, i, arr) => (
-                <>
-                  <span class="rounded-full bg-white border border-neutral-200 px-4 py-2 text-sm font-semibold text-navy-950">
-                    {step}
-                  </span>
-                  {i < arr.length - 1 && (
-                    <svg class="h-4 w-4 flex-none text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                  )}
-                </>
-              ))
-            }
-          </div>
-          <p class="mt-4 text-sm leading-relaxed text-neutral-600">
-            最初に巨大な仕様書を完成させるのではなく、このサイクルを短く回します。<a href="https://pmonrails.com" rel="noopener" class="font-semibold text-primary-500 hover:text-primary-600">PM on Rails</a>は、Beekleが自社開発し、実案件で使っているプロジェクト管理基盤です。
-          </p>
-        </div>
-
-        {/* PROOF: 実案件による証明 */}
-        <div class="mt-14">
-          <span class="section-label">PROOF</span>
-          <h3 class="mt-3 text-2xl font-bold text-navy-950 md:text-3xl">
-            速さは、実案件で証明しています。
-          </h3>
-          <div class="mt-6 grid gap-4 md:grid-cols-3">
-            <a href="/case-studies" class="group block">
-              <div class="card-base card-hover h-full p-6">
-                <p class="text-3xl font-bold text-primary-500">3ヶ月停滞 → 3週間</p>
-                <p class="mt-3 text-sm leading-relaxed text-neutral-600">
-                  他社で約3ヶ月停滞した開発を引き継ぎ、バックエンドからインフラまで一貫して3週間で完成させました。
-                </p>
-              </div>
-            </a>
-            <a href="/case-studies" class="group block">
-              <div class="card-base card-hover h-full p-6">
-                <p class="text-3xl font-bold text-primary-500">議事録 → デモ1日</p>
-                <p class="mt-3 text-sm leading-relaxed text-neutral-600">
-                  ヒアリング議事録からRFPを生成し、その仕様のまま1日で動くデモまで到達。「イメージとずれていない」と評価いただきました。
-                </p>
-              </div>
-            </a>
-            <a href="/case-studies" class="group block">
-              <div class="card-base card-hover h-full p-6">
-                <p class="text-3xl font-bold text-primary-500">新規事業 → 1週間</p>
-                <p class="mt-3 text-sm leading-relaxed text-neutral-600">
-                  大手商社の新規事業プラットフォームを、フロントからインフラまで1週間で動く形に立ち上げました。
-                </p>
-              </div>
-            </a>
-          </div>
-          <div class="mt-6 text-center">
-            <a href="/case-studies" class="inline-flex min-h-[44px] items-center font-semibold text-primary-500 hover:text-primary-600">
-              導入事例を見る
-              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
           </div>
         </div>
       </div>
     </section>
 
     {/* 相談内容の整理 */}
-    <section class="relative overflow-hidden bg-neutral-50 py-20 md:py-24">
-      <div class="absolute top-16 left-8 w-24 h-48 decoration-bar-purple opacity-10"></div>
+    <section class="relative overflow-hidden bg-neutral-100 py-16 md:py-20">
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center mb-12">
           <span class="number-label">02</span>
-          <span class="section-label ml-4">WHAT WE SOLVE</span>
+          <span class="section-label ml-4">相談が始まる場面</span>
           <h2 class="mt-4 text-4xl font-bold text-navy-950 lg:text-5xl">
-            相談が多いのは、この5つの課題です。
+            発注前に止まりやすい場面から選べます。
           </h2>
           <p class="mx-auto mt-4 max-w-3xl text-lg leading-relaxed text-neutral-600">
-            どれも最初から大きな開発に入るより、まず動く形にしてから判断した方が失敗を減らせます。
+            技術カテゴリではなく、いま社内で起きている困りごとから見てください。各入口で、何を確かめれば社内説明に使えるかまで整理します。
           </p>
         </div>
 
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <a href="/services/mvp-poc-development" class="group block">
-            <div class="card-base card-hover h-full p-8">
-              <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary-50 text-lg font-bold text-primary-500">
-                MVP
-              </span>
-              <h3 class="mt-5 text-2xl font-bold leading-snug text-navy-950">
-                新規事業を早く検証したい
-              </h3>
-              <p class="mt-4 leading-relaxed text-neutral-600">
-                アイデア段階から、無料プロトタイプ→PoC→MVP→本開発へ。大きく作る前に、小さく確かめてから投資を判断できます。
-              </p>
-              <p class="mt-5 font-semibold text-primary-500 group-hover:text-primary-600">
-                MVP・PoC開発を見る
-              </p>
-            </div>
-          </a>
-          <a href="/services/ai-development" class="group block">
-            <div class="card-base card-hover h-full p-8">
-              <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary-50 text-xl font-bold text-primary-500">
-                AI
-              </span>
-              <h3 class="mt-5 text-2xl font-bold leading-snug text-navy-950">
-                AIで業務を効率化したい
-              </h3>
-              <p class="mt-4 leading-relaxed text-neutral-600">
-                問い合わせ対応、書類処理、定型業務の自動化など、AIが効く業務を見極めて検証します。
-              </p>
-              <p class="mt-5 font-semibold text-primary-500 group-hover:text-primary-600">
-                AI開発を見る
-              </p>
-            </div>
-          </a>
-          <a href="/services/web-mobile-development" class="group block">
-            <div class="card-base card-hover h-full p-8">
-              <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary-50 text-xl font-bold text-primary-500">
-                App
-              </span>
-              <h3 class="mt-5 text-2xl font-bold leading-snug text-navy-950">
-                属人業務をシステム化したい
-              </h3>
-              <p class="mt-4 leading-relaxed text-neutral-600">
-                Excel、メール、担当者の記憶に散らばった業務を、誰でも回せるシステムへ整えます。
-              </p>
-              <p class="mt-5 font-semibold text-primary-500 group-hover:text-primary-600">
-                Web・モバイル開発を見る
-              </p>
-            </div>
-          </a>
-          <a href="/services/rag-system-development" class="group block">
-            <div class="card-base card-hover h-full p-8">
-              <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary-50 text-lg font-bold text-primary-500">
-                Docs
-              </span>
-              <h3 class="mt-5 text-2xl font-bold leading-snug text-navy-950">
-                社内情報をAI活用したい
-              </h3>
-              <p class="mt-4 leading-relaxed text-neutral-600">
-                散らばった文書や過去の対応をAIで横断検索し、根拠つきで答えられる状態にします。
-              </p>
-              <p class="mt-5 font-semibold text-primary-500 group-hover:text-primary-600">
-                RAGシステム構築を見る
-              </p>
-            </div>
-          </a>
-          <a href="/services/cdp-development" class="group block">
-            <div class="card-base card-hover h-full p-8">
-              <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary-50 text-xl font-bold text-primary-500">
-                Data
-              </span>
-              <h3 class="mt-5 text-2xl font-bold leading-snug text-navy-950">
-                データを活用したい
-              </h3>
-              <p class="mt-4 leading-relaxed text-neutral-600">
-                顧客情報や行動データを整理し、施策・分析・営業判断に使える状態へ近づけます。
-              </p>
-              <p class="mt-5 font-semibold text-primary-500 group-hover:text-primary-600">
-                顧客データ基盤を見る
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    {/* サービス一覧 - Pop Style */}
-    <section id="services" class="relative py-32 overflow-hidden bg-white">
-      {/* Pop decorations */}
-      <div class="absolute top-20 left-0 w-40 h-80 decoration-bar-purple opacity-10 animate-float"></div>
-      <div class="absolute bottom-10 right-10 w-32 h-64 decoration-bar-purple opacity-10 animate-float-delay"></div>
-
-      <div class="container mx-auto px-8 lg:px-12 relative">
-        <div class="text-center mb-16">
-          {/* Number Label */}
-          <span class="number-label">03</span>
-          <span class="section-label ml-4">SERVICES</span>
-
-          <h2 class="text-4xl lg:text-5xl font-bold text-navy-950 mb-6 mt-4">
-            Beekleが<span class="text-primary-500">作れるもの</span>
-          </h2>
-          <p class="text-xl text-neutral-600 max-w-3xl mx-auto">
-            MVP・PoCでの検証から、AI・Webアプリ・モバイルアプリの本開発まで。最初に業務課題を絞り、必要な機能から動く形にします。
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-8">
-          {topServices.map((service, index) => (
-            <div
-              class="h-full transform transition-all duration-500 hover:-translate-y-2"
-              style={{ transitionDelay: `${index * 100}ms` }}
-            >
-              <ServiceCard
-                client:visible
-                id={service.id}
-                title={service.title}
-                description={service.description}
-              />
-            </div>
+        <div class="grid gap-5 lg:grid-cols-3">
+          {featuredConsultationSituations.map((situation, index) => (
+            <a href={situation.href} class="group block">
+              <div class="card-base card-hover h-full p-7">
+                <p class="text-sm font-bold text-primary-500">
+                  発注前の詰まり {String(index + 1).padStart(2, '0')}
+                </p>
+                <h3 class="mt-3 text-2xl font-bold leading-snug text-navy-950">
+                  {situation.cardTitle}
+                </h3>
+                <p class="mt-4 leading-relaxed text-neutral-600">{situation.description}</p>
+                <div class="mt-5 grid gap-2 border-t border-neutral-200 pt-4">
+                  {situation.rtbItems.slice(0, 2).map((item) => (
+                    <p class="text-sm leading-relaxed text-neutral-700">
+                      <span class="font-bold text-primary-700">{item.label}</span>: {item.value}
+                    </p>
+                  ))}
+                </div>
+                <p class="mt-5 text-sm font-semibold text-primary-500 group-hover:text-primary-600">
+                  場面別に判断材料を見る
+                </p>
+              </div>
+            </a>
           ))}
         </div>
+
+        <div class="mt-10 text-center">
+          <a
+            href="/situations"
+            class="inline-flex min-h-[52px] items-center justify-center border border-primary-500 px-8 py-4 text-base font-semibold text-primary-500 transition-colors hover:bg-primary-500 hover:text-white"
+          >
+            相談が始まる場面をすべて見る
+          </a>
+        </div>
       </div>
     </section>
 
-    {/* 開発の流れ - Pop Style */}
-    <section id="process" class="relative bg-neutral-50 py-32 overflow-hidden">
-      {/* Pop decorations */}
-      <div class="absolute -top-10 right-20 w-36 h-72 decoration-bar-purple opacity-10"></div>
-      <div class="absolute bottom-40 left-10 w-28 h-56 decoration-bar-purple opacity-10"></div>
+    {/* 開発の流れ */}
+    <section id="process" class="relative bg-neutral-50 py-20 md:py-24 overflow-hidden">
       <div class="relative">
         {/* Number Label */}
         <div class="container mx-auto px-8 lg:px-12 mb-8">
           <div class="text-center">
-            <span class="number-label">04</span>
-            <span class="section-label ml-4">PROCESS</span>
+            <span class="number-label">03</span>
+            <span class="section-label ml-4">進め方</span>
           </div>
         </div>
 
@@ -352,38 +234,33 @@ try {
           <ProcessSteps client:visible />
         </div>
 
-        {/* CTA for Zero Start - Pop Style */}
+        {/* CTA for Zero Start */}
         <div class="container mx-auto px-8 lg:px-12 mt-16">
           <div class="max-w-4xl mx-auto">
-            <div class="bg-primary-500 rounded-[40px] p-10 shadow-medium text-center relative overflow-hidden">
-              {/* Inner decorations */}
-              <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full"></div>
-              <div class="absolute -bottom-5 -left-5 w-24 h-24 bg-white/10 rounded-full"></div>
-
-              <h3 class="text-3xl font-bold text-white mb-4 relative">
-                まずは、ゼロスタートから
+            <div class="relative overflow-hidden border-y border-neutral-300 border-l-8 border-primary-500 bg-white p-8 md:p-10">
+              <h3 class="text-3xl font-bold text-accent-950 mb-4 relative">
+                実物で確かめてから、次の投資条件を決めてください
               </h3>
-              <p class="text-lg text-white/90 mb-8 leading-relaxed relative">
-                初期費用0円で、実際に動くものを体験できます。<br />
-                お気軽にお問い合わせください。
+              <p class="text-lg text-neutral-700 mb-8 leading-relaxed relative">
+                検証用プロトタイプで、業務に合うか・次に投資すべきかを判断できます。
               </p>
-              <div class="flex flex-col sm:flex-row gap-4 justify-center relative">
+              <div class="flex flex-col sm:flex-row gap-4 relative">
                 <a
                   href="/contact?source=home-zerostart"
                   data-cta-source="home-zerostart"
                   data-cta-id="contact"
-                  class="page-cta inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-50 transition-all shadow-soft hover:shadow-medium hover:scale-105 transform"
+                  class="page-cta inline-flex min-h-[52px] items-center justify-center rounded-md bg-primary-500 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-primary-600"
                 >
-                  ゼロスタートを始める
+                  実現可否を相談する
                   <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </a>
                 <a
                   href="/prooffirst"
-                  class="inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
+                  class="inline-flex min-h-[52px] items-center justify-center border-b border-accent-950 text-base font-semibold text-accent-950 hover:border-primary-500 hover:text-primary-500"
                 >
-                  詳しく見る
+                  初期費用0円の条件を見る
                 </a>
               </div>
             </div>
@@ -393,20 +270,17 @@ try {
     </section>
 
 
-    {/* COLUMNS - 発注前に読むコラム */}
-    <section class="py-32 bg-neutral-50 relative overflow-hidden">
-      <div class="absolute top-20 left-0 w-32 h-64 decoration-bar-purple opacity-10"></div>
-      <div class="absolute bottom-20 right-0 w-40 h-80 decoration-bar-purple opacity-10"></div>
-
+    {/* 発注前に読む判断材料 */}
+    <section class="py-16 md:py-20 bg-neutral-50 relative overflow-hidden">
       <div class="container mx-auto px-8 lg:px-12 relative">
-        <div class="text-center mb-16">
-          <span class="number-label">05</span>
-          <span class="section-label ml-4">COLUMNS</span>
+        <div class="text-center mb-10">
+          <span class="number-label">04</span>
+          <span class="section-label ml-4">発注前の判断材料</span>
           <h2 class="text-4xl lg:text-5xl font-bold text-navy-950 mb-4 mt-4">
             発注前に読む<span class="text-primary-500">コラム</span>
           </h2>
-          <p class="text-xl text-neutral-600">
-            見積もり・要件定義・費用相場・AI開発まで、発注者目線で解説しています
+          <p class="text-lg text-neutral-600">
+            相談前に確認されやすい、費用・要件定義・AI開発の判断材料をまとめています
           </p>
         </div>
 
@@ -414,7 +288,7 @@ try {
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {featuredColumns.map((c) => (
               <a href={`/column/${c.id}`} class="group">
-                <div class="card-base card-hover card-lift p-6 h-full flex flex-col">
+                <div class="card-base card-hover p-6 h-full flex flex-col">
                   {c.categoryTitle && (
                     <span class="inline-block text-xs font-bold text-primary-500 mb-3">
                       {c.categoryTitle}
@@ -449,74 +323,71 @@ try {
     </section>
 
     {/* よくある質問 */}
-    <section id="faq" class="py-32 bg-neutral-50">
+    <section id="faq" class="py-16 md:py-20 bg-neutral-100">
       <div class="container mx-auto px-8 lg:px-12 mb-8">
         <div class="text-center">
-          <span class="number-label">06</span>
-          <span class="section-label ml-4">FAQ</span>
+          <span class="number-label">05</span>
+          <span class="section-label ml-4">よくあるご不安</span>
         </div>
       </div>
       <ProcessFAQ client:visible />
     </section>
 
-    {/* お問い合わせフォーム - Pop Style */}
-    <section class="py-32 bg-white relative overflow-hidden">
-      {/* Pop decorations */}
-      <div class="absolute top-10 right-20 w-36 h-72 decoration-bar-purple opacity-10 animate-float"></div>
-      <div class="absolute bottom-20 left-10 w-28 h-56 decoration-bar-purple opacity-10 animate-float-delay"></div>
-
+    {/* お問い合わせフォーム */}
+    <section class="py-16 md:py-20 bg-neutral-50 relative overflow-hidden">
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center mb-12">
           {/* Number Label */}
-          <span class="number-label">07</span>
-          <span class="section-label ml-4">CONTACT</span>
+          <span class="number-label">06</span>
+          <span class="section-label ml-4">相談前の安心材料</span>
 
           <h2 class="text-4xl lg:text-5xl font-bold text-navy-950 mb-4 mt-4">
-            お気軽に<span class="text-primary-500">ご相談</span>ください
+            業務課題を<span class="text-primary-500">相談</span>する
           </h2>
-          <p class="text-xl text-neutral-600">企業のご担当者様からのご相談を受け付けています</p>
+          <p class="text-lg text-neutral-600">
+            NDA可・要件未確定でも可。通常1〜2営業日以内に、概算レンジと進め方の候補を返信します。
+          </p>
+          <div class="mt-6 grid gap-3 sm:grid-cols-3">
+            {['NDA締結可', '要件未確定でも可', '見送り条件も整理'].map((item) => (
+              <div class="border-l-4 border-primary-500 bg-white px-4 py-3 text-sm font-bold text-primary-700">
+                {item}
+              </div>
+            ))}
+          </div>
         </div>
         <div class="max-w-2xl mx-auto">
-          <div class="card-base p-8">
-            <ContactForm client:visible={{ rootMargin: '600px' }} />
-          </div>
+          <ContactForm client:visible={{ rootMargin: '600px' }} />
         </div>
       </div>
     </section>
 
-    {/* CTA Section - Pop Style */}
-    <section class="relative py-32 overflow-hidden">
+    {/* CTA Section */}
+    <section class="relative py-20 md:py-24 overflow-hidden">
       <div class="absolute inset-0 bg-accent-950" />
-
-      {/* Pop decorations */}
-      <div class="absolute -top-20 -left-10 w-48 h-96 decoration-bar-purple opacity-20 animate-float"></div>
-      <div class="absolute top-20 right-10 w-40 h-80 decoration-bar-purple opacity-20 animate-float-delay"></div>
-
-      <div class="absolute inset-0 bg-grid-pattern-light opacity-5" />
 
       <div class="container mx-auto px-8 lg:px-12 relative">
         <div class="text-center">
           <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">
-            まず「動くもの」で確かめてから決めてください。
+            まず「動くもの」で確かめてから、次の投資条件を決めてください。
           </h2>
           <p class="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-            初期費用0円・最短数日で、あなたの業務に合うか実物で判断できます。
+            NDA可。要件未確定でも構いません。合わない場合は、開発を勧めず見送り理由をお伝えします。
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/contact?source=home-final-cta"
               data-cta-source="home-final-cta"
               data-cta-id="contact"
-              class="page-cta inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-accent-950 bg-white rounded-full hover:bg-gray-100 transition-all shadow-soft hover:shadow-medium"
+              class="page-cta inline-flex min-h-[52px] items-center justify-center rounded-md bg-white px-8 py-4 text-lg font-semibold text-accent-950 transition-colors hover:bg-neutral-100"
             >
-              業務課題を相談する
+              実現可否を相談する
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </a>
             <a
               href="/case-studies"
-              class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-accent-950 transition-all"
+              class="inline-flex min-h-[52px] items-center justify-center text-base font-semibold text-white underline-offset-4 hover:underline"
             >
               導入事例を見る
             </a>
@@ -527,43 +398,4 @@ try {
   </main>
 </Layout>
 
-<style>
-  @keyframes float {
-    0%, 100% { transform: translateY(0) rotate(-25deg) }
-    50% { transform: translateY(-20px) rotate(-25deg) }
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .animate-float-delay {
-    animation: float 8s ease-in-out infinite;
-    animation-delay: 1s;
-  }
-
-  .animate-float-slow {
-    animation: float 10s ease-in-out infinite;
-    animation-delay: 2s;
-  }
-
-  .bg-grid-pattern {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
-  .bg-grid-pattern-light {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
-  /* Pop decoration bars */
-  .decoration-bar-purple {
-    background: linear-gradient(135deg, #3D4DB7, #a0b0ff);
-    border-radius: 9999px;
-    transform: rotate(-25deg);
-  }
-
-</style>
+<style></style>

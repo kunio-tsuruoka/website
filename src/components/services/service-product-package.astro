@@ -190,22 +190,22 @@ const configs: Record<string, PackageConfig> = {
   },
   'mvp-poc-development': {
     promise:
-      'アイデアを「作るべきか」の判断材料へ変えます。仮説と成功基準を先に決め、実物とデータでGo / No-Go / Pivotを判断できる状態まで進めます。',
+      'アイデアを「作るべきか」の判断材料へ変えます。仮説と成功基準を先に決め、実物とデータで本番化・見送り・方向転換を判断できる状態まで進めます。',
     process: [
       '仮説・課題の定義',
       '成功・中止基準',
       '無料プロトタイプ',
       'PoC・実利用検証',
       '結果の評価',
-      'Go / No-Go / Pivot',
+      '本番化 / 見送り / 方向転換',
     ],
     deliverables: [
       '検証仮説と評価基準',
       '動くプロトタイプ / PoC',
       'ユーザー・業務検証結果',
       '技術・費用・運用上の論点',
-      'Go / No-Go / Pivot判断材料',
-      'Goの場合の要件・改善バックログ',
+      '本番化・見送り・方向転換の判断材料',
+      '本番化する場合の要件・改善バックログ',
     ],
     boundary:
       'PoCの目的は本開発へ進むことではなく、投資判断を早く正しくすることです。基準を満たさなければ、無理にMVPや本開発へ進めません。',
@@ -216,7 +216,7 @@ const config = configs[serviceId];
 ---
 
 {config && (
-  <section class="relative overflow-hidden bg-white py-16 md:py-20">
+  <section class="relative overflow-hidden bg-neutral-50 py-16 md:py-20">
     <div class="container relative mx-auto px-6 lg:px-12">
       <div class="mx-auto max-w-6xl">
         <div class="max-w-4xl">
@@ -230,14 +230,14 @@ const config = configs[serviceId];
         </div>
 
         <div class="mt-8 grid gap-4 lg:grid-cols-3">
-          <article class="rounded-3xl border border-neutral-200 bg-neutral-50 p-5 md:p-6">
+          <article class="rounded-lg border border-neutral-200 bg-white p-5 md:p-6">
             <p class="text-xs font-bold tracking-wide text-primary-600">PROMISE / 約束</p>
             <p class="mt-3 text-sm font-semibold leading-relaxed text-accent-950 md:text-base">
               {config.promise}
             </p>
           </article>
 
-          <article class="rounded-3xl border border-neutral-200 bg-neutral-50 p-5 md:p-6">
+          <article class="rounded-lg border border-neutral-200 bg-white p-5 md:p-6">
             <p class="text-xs font-bold tracking-wide text-primary-600">PROCESS / 工程</p>
             <ol class="mt-3 space-y-2">
               {config.process.map((item, index) => (
@@ -249,7 +249,7 @@ const config = configs[serviceId];
             </ol>
           </article>
 
-          <article class="rounded-3xl border border-neutral-200 bg-neutral-50 p-5 md:p-6">
+          <article class="rounded-lg border border-neutral-200 bg-white p-5 md:p-6">
             <p class="text-xs font-bold tracking-wide text-primary-600">DELIVERABLES / 成果物</p>
             <ul class="mt-3 space-y-2">
               {config.deliverables.map((item) => (
@@ -262,7 +262,7 @@ const config = configs[serviceId];
           </article>
         </div>
 
-        <div class="mt-5 rounded-2xl border border-neutral-200 bg-white p-4 md:p-5">
+        <div class="mt-5 rounded-lg border border-neutral-200 bg-neutral-50 p-4 md:p-5">
           <p class="text-xs font-bold tracking-wide text-neutral-600">SCOPE / 前提・境界</p>
           <p class="mt-2 text-sm leading-relaxed text-neutral-700">{config.boundary}</p>
         </div>

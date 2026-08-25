@@ -23,7 +23,7 @@ export function SuggestionsPanel({ onSuggest }: { onSuggest: () => void }) {
   // 未生成: 改善提案を出すボタン
   if (!suggestions) {
     return (
-      <div className="mt-4 rounded-2xl border border-primary-100 bg-primary-50/60 p-5">
+      <div className="mt-4 rounded-lg border border-primary-100 bg-primary-50/60 p-5">
         <h3 className="text-sm font-bold text-navy-950 mb-1">この業務、もっと良くできるかも</h3>
         <p className="text-xs text-gray-600 leading-relaxed mb-4">
           いまの流れをもとに、自動化・AI活用・システム連携でどう改善できるかをAIが提案します。
@@ -56,7 +56,7 @@ export function SuggestionsPanel({ onSuggest }: { onSuggest: () => void }) {
           return (
             <li
               key={`${s.kind}-${i}-${s.title.slice(0, 8)}`}
-              className="rounded-2xl border border-gray-200 bg-white p-4"
+              className="rounded-lg border border-gray-200 bg-white p-4"
             >
               <div className="flex items-center gap-2 mb-1.5">
                 <span
@@ -76,7 +76,7 @@ export function SuggestionsPanel({ onSuggest }: { onSuggest: () => void }) {
         })}
       </ul>
 
-      <div className="mt-5 rounded-2xl bg-navy-950 text-white p-5 sm:p-6">
+      <div className="mt-5 rounded-lg bg-navy-950 text-white p-5 sm:p-6">
         <p className="font-bold text-base mb-1">この改善、Beekleで実現できます</p>
         <p className="text-sm text-white/80 leading-relaxed mb-4">
           上の改善案は、Beekleの生成AI開発で形にできます。現状フローはもう整理済みなので、最初の打ち合わせから具体的な進め方の相談に入れます。

@@ -73,6 +73,18 @@ function slackBody(mock: FetchMock): string {
   return (call[1] as { body: string }).body;
 }
 
+function crmBody(mock: FetchMock): Record<string, unknown> {
+  const call = mock.mock.calls.find((c) => c[0] === CRM_URL);
+  if (!call) throw new Error('crm was not called');
+  return JSON.parse((call[1] as { body: string }).body) as Record<string, unknown>;
+}
+
+function crmHeaders(mock: FetchMock): Record<string, string> {
+  const call = mock.mock.calls.find((c) => c[0] === CRM_URL);
+  if (!call) throw new Error('crm was not called');
+  return (call[1] as { headers: Record<string, string> }).headers;
+}
+
 describe('POST /api/contact のCRM仕分け', () => {
   beforeEach(() => {
     vi.stubGlobal('fetch', vi.fn());
@@ -109,6 +121,38 @@ describe('POST /api/contact のCRM仕分け', () => {
     expect(res.status).toBe(200);
     expect(calledUrls(fetchMock)).toContain(CRM_URL);
     expect(slackBody(fetchMock)).toContain('実施（問い合わせと判定）');
+  });
+
+  it('submissionIdをCRM payloadと冪等性ヘッダーへ渡し、レスポンスにも返す', async () => {
+    const fetchMock = routeFetch({
+      openrouter: () => llmVerdict('lead', '開発の相談'),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await POST({
+      request: contactRequest({
+        source: 'knowledge-gherkin',
+        intent: 'requirements-template-mid',
+        submissionId: 'contact-test-submission-123',
+      }),
+      locals: baseEnv(),
+    } as never);
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({
+      success: true,
+      submissionId: 'contact-test-submission-123',
+    });
+
+    const body = crmBody(fetchMock) as { meta: Record<string, unknown> };
+    expect(body.submission_id).toBe('contact-test-submission-123');
+    expect(body.meta.submission_id).toBe('contact-test-submission-123');
+    expect(body.meta.source).toBe('knowledge-gherkin');
+    expect(body.meta.intent).toBe('requirements-template-mid');
+    expect(crmHeaders(fetchMock)).toMatchObject({
+      'Idempotency-Key': 'contact-test-submission-123',
+      'X-Submission-Id': 'contact-test-submission-123',
+    });
   });
 
   it('AI判定が失敗してもCRMに送る（本物のリードを落とさない）', async () => {
@@ -190,7 +234,7 @@ describe('POST /api/contact のCRM仕分け', () => {
     const res = await POST({ request: contactRequest(), locals: baseEnv() } as never);
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ success: true });
+    expect(await res.json()).toMatchObject({ success: true });
   });
 });
 
@@ -204,12 +248,6 @@ describe('POST /api/contact のBuying Stage (tasks-v3 TASK-P0-03)', () => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
   });
-
-  function crmBody(mock: FetchMock): Record<string, unknown> {
-    const call = mock.mock.calls.find((c) => c[0] === CRM_URL);
-    if (!call) throw new Error('crm was not called');
-    return JSON.parse((call[1] as { body: string }).body) as Record<string, unknown>;
-  }
 
   it('buyingStage指定時、Slackに検討状況ラベル・CRM metaに値が載る', async () => {
     const fetchMock = routeFetch({ openrouter: () => llmVerdict('lead', '開発の相談') });

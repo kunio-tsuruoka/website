@@ -13,7 +13,7 @@ export const companyInfo = {
   name: '株式会社Beekle',
   established: '2023年2月1日',
   capital: '100万円',
-  representative: '鶴岡邦夫',
+  representative: '鶴岡 邦夫',
   businessActivities: [
     'コンピュータのソフトウェア・ハードウェアの企画、研究、開発、設計、製造、販売、保守、リース、賃貸、輸出入',
     'インターネット等を利用した各種情報提供サービス',

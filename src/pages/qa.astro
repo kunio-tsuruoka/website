@@ -78,17 +78,17 @@ const description =
       data={{ faqs: faqEntries }}
     />
   )}
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <PageHero
       title="一問一答"
       subtitle="システム開発では「作れるか」だけでなく、業務に合うのか、予算を無駄にしないか、途中で仕様が変わっても大丈夫か、といった不安がつきものです。発注前の疑問に、Beekleの進め方とあわせてお答えします。"
       badge="Q&A"
     >
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <div class="flex flex-col sm:flex-row gap-3">
         <a
           href="#categories"
-          class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+          class="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-primary-500 border border-primary-500 rounded-md hover:bg-primary-600 hover:border-primary-600 transition-colors"
         >
           質問を見る
           <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,7 +99,7 @@ const description =
           href="/contact?source=qa-hero"
           data-cta-source="qa-hero"
           data-cta-id="contact"
-          class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
+          class="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-accent-950 bg-white border border-neutral-300 rounded-md hover:border-primary-500 hover:text-primary-600 transition-colors"
         >
           直接相談する
         </a>
@@ -109,7 +109,7 @@ const description =
     {apiError && (
       <section class="py-8">
         <div class="container mx-auto px-6 md:px-8">
-          <div class="bg-gray-50 rounded-xl p-8 text-center">
+          <div class="rounded-lg border border-neutral-200 bg-neutral-50 p-8 text-center">
             <p class="text-gray-600">現在コンテンツを読み込めません。しばらくしてから再度お試しください。</p>
           </div>
         </div>
@@ -118,13 +118,13 @@ const description =
 
     {/* Category Quick Nav */}
     {qaByCategory.length > 0 && (
-      <section class="py-10 bg-white border-b border-gray-100">
+      <section class="border-b border-neutral-300 bg-neutral-50 py-10">
         <div class="container mx-auto px-6 md:px-8">
           <div class="flex flex-wrap justify-center gap-3">
             {qaByCategory.map((category) => (
               <a
                 href={`#${category.id}`}
-                class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-50 to-primary-100 hover:from-primary-100 hover:to-primary-200 text-primary-600 rounded-full font-medium transition-all shadow-sm hover:shadow-md"
+                class="inline-flex items-center gap-2 rounded-md border border-neutral-300 bg-white px-5 py-2.5 font-medium text-primary-600 transition-colors hover:border-primary-400"
               >
                 {category.icon && <span>{category.icon}</span>}
                 <span>{category.title}</span>
@@ -137,10 +137,10 @@ const description =
     )}
 
     {/* QA List */}
-    <section id="categories" class="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-white">
+    <section id="categories" class="border-b border-neutral-300 bg-neutral-100 py-16 md:py-24">
       <div class="container mx-auto px-6 md:px-8 max-w-4xl">
         {qaByCategory.length === 0 && !apiError && (
-          <div class="text-center py-16 bg-white rounded-2xl shadow-sm">
+          <div class="rounded-lg border border-neutral-200 bg-white py-16 text-center">
             <p class="text-gray-500">準備中です。もうしばらくお待ちください。</p>
           </div>
         )}
@@ -149,7 +149,7 @@ const description =
           <div id={category.id} class="mb-16 scroll-mt-24">
             <div class="mb-8">
               <div class="flex items-center gap-4 mb-3">
-                <div class="w-14 h-14 flex-shrink-0 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg text-white font-Poppins text-xl font-bold">
+                <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg bg-accent-950 font-Poppins text-xl font-bold text-white">
                   {String(idx + 1).padStart(2, '0')}
                 </div>
                 <div class="flex-1">
@@ -168,7 +168,7 @@ const description =
             {category.items.length > 0 ? (
               <div class="space-y-4">
                 {category.items.map((item) => (
-                  <details class="group bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow border border-gray-100 overflow-hidden">
+                  <details class="group overflow-hidden rounded-lg border border-neutral-200 bg-white transition-colors hover:border-primary-300">
                     <summary class="flex items-start gap-4 p-6 md:p-7 cursor-pointer list-none">
                       <span class="flex-shrink-0 w-10 h-10 rounded-full bg-primary-500 text-white font-bold flex items-center justify-center text-sm">
                         Q
@@ -176,7 +176,7 @@ const description =
                       <h3 class="flex-1 text-lg md:text-xl font-bold text-gray-900 leading-snug pt-1.5">
                         {item.question}
                       </h3>
-                      <span class="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 group-hover:bg-primary-100 flex items-center justify-center transition-all">
+                      <span class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-neutral-100 transition-colors group-hover:bg-primary-100">
                         <svg
                           class="w-4 h-4 text-gray-600 group-open:rotate-180 transition-transform"
                           fill="none"
@@ -213,7 +213,7 @@ const description =
                 ))}
               </div>
             ) : (
-              <div class="text-center py-10 bg-white rounded-xl border border-gray-100">
+              <div class="rounded-lg border border-neutral-200 bg-white py-10 text-center">
                 <p class="text-gray-500">このカテゴリーの質問はまだありません</p>
               </div>
             )}
@@ -223,8 +223,7 @@ const description =
     </section>
 
     {/* CTA */}
-    <section class="relative py-20 md:py-28 overflow-hidden bg-gradient-to-br from-primary-500 to-primary-600">
-      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+    <section class="relative overflow-hidden bg-navy-950 py-20 md:py-28">
       <div class="container mx-auto px-6 md:px-8 relative">
         <div class="max-w-3xl mx-auto text-center">
           <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
@@ -238,7 +237,7 @@ const description =
               href="/contact?source=qa-final"
               data-cta-source="qa-final"
               data-cta-id="contact"
-              class="inline-flex items-center justify-center px-10 py-5 text-lg font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl"
+              class="inline-flex items-center justify-center rounded-md bg-white px-8 py-4 text-lg font-semibold text-accent-950 transition-colors hover:bg-neutral-100"
             >
               無料相談を予約する
               <svg class="w-5 h-5 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -247,7 +246,7 @@ const description =
             </a>
             <a
               href="/column"
-              class="inline-flex items-center justify-center px-10 py-5 text-lg font-semibold text-white bg-transparent border-2 border-white rounded-full hover:bg-white hover:text-primary-500 transition-all"
+              class="inline-flex items-center justify-center rounded-md border border-white bg-transparent px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-white hover:text-accent-950"
             >
               コラムで詳しく学ぶ
             </a>
@@ -261,12 +260,5 @@ const description =
 <style>
   details > summary::-webkit-details-marker { display: none; }
   details[open] summary span:last-child { background-color: rgb(219 209 255); }
-
-  .bg-grid-pattern {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
   .scroll-mt-24 { scroll-margin-top: 6rem; }
 </style>

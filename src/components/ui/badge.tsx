@@ -56,7 +56,7 @@ const badgeVariants = cva('inline-flex items-center justify-center font-medium t
 
     hover: {
       none: '',
-      scale: 'hover:scale-105',
+      scale: '',
       opacity: 'hover:opacity-80',
     },
   },
@@ -142,7 +142,7 @@ const CategoryBadge: React.FC<CategoryBadgeProps> = ({
       className={cn(
         'px-4 py-2 rounded-full text-sm font-medium transition-all',
         active
-          ? 'bg-accent-600 text-white shadow-soft'
+          ? 'bg-accent-600 text-white'
           : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200',
         className
       )}

@@ -42,7 +42,7 @@ export function WorkspacePanel({ onEdit, onSuggest, onGenerateRfp }: Props) {
   }, [rfpMarkdown]);
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-soft p-4 sm:p-5">
+    <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-5">
       {/* フェーズ・ステッパー */}
       <ol className="flex items-center gap-1 mb-4">
         {steps.map((st, i) => {

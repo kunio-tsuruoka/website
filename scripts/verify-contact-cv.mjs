@@ -14,6 +14,15 @@ await page.exposeFunction('__captureEvent', (e) => {
 });
 
 await page.addInitScript(() => {
+  window.turnstile = {
+    render: (_el, opts) => {
+      setTimeout(() => opts.callback?.('test-turnstile-token'), 0);
+      return 'test-widget';
+    },
+    reset: () => {},
+    remove: () => {},
+  };
+
   const installHook = () => {
     if (!window.dataLayer) window.dataLayer = [];
     if (window.__hookInstalled) return;
@@ -81,7 +90,7 @@ await page.evaluate(() => {
 
 console.log('3) 送信');
 await Promise.all([
-  page.waitForURL('**/thanks', { timeout: 20000 }).catch((err) => {
+  page.waitForURL('**/thanks**', { timeout: 20000 }).catch((err) => {
     console.error('thanks 遷移待ちタイムアウト:', err.message);
   }),
   page.click('button[type="submit"]'),

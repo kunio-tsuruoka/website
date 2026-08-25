@@ -45,8 +45,8 @@ export function ChatPanel({ onSubmit, onToggleRecording }: Props) {
             <div
               className={
                 m.role === 'user'
-                  ? 'max-w-[85%] rounded-2xl rounded-br-sm bg-primary-500 text-white px-4 py-2.5 text-sm leading-relaxed'
-                  : 'max-w-[85%] rounded-2xl rounded-bl-sm bg-gray-100 text-gray-800 px-4 py-2.5 text-sm leading-relaxed'
+                  ? 'max-w-[85%] rounded-lg rounded-br-sm bg-primary-500 text-white px-4 py-2.5 text-sm leading-relaxed'
+                  : 'max-w-[85%] rounded-lg rounded-bl-sm bg-gray-100 text-gray-800 px-4 py-2.5 text-sm leading-relaxed'
               }
             >
               {m.content}
@@ -55,7 +55,7 @@ export function ChatPanel({ onSubmit, onToggleRecording }: Props) {
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="rounded-2xl rounded-bl-sm bg-gray-100 text-gray-500 px-4 py-2.5 text-sm">
+            <div className="rounded-lg rounded-bl-sm bg-gray-100 text-gray-500 px-4 py-2.5 text-sm">
               考え中…
             </div>
           </div>

@@ -18,7 +18,7 @@ export function FlowInterview({ sitekey }: { sitekey: string }) {
 
   if (!started) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-soft p-6 sm:p-8 max-w-2xl mx-auto">
+      <div className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8 max-w-2xl mx-auto">
         <h2 className="text-lg font-bold text-navy-950 mb-2">話すだけ発注準備</h2>
         <p className="text-sm text-gray-600 leading-relaxed mb-5">
           AIが今の業務の流れを質問していきます。答えていくと、右側に現状フロー図（As-Is）がリアルタイムで描かれます。テキストでも音声でも回答できます。所要時間の目安は3〜5分です。
@@ -55,7 +55,7 @@ export function FlowInterview({ sitekey }: { sitekey: string }) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-soft p-4 sm:p-5">
+      <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-5">
         <ChatPanel
           onSubmit={(t) => void answer(t)}
           onToggleRecording={() => void toggleRecording()}

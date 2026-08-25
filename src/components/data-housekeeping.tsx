@@ -27,7 +27,7 @@ export function DataHousekeeping() {
   const staleCount = snapshots.filter((s) => isStale(s.savedAt)).length;
 
   return (
-    <section className="bg-white rounded-2xl shadow-soft border border-gray-200 p-5 md:p-6">
+    <section className="rounded-lg border border-neutral-200 bg-white p-5 md:p-6">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

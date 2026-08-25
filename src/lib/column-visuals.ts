@@ -546,6 +546,199 @@ function buildCtaCard(opts: {
 </a>`;
 }
 
+type ChatGptEvaluationCta = {
+  title: string;
+  description: string;
+  label: string;
+  prompt: string;
+};
+
+const CHATGPT_EVALUATION_CTAS: Record<string, ChatGptEvaluationCta> = {
+  technical_skill: {
+    title: 'この開発会社の回答、良いのか分からない？',
+    description:
+      'AIが生成したものを判断できる会社か、商談で聞いた回答をChatGPTに貼って確認できます。',
+    label: 'ChatGPTでこの会社を判定する',
+    prompt: `あなたはAI受託開発会社を選定する発注側のアドバイザーです。
+以下の開発会社の回答を、「AIが生成したものを判断できる会社か」という観点で評価してください。
+
+評価してほしい観点:
+- AIの出力をそのまま採用せず、業務要件・制約・リスクと照合しているか
+- モデル選定、評価データ、失敗時の切り分けを具体的に説明しているか
+- セキュリティ、著作権、誤回答、運用時のレビュー体制に触れているか
+- 「できます」「精度が高いです」だけで根拠が薄くないか
+
+出力形式:
+1. 総合判定（A: 任せやすい / B: 追加確認が必要 / C: 注意）
+2. 良い回答だと言える根拠
+3. 不安な点
+4. 次に聞くべき追加質問3つ
+
+開発会社の回答:
+（ここに商談で聞いた回答を貼り付ける）`,
+  },
+  requirements: {
+    title: '要望をそのまま作る会社か、課題から整理できる会社か？',
+    description: '開発会社のヒアリング回答を貼り付けて、要件定義の進め方を確認できます。',
+    label: 'ChatGPTで要件整理力を判定する',
+    prompt: `あなたはシステム開発の発注支援アドバイザーです。
+以下の開発会社の回答を、「要望をそのまま作らず、課題・業務を整理できる会社か」という観点で評価してください。
+
+評価してほしい観点:
+- 要望の背景にある業務課題、利用者、成功条件を確認しているか
+- As-Is / To-Be、優先順位、作らない範囲を整理しようとしているか
+- ユーザーストーリー、受入条件、業務フローなど実装可能な仕様に落とせる説明があるか
+- 依頼内容をそのまま機能一覧にしていないか
+
+出力形式:
+1. 総合判定（A: 任せやすい / B: 追加確認が必要 / C: 注意）
+2. 良い回答だと言える根拠
+3. 不安な点
+4. 次に聞くべき追加質問3つ
+
+開発会社の回答:
+（ここに商談で聞いた回答を貼り付ける）`,
+  },
+  change_management: {
+    title: '仕様変更に強い会社か、あとで揉めそうか？',
+    description: '仕様変更時の影響範囲、追加費用、優先順位の扱いをChatGPTで確認できます。',
+    label: 'ChatGPTで変更対応力を判定する',
+    prompt: `あなたはシステム開発プロジェクトのリスクレビュー担当です。
+以下の開発会社の回答を、「仕様変更の影響範囲を追える会社か」という観点で評価してください。
+
+評価してほしい観点:
+- 変更が要件、設計、実装、テスト、スケジュール、費用へ及ぼす影響を説明しているか
+- 変更要求を記録し、優先順位と合意を更新する運用があるか
+- 追加費用や納期変更の条件が曖昧でないか
+- 「柔軟に対応します」だけで具体的な管理方法がない状態ではないか
+
+出力形式:
+1. 総合判定（A: 任せやすい / B: 追加確認が必要 / C: 注意）
+2. 良い回答だと言える根拠
+3. 不安な点
+4. 次に聞くべき追加質問3つ
+
+開発会社の回答:
+（ここに商談で聞いた回答を貼り付ける）`,
+  },
+  testing: {
+    title: '完成条件とテストがつながっている会社か？',
+    description: '受入条件、テスト、リリース判定の説明が十分かをChatGPTで確認できます。',
+    label: 'ChatGPTでテスト設計力を判定する',
+    prompt: `あなたは発注側の受入テスト支援アドバイザーです。
+以下の開発会社の回答を、「完成条件とテストがつながっている会社か」という観点で評価してください。
+
+評価してほしい観点:
+- 何を満たせば完成かを受入条件として具体化しているか
+- 正常系だけでなく、異常系、権限、境界値、外部連携失敗を考えているか
+- テスト結果を発注側が確認できる形で共有する説明があるか
+- リリース後の不具合を回帰テストへ戻す運用があるか
+
+出力形式:
+1. 総合判定（A: 任せやすい / B: 追加確認が必要 / C: 注意）
+2. 良い回答だと言える根拠
+3. 不安な点
+4. 次に聞くべき追加質問3つ
+
+開発会社の回答:
+（ここに商談で聞いた回答を貼り付ける）`,
+  },
+  bus_factor: {
+    title: '担当者の知見が会社のルールになっているか？',
+    description: 'CTOやPM個人に依存せず、チームで再現できる開発プロセスかを確認できます。',
+    label: 'ChatGPTで属人化リスクを判定する',
+    prompt: `あなたは開発会社選定のリスク評価担当です。
+以下の開発会社の回答を、「CTO/PM等の知見が属人化せず会社のルールになっているか」という観点で評価してください。
+
+評価してほしい観点:
+- 要件定義、設計レビュー、コードレビュー、テスト、リリースの標準プロセスがあるか
+- 特定担当者が抜けても引き継げるドキュメントや履歴管理があるか
+- 品質判断が個人の経験や勘だけに依存していないか
+- 体制変更時の連絡、責任範囲、バックアップが説明されているか
+
+出力形式:
+1. 総合判定（A: 任せやすい / B: 追加確認が必要 / C: 注意）
+2. 良い回答だと言える根拠
+3. 不安な点
+4. 次に聞くべき追加質問3つ
+
+開発会社の回答:
+（ここに商談で聞いた回答を貼り付ける）`,
+  },
+  prototype_to_production: {
+    title: 'プロトタイプから完成まで速度を維持できる会社か？',
+    description: 'デモは速いが本番化で止まる会社ではないか、回答から確認できます。',
+    label: 'ChatGPTで本番化の進め方を判定する',
+    prompt: `あなたはAI開発プロジェクトの発注支援アドバイザーです。
+以下の開発会社の回答を、「プロトタイプから完成まで速度を維持できる会社か」という観点で評価してください。
+
+評価してほしい観点:
+- プロトタイプ、本番要件、セキュリティ、運用、保守の違いを説明しているか
+- 検証結果を要件に戻し、作り直しを減らす進め方があるか
+- 技術検証だけで終わらず、権限、監視、データ連携、運用体制まで見ているか
+- デモの速さだけを強調し、本番化の難所を隠していないか
+
+出力形式:
+1. 総合判定（A: 任せやすい / B: 追加確認が必要 / C: 注意）
+2. 良い回答だと言える根拠
+3. 不安な点
+4. 次に聞くべき追加質問3つ
+
+開発会社の回答:
+（ここに商談で聞いた回答を貼り付ける）`,
+  },
+  delay_recovery: {
+    title: '遅延や事故から学べる会社か？',
+    description: 'トラブル時の説明責任、再発防止、開発プロセス改善の力を確認できます。',
+    label: 'ChatGPTでリカバリー力を判定する',
+    prompt: `あなたはシステム開発の発注側PMOです。
+以下の開発会社の回答を、「遅延・事故から学び、開発プロセスを改善できる会社か」という観点で評価してください。
+
+評価してほしい観点:
+- 遅延や不具合の原因を個人責任で終わらせず、プロセスとして分析しているか
+- 発生時の報告、影響範囲、代替案、再計画の出し方が具体的か
+- 再発防止を要件、テスト、レビュー、リリース手順へ反映する説明があるか
+- 「頑張ります」「人を増やします」だけで構造的な改善がない状態ではないか
+
+出力形式:
+1. 総合判定（A: 任せやすい / B: 追加確認が必要 / C: 注意）
+2. 良い回答だと言える根拠
+3. 不安な点
+4. 次に聞くべき追加質問3つ
+
+開発会社の回答:
+（ここに商談で聞いた回答を貼り付ける）`,
+  },
+};
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;');
+}
+
+function buildChatGptEvaluationCta(
+  source: string,
+  evaluationType: string,
+  cta: ChatGptEvaluationCta,
+  location = 'article-body'
+): string {
+  return `<aside class="cv-chatgpt-cta" data-chatgpt-evaluation-cta data-cta-source="${escapeHtml(source)}" data-evaluation-type="${escapeHtml(evaluationType)}" data-cta-location="${escapeHtml(location)}" aria-label="ChatGPT判定CTA">
+  <div class="cv-chatgpt-cta-kicker">ChatGPTで判定する</div>
+  <div class="cv-chatgpt-cta-title">${escapeHtml(cta.title)}</div>
+  <div class="cv-chatgpt-cta-description">${escapeHtml(cta.description)}</div>
+  <button type="button" class="cv-chatgpt-cta-button" data-chatgpt-evaluation-button>${escapeHtml(cta.label)}</button>
+  <div class="cv-chatgpt-cta-note">※判定用の質問文をコピーしてChatGPTを開きます</div>
+  <div class="cv-chatgpt-cta-status" data-chatgpt-evaluation-status role="status" aria-live="polite" hidden></div>
+  <details class="cv-chatgpt-cta-fallback" data-chatgpt-evaluation-fallback hidden>
+    <summary>判定用プロンプトを手動でコピーする</summary>
+    <textarea class="cv-chatgpt-cta-prompt" data-chatgpt-evaluation-prompt readonly>${escapeHtml(cta.prompt)}</textarea>
+  </details>
+</aside>`;
+}
+
 function buildContactCta(source: string, intent: string): string {
   return buildCtaCard({
     href: `/contact?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(intent)}`,
@@ -930,6 +1123,16 @@ export function renderColumnVisuals(html: string, ctx?: ColumnVisualContext): st
         const bare = new RegExp(`\\{\\{${markerKey}\\}\\}`, 'g');
         result = result.replace(wrapped, visual).replace(bare, visual);
       }
+    }
+
+    for (const [evaluationType, cta] of Object.entries(CHATGPT_EVALUATION_CTAS)) {
+      const visual = buildChatGptEvaluationCta(ctx.source, evaluationType, cta);
+      const wrapped = new RegExp(
+        `<p>\\s*\\{\\{CHATGPT_EVALUATION_CTA:${evaluationType}\\}\\}\\s*</p>`,
+        'g'
+      );
+      const bare = new RegExp(`\\{\\{CHATGPT_EVALUATION_CTA:${evaluationType}\\}\\}`, 'g');
+      result = result.replace(wrapped, visual).replace(bare, visual);
     }
   }
   return result;

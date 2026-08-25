@@ -428,7 +428,7 @@ export function ScopeManager() {
   return (
     <div className="space-y-8">
       {/* 入力エリア */}
-      <section className="bg-white rounded-2xl shadow-soft border border-gray-200 p-6 md:p-8">
+      <section className="rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
         <div className="flex items-start justify-between gap-4 mb-4 flex-wrap">
           <div>
             <h2 className="text-xl font-bold text-gray-900 mb-1">
@@ -468,7 +468,7 @@ export function ScopeManager() {
             <button
               type="button"
               onClick={onLoadSample}
-              className="inline-flex items-center px-5 py-3 min-h-[44px] text-sm font-semibold text-white bg-primary-500 rounded-lg hover:bg-primary-600 shadow-soft transition-colors"
+              className="inline-flex items-center px-5 py-3 min-h-[44px] text-sm font-semibold text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors"
             >
               まずサンプルで試す
             </button>
@@ -532,7 +532,7 @@ export function ScopeManager() {
 
       {/* 集計＆ツールバー */}
       {requirements.length > 0 && (
-        <section className="bg-white rounded-2xl shadow-soft border border-gray-200 p-6 md:p-8">
+        <section className="rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
           <h2 className="text-xl font-bold text-gray-900 mb-4">2. 優先度を判定する</h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">

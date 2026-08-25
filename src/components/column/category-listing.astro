@@ -74,22 +74,17 @@ const secondaryCtaHref = categoryCta.secondary ? withSource(categoryCta.secondar
       }}
     />
   )}
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <PageHero title={title} subtitle={subtitle} badge={badge} />
 
     <section class="relative overflow-hidden py-16 md:py-24">
-      <div class="absolute -left-24 top-24 h-72 w-72 rounded-full bg-primary-100/40 blur-3xl" aria-hidden="true"></div>
-      <div class="absolute -right-20 bottom-40 h-64 w-64 rounded-full bg-secondary-100/40 blur-3xl" aria-hidden="true"></div>
-      <div class="decoration-dot dot-cyan absolute right-[10%] top-32 hidden h-2.5 w-2.5 lg:block" aria-hidden="true"></div>
-      <div class="decoration-dot dot-yellow absolute left-[8%] bottom-48 hidden h-2 w-2 lg:block" aria-hidden="true"></div>
       <div class="container relative mx-auto px-6 md:px-8 max-w-5xl">
         {pillar && (
           <a
             href={`/column/${pillar.id}`}
-            class="group relative mb-12 block overflow-hidden rounded-3xl border-2 border-primary-200 bg-gradient-to-br from-primary-50 to-white p-6 shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary-400 hover:shadow-medium md:p-8"
+            class="group relative mb-12 block overflow-hidden rounded-lg border-2 border-primary-200 bg-white p-6 transition-all hover:border-primary-400 md:p-8"
           >
-            <div class="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-primary-100/70 blur-2xl" aria-hidden="true"></div>
             <div class="relative">
               <p class="mb-3 flex items-center gap-2 text-xs font-bold tracking-wide text-primary-500">
                 <span class="inline-flex items-center rounded-full bg-primary-500 px-3 py-1 text-white">完全ガイド</span>
@@ -117,7 +112,7 @@ const secondaryCtaHref = categoryCta.secondary ? withSource(categoryCta.secondar
           {articles.map((article) => (
             <a
               href={`/column/${article.id}`}
-              class="group flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary-200 hover:shadow-medium"
+              class="group flex flex-col rounded-lg border border-gray-100 bg-white p-6 transition-all hover:border-primary-200"
             >
               <time class="text-sm text-gray-500">
                 {new Date(article.publishedAt).toLocaleDateString('ja-JP')}
@@ -141,16 +136,14 @@ const secondaryCtaHref = categoryCta.secondary ? withSource(categoryCta.secondar
         </div>
 
         {allColumns.length === 0 && (
-          <div class="text-center py-16 bg-gray-50 rounded-2xl">
+          <div class="text-center py-16 bg-gray-50 rounded-lg">
             <p class="text-gray-500">
               記事を読み込めませんでした。しばらくしてから再度お試しください。
             </p>
           </div>
         )}
 
-        <div class="relative mt-16 overflow-hidden rounded-3xl bg-accent-950 p-6 text-center text-white shadow-strong md:p-8">
-          <div class="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-primary-500/25 blur-3xl" aria-hidden="true"></div>
-          <div class="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-secondary-500/15 blur-3xl" aria-hidden="true"></div>
+        <div class="relative mt-16 overflow-hidden rounded-lg bg-accent-950 p-6 text-center text-white md:p-8">
           <div class="relative">
           <h2 class="text-lg md:text-xl font-bold mb-3">{categoryCta.heading}</h2>
           <p class="text-white/80 text-sm leading-relaxed mb-6">
@@ -161,7 +154,7 @@ const secondaryCtaHref = categoryCta.secondary ? withSource(categoryCta.secondar
               href={primaryCtaHref}
               data-cta-source={ctaSource}
               data-cta-id={categoryCta.primary.ctaId}
-              class="inline-flex items-center justify-center px-6 py-3 min-h-[44px] bg-primary-500 text-white rounded-full text-sm font-semibold hover:bg-primary-600 transition-colors"
+              class="inline-flex items-center justify-center px-6 py-3 min-h-[44px] bg-primary-500 text-white rounded-md text-sm font-semibold hover:bg-primary-600 transition-colors"
             >
               {categoryCta.primary.label}
             </a>
@@ -170,7 +163,7 @@ const secondaryCtaHref = categoryCta.secondary ? withSource(categoryCta.secondar
                 href={secondaryCtaHref}
                 data-cta-source={ctaSource}
                 data-cta-id={categoryCta.secondary.ctaId}
-                class="inline-flex items-center justify-center px-6 py-3 min-h-[44px] bg-white/10 border border-white/30 text-white rounded-full text-sm font-semibold hover:bg-white/20 transition-colors"
+                class="inline-flex items-center justify-center px-6 py-3 min-h-[44px] bg-white/10 border border-white/30 text-white rounded-md text-sm font-semibold hover:bg-white/20 transition-colors"
               >
                 {categoryCta.secondary.label}
               </a>

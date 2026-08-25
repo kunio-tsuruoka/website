@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const BASE = 'http://localhost:4321';
+const BASE = process.env.BASE_URL || 'http://localhost:4321';
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext();
 const page = await context.newPage();
@@ -11,6 +11,15 @@ await page.exposeFunction('__captureEvent', (e) => {
 });
 
 await page.addInitScript(() => {
+  window.turnstile = {
+    render: (_el, opts) => {
+      setTimeout(() => opts.callback?.('test-turnstile-token'), 0);
+      return 'test-widget';
+    },
+    reset: () => {},
+    remove: () => {},
+  };
+
   const installHook = () => {
     if (!window.dataLayer) window.dataLayer = [];
     if (window.__hookInstalled) return;
@@ -112,13 +121,15 @@ async function probeContactWithQuery() {
   });
   await page.waitForSelector('form', { timeout: 5000 });
   await page.selectOption('select[name="type"]', 'consultation');
+  await page.fill('input[name="from_name"]', 'CTA計測テスト');
+  await page.fill('input[name="company_name"]', '株式会社Beekle検証');
   await page.fill('input[name="reply_to"]', `cta-test-${Date.now()}@beekle.test`);
   await page.fill(
     'textarea[name="message"]',
     '[CTA計測テスト] source/intent/phase が gtag と Slack に乗るか検証'
   );
   await Promise.all([
-    page.waitForURL('**/thanks', { timeout: 15000 }).catch(() => {}),
+    page.waitForURL('**/thanks**', { timeout: 15000 }).catch(() => {}),
     page.click('button[type="submit"]'),
   ]);
   await page.waitForTimeout(1500);

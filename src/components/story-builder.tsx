@@ -279,7 +279,7 @@ export function StoryBuilder() {
 
   return (
     <div className="space-y-6">
-      <div className="p-6 bg-white rounded-2xl border border-gray-200 shadow-soft">
+      <div className="p-6 bg-white rounded-lg border border-gray-200">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h2 className="text-lg font-bold text-gray-900">1. やりたいことを文章で書く</h2>
           <div className="flex flex-wrap gap-2">
@@ -592,7 +592,7 @@ function CountSelect({
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="p-6 bg-white rounded-2xl border border-gray-200 shadow-soft">
+    <div className="p-6 bg-white rounded-lg border border-gray-200">
       <h2 className="text-lg font-bold text-gray-900 mb-4">{title}</h2>
       {children}
     </div>

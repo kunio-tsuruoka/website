@@ -106,7 +106,7 @@ export function ContactModal() {
         onClick={() => !isSubmitting && closeContact()}
         className="absolute inset-0 bg-black/50 cursor-default"
       />
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-strong p-6 max-h-[90vh] overflow-y-auto">
+      <div className="relative w-full max-w-md bg-white rounded-lg p-6 max-h-[90vh] overflow-y-auto">
         {done ? (
           <div className="text-center py-4">
             <h3 className="text-lg font-bold text-navy-950 mb-2">送信しました</h3>

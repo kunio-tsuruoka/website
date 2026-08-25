@@ -18,13 +18,14 @@ Beekle コーポレートサイト（beekle.jp）の正式なデザインシス�
 
 ## 1. デザイン原則
 
-- **Pop Style** — フラットすぎず装飾を入れる。斜めバー（`decoration-bar-purple/cyan/yellow`）、丸ぼかし、ドット群を背景に重ね、紙面に動きを出す。
-- **角丸は大きめ** — ボタンは `rounded-full`、カードは `rounded-[32px]`（`2xl`/`3xl`）。小さい角丸は使わない。
-- **影は3段階** — `shadow-soft` / `shadow-medium` / `shadow-strong` のいずれかに揃える。任意の box-shadow を書かない。
+- **Editorial / Decision Sheet** — 装飾より判断材料を優先する。背景は薄いNeutral面、情報は白い面、強調は左罫線・表・ログで作る。
+- **角丸は控えめ** — カード、表、FAQは原則 `rounded-lg` まで。大きい角丸（`2xl`/`3xl`/`[32px]`）はモーダルや特殊な埋め込みに限定する。
+- **影に頼らない** — 通常の情報面は `border-neutral-200/300` で分離する。影はCTAやフォームなど、操作対象を浮かせる必要がある場合だけ最小限に使う。
 - **日本語可読性優先** — 本文は Noto Sans JP、見出しの英字部分は Poppins / Montserrat。
 - **モバイルでタップ領域 44px 確保** — `.claude/rules/mobile-responsive.md` のルールを守る。
 - **モバイルは上から下に読む前提** — PCで横並びに見せる情報も、モバイルでは上から流し読みできる順序にする。横方向の比較に依存しない。
 - **LPは業務価値を先に出す** — 技術名・機能名より先に「誰の、どの業務が、どう良くなるか」を見せる。
+- **白一色にしない** — `PageHero` や大きいセクションの地は `neutral-50` / `neutral-100` を基本にし、白い情報面が見分けられるようにする。
 - **Tailwind class を直接書く** — `cn()` でクラス結合、`src/components/ui/` の既存バリアントで足りるならそれを使う。任意の color HEX を書かない。
 
 ---
@@ -80,8 +81,8 @@ Beekle コーポレートサイト（beekle.jp）の正式なデザインシス�
 
 | Token | 用途 |
 |---|---|
-| `neutral-50` `#f8fafc` | セクション背景（`Section variant="light"`） |
-| `neutral-100` | カードの薄背景 |
+| `neutral-50` `#f8fafc` | ページHero、標準セクション背景 |
+| `neutral-100` | 隣接セクション背景、薄い区切り面 |
 | `neutral-200` | カード `outlined` のボーダー |
 | `neutral-600` `#475569` | 本文のサブテキスト |
 | `neutral-700` `#334155` | 本文 |
@@ -189,15 +190,9 @@ AIサービスLPでは、比較表だけで説明しない。以下の型を優�
 
 ## 5. 影（Shadow）
 
-定義: `tailwind.config.mjs:20-24`
+原則として、ページの情報面・カード・CTAに影を使わない。階層は背景面、境界線、余白、見出しサイズで作る。
 
-| Token | 値 | 用途 |
-|---|---|---|
-| `shadow-soft` | `0 4px 20px -4px rgba(0,23,56,0.08)` | カードのデフォルト |
-| `shadow-medium` | `0 8px 30px -8px rgba(0,23,56,0.12)` | hover時 |
-| `shadow-strong` | `0 16px 50px -12px rgba(0,23,56,0.18)` | フローティングCTA |
-
-3段階以外の影を新規作成しない。色は `#001738` (Accent) ベースで統一。
+既存互換の `shadow-soft` / `shadow-medium` / `shadow-strong` は残っていても、新規UIでは使わない。hover は影や浮き上がりではなく、`hover:border-primary-300` や背景色の軽い変化で表す。
 
 ---
 
@@ -205,12 +200,12 @@ AIサービスLPでは、比較表だけで説明しない。以下の型を優�
 
 | Token | 値 | 用途 |
 |---|---|---|
-| `rounded-full` | 9999px | **すべてのボタン**（`buttonVariants` で固定） |
-| `rounded-2xl` | 32px | カード、アイコンコンテナ |
-| `rounded-3xl` | 40px | 大きめのモジュール |
-| `rounded-[32px]` | 32px | Card コンポーネントの実装値 |
+| `rounded-md` | 6px | ボタン、入力、ナビの操作面 |
+| `rounded-lg` | 8px | カード、フォーム、白い情報面 |
+| `rounded-xl` | 12px | 画像など、やや広い面に限定 |
+| `rounded-full` | 9999px | ステータス点、番号、タグなど形状に意味がある小要素 |
 
-`rounded-md` 以下の小さい角丸は基本的に使わない（バッジの一部・フォーム入力欄を除く）。
+`rounded-md` / `rounded-lg` を基本にする。丸いカードを並べると視線の優先順位が弱くなるため、通常の情報面に `rounded-2xl` 以上は使わない。
 
 ---
 
@@ -223,7 +218,7 @@ AIサービスLPでは、比較表だけで説明しない。以下の型を優�
 ページのセクション全体を囲む。背景・装飾・グリッドオーバーレイを一括制御。
 
 ```tsx
-<Section variant="white" padding="lg" decoration="blursPurple">
+<Section variant="white" padding="lg" decoration="none">
   <SectionHeader title="..." subtitle="..." number="01" label="SERVICE" />
   {/* content */}
 </Section>
@@ -235,7 +230,7 @@ AIサービスLPでは、比較表だけで説明しない。以下の型を優�
 
 ### 7.2 SectionHeader
 
-セクション見出し。`number` + `label`（"01 SERVICE"）の Pop Style 表示に対応。`highlight` を渡すと該当文字列を Primary 色で装飾。
+セクション見出し。`number` + `label`（"01 SERVICE"）の補助ラベルに対応。`highlight` を渡すと該当文字列を Primary 色で装飾。
 
 ### 7.3 Card (`card.tsx`)
 
@@ -264,7 +259,7 @@ AIサービスLPでは、比較表だけで説明しない。以下の型を優�
 
 **variant**: `primary`(default) / `accent` / `secondary` / `highlight` / `white` / `outline` / `outlinePrimary` / `outlineNavy` / `ghost` / `link` / `destructive` / `muted`
 **size**: `sm` / `md`(default) / `lg` / `xl`
-すべて `rounded-full`。`<a>` で出したい時は `ButtonLink` を使う（`<button>` を `<a>` に書き換えない）。
+ボタンは `rounded-md` を基本にする。`<a>` で出したい時は `ButtonLink` を使う（`<button>` を `<a>` に書き換えない）。
 
 ### 7.5 Badge / StepBadge / CategoryBadge (`badge.tsx`)
 
@@ -272,7 +267,7 @@ AIサービスLPでは、比較表だけで説明しない。以下の型を優�
 
 ### 7.6 PageHero (`page-hero.tsx`)
 
-各ページのヒーロー領域。`bg-primary-500` 固定、グリッドパターン入り。`title` `subtitle` `badge` `children`(CTA) を受ける。
+各ページのヒーロー領域。`border-b border-neutral-300 bg-neutral-100` の編集面として扱い、紫のポスター面にしない。`title` `subtitle` `badge` `children`(CTA) を受ける。
 
 ### 7.7 FloatingCTA (`floating-cta.astro`)
 
@@ -284,9 +279,7 @@ AIサービスLPでは、比較表だけで説明しない。以下の型を優�
 
 定義: `src/styles/global.css:138-176` / `Section`/`Card` の `decoration` props
 
-- **斜めバー**: `.decoration-bar-purple` (Primary), `.decoration-bar-cyan` (Secondary), `.decoration-bar-yellow` (Highlight)。グラデーション + `rotate(±25deg)`。
-- **丸ぼかし**: `<div class="w-96 h-96 bg-primary-100/30 rounded-full blur-3xl" />` パターン。`Section variant="white"` + `decoration="blursPurple"` で両端に配置される。
-- **ドット群**: ランダムに散らした小さい円。`Section decoration="dots"` または個別に `.dot-purple/cyan/yellow` 使用。
+斜めバー、丸ぼかし、ドット群は旧 Pop 装飾。新規UIでは使わない。必要な強調は、左罫線、番号、タグ、薄い背景色で表す。
 
 ダーク背景セクションでは `barsDark` / `dotsDark` / `fullDark` を使う（コントラスト確保のため不透明度が上がっている）。
 

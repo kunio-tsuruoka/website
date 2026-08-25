@@ -10,9 +10,7 @@ interface Props {
 const { faq, number } = Astro.props;
 ---
 
-<section class="relative overflow-hidden bg-white py-20 md:py-28">
-  <div class="absolute -left-24 top-32 h-72 w-72 rounded-full bg-primary-100/40 blur-3xl" aria-hidden="true"></div>
-  <div class="absolute -right-20 bottom-24 h-64 w-64 rounded-full bg-secondary-100/40 blur-3xl" aria-hidden="true"></div>
+<section class="relative overflow-hidden bg-neutral-100 py-20 md:py-28">
   <div class="container relative mx-auto px-6 lg:px-12">
     <div class="mx-auto max-w-4xl">
       <SectionHeader
@@ -22,7 +20,7 @@ const { faq, number } = Astro.props;
         number={number}
         label="FAQ"
       />
-      <div class="divide-y divide-neutral-200 rounded-3xl border border-neutral-200 bg-white shadow-soft">
+      <div class="divide-y divide-neutral-200 rounded-lg border border-neutral-200 bg-white">
         {faq.map((item) => (
           <details class="group p-6 transition-colors open:bg-neutral-50 hover:bg-neutral-50/60 md:p-7">
             <summary class="flex cursor-pointer list-none items-start justify-between gap-4">

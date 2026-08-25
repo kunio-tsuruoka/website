@@ -740,24 +740,63 @@ async function clarityInsights(numOfDays: number, dimensions: string[], env: Mar
     params.set(`dimension${index + 1}`, dimension);
   });
 
-  const response = await fetch(
-    `https://www.clarity.ms/export-data/api/v1/project-live-insights?${params}`,
-    {
+  const url = `https://www.clarity.ms/export-data/api/v1/project-live-insights?${params}`;
+  const maxAttempts = 2;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const response = await fetch(url, {
       headers: {
         authorization: `Bearer ${token}`,
         'content-type': 'application/json',
       },
+    });
+    const text = await response.text();
+    const data = parseJson(text);
+    if (response.ok) {
+      return data;
     }
-  );
-  const text = await response.text();
-  const data = parseJson(text);
-  if (!response.ok) {
-    throw new Error(
-      `Clarity API ${response.status}: ${typeof data === 'string' ? data : JSON.stringify(data)}`
-    );
+    if (!isRetryableClarityStatus(response.status) || attempt === maxAttempts) {
+      throw new Error(
+        clarityHttpErrorMessage(response, text, data, { numOfDays, dimensions, attempt })
+      );
+    }
   }
+  throw new Error('Clarity API request failed unexpectedly.');
+}
 
-  return data;
+function clarityHttpErrorMessage(
+  response: Response,
+  text: string,
+  data: unknown,
+  request: { numOfDays: number; dimensions: string[]; attempt: number }
+) {
+  const contentType = response.headers.get('content-type') || 'none';
+  const retryAfter = response.headers.get('retry-after') || 'none';
+  const dimensions = request.dimensions.length > 0 ? request.dimensions.join(',') : 'none';
+  return [
+    `Clarity API ${response.status}`,
+    `body=${responseBodySummary(text, data)}`,
+    `numOfDays=${request.numOfDays}`,
+    `dimensions=${dimensions}`,
+    `attempt=${request.attempt}`,
+    `contentType=${contentType}`,
+    `responseLength=${text.length}`,
+    `retryAfter=${retryAfter}`,
+  ].join(' ');
+}
+
+function isRetryableClarityStatus(status: number) {
+  return status >= 500 && status <= 599;
+}
+
+function responseBodySummary(text: string, data: unknown) {
+  if (!text) return 'empty';
+  const body = typeof data === 'string' ? data : JSON.stringify(data);
+  return truncateForError(body ?? 'unserializable');
+}
+
+function truncateForError(value: string) {
+  const normalized = value.replaceAll(/\s+/g, ' ').trim();
+  return normalized.length > 500 ? `${normalized.slice(0, 500)}...` : normalized;
 }
 
 function clarityApiKey(env: MarketingEnv) {

@@ -1177,18 +1177,36 @@ const hasPrevPage = currentPage > 1;
       })),
     }}
   />
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <PageHero
-      title="導入事例"
-      subtitle="お客様の課題解決と事業成長をサポートした実績をご紹介します"
+      title="動いた後の変化で見る導入事例"
+      subtitle="3ヶ月停滞した開発の立て直し、議事録から1日デモ、新規事業の1週間立ち上げなど、発注前に確認したい変化から探せます。"
     />
 
-    <section class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-16">
+    <section class="border-b border-neutral-300 bg-neutral-50 py-10 md:py-14">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid gap-4 md:grid-cols-3">
+          {[
+            { label: '難航案件', value: '3ヶ月停滞 → 3週間', detail: '引き継ぎ後、動作状態まで立て直し' },
+            { label: '構想具体化', value: '議事録 → デモ1日', detail: '発注前に画面で認識合わせ' },
+            { label: '新規事業', value: '1週間で立ち上げ', detail: '要件・技術・インフラまで一体で対応' },
+          ].map((item) => (
+            <div class="rounded-lg border border-primary-100 bg-white p-5">
+              <p class="text-sm font-bold text-primary-600">{item.label}</p>
+              <p class="mt-2 text-2xl font-bold leading-snug text-navy-950">{item.value}</p>
+              <p class="mt-2 text-sm leading-relaxed text-neutral-700">{item.detail}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
 
       <div class="space-y-24">
         {cases.map((case_study) => (
-          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="overflow-hidden rounded-lg border border-neutral-200 bg-white">
             <div class="p-8 lg:p-12">
               <div class="lg:grid lg:grid-cols-12 lg:gap-8">
                 {/* ヘッダー情報 */}
@@ -1199,7 +1217,7 @@ const hasPrevPage = currentPage > 1;
                         <img
                           src={case_study.image}
                           alt={case_study.title}
-                          class="w-full h-48 object-cover rounded-xl shadow-md"
+                          class="h-48 w-full rounded-lg object-cover"
                         />
                       </div>
                     )}
@@ -1218,18 +1236,18 @@ const hasPrevPage = currentPage > 1;
                       </h2>
                       <div class="mt-4 flex flex-wrap gap-4">
                         {case_study.featured && (
-                          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-primary-500 text-white">
+                        <span class="inline-flex items-center rounded-md bg-primary-500 px-3 py-1 text-sm font-bold text-white">
                             注目の事例
                           </span>
                         )}
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
+                        <span class="inline-flex items-center rounded-md bg-neutral-100 px-3 py-1 text-sm font-medium">
                           {case_study.industry}
                         </span>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
+                        <span class="inline-flex items-center rounded-md bg-neutral-100 px-3 py-1 text-sm font-medium">
                           {case_study.scale}
                         </span>
                         {case_study.period && (
-                          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100">
+                          <span class="inline-flex items-center rounded-md bg-neutral-100 px-3 py-1 text-sm font-medium">
                             開発期間：{case_study.period}
                           </span>
                         )}
@@ -1295,7 +1313,7 @@ const hasPrevPage = currentPage > 1;
                       ]}
                     >
                       {case_study.results.map((result) => (
-                        <div class="bg-gray-50 rounded-lg p-5">
+                        <div class="rounded-lg border border-neutral-200 bg-neutral-50 p-5">
                           <div class="text-sm text-gray-500">{result.label}</div>
                           <div class="mt-1 text-lg md:text-xl font-bold text-primary-600 leading-snug">
                             {result.value}
@@ -1309,8 +1327,8 @@ const hasPrevPage = currentPage > 1;
                 {/* Beekleだからできたこと */}
                 {case_study.strength && (
                   <div class="lg:col-span-12 mt-8">
-                    <div class="rounded-2xl border border-primary-200 bg-primary-50/40 p-6 md:p-8">
-                      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-navy-950 text-white">
+                    <div class="rounded-lg border border-primary-200 bg-primary-50/40 p-6 md:p-8">
+                      <span class="inline-flex items-center rounded-md bg-navy-950 px-3 py-1 text-xs font-bold text-white">
                         Beekleだからできたこと
                       </span>
                       <h3 class="mt-4 text-xl font-bold text-gray-900 leading-snug">
@@ -1333,27 +1351,27 @@ const hasPrevPage = currentPage > 1;
                 {/* 発注判断の裏側（顧客ヒアリングで事実が取れた事例のみ） */}
                 {'decision' in case_study && case_study.decision && (
                   <div class="lg:col-span-12 mt-8">
-                    <div class="rounded-2xl border border-neutral-200 bg-white p-6 md:p-8 shadow-soft">
-                      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary-500 text-white">
+                    <div class="rounded-lg border border-neutral-200 bg-neutral-50 p-6 md:p-8">
+                      <span class="inline-flex items-center rounded-md bg-primary-500 px-3 py-1 text-xs font-bold text-white">
                         発注判断の裏側
                       </span>
                       <p class="mt-3 text-sm text-gray-500">
                         このお客様が、何と比較し、何を不安に感じ、なぜBeekleに決めたか。
                       </p>
                       <div class="mt-5 grid gap-5 md:grid-cols-3">
-                        <div class="rounded-xl bg-gray-50 p-5">
+                        <div class="rounded-lg border border-neutral-200 bg-white p-5">
                           <p class="text-sm font-bold text-primary-600 mb-2">比較した選択肢</p>
                           <p class="text-sm text-gray-600 leading-relaxed">
                             {case_study.decision.alternatives}
                           </p>
                         </div>
-                        <div class="rounded-xl bg-gray-50 p-5">
+                        <div class="rounded-lg border border-neutral-200 bg-white p-5">
                           <p class="text-sm font-bold text-primary-600 mb-2">不安だったこと</p>
                           <p class="text-sm text-gray-600 leading-relaxed">
                             {case_study.decision.concerns}
                           </p>
                         </div>
-                        <div class="rounded-xl border border-primary-200 bg-primary-50/40 p-5">
+                        <div class="rounded-lg border border-primary-200 bg-primary-50/40 p-5">
                           <p class="text-sm font-bold text-primary-600 mb-2">Beekleを選んだ理由</p>
                           <p class="text-sm text-gray-700 leading-relaxed font-medium">
                             {case_study.decision.whyChosen}
@@ -1442,7 +1460,7 @@ const hasPrevPage = currentPage > 1;
             href="/contact?source=case-studies-final"
             data-cta-source="case-studies-final"
             data-cta-id="contact"
-            class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-primary-500 border border-transparent rounded-full hover:bg-primary-600"
+            class="inline-flex items-center justify-center rounded-md border border-transparent bg-primary-500 px-8 py-4 text-lg font-medium text-white transition-colors hover:bg-primary-600"
           >
             業務課題を相談する
             <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1454,7 +1472,7 @@ const hasPrevPage = currentPage > 1;
             download="beekle-zero-start-sales-deck.pdf"
             data-cta-source="case-studies-final"
             data-cta-id="pdf-zero-start-sales-deck"
-            class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-primary-600 bg-white border-2 border-primary-500 rounded-full hover:bg-primary-50"
+            class="inline-flex items-center justify-center rounded-md border border-primary-500 bg-white px-8 py-4 text-lg font-medium text-primary-600 transition-colors hover:bg-primary-50"
           >
             サービス資料をダウンロード
             <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

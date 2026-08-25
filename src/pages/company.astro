@@ -31,8 +31,8 @@ const pageDescription = `株式会社Beekleの会社概要。${companyPositionin
       url: 'https://beekle.jp/company',
     }}
   />
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <!-- Hero Section -->
     <PageHero
       title="会社概要"
@@ -40,7 +40,7 @@ const pageDescription = `株式会社Beekleの会社概要。${companyPositionin
     />
 
     <!-- About Section -->
-    <section class="py-32">
+    <section class="border-b border-neutral-300 bg-neutral-100 py-24 md:py-28">
       <div class="container mx-auto px-8">
         <div class="max-w-4xl mx-auto prose prose-lg">
           <h2 class="text-2xl font-bold text-gray-800 mb-6">どう開発する会社か</h2>
@@ -58,11 +58,11 @@ const pageDescription = `株式会社Beekleの会社概要。${companyPositionin
     </section>
 
     <!-- Culture Section -->
-    <section class="py-32 bg-gray-50">
+    <section class="border-b border-neutral-300 bg-neutral-50 py-24 md:py-28">
       <div class="container mx-auto px-8">
         <div class="max-w-4xl mx-auto">
           <h2 class="text-3xl font-bold text-center mb-16">会社のカルチャー</h2>
-          <div class="bg-white rounded-xl shadow-lg p-12">
+          <div class="rounded-lg border border-neutral-200 bg-white p-8 md:p-12">
             <p class="text-xl text-gray-700 leading-relaxed text-center italic">
               "言葉で正解を探し続けるより、動くものを見て確かめる。<br />その場に求められる最適解を、物作りの場で出す"
             </p>
@@ -72,21 +72,36 @@ const pageDescription = `株式会社Beekleの会社概要。${companyPositionin
     </section>
 
     <!-- CEO Profile Section -->
-    <section class="py-32">
+    <section class="border-b border-neutral-300 bg-neutral-100 py-24 md:py-28">
       <div class="container mx-auto px-8">
         <div class="max-w-4xl mx-auto">
           <h2 class="text-3xl font-bold text-center mb-16">代表プロフィール</h2>
-          <div class="bg-white rounded-xl shadow-lg p-12">
+          <div class="rounded-lg border border-neutral-200 bg-white p-8 md:p-12">
             <h3 class="text-2xl font-bold text-gray-800 mb-6">代表 {companyInfo.representative}</h3>
             <div class="space-y-6 text-gray-600">
               <p>
-                フロントエンド、バックエンド、インフラまで一通り対応するフルスタックエンジニア。自らも実装しながら、複数案件のマネジメントとディレクションを並行しています。
+                株式会社Beekle 代表取締役。フリーランスエンジニアとしてさまざまなシステム開発を経験した後、株式会社Beekleを設立。
               </p>
               <p>
-                現在は、自社開発のPM基盤「PM on Rails」を軸に、要求整理からAIエージェントによる実装までの開発プロセスそのものを設計・改善しています。
+                バックエンド、フロントエンド、インフラまで幅広く開発に携わってきたほか、顧客ヒアリング、要件定義、プロダクトマネジメント、営業・提案、事業設計まで一貫して担当してきた。
               </p>
               <p>
-                個人で事業を行う過程でITで困る人が多いと知り、Beekleを立ち上げチームで受託を開始。創業2018年、現在のBeekleとしての会社の立ち上げが2023年になります。
+                新規事業では、まだサービスの形が決まっていない段階から、リサーチ、課題整理、要件定義、デザイン、システム開発までを進める0→1のプロジェクトを多数経験。立ち上げ後の改善や運用、内製化支援など、1→100のフェーズにも携わっている。
+              </p>
+              <p>
+                現在は生成AI・RAG・業務システムを中心に、企業のDX・AI活用支援を行う一方、自社でもAIを積極的に実務へ導入している。
+              </p>
+              <p>
+                Cursor cloud agents、Claude CodeやCodexを使ったAI開発だけでなく、AIによるコードレビュー、Gherkinを活用した仕様・テスト管理、営業案件の分析、マーケティングデータ分析、経営・財務分析など、開発から会社経営まで幅広い領域でAIを実際に活用している。
+              </p>
+              <p>
+                また、自社プロダクト「PM on Rails」の開発をはじめ、AI推薦システム、GraphRAGを利用したゲーム、音声・言語系アプリケーションなど、さまざまなAIプロダクトの企画・検証にも取り組んでいる。
+              </p>
+              <p>
+                技術ありきではなく、「顧客が本当に解決したい問題は何か」を整理し、必要であれば既存サービスの活用も含めて、最も現実的な方法を設計することを大切にしている。
+              </p>
+              <p>
+                現在は、AIを活用することで少人数でも高い生産性と品質を実現できる開発・経営の仕組みづくりと、日本発のプロダクトを世界へ展開することを目指している。
               </p>
             </div>
           </div>
@@ -95,11 +110,11 @@ const pageDescription = `株式会社Beekleの会社概要。${companyPositionin
     </section>
 
     <!-- Company Info Section -->
-    <section class="py-32 bg-gray-50">
+    <section class="border-b border-neutral-300 bg-neutral-50 py-24 md:py-28">
       <div class="container mx-auto px-8">
         <div class="max-w-4xl mx-auto">
           <h2 class="text-3xl font-bold text-center mb-16">会社概要</h2>
-          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="overflow-hidden rounded-lg border border-neutral-200 bg-white">
             <div class="divide-y divide-gray-200">
               {
                 Object.entries({
@@ -121,7 +136,7 @@ const pageDescription = `株式会社Beekleの会社概要。${companyPositionin
           </div>
 
           <!-- Business Description -->
-          <div class="mt-12 bg-white rounded-xl shadow-lg p-8">
+          <div class="mt-12 rounded-lg border border-neutral-200 bg-white p-8">
             <h3 class="text-xl font-bold text-gray-800 mb-6">事業内容</h3>
             <ol class="list-decimal list-inside space-y-4 text-gray-600">
               {
@@ -133,7 +148,7 @@ const pageDescription = `株式会社Beekleの会社概要。${companyPositionin
           </div>
 
           <!-- Advisors -->
-          <div class="mt-12 bg-white rounded-xl shadow-lg p-8">
+          <div class="mt-12 rounded-lg border border-neutral-200 bg-white p-8">
             <h3 class="text-xl font-bold text-gray-800 mb-6">顧問</h3>
             <div class="grid md:grid-cols-2 gap-6">
               {
@@ -172,7 +187,7 @@ const pageDescription = `株式会社Beekleの会社概要。${companyPositionin
             href="/contact?source=company-final"
             data-cta-source="company-final"
             data-cta-id="contact"
-            class="page-cta inline-flex min-h-[52px] items-center justify-center rounded-full bg-white px-8 py-4 text-lg font-semibold text-accent-950 shadow-soft transition-all hover:bg-gray-100 hover:shadow-medium"
+            class="page-cta inline-flex min-h-[52px] items-center justify-center rounded-md bg-white px-8 py-4 text-lg font-semibold text-accent-950 transition-colors hover:bg-neutral-100"
           >
             業務課題を相談する
             <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -181,7 +196,7 @@ const pageDescription = `株式会社Beekleの会社概要。${companyPositionin
           </a>
           <a
             href="/prooffirst"
-            class="inline-flex min-h-[52px] items-center justify-center rounded-full border-2 border-white bg-transparent px-8 py-4 text-lg font-semibold text-white transition-all hover:bg-white hover:text-accent-950"
+            class="inline-flex min-h-[52px] items-center justify-center rounded-md border border-white bg-transparent px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-white hover:text-accent-950"
           >
             ゼロスタートを見る
           </a>

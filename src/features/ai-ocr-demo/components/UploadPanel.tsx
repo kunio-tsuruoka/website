@@ -46,7 +46,7 @@ export function UploadPanel({ turnstileContainerRef, hasTurnstileToken, onSubmit
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-soft p-6 space-y-4">
+    <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
       <h3 className="font-bold text-lg">領収書をアップロード</h3>
       <input
         type="file"

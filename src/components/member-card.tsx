@@ -20,16 +20,12 @@ const MemberCard: React.FC<MemberCardProps> = ({
   // 説明文に改行があれば段落に分割
   const paragraphs = description.split('\n').filter((p) => p.trim() !== '');
 
-  // ポジションに基づいた色のマッピング - Beekle Pop Style
-  const getGradientByPosition = (pos: string) => {
-    if (pos.includes('CEO') || pos.includes('代表')) return 'from-primary-500 to-primary-600';
-    if (pos.includes('デザイン')) return 'from-secondary-500 to-secondary-600';
-    if (pos.includes('エンジニア')) return 'from-primary-400 to-primary-500';
-    if (pos.includes('ディレクター')) return 'from-primary-500 to-secondary-500';
-    return 'from-primary-500 to-primary-600';
+  const getAccentByPosition = (pos: string) => {
+    if (pos.includes('デザイン')) return 'border-secondary-500 text-secondary-700';
+    return 'border-primary-500 text-primary-700';
   };
 
-  const gradient = getGradientByPosition(position);
+  const accentClass = getAccentByPosition(position);
 
   return (
     <motion.div
@@ -37,24 +33,17 @@ const MemberCard: React.FC<MemberCardProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group relative scroll-mt-24"
+      className="relative scroll-mt-24"
     >
-      {/* 背景のグラデーション効果 */}
-      <div
-        className={`absolute inset-0 bg-gradient-to-br ${gradient} rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300`}
-      />
-
-      {/* カード本体 */}
-      <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 break-words">
-        {/* 上部のアクセントライン */}
-        <div className={`h-1 bg-gradient-to-r ${gradient}`} />
+      <div className="relative overflow-hidden rounded-lg border border-neutral-200 bg-white transition-colors duration-300 hover:border-primary-300 break-words">
+        <div className="h-1 bg-primary-500" />
 
         <div className="p-8">
           {/* ヘッダー部分 */}
           <div className="mb-6">
             <h3 className="text-2xl font-bold text-gray-900 mb-2">{name}</h3>
             <p
-              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r ${gradient} text-white`}
+              className={`inline-flex items-center rounded-md border bg-neutral-50 px-3 py-1 text-sm font-semibold ${accentClass}`}
             >
               {position}
             </p>
@@ -88,13 +77,9 @@ const MemberCard: React.FC<MemberCardProps> = ({
                     return (
                       <div
                         key={idx}
-                        className="border-l-2 border-gray-200 pl-4 group-hover:border-primary-400 transition-colors"
+                        className="border-l-2 border-neutral-200 pl-4 transition-colors hover:border-primary-400"
                       >
-                        <p
-                          className={`font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent mb-2`}
-                        >
-                          {title}
-                        </p>
+                        <p className="font-bold text-primary-700 mb-2">{title}</p>
                         <div className="flex flex-wrap gap-1.5">
                           {skills.map((skill, si) => (
                             <span
@@ -112,14 +97,10 @@ const MemberCard: React.FC<MemberCardProps> = ({
                   return (
                     <div
                       key={idx}
-                      className="border-l-2 border-gray-200 pl-4 group-hover:border-primary-400 transition-colors"
+                      className="border-l-2 border-neutral-200 pl-4 transition-colors hover:border-primary-400"
                     >
                       <p className="text-gray-700">
-                        <span
-                          className={`font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}
-                        >
-                          {title}
-                        </span>
+                        <span className="font-bold text-primary-700">{title}</span>
                         {content && ` ${content}`}
                       </p>
                     </div>
@@ -134,15 +115,6 @@ const MemberCard: React.FC<MemberCardProps> = ({
             ) : (
               <p className="text-gray-700 leading-relaxed">{description}</p>
             )}
-          </div>
-
-          {/* 装飾的な要素 */}
-          <div className="absolute bottom-0 right-0 w-32 h-32 opacity-5">
-            <svg viewBox="0 0 100 100" className="w-full h-full">
-              <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-              <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="0.5" />
-              <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            </svg>
           </div>
         </div>
       </div>

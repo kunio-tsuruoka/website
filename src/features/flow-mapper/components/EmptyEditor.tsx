@@ -29,7 +29,7 @@ export function EmptyEditor({ onAddStep }: { onAddStep: () => void }) {
       <button
         type="button"
         onClick={onAddStep}
-        className="w-full px-4 py-2.5 text-xs font-semibold text-white bg-primary-500 rounded-lg hover:bg-primary-600 shadow-sm"
+        className="w-full px-4 py-2.5 text-xs font-semibold text-white bg-primary-500 rounded-lg hover:bg-primary-600"
       >
         ＋ 最初のステップを追加
       </button>

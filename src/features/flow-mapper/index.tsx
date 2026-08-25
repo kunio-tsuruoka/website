@@ -201,10 +201,10 @@ export function FlowMapper() {
   return (
     <div
       className={cn(
-        'bg-white border border-gray-200 shadow-soft flow-mapper-root',
+        'bg-white border border-gray-200 flow-mapper-root',
         fullscreen
           ? 'fixed inset-0 z-50 rounded-none flex flex-col overflow-hidden'
-          : 'rounded-2xl overflow-hidden'
+          : 'rounded-lg overflow-hidden'
       )}
     >
       <PrintStyles />

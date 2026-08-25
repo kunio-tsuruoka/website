@@ -19,16 +19,16 @@ const sitekey = runtime?.env?.TURNSTILE_SITE_KEY ?? '0x4AAAAAADHmRrTyQk-jx5-X';
 
 const trustPoints = [
   {
-    title: 'RFP・As-Isから整理',
-    body: '既存のRFP、業務フロー、議事録があれば、PM on Railsでユースケースと受入条件に起こします。',
+    title: 'NDA締結可',
+    body: '社内資料や既存システムの情報を扱う場合は、NDA締結後に詳細を伺えます。',
   },
   {
-    title: '無料相談・しつこい営業なし',
-    body: 'ご検討段階のご相談歓迎。「合わなさそう」と感じた場合の連絡停止もメール1通で完了します。',
+    title: '要件未確定でも可',
+    body: 'RFP、業務フロー、議事録があれば、ユースケースと受入条件へ整理します。',
   },
   {
-    title: '最初の返信で判断材料を返します',
-    body: '想定ユースケース、PoC範囲、概算レンジ、進め方の候補を、わかる範囲で整理して返信します。',
+    title: '進めない判断も可',
+    body: '作るべきでない場合は、見送り理由と次に確認すべきことをお伝えします。',
   },
 ];
 ---
@@ -57,31 +57,32 @@ const trustPoints = [
       url: 'https://beekle.jp/contact',
     }}
   />
-  <Header client:idle />
-  <main class="pt-20">
+  <Header />
+  <main class="bg-neutral-100 pt-20">
     <PageHero
-      title="お問い合わせ"
-      subtitle="企業のご担当者様からのご相談を受け付けています。会社名必須。通常1〜2営業日以内に、想定構成・概算レンジ・進め方の候補を返信します。"
+      title="業務課題を相談する"
+      subtitle="NDA可。要件未確定でも構いません。通常1〜2営業日以内に、想定構成・概算レンジ・進め方の候補を返信します。"
     />
 
-    <section class="py-20 md:py-28">
+    <section class="border-b border-neutral-300 bg-neutral-100 py-20 md:py-28">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl mx-auto">
           <div class="grid sm:grid-cols-3 gap-4 mb-10">
             {trustPoints.map((p) => (
-              <div class="bg-white border border-primary-100 rounded-2xl p-5 shadow-soft">
+              <div class="rounded-lg border border-neutral-200 bg-white p-5">
                 <p class="text-sm font-bold text-primary-700 mb-1">{p.title}</p>
                 <p class="text-xs text-foreground/70 leading-relaxed">{p.body}</p>
               </div>
             ))}
           </div>
 
-          <div class="mb-8 rounded-2xl bg-primary-50 border border-primary-100 p-5">
+          <div class="mb-8 rounded-lg border border-primary-100 bg-white p-5">
             <p class="text-sm font-semibold text-primary-700 mb-2">相談すると返ってくるもの</p>
             <ul class="space-y-2 text-sm text-foreground/85 leading-relaxed">
               <li>・RFPやAs-Isから起こすべきユースケースの候補</li>
               <li>・AI/RAG/業務システム化に必要なデータ・権限・受入条件の確認点</li>
-              <li>・PM on Railsで要件定義を短縮する進め方と概算費用レンジ</li>
+              <li>・要求、受入条件、確認結果をつなげて仕様変更を追う進め方と概算費用レンジ</li>
+              <li>・判断に必要な不足情報と次に確認すること</li>
             </ul>
             <p class="mt-4 text-sm text-foreground/75 leading-relaxed">
               事前に資料で全体像を把握したい場合は
@@ -98,7 +99,7 @@ const trustPoints = [
 
           <ContactForm client:load sitekey={sitekey} />
 
-          <details class="mt-8 rounded-xl border border-amber-200 bg-amber-50 p-5 md:p-6">
+          <details class="mt-8 rounded-lg border border-amber-200 bg-amber-50 p-5 md:p-6">
             <summary class="cursor-pointer font-semibold text-gray-800 list-none flex items-center justify-between">
               <span>営業・売り込み目的のご連絡について</span>
               <span class="text-gray-500 text-sm">クリックで詳細</span>

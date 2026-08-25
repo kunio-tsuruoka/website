@@ -27,7 +27,8 @@
     "data:ga4": "node scripts/data/snapshot-ga4.mjs",
     "data:clarity": "node scripts/data/import-clarity-citations.mjs",
     "data:clarity-dash": "node scripts/data/import-clarity-dashboard.mjs",
-    "data:leads": "node scripts/data/leads.mjs"
+    "data:leads": "node scripts/data/leads.mjs",
+    "agent:pm-on-rails": "node scripts/start-cursor-pm-on-rails-agent.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",

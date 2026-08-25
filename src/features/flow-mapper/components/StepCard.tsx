@@ -123,7 +123,7 @@ export function StepCard({
         >
           <span
             className={cn(
-              'flex items-center justify-center transition-shadow rounded-full shadow-sm hover:shadow-md',
+              'flex items-center justify-center transition-colors rounded-full',
               STEP_TYPE_STYLE[step.type],
               step.type === 'end' ? 'border-[3px]' : 'border-2'
             )}
@@ -169,7 +169,7 @@ export function StepCard({
               }}
               aria-label="このステップから矢印を引く"
               title="このステップから矢印を引く"
-              className="no-print absolute -right-7 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-secondary-500 text-white text-xs font-bold shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto hover:bg-secondary-600 z-20 transition-opacity flex items-center justify-center"
+              className="no-print absolute -right-7 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-secondary-500 text-white text-xs font-bold opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto hover:bg-secondary-600 z-20 transition-opacity flex items-center justify-center"
             >
               +
             </button>
@@ -181,7 +181,7 @@ export function StepCard({
               }}
               aria-label="このステップを削除"
               title="このステップを削除"
-              className="no-print absolute -right-5 -top-5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto hover:bg-red-600 z-20 transition-opacity flex items-center justify-center"
+              className="no-print absolute -right-5 -top-5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto hover:bg-red-600 z-20 transition-opacity flex items-center justify-center"
             >
               ×
             </button>
@@ -191,13 +191,13 @@ export function StepCard({
     );
   }
 
-  const shapeClass = shape === 'diamond' ? 'border-0' : 'rounded-lg border-2 shadow-sm';
+  const shapeClass = shape === 'diamond' ? 'border-0' : 'rounded-lg border-2';
 
   const containerClass = cn(
     'absolute text-left transition-all focus:outline-none',
     shape !== 'diamond' && STEP_TYPE_STYLE[step.type],
     shape !== 'diamond' && shapeClass,
-    !connectMode && 'cursor-pointer hover:shadow-md',
+    !connectMode && 'cursor-pointer',
     connectMode &&
       (isConnectFrom ? 'ring-4 ring-secondary-400' : 'hover:ring-2 hover:ring-secondary-400'),
     selected && !connectMode && 'ring-2 ring-primary-500 ring-offset-1 z-10'
@@ -301,7 +301,7 @@ export function StepCard({
             }}
             aria-label="このステップから矢印を引く"
             title="このステップから矢印を引く"
-            className="no-print absolute -right-7 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-secondary-500 text-white text-xs font-bold shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto hover:bg-secondary-600 z-20 transition-opacity flex items-center justify-center"
+            className="no-print absolute -right-7 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-secondary-500 text-white text-xs font-bold opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto hover:bg-secondary-600 z-20 transition-opacity flex items-center justify-center"
           >
             +
           </button>
@@ -313,7 +313,7 @@ export function StepCard({
             }}
             aria-label="このステップを削除"
             title="このステップを削除"
-            className="no-print absolute -right-5 -top-5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto hover:bg-red-600 z-20 transition-opacity flex items-center justify-center"
+            className="no-print absolute -right-5 -top-5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto hover:bg-red-600 z-20 transition-opacity flex items-center justify-center"
           >
             ×
           </button>

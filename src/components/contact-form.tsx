@@ -1,8 +1,9 @@
 import { getAttribution } from '@/lib/attribution';
 import { consumeContactPrefill } from '@/lib/contact-prefill';
+import { createContactSubmissionId } from '@/lib/contact-submission';
 import { useTurnstile } from '@/lib/use-turnstile';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type SubmitStatus = 'idle' | 'submitting' | 'error';
 
@@ -32,7 +33,7 @@ type IntentGuide = {
 const PROVENANCE_MAX_LENGTH = 80;
 const PROVENANCE_PATTERN = /^[a-zA-Z0-9_\-./]+$/;
 const DEFAULT_MESSAGE_PLACEHOLDER =
-  '空欄でも送信できます。現状の課題、使いたいデータ、検討中のサービス、概算を知りたい内容などがあればご記入ください。';
+  '空欄でも送信できます。現状の課題、使いたいデータ、概算を知りたい範囲など、書ける範囲だけご記入ください。詳細はNDA後に共有できます。';
 
 const INTENT_TYPE_MAP: Record<string, string> = {
   'ai-accuracy': 'ai',
@@ -45,11 +46,11 @@ const INTENT_TYPE_MAP: Record<string, string> = {
   'document-ai-search': 'ai',
   'genai-adoption': 'ai',
   'genai-roi': 'ai',
-  'pm-on-rails-ai-cost': 'pm_on_rails',
+  'pm-on-rails-ai-cost': 'estimate',
   'pm-on-rails-cost': 'estimate',
   'pm-on-rails-rag': 'ai',
-  'pm-on-rails-requirements': 'pm_on_rails',
-  'pm-on-rails-rfp': 'pm_on_rails',
+  'pm-on-rails-requirements': 'requirements',
+  'pm-on-rails-rfp': 'requirements',
   'quote-comparison': 'estimate',
   'ocr-ai-development': 'ai',
   'rag-accuracy': 'ai',
@@ -203,13 +204,13 @@ function intentToType(intent: string): string {
   if (normalized.startsWith('ai-development')) return 'ai';
   if (normalized.startsWith('genai-adoption')) return 'ai';
   if (normalized.startsWith('cdp')) return 'cdp';
-  if (normalized.startsWith('dx')) return 'dx';
+  if (normalized.startsWith('dx')) return 'consultation';
   if (normalized.startsWith('estimate')) return 'estimate';
-  if (normalized.startsWith('pm-on-rails')) return 'pm_on_rails';
+  if (normalized.startsWith('pm-on-rails')) return 'requirements';
   if (normalized.startsWith('rag')) return 'ai';
   if (normalized.startsWith('requirements')) return 'requirements';
   if (normalized.startsWith('rfp')) return 'requirements';
-  if (normalized.startsWith('tech-review')) return 'tech_review';
+  if (normalized.startsWith('tech-review')) return 'ai';
   return '';
 }
 
@@ -231,6 +232,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
   const [message, setMessage] = useState('');
   // 流入元の intent から相談種別を初期選択し、入力の手間を減らす（Slack 通知の分類精度も上がる）
   const [inquiryType, setInquiryType] = useState('consultation');
+  const submissionIdRef = useRef('');
   const intentGuide = getIntentGuide(provenance.intent);
 
   useEffect(() => {
@@ -268,6 +270,10 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
     const selectedType = String(formData.get('type') || 'consultation');
     const buyingStage = String(formData.get('buying_stage') || '');
     const rawMessage = String(formData.get('message') || '').trim();
+    if (!submissionIdRef.current) {
+      submissionIdRef.current = createContactSubmissionId();
+    }
+    const submissionId = submissionIdRef.current;
     const data = {
       name: formData.get('from_name') || '',
       email: formData.get('reply_to'),
@@ -279,6 +285,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
       source: provenance.source,
       intent: provenance.intent,
       phase: provenance.phase,
+      submissionId,
       buyingStage,
       turnstileToken: turnstileToken ?? '',
       // 流入元（入口ページ・参照元・UTM・GA client_id）を問い合わせ通知へ同送
@@ -300,9 +307,15 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
         );
       }
 
+      const confirmedSubmissionId =
+        typeof result.submissionId === 'string' && result.submissionId
+          ? result.submissionId
+          : submissionId;
+
       const eventParams: Record<string, string> = {
         form_id: 'contact',
         form_type: typeof data.type === 'string' ? data.type : 'unknown',
+        submission_id: confirmedSubmissionId,
       };
       if (provenance.source) eventParams.source = provenance.source;
       if (provenance.intent) eventParams.intent = provenance.intent;
@@ -318,6 +331,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
         if (provenance.source) thanksParams.set('source', provenance.source);
         if (provenance.intent) thanksParams.set('intent', provenance.intent);
         if (provenance.phase) thanksParams.set('phase', provenance.phase);
+        thanksParams.set('submission_id', confirmedSubmissionId);
         const query = thanksParams.toString();
         window.location.href = query ? `/thanks?${query}` : '/thanks';
       };
@@ -349,8 +363,14 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
   const submitDisabled = isSubmitting || (turnstileEnabled && !turnstileToken);
 
   return (
-    <div className="bg-white rounded-[32px] shadow-soft p-8 md:p-12">
+    <div className="rounded-lg border border-neutral-200 bg-white p-8 md:p-12">
       <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="rounded-lg border border-primary-100 bg-primary-50 px-4 py-3">
+          <p className="text-sm font-bold leading-relaxed text-primary-800">
+            NDA締結可。要件が固まっていなくても送れます。通常1〜2営業日以内に、判断に必要な不足情報と進め方の候補を返します。
+          </p>
+        </div>
+
         {intentGuide && (
           <div className="border-l-4 border-primary-400 bg-primary-50 px-4 py-3">
             <p className="text-sm font-bold text-primary-800">{intentGuide.title}</p>
@@ -373,14 +393,10 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
             <option value="consultation">まずは相談したい</option>
             <option value="estimate">見積もり妥当性・概算費用を聞きたい</option>
             <option value="requirements">作りたいもの・依頼内容を整理したい</option>
-            <option value="pm_on_rails">RFP・As-Isから要件定義を進めたい</option>
-            <option value="web">Webアプリ開発について</option>
-            <option value="mobile">モバイルアプリ開発について</option>
-            <option value="prototype">15分で開発方針を整理したい</option>
+            <option value="web">WEB・モバイルアプリ開発について</option>
+            <option value="mobile">モバイルアプリ中心で相談したい</option>
             <option value="ai">社内資料や業務データをAIで使いたい</option>
             <option value="cdp">顧客データを整理・活用したい</option>
-            <option value="dx">業務改善・AI導入について</option>
-            <option value="tech_review">社内データ・既存システムの不安を相談したい</option>
             <option value="mvp_poc">MVP・PoC・新規事業検証について</option>
             <option value="partner">開発パートナー・協業のご相談（開発会社・SIer様）</option>
             <option value="other">その他</option>
@@ -480,7 +496,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
             placeholder={intentGuide?.placeholder ?? DEFAULT_MESSAGE_PLACEHOLDER}
           />
           <p className="text-sm text-muted-foreground mt-2">
-            まとまっていなくて構いません。返信時にこちらから具体的に質問します。
+            まとまっていなくて構いません。秘密情報はNDA後に共有できます。
           </p>
         </div>
 
@@ -524,7 +540,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
           <div
             role="alert"
             aria-live="assertive"
-            className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl"
+            className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg"
           >
             <p className="text-destructive font-medium mb-1">送信できませんでした</p>
             <p className="text-sm text-foreground/80">{errorMessage}</p>
@@ -548,10 +564,10 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
           <button
             type="submit"
             disabled={submitDisabled}
-            className={`inline-flex justify-center items-center w-full md:w-auto px-10 py-4 rounded-full font-semibold text-white text-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+            className={`inline-flex justify-center items-center w-full md:w-auto px-10 py-4 rounded-md font-semibold text-white text-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
               submitDisabled
                 ? 'bg-neutral-400 cursor-not-allowed'
-                : 'bg-primary-500 hover:bg-primary-600 shadow-soft hover:shadow-medium focus:ring-primary-500'
+                : 'bg-primary-500 hover:bg-primary-600 focus:ring-primary-500'
             }`}
           >
             {isSubmitting ? (
@@ -575,7 +591,7 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
                 送信中...
               </>
             ) : (
-              'この内容で送る'
+              '実現可否の相談を送る'
             )}
           </button>
           <p className="text-sm text-muted-foreground mt-4">

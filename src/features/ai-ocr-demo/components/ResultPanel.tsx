@@ -7,7 +7,7 @@ export function ResultPanel() {
   const loading = useOcrStore((s) => s.loading);
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-soft p-6 space-y-4">
+    <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
       <h3 className="font-bold text-lg">抽出結果</h3>
       {!result && !rawText && !loading && (
         <p className="text-gray-500 text-sm">
