@@ -9,20 +9,14 @@ type AskAiSectionProps = {
 
 export function AskAiSection({ source, pageTitle, pageSummary, serviceName }: AskAiSectionProps) {
   return (
-    <section className="relative overflow-hidden bg-white py-20 md:py-24">
-      <div
-        className="pointer-events-none absolute -right-16 top-8 h-64 w-64 rounded-full bg-primary-100/70 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -left-10 bottom-0 h-48 w-48 rounded-full bg-secondary-100/50 blur-3xl"
-        aria-hidden="true"
-      />
-      <div className="container relative mx-auto px-8 lg:px-12">
-        <div className="mx-auto max-w-3xl rounded-[32px] border border-primary-200 bg-primary-50 p-8 shadow-soft md:p-10">
-          <p className="text-xs font-bold tracking-wide text-primary-500">ASK YOUR AI</p>
-          <h2 className="mt-3 text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
-            問い合わせの前に、普段のAIへ聞いてみてください
+    <section className="border-y border-neutral-300 bg-neutral-50 py-16 md:py-20">
+      <div className="container mx-auto px-8 lg:px-12">
+        <div className="mx-auto max-w-3xl rounded-md border border-neutral-300 bg-white p-6 md:p-8">
+          <p className="border-l-8 border-primary-500 pl-4 text-sm font-bold text-primary-700">
+            問い合わせの前に
+          </p>
+          <h2 className="mt-4 text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
+            普段のAIへ、合うか聞いてみてください
           </h2>
           <p className="mt-4 text-base leading-relaxed text-neutral-700 md:text-lg">
             営業資料だけでは、自社に合うか判断しにくいことがあります。社内の制約や今の状況を知っているAIに聞くと、合う理由と合わない理由が先に見えます。

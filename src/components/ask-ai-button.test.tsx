@@ -42,6 +42,44 @@ describe('AskAiButton', () => {
     expect(decodeURIComponent(String(opened))).toContain('中立に評価');
   });
 
+  it('Geminiはクリップボード完了を待たずに先に新しいタブを開く', async () => {
+    let resolveClipboard: (() => void) | undefined;
+    const order: string[] = [];
+    vi.mocked(window.open).mockImplementation(() => {
+      order.push('open');
+      return null;
+    });
+    vi.mocked(navigator.clipboard.writeText).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveClipboard = () => {
+            order.push('clipboard');
+            resolve();
+          };
+        })
+    );
+
+    render(<AskAiButton source="test" pageTitle="生成AI受託開発" />);
+    fireEvent.click(screen.getByRole('button', { name: 'AIに相談する' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Geminiで聞く' }));
+
+    expect(window.open).toHaveBeenCalledWith(
+      'https://gemini.google.com/app',
+      '_blank',
+      'noopener,noreferrer'
+    );
+    expect(order).toEqual(['open']);
+    expect(navigator.clipboard.writeText).toHaveBeenCalled();
+
+    resolveClipboard?.();
+    await waitFor(() => {
+      expect(order).toEqual(['open', 'clipboard']);
+    });
+    expect(
+      await screen.findByText('プロンプトをコピーしました。開いた画面に貼り付けてください。')
+    ).toBeInTheDocument();
+  });
+
   it('プロンプトをクリップボードへコピーできる', async () => {
     render(<AskAiButton source="test" pageTitle="Beekle" />);
     fireEvent.click(screen.getByRole('button', { name: 'AIに相談する' }));

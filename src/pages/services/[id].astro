@@ -1,4 +1,6 @@
 ---
+import { AskAiButton } from '@/components/ask-ai-button';
+import { AskAiSection } from '@/components/ask-ai-section';
 import { Header } from '@/components/header';
 import JsonLd from '@/components/seo/json-ld.astro';
 import AiDevelopmentOverview from '@/components/services/ai-development-overview.astro';
@@ -369,6 +371,14 @@ const featuresCopy = sectionCopy[service.id]?.features;
 
     <ServiceFaq faq={service.faq} number={faqNumber} />
 
+    <AskAiSection
+      client:visible
+      source={`services-${service.id}-ask-ai`}
+      pageTitle={servicePageConfig?.headline ?? service.title}
+      pageSummary={servicePageConfig?.heroLead ?? service.description}
+      serviceName={service.title}
+    />
+
     <section class="relative py-20 md:py-32 overflow-hidden bg-navy-950">
       <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center relative z-10">
         <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 font-Montserrat">
@@ -401,6 +411,15 @@ const featuresCopy = sectionCopy[service.id]?.features;
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </a>
+          <AskAiButton
+            client:visible
+            source={`services-${service.id}-final`}
+            variant="link"
+            tone="dark"
+            pageTitle={servicePageConfig?.headline ?? service.title}
+            pageSummary={finalCtaLead}
+            serviceName={service.title}
+          />
         </div>
       </div>
     </section>

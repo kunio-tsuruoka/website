@@ -1,3 +1,4 @@
+import { AskAiButton } from '@/components/ask-ai-button';
 import { ArrowRight } from 'lucide-react';
 
 const sheetRows = [
@@ -62,6 +63,12 @@ export const HeroSection = () => (
           >
             実案件の判断材料を見る
           </a>
+          <AskAiButton
+            source="home-hero"
+            variant="link"
+            pageTitle="AI・DXで、何を作るべきかから一緒に考える。"
+            pageSummary="要件が固まる前から、業務課題を整理し、まず動く形で検証します。作ってから後悔するのではなく、試してから本開発を決めるためのAI・業務システム開発です。"
+          />
         </div>
 
         <p className="mt-5 max-w-2xl text-sm leading-relaxed text-neutral-600">
