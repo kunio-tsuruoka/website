@@ -32,17 +32,16 @@ export const HeroSection = () => (
         </p>
 
         <h1 className="mt-6 text-4xl font-bold leading-[1.05] text-accent-950 sm:text-5xl md:text-6xl xl:text-7xl">
-          数百万円を
+          AI・DXで、
           <br />
-          発注する前に、
+          <span className="text-primary-500">何を作るべきかから</span>
           <br />
-          <span className="text-primary-500">本当に作るべきか</span>
-          <br />
-          <span className="text-primary-500">確かめる。</span>
+          <span className="text-primary-500">一緒に考える。</span>
         </h1>
 
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-700 md:text-xl">
-          要件が固まっていなくても構いません。業務課題を整理し、動く形で確認してから、開発する・見送る・範囲を変える判断材料を作ります。
+          要件が固まる前から、業務課題を整理し、まず動く形で検証します。
+          作ってから後悔するのではなく、試してから本開発を決めるためのAI・業務システム開発です。
         </p>
 
         <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">

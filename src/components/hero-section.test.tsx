@@ -11,11 +11,14 @@ describe('HeroSection', () => {
 
     expect(text).toContain('要件が固まる前のAI・DX・業務システム相談');
     expect(text).not.toContain('社内システム化の発注前相談');
-    expect(text).toContain('数百万円を発注する前に、本当に作るべきか確かめる。');
-    expect(text).toContain('本当に作るべきか確かめる。');
+    expect(text).toContain('AI・DXで、何を作るべきかから一緒に考える。');
+    expect(text).toContain('何を作るべきかから一緒に考える。');
     expect(html).toContain('text-4xl font-bold leading-[1.05] text-accent-950 sm:text-5xl');
     expect(html).toContain('発注前に相談する');
-    expect(html).toContain('開発する・見送る・範囲を変える判断材料を作ります。');
+    expect(html).toContain('要件が固まる前から、業務課題を整理し、まず動く形で検証します。');
+    expect(html).toContain('試してから本開発を決めるためのAI・業務システム開発です。');
+    expect(html).not.toContain('数百万円を発注する前に、本当に作るべきか確かめる。');
+    expect(html).not.toContain('開発する・見送る・範囲を変える判断材料を作ります。');
     expect(html).toContain('初回相談・簡易デモは無料');
     expect(html).toContain('PoCが必要な場合は、目的・範囲・判断基準を別途整理します。');
     expect(html).toContain('見送り条件がある場合も、開発前に理由を残します。');
