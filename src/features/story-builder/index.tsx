@@ -10,12 +10,12 @@ import {
 } from '@/lib/story-spec';
 import { consumeHandoff, writeHandoff } from '@/lib/tool-handoff';
 import { markToolSaved } from '@/lib/tool-storage';
-import { cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
 import { AsIsToBePanel } from './components/AsIsToBePanel';
 import { RfpPanel } from './components/RfpPanel';
 import { StoriesPanel } from './components/StoriesPanel';
 import { type Step, WorkspaceSteps } from './components/WorkspaceSteps';
+import { Eyebrow, Sheet, SheetBody, ToolButton } from './components/sheet';
 
 const MAX_IMPORT_BYTES = 2_000_000;
 export const STORAGE_KEY = 'beekle-story-builder-v2';
@@ -233,111 +233,99 @@ export function StoryBuilder() {
       <WorkspaceSteps step={step} hasSpec={!!spec} onChange={setStep} />
 
       {step === 'input' && (
-        <section className="rounded-lg border border-neutral-200 bg-white p-5 md:p-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-2">いまの業務と、こうしたいを書く</h2>
-          <p className="text-sm text-gray-700 leading-relaxed mb-4">
-            専門用語は不要です。誰が、何を、どの道具でやっていて、どこが困っているか。そのあとどうしたいかが分かれば十分です。
-          </p>
-          <div className="flex flex-wrap gap-2 mb-3">
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="min-h-[44px] px-3 py-2 text-sm font-semibold text-primary-700 border border-primary-200 rounded-md hover:bg-primary-50"
-            >
-              ファイルを読み込む
-            </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".txt,.md,.markdown,.docx,text/plain,text/markdown,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-              onChange={importFile}
-              className="hidden"
-            />
-            <select
-              defaultValue=""
-              onChange={(e) => {
-                const tpl = STORY_TEMPLATES.find((t) => t.id === e.target.value);
-                if (!tpl) return;
-                setDescription(tpl.text);
-                setSpec(null);
-                setError(null);
-                trackToolEvent('tool_load_template', {
-                  tool: 'story-builder',
-                  meta: { template: tpl.id },
-                });
-                e.target.value = '';
-              }}
-              className="min-h-[44px] px-3 py-2 text-sm font-semibold text-primary-800 bg-primary-50 border border-primary-200 rounded-md"
-            >
-              <option value="" disabled>
-                業界別の例から始める
-              </option>
-              {STORY_TEMPLATES.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.name}（{t.industry}）
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={() => {
-                setDescription(SAMPLE_TEXT);
-                setSpec(null);
-                setError(null);
-                trackToolEvent('tool_load_sample', { tool: 'story-builder' });
-              }}
-              className="min-h-[44px] px-3 py-2 text-sm font-semibold text-primary-700 border border-primary-200 rounded-md hover:bg-primary-50"
-            >
-              サンプルを入れる
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setDescription('');
-                setSpec(null);
-                setError(null);
-                setStep('input');
-              }}
-              className="min-h-[44px] px-3 py-2 text-sm font-semibold text-gray-600 border border-gray-200 rounded-md hover:bg-gray-50"
-            >
-              クリア
-            </button>
-          </div>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={9}
-            placeholder="例：出張のあと、紙の領収書を月末にまとめて申請している。なくしたり、承認が遅れたりする。スマホでその場申請できるようにしたい。"
-            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-300 leading-relaxed"
-          />
-          <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-3">
-            <button
-              type="button"
-              onClick={generate}
-              disabled={loading}
-              className={cn(
-                'min-h-[44px] px-5 py-2 text-sm font-semibold text-white rounded-md',
-                loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary-500 hover:bg-primary-600'
-              )}
-            >
-              {loading ? '整理しています…（1〜2分）' : '現状・ストーリー・RFPに整理する'}
-            </button>
-            {spec && (
-              <button
-                type="button"
-                onClick={() => setStep('asis')}
-                className="min-h-[44px] text-sm font-semibold text-primary-700"
-              >
-                前回の整理結果を見る
-              </button>
-            )}
-          </div>
-          {error && (
-            <p className="mt-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-md px-3 py-2">
-              {error}
+        <Sheet accent="navy">
+          <SheetBody>
+            <Eyebrow>01 INPUT</Eyebrow>
+            <h2 className="mb-2 text-xl font-bold text-accent-950">
+              いまの業務と、こうしたいを書く
+            </h2>
+            <p className="mb-5 text-sm leading-relaxed text-neutral-700">
+              専門用語は不要です。誰が、何を、どの道具でやっていて、どこが困っているか。そのあとどうしたいかが分かれば十分です。
             </p>
-          )}
-        </section>
+            <div className="mb-4 flex flex-wrap gap-2">
+              <ToolButton type="button" onClick={() => fileInputRef.current?.click()}>
+                ファイルを読み込む
+              </ToolButton>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".txt,.md,.markdown,.docx,text/plain,text/markdown,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                onChange={importFile}
+                className="hidden"
+              />
+              <select
+                defaultValue=""
+                onChange={(e) => {
+                  const tpl = STORY_TEMPLATES.find((t) => t.id === e.target.value);
+                  if (!tpl) return;
+                  setDescription(tpl.text);
+                  setSpec(null);
+                  setError(null);
+                  trackToolEvent('tool_load_template', {
+                    tool: 'story-builder',
+                    meta: { template: tpl.id },
+                  });
+                  e.target.value = '';
+                }}
+                className="min-h-[44px] rounded-md border border-primary-500 bg-white px-4 py-2 text-sm font-semibold text-primary-500"
+              >
+                <option value="" disabled>
+                  業界別の例から始める
+                </option>
+                {STORY_TEMPLATES.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}（{t.industry}）
+                  </option>
+                ))}
+              </select>
+              <ToolButton
+                type="button"
+                onClick={() => {
+                  setDescription(SAMPLE_TEXT);
+                  setSpec(null);
+                  setError(null);
+                  trackToolEvent('tool_load_sample', { tool: 'story-builder' });
+                }}
+              >
+                サンプルを入れる
+              </ToolButton>
+              <ToolButton
+                type="button"
+                variant="ghost"
+                onClick={() => {
+                  setDescription('');
+                  setSpec(null);
+                  setError(null);
+                  setStep('input');
+                }}
+              >
+                クリア
+              </ToolButton>
+            </div>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={10}
+              placeholder="例：出張のあと、紙の領収書を月末にまとめて申請している。なくしたり、承認が遅れたりする。スマホでその場申請できるようにしたい。"
+              className="w-full rounded-md border border-neutral-300 bg-neutral-50 px-4 py-3 text-sm leading-relaxed text-accent-950 focus:border-primary-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-300"
+            />
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <ToolButton type="button" variant="accent" onClick={generate} disabled={loading}>
+                {loading ? '整理しています…（1〜2分）' : '現状・ストーリー・RFPに整理する'}
+              </ToolButton>
+              {spec && (
+                <ToolButton type="button" variant="ghost" onClick={() => setStep('asis')}>
+                  前回の整理結果を見る
+                </ToolButton>
+              )}
+            </div>
+            {error && (
+              <p className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                {error}
+              </p>
+            )}
+          </SheetBody>
+        </Sheet>
       )}
 
       {step === 'asis' && spec && <AsIsToBePanel spec={spec} />}
@@ -355,33 +343,21 @@ export function StoryBuilder() {
       )}
 
       {spec && step !== 'input' && (
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap gap-2">
           {step !== 'asis' && (
-            <button
-              type="button"
-              onClick={() => setStep('asis')}
-              className="min-h-[44px] px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
-            >
+            <ToolButton type="button" variant="outlineNavy" onClick={() => setStep('asis')}>
               現状と目指す姿
-            </button>
+            </ToolButton>
           )}
           {step !== 'stories' && (
-            <button
-              type="button"
-              onClick={() => setStep('stories')}
-              className="min-h-[44px] px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
-            >
+            <ToolButton type="button" variant="outlineNavy" onClick={() => setStep('stories')}>
               ストーリーを見る
-            </button>
+            </ToolButton>
           )}
           {step !== 'rfp' && (
-            <button
-              type="button"
-              onClick={() => setStep('rfp')}
-              className="min-h-[44px] px-4 py-2 text-sm font-semibold text-white bg-primary-500 rounded-md hover:bg-primary-600"
-            >
+            <ToolButton type="button" variant="accent" onClick={() => setStep('rfp')}>
               RFPを見る
-            </button>
+            </ToolButton>
           )}
         </div>
       )}

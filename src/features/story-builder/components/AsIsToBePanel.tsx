@@ -1,14 +1,15 @@
 import type { StorySpec } from '@/lib/story-spec';
+import { Eyebrow, Sheet, SheetBody } from './sheet';
 
 function List({ title, items }: { title: string; items: string[] }) {
   if (items.length === 0) return null;
   return (
-    <div className="mt-4">
-      <p className="text-xs font-semibold text-gray-600 mb-1.5">{title}</p>
-      <ul className="space-y-1.5 text-sm text-gray-800 leading-relaxed">
+    <div className="mt-6">
+      <p className="mb-2 text-xs font-semibold tracking-wide text-neutral-500">{title}</p>
+      <ul className="space-y-2 text-sm leading-relaxed text-accent-950">
         {items.map((item) => (
-          <li key={item} className="flex gap-2">
-            <span className="mt-2 h-1.5 w-1.5 rounded-full bg-current flex-shrink-0 opacity-50" />
+          <li key={item} className="flex gap-3">
+            <span className="mt-2 h-px w-3 flex-shrink-0 bg-neutral-400" />
             <span>{item}</span>
           </li>
         ))}
@@ -17,40 +18,54 @@ function List({ title, items }: { title: string; items: string[] }) {
   );
 }
 
+function Meta({ label, value }: { label: string; value: string }) {
+  if (!value) return null;
+  return (
+    <p className="mt-4 border-t border-neutral-200 pt-4 text-sm leading-relaxed text-neutral-700">
+      <span className="mr-2 font-semibold text-accent-950">{label}</span>
+      {value}
+    </p>
+  );
+}
+
 export function AsIsToBePanel({ spec }: { spec: StorySpec }) {
   return (
-    <div className="grid md:grid-cols-2 gap-4">
-      <section className="rounded-lg border border-neutral-200 bg-white p-5 md:p-6">
-        <p className="text-xs font-semibold tracking-wide text-gray-500 mb-2">現状 As-Is</p>
-        <h3 className="text-lg font-bold text-gray-900 mb-3">いまどうやっているか</h3>
-        <p className="text-sm text-gray-800 leading-relaxed">{spec.asIs.summary || '（未整理）'}</p>
-        {spec.asIs.actors.length > 0 && (
-          <p className="mt-4 text-sm text-gray-700">
-            <span className="font-semibold">登場人物: </span>
-            {spec.asIs.actors.join('、')}
+    <div className="grid gap-0 overflow-hidden rounded-lg border border-neutral-200 md:grid-cols-2">
+      <Sheet accent="neutral" className="rounded-none border-0 border-b md:border-b-0 md:border-r">
+        <SheetBody>
+          <Eyebrow>01 AS-IS</Eyebrow>
+          <p className="mb-1 text-xs font-semibold tracking-wide text-neutral-500">現状</p>
+          <h3 className="mb-4 text-xl font-bold leading-snug text-accent-950">
+            いまどうやっているか
+          </h3>
+          <p className="text-base leading-relaxed text-accent-950">
+            {spec.asIs.summary || '（未整理）'}
           </p>
-        )}
-        {spec.asIs.tools.length > 0 && (
-          <p className="mt-2 text-sm text-gray-700">
-            <span className="font-semibold">使っているもの: </span>
-            {spec.asIs.tools.join('、')}
-          </p>
-        )}
-        <List title="困りごと" items={spec.asIs.pains} />
-      </section>
+          <Meta label="登場人物" value={spec.asIs.actors.join('、')} />
+          <Meta label="使っているもの" value={spec.asIs.tools.join('、')} />
+          <List title="困りごと" items={spec.asIs.pains} />
+        </SheetBody>
+      </Sheet>
 
-      <section className="rounded-lg border border-primary-200 bg-primary-50/40 p-5 md:p-6">
-        <p className="text-xs font-semibold tracking-wide text-primary-700 mb-2">目指す姿 To-Be</p>
-        <h3 className="text-lg font-bold text-gray-900 mb-3">どうなっていたいか</h3>
-        <p className="text-sm text-gray-800 leading-relaxed">{spec.toBe.summary || '（未整理）'}</p>
-        <List title="実現したいこと" items={spec.toBe.outcomes} />
-      </section>
+      <Sheet accent="primary" className="rounded-none border-0 bg-primary-50/50">
+        <SheetBody>
+          <Eyebrow>02 TO-BE</Eyebrow>
+          <p className="mb-1 text-xs font-semibold tracking-wide text-primary-700">目指す姿</p>
+          <h3 className="mb-4 text-xl font-bold leading-snug text-accent-950">
+            どうなっていたいか
+          </h3>
+          <p className="text-base leading-relaxed text-accent-950">
+            {spec.toBe.summary || '（未整理）'}
+          </p>
+          <List title="実現したいこと" items={spec.toBe.outcomes} />
+        </SheetBody>
+      </Sheet>
 
       {spec.background && (
-        <section className="md:col-span-2 rounded-lg border border-neutral-200 bg-white p-5">
-          <h3 className="text-sm font-bold text-gray-900 mb-2">背景</h3>
-          <p className="text-sm text-gray-800 leading-relaxed">{spec.background}</p>
-        </section>
+        <div className="border-t border-neutral-200 bg-white px-5 py-5 md:col-span-2 md:px-7">
+          <p className="mb-2 text-xs font-semibold tracking-wide text-neutral-500">背景</p>
+          <p className="text-sm leading-relaxed text-accent-950">{spec.background}</p>
+        </div>
       )}
     </div>
   );

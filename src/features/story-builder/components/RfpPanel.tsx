@@ -1,5 +1,6 @@
 import { type StorySpec, formatRfpMarkdown, storyCountSummary } from '@/lib/story-spec';
 import { useState } from 'react';
+import { Eyebrow, Sheet, SheetBody, ToolButton } from './sheet';
 
 export function RfpPanel({
   spec,
@@ -14,65 +15,64 @@ export function RfpPanel({
   onSendScope: () => void;
   onCopyShare: () => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const counts = storyCountSummary(spec);
   const markdown = formatRfpMarkdown(spec);
 
   return (
-    <div className="space-y-4">
-      <section className="rounded-lg border border-neutral-200 bg-white p-5 md:p-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-2">{spec.title}</h3>
-        <p className="text-sm text-gray-700 leading-relaxed mb-4">
-          現状と目指す姿、ユーザーストーリー {counts.stories} 件、シナリオ {counts.scenarios}{' '}
-          件を、開発会社に渡せるRFPの章立てにまとめました。
-        </p>
-        <ul className="text-sm text-gray-700 space-y-1 mb-5">
-          <li>・ 背景 / 現状（As-Is） / 目指す姿（To-Be）</li>
-          <li>・ ユーザーストーリーと、Gherkin（Given / When / Then）のシナリオ</li>
-          <li>・ 非機能、制約、提案してほしい事項</li>
-        </ul>
-        <div className="flex flex-wrap gap-2">
+    <div className="space-y-0 overflow-hidden rounded-lg border border-neutral-200">
+      <Sheet accent="navy" className="rounded-none border-0 border-b">
+        <SheetBody>
+          <Eyebrow>04 RFP DRAFT</Eyebrow>
+          <h3 className="mb-3 text-2xl font-bold leading-snug text-accent-950">{spec.title}</h3>
+          <p className="mb-6 text-sm leading-relaxed text-neutral-700">
+            現状と目指す姿、ユーザーストーリー {counts.stories} 件、シナリオ {counts.scenarios}{' '}
+            件を、開発会社に渡せるRFPの章立てにまとめました。
+          </p>
+          <ol className="mb-6 grid gap-2 text-sm text-accent-950 md:grid-cols-3">
+            <li className="border border-neutral-200 bg-neutral-50 px-3 py-3">
+              <span className="mr-2 font-Poppins text-xs text-primary-500">01</span>
+              背景 / 現状 / 目指す姿
+            </li>
+            <li className="border border-neutral-200 bg-neutral-50 px-3 py-3">
+              <span className="mr-2 font-Poppins text-xs text-primary-500">02</span>
+              ストーリーと Gherkin
+            </li>
+            <li className="border border-neutral-200 bg-neutral-50 px-3 py-3">
+              <span className="mr-2 font-Poppins text-xs text-primary-500">03</span>
+              非機能・制約・提案依頼
+            </li>
+          </ol>
+          <div className="flex flex-wrap gap-2">
+            <ToolButton variant="accent" onClick={onDownload}>
+              RFPをダウンロード
+            </ToolButton>
+            <ToolButton onClick={onCopy}>クリップボードにコピー</ToolButton>
+            <ToolButton variant="secondary" onClick={onSendScope}>
+              スコープ管理に送る
+            </ToolButton>
+            <ToolButton variant="ghost" onClick={onCopyShare}>
+              共有URLをコピー
+            </ToolButton>
+          </div>
+        </SheetBody>
+      </Sheet>
+
+      <section className="bg-white">
+        <div className="flex items-center justify-between border-b border-neutral-200 px-5 py-2 md:px-7">
+          <p className="font-Poppins text-[11px] font-semibold tracking-[0.16em] text-neutral-500">
+            MARKDOWN
+          </p>
           <button
             type="button"
-            onClick={onDownload}
-            className="min-h-[44px] px-4 py-2 text-sm font-semibold text-white bg-primary-500 rounded-md hover:bg-primary-600"
+            onClick={() => setOpen((v) => !v)}
+            className="min-h-[44px] text-sm font-semibold text-primary-600"
           >
-            RFPをダウンロード
-          </button>
-          <button
-            type="button"
-            onClick={onCopy}
-            className="min-h-[44px] px-4 py-2 text-sm font-semibold text-primary-700 border border-primary-300 rounded-md hover:bg-primary-50"
-          >
-            クリップボードにコピー
-          </button>
-          <button
-            type="button"
-            onClick={onSendScope}
-            className="min-h-[44px] px-4 py-2 text-sm font-semibold text-secondary-800 bg-secondary-50 border border-secondary-300 rounded-md hover:bg-secondary-100"
-          >
-            スコープ管理に送る
-          </button>
-          <button
-            type="button"
-            onClick={onCopyShare}
-            className="min-h-[44px] px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            共有URLをコピー
+            {open ? 'プレビューを閉じる' : 'Markdownプレビューを見る'}
           </button>
         </div>
-      </section>
-
-      <section className="rounded-lg border border-neutral-200 bg-white p-5 md:p-6">
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="min-h-[44px] text-sm font-semibold text-gray-800"
-        >
-          {open ? 'プレビューを閉じる' : 'Markdownプレビューを見る'}
-        </button>
         {open && (
-          <pre className="mt-3 max-h-[420px] overflow-auto rounded-lg border border-neutral-200 bg-neutral-50 p-4 text-xs leading-relaxed whitespace-pre-wrap text-gray-800">
+          <pre className="max-h-[480px] overflow-auto bg-neutral-50 px-5 py-5 font-mono text-xs leading-relaxed text-accent-950 whitespace-pre-wrap md:px-7">
             {markdown}
           </pre>
         )}

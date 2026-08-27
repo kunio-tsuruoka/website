@@ -10,11 +10,9 @@ const toolsIndex = readFileSync(resolve(import.meta.dirname, '../pages/tools/ind
 
 describe('tools information architecture', () => {
   it('story-builder は As-Is / シナリオ / RFP をこの順で案内する', () => {
-    const asIs = storyPage.indexOf('<h3 class="font-bold text-gray-900 mb-1">現状と目指す姿</h3>');
-    const stories = storyPage.indexOf(
-      '<h3 class="font-bold text-gray-900 mb-1">ストーリーとシナリオ</h3>'
-    );
-    const rfp = storyPage.indexOf('<h3 class="font-bold text-gray-900 mb-1">RFPの下書き</h3>');
+    const asIs = storyPage.indexOf('>現状と目指す姿</h3>');
+    const stories = storyPage.indexOf('>ストーリーとシナリオ</h3>');
+    const rfp = storyPage.indexOf('>RFPの下書き</h3>');
     expect(asIs).toBeGreaterThan(-1);
     expect(stories).toBeGreaterThan(asIs);
     expect(rfp).toBeGreaterThan(stories);
