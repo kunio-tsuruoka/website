@@ -18,11 +18,17 @@ describe('HeroSection', () => {
     expect(html).toContain('速さの実績を見る');
     expect(html).toContain('AIに相談する');
     expect(html).not.toContain('PM on Rails');
-    expect(html).toContain('業務課題の整理からプロトタイプ、本開発までをAIを前提に高速化します。');
-    expect(html).toContain('必要な人月を減らし、その分、開発総額を抑えながら、検証と改善の回数を増やします。');
+    expect(html).toContain(
+      '業務課題の整理からプロトタイプ、本開発までをAIを前提に高速化します。'
+    );
+    expect(html).toContain(
+      '必要な人月を減らし、その分、開発総額を抑えながら、検証と改善の回数を増やします。'
+    );
     expect(html).toContain('安いから速いのではなく、速いからコストを下げられる開発です。');
     expect(html).toContain('初回相談・簡易デモは無料');
-    expect(html).toContain('速さのために品質を落とすのではなく、手戻りと待ち時間を減らします。');
+    expect(html).toContain(
+      '速さのために品質を落とすのではなく、手戻りと待ち時間を減らします。'
+    );
     expect(html).not.toContain('初期費用0円');
     expect(html).not.toContain('無料相談');
     expect(html).not.toContain('opacity:0');
