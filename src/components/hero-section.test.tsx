@@ -53,6 +53,10 @@ describe('HeroSection', () => {
     expect(html).not.toContain('lg:grid-cols');
     expect(html).not.toContain('md:hidden');
     expect(html).not.toContain('hidden border-y border-neutral-300 bg-white md:block');
+    expect(html).toContain('max-w-[16.5rem]');
+    expect(html).toContain('xl:max-w-[22rem]');
+    expect(html).not.toContain('xl:text-8xl');
+    expect(html).not.toContain('md:text-7xl');
   });
 
   it('keeps restrained brand styling', () => {
