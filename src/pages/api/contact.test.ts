@@ -85,6 +85,20 @@ function crmHeaders(mock: FetchMock): Record<string, string> {
   return (call[1] as { headers: Record<string, string> }).headers;
 }
 
+function crmCallCount(mock: FetchMock): number {
+  return mock.mock.calls.filter((c) => c[0] === CRM_URL).length;
+}
+
+function createMemoryKV(initial: Record<string, string> = {}) {
+  const store = new Map<string, string>(Object.entries(initial));
+  return {
+    get: async (key: string) => store.get(key) ?? null,
+    put: async (key: string, value: string) => {
+      store.set(key, value);
+    },
+  };
+}
+
 describe('POST /api/contact のCRM仕分け', () => {
   beforeEach(() => {
     vi.stubGlobal('fetch', vi.fn());
@@ -235,6 +249,46 @@ describe('POST /api/contact のCRM仕分け', () => {
 
     expect(res.status).toBe(200);
     expect(await res.json()).toMatchObject({ success: true });
+    expect(crmCallCount(fetchMock)).toBe(1);
+  });
+
+  it('CRMが失敗しても再送せず1回だけ呼ぶ', async () => {
+    const fetchMock = routeFetch({
+      openrouter: () => llmVerdict('lead', '開発の相談'),
+      crm: () => new Response('timeout', { status: 504 }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const res = await POST({
+      request: contactRequest({ submissionId: 'contact-no-retry' }),
+      locals: baseEnv(),
+    } as never);
+
+    expect(res.status).toBe(200);
+    expect(crmCallCount(fetchMock)).toBe(1);
+  });
+
+  it('同じsubmissionIdの2回目はCRMに送らない', async () => {
+    const kv = createMemoryKV();
+    const fetchMock = routeFetch({
+      openrouter: () => llmVerdict('lead', '開発の相談'),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const first = await POST({
+      request: contactRequest({ submissionId: 'contact-dup-1' }),
+      locals: baseEnv({ RATE_LIMIT: kv }),
+    } as never);
+    const second = await POST({
+      request: contactRequest({ submissionId: 'contact-dup-1' }),
+      locals: baseEnv({ RATE_LIMIT: kv }),
+    } as never);
+
+    expect(first.status).toBe(200);
+    expect(second.status).toBe(200);
+    expect(crmCallCount(fetchMock)).toBe(1);
+    expect(calledUrls(fetchMock).filter((url) => url === SLACK_URL)).toHaveLength(2);
   });
 });
 

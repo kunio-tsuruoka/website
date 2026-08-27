@@ -5,7 +5,7 @@ import {
   isRecruitmentInquiry,
   requiresCompanyName,
 } from '../../lib/contact-inquiry';
-import { createContactSubmissionId } from '../../lib/contact-submission';
+import { claimCrmInquirySync, createContactSubmissionId } from '../../lib/contact-submission';
 import { readSession } from '../../lib/flow-interview/session';
 import { type LeadClassification, classifyInquiry } from '../../lib/lead-classifier';
 import { verifyTurnstile } from '../../lib/turnstile';
@@ -54,41 +54,64 @@ const ContactSchema = z
     }
   });
 
-const WEBHOOK_TIMEOUT_MS = 8000;
-const MAX_RETRIES = 2;
+const SLACK_TIMEOUT_MS = 8000;
+const CRM_TIMEOUT_MS = 15000;
+const MAX_SLACK_RETRIES = 2;
 const DEPRECATED_CONTACT_TYPES = new Set(['download_zero_start']);
+
+async function postJsonOnce(
+  url: string,
+  payload: unknown,
+  headers: Record<string, string>,
+  serviceName: string,
+  timeoutMs: number
+): Promise<void> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+    if (response.ok) return;
+    const text = await response.text().catch(() => '');
+    throw new Error(`${serviceName} ${response.status}: ${text || 'no body'}`);
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 async function postJsonWithRetry(
   url: string,
   payload: unknown,
   headers: Record<string, string>,
-  serviceName: string
+  serviceName: string,
+  timeoutMs: number,
+  maxRetries: number
 ): Promise<void> {
   let lastError: unknown = null;
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), WEBHOOK_TIMEOUT_MS);
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload),
-        signal: controller.signal,
-      });
-      if (response.ok) return;
-      const text = await response.text().catch(() => '');
-      lastError = new Error(`${serviceName} ${response.status}: ${text || 'no body'}`);
+      await postJsonOnce(url, payload, headers, serviceName, timeoutMs);
+      return;
     } catch (err) {
       lastError = err;
-    } finally {
-      clearTimeout(timeout);
     }
   }
   throw lastError instanceof Error ? lastError : new Error(String(lastError));
 }
 
 function postToSlack(webhookUrl: string, payload: unknown): Promise<void> {
-  return postJsonWithRetry(webhookUrl, payload, { 'Content-Type': 'application/json' }, 'Slack');
+  return postJsonWithRetry(
+    webhookUrl,
+    payload,
+    { 'Content-Type': 'application/json' },
+    'Slack',
+    SLACK_TIMEOUT_MS,
+    MAX_SLACK_RETRIES
+  );
 }
 
 function postToCrm(
@@ -98,7 +121,9 @@ function postToCrm(
   payload: unknown,
   submissionId: string
 ): Promise<void> {
-  return postJsonWithRetry(
+  // beekle-crm は POST ごとに Lead を作る。Idempotency-Key は未実装。
+  // 失敗時の再送は同じ問い合わせが3件になるので、1回だけ送る。
+  return postJsonOnce(
     webhookUrl,
     payload,
     {
@@ -107,7 +132,8 @@ function postToCrm(
       'Idempotency-Key': submissionId,
       'X-Submission-Id': submissionId,
     },
-    'CRM'
+    'CRM',
+    CRM_TIMEOUT_MS
   );
 }
 
@@ -124,7 +150,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
             TURNSTILE_SECRET_KEY?: string;
             OPENROUTER_API_KEY?: string;
             OPENROUTER_MODEL_LEAD_FILTER?: string;
-            RATE_LIMIT?: { get(key: string): Promise<string | null> };
+            RATE_LIMIT?: {
+              get(key: string): Promise<string | null>;
+              put(key: string, value: string, opts?: { expirationTtl?: number }): Promise<void>;
+            };
           };
         };
       }
@@ -390,9 +419,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     const deliveries: Promise<void>[] = [postToSlack(webhookUrl, slackMessage)];
     if (syncToCrm && crmWebhookUrl && crmWebhookToken) {
-      deliveries.push(
-        postToCrm(crmWebhookUrl, crmWebhookToken, crmWebhookAuthHeader, crmPayload, submissionId)
-      );
+      const claimed = await claimCrmInquirySync(rateLimitKv, submissionId);
+      if (claimed) {
+        deliveries.push(
+          postToCrm(crmWebhookUrl, crmWebhookToken, crmWebhookAuthHeader, crmPayload, submissionId)
+        );
+      } else {
+        console.info('[contact] CRM sync skipped as duplicate submission:', submissionId);
+      }
     } else if (crmConfigured) {
       console.info('[contact] CRM sync skipped as sales outreach:', classification.reason);
     } else if (crmWebhookUrl || crmWebhookToken) {
