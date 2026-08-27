@@ -120,11 +120,15 @@ export function StoriesPanel({
   onChange,
   onDownloadGherkin,
   onCopyGherkin,
+  onRegenerateStory,
+  regeneratingStoryId,
 }: {
   spec: StorySpec;
   onChange: (spec: StorySpec) => void;
   onDownloadGherkin: () => void;
   onCopyGherkin: () => void;
+  onRegenerateStory: (storyId: string) => void;
+  regeneratingStoryId: string | null;
 }) {
   return (
     <div className="space-y-5">
@@ -190,6 +194,15 @@ export function StoriesPanel({
                     </option>
                   ))}
                 </select>
+                <ToolButton
+                  type="button"
+                  onClick={() => onRegenerateStory(story.id)}
+                  disabled={regeneratingStoryId === story.id}
+                >
+                  {regeneratingStoryId === story.id
+                    ? 'このストーリーだけ直しています…'
+                    : 'このストーリーだけ再整理する'}
+                </ToolButton>
                 {spec.stories.length > 1 && (
                   <ToolButton
                     type="button"

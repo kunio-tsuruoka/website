@@ -1,6 +1,7 @@
 import { STORY_TEMPLATES } from '@/data/story-builder-templates';
 import { trackToolEvent } from '@/lib/analytics';
 import { buildShareUrl, clearShareHash, readSharedFromHash } from '@/lib/share-url';
+import type { ChatTurn, ReviseMode } from '@/lib/story-revise';
 import {
   type StorySpec,
   formatGherkinFeature,
@@ -12,6 +13,7 @@ import { consumeHandoff, writeHandoff } from '@/lib/tool-handoff';
 import { markToolSaved } from '@/lib/tool-storage';
 import { useEffect, useRef, useState } from 'react';
 import { AsIsToBePanel } from './components/AsIsToBePanel';
+import { ReviseChat } from './components/ReviseChat';
 import { RfpPanel } from './components/RfpPanel';
 import { StoriesPanel } from './components/StoriesPanel';
 import { type Step, WorkspaceSteps } from './components/WorkspaceSteps';
@@ -28,13 +30,18 @@ const SAMPLE_TEXT = `社内の経費精算をスマホアプリでやれるよ�
 type Stored = {
   description?: string;
   spec?: StorySpec | null;
+  chat?: ChatTurn[];
 };
+
+type LoadingKind = ReviseMode | null;
 
 export function StoryBuilder() {
   const [description, setDescription] = useState('');
   const [spec, setSpec] = useState<StorySpec | null>(null);
+  const [chat, setChat] = useState<ChatTurn[]>([]);
   const [step, setStep] = useState<Step>('input');
-  const [loading, setLoading] = useState(false);
+  const [loadingKind, setLoadingKind] = useState<LoadingKind>(null);
+  const [loadingStoryId, setLoadingStoryId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -51,6 +58,7 @@ export function StoryBuilder() {
           setSpec(parsed.spec);
           setStep('asis');
         }
+        if (Array.isArray(parsed.chat)) setChat(parsed.chat);
       }
     } catch {
       // ignore
@@ -84,12 +92,12 @@ export function StoryBuilder() {
     if (!hydrated) return;
     if (!spec && !description) return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ description, spec }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ description, spec, chat }));
       markToolSaved('story-builder');
     } catch (err) {
       console.warn('[story-builder] localStorage 書き込み失敗:', err);
     }
-  }, [description, spec, hydrated]);
+  }, [description, spec, chat, hydrated]);
 
   const fireExportEvent = (format: string) => {
     exportCountRef.current += 1;
@@ -137,35 +145,100 @@ export function StoryBuilder() {
     }
   }
 
+  async function requestSpec(body: {
+    mode: ReviseMode;
+    instruction?: string;
+    storyId?: string;
+  }): Promise<{ spec: StorySpec; note?: string }> {
+    const res = await fetch('/api/tools/generate-scenarios', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        description,
+        spec,
+        mode: body.mode,
+        instruction: body.instruction,
+        storyId: body.storyId,
+      }),
+    });
+    const data = (await res.json()) as
+      | { success: true; spec: StorySpec; note?: string }
+      | { success: false; error: string; detail?: string };
+    if (!data.success) {
+      throw new Error(data.error + (data.detail ? `: ${data.detail}` : ''));
+    }
+    if (!isStorySpec(data.spec)) {
+      throw new Error('生成結果の形式が想定と違います。もう一度試してください');
+    }
+    return { spec: data.spec, note: data.note };
+  }
+
   async function generate() {
     if (!description.trim()) {
       setError('やりたいこと、またはいま困っていることを書いてください');
       return;
     }
-    setLoading(true);
+    setLoadingKind('full');
     setError(null);
     try {
-      const res = await fetch('/api/tools/generate-scenarios', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description }),
-      });
-      const data = (await res.json()) as
-        | { success: true; spec: StorySpec }
-        | { success: false; error: string; detail?: string };
-      if (!data.success) {
-        throw new Error(data.error + (data.detail ? `: ${data.detail}` : ''));
-      }
-      if (!isStorySpec(data.spec)) {
-        throw new Error('生成結果の形式が想定と違います。もう一度試してください');
-      }
+      const data = await requestSpec({ mode: 'full' });
       setSpec(data.spec);
+      setChat([]);
       setStep('asis');
       trackToolEvent('tool_save', { tool: 'story-builder', meta: { source: 'ai-generate' } });
     } catch (err) {
       setError(err instanceof Error ? err.message : '生成に失敗しました');
     } finally {
-      setLoading(false);
+      setLoadingKind(null);
+    }
+  }
+
+  async function regenerateAsIs() {
+    setLoadingKind('asis');
+    setError(null);
+    try {
+      const data = await requestSpec({ mode: 'asis' });
+      setSpec(data.spec);
+      trackToolEvent('tool_save', { tool: 'story-builder', meta: { source: 'ai-asis' } });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '再整理に失敗しました');
+    } finally {
+      setLoadingKind(null);
+    }
+  }
+
+  async function regenerateStory(storyId: string) {
+    setLoadingKind('story');
+    setLoadingStoryId(storyId);
+    setError(null);
+    try {
+      const data = await requestSpec({ mode: 'story', storyId });
+      setSpec(data.spec);
+      trackToolEvent('tool_save', {
+        tool: 'story-builder',
+        meta: { source: 'ai-story', storyId },
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '再整理に失敗しました');
+    } finally {
+      setLoadingKind(null);
+      setLoadingStoryId(null);
+    }
+  }
+
+  async function reviseByChat(instruction: string) {
+    setLoadingKind('revise');
+    setError(null);
+    setChat((prev) => [...prev, { role: 'user', content: instruction }]);
+    try {
+      const data = await requestSpec({ mode: 'revise', instruction });
+      setSpec(data.spec);
+      setChat((prev) => [...prev, { role: 'assistant', content: data.note || '直しました。' }]);
+      trackToolEvent('tool_save', { tool: 'story-builder', meta: { source: 'ai-revise' } });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '会話での修正に失敗しました');
+    } finally {
+      setLoadingKind(null);
     }
   }
 
@@ -310,8 +383,15 @@ export function StoryBuilder() {
               className="w-full rounded-md border border-neutral-300 bg-neutral-50 px-4 py-3 text-sm leading-relaxed text-accent-950 focus:border-primary-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-300"
             />
             <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <ToolButton type="button" variant="primary" onClick={generate} disabled={loading}>
-                {loading ? '整理しています…（1〜2分）' : '現状・ストーリー・RFPに整理する'}
+              <ToolButton
+                type="button"
+                variant="primary"
+                onClick={generate}
+                disabled={loadingKind !== null}
+              >
+                {loadingKind === 'full'
+                  ? '整理しています…（1〜2分）'
+                  : '現状・ストーリー・RFPに整理する'}
               </ToolButton>
               {spec && (
                 <ToolButton type="button" variant="ghost" onClick={() => setStep('asis')}>
@@ -328,22 +408,44 @@ export function StoryBuilder() {
         </Sheet>
       )}
 
-      {loading && (
+      {loadingKind && (
         <div className="mb-5 border border-neutral-200 bg-white px-5 py-4 text-sm text-neutral-700">
-          <p className="font-semibold text-accent-950">整理しています（1〜2分）</p>
+          <p className="font-semibold text-accent-950">
+            {loadingKind === 'full' && '整理しています（1〜2分）'}
+            {loadingKind === 'asis' && '現状と目指す姿だけ直しています'}
+            {loadingKind === 'story' && '指定したストーリーだけ直しています'}
+            {loadingKind === 'revise' && '指示どおり直しています'}
+          </p>
           <p className="mt-1">
-            書いた内容を、現状と目指す姿、ストーリー、Gherkin、RFPの章立てに分けています。
+            {loadingKind === 'full'
+              ? '書いた内容を、現状と目指す姿、ストーリー、Gherkin、RFPの章立てに分けています。'
+              : '指示していない箇所はそのまま残します。'}
           </p>
         </div>
       )}
 
-      {step === 'asis' && spec && <AsIsToBePanel spec={spec} onChange={setSpec} />}
+      {error && step !== 'input' && (
+        <p className="mb-5 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </p>
+      )}
+
+      {step === 'asis' && spec && (
+        <AsIsToBePanel
+          spec={spec}
+          onChange={setSpec}
+          onRegenerate={regenerateAsIs}
+          regenerating={loadingKind === 'asis'}
+        />
+      )}
       {step === 'stories' && spec && (
         <StoriesPanel
           spec={spec}
           onChange={setSpec}
           onDownloadGherkin={downloadGherkin}
           onCopyGherkin={copyGherkin}
+          onRegenerateStory={regenerateStory}
+          regeneratingStoryId={loadingStoryId}
         />
       )}
       {step === 'rfp' && spec && (
@@ -354,6 +456,10 @@ export function StoryBuilder() {
           onSendScope={sendToScopeManager}
           onCopyShare={copyShareUrl}
         />
+      )}
+
+      {spec && step !== 'input' && (
+        <ReviseChat messages={chat} loading={loadingKind === 'revise'} onSubmit={reviseByChat} />
       )}
 
       {spec && step !== 'input' && (

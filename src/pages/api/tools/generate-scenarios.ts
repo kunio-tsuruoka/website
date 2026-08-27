@@ -1,76 +1,35 @@
 import { chatCompletion } from '@/lib/openrouter';
-import { parseStorySpecJson } from '@/lib/story-spec';
+import {
+  type ReviseMode,
+  type ReviseRequest,
+  applyRevision,
+  buildAsIsPrompt,
+  buildFullPrompt,
+  buildRevisePrompt,
+  buildStoryPrompt,
+  isReviseMode,
+  parseRevisionPayload,
+} from '@/lib/story-revise';
+import { isStorySpec } from '@/lib/story-spec';
 import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-type RequestBody = {
-  description?: string;
-};
-
 // recommend-system の UNDERSTAND_MODEL（中村選定）。OpenRouter スラッグは同リポ wrangler.toml の記載どおり
 const DEFAULT_MODEL = 'qwen/qwen3-30b-a3b';
 
-function buildPrompt(description: string): string {
-  return `あなたは要件定義の専門家です。発注側の担当者が書いた「やりたいこと」から、PM on Rails と同じ粒度で要件を整理してください。
-
-# 入力
-${description}
-
-# 整理の順番
-1. 現状（As-Is）と目指す姿（To-Be）を分ける。入力に現状が薄くても、書かれている範囲だけ書く。一般論で埋めない
-2. ユーザーストーリーは「登場人物の目標」単位。システム機能の一覧にしない。3〜6件
-3. 各ストーリーに Gherkin シナリオを付ける。正常系1〜2、異常系1、必要なら境界1
-4. シナリオは Given / When / Then。when は意図した行為を1つ。then は業務上の帰結。現在形・三人称。値の先頭に Given/When/Then は書かない
-   - 良い when: 「営業担当が出張先で領収書を申請する」
-   - 悪い when: 「申請ボタンをタップする」「申請画面を開く」
-5. 非機能・制約・提案依頼は分かる範囲だけ。不明なら空配列
-
-# 出力
-有効な JSON オブジェクト1つだけ。前置き・コードフェンス・説明は出さない。
-
-{
-  "title": "業務名を含むタイトル",
-  "background": "なぜ今これを整理するか（2〜4文。入力に根拠があることだけ）",
-  "asIs": {
-    "summary": "いまどうやっているか（2〜3文）",
-    "actors": ["登場人物"],
-    "tools": ["使っているもの"],
-    "pains": ["困りごと"]
-  },
-  "toBe": {
-    "summary": "実現したい姿（2〜3文）",
-    "outcomes": ["実現したいこと"]
-  },
-  "stories": [
-    {
-      "id": "US-01",
-      "role": "誰が",
-      "want": "何をしたいか",
-      "benefit": "なぜか",
-      "priority": "必須",
-      "scenarios": [
-        {
-          "id": "SC-US-01-N1",
-          "title": "短いタイトル",
-          "type": "normal",
-          "given": "前提（キーワードは値に含めない）",
-          "when": "操作1つ（キーワードは値に含めない）",
-          "then": "結果。複数なら改行で続ける"
-        }
-      ]
-    }
-  ],
-  "nonFunctional": ["分かる範囲の非機能"],
-  "constraints": ["分かる範囲の制約"],
-  "proposalRequests": ["ベンダーに聞いてほしいこと"]
-}
-
-# 禁止
-- EARS 記法、REQ-ID、イベント駆動などの専門ラベル
-- 画面名・ボタン名を normal / error / boundary に書くこと
-- 入力にない数値・固有名詞の捏造
-- 「自分が思う」「重要なポイントは」などの前置き`;
+function promptFor(body: ReviseRequest, mode: ReviseMode): string {
+  const description = body.description?.trim() ?? '';
+  if (mode === 'full') return buildFullPrompt(description);
+  if (!body.spec) throw new Error('いまの整理がありません');
+  if (mode === 'asis') return buildAsIsPrompt(description, body.spec);
+  if (mode === 'story') {
+    if (!body.storyId) throw new Error('対象のストーリーがありません');
+    return buildStoryPrompt(description, body.spec, body.storyId);
+  }
+  const instruction = body.instruction?.trim() ?? '';
+  if (!instruction) throw new Error('直してほしいことを書いてください');
+  return buildRevisePrompt(description, body.spec, instruction);
 }
 
 export const POST: APIRoute = async ({ request, locals }) => {
@@ -90,27 +49,42 @@ export const POST: APIRoute = async ({ request, locals }) => {
       return json(500, { success: false, error: 'OPENROUTER_API_KEY is not configured' });
     }
 
-    const body = (await request.json()) as RequestBody;
+    const body = (await request.json()) as ReviseRequest;
+    const mode: ReviseMode = isReviseMode(body.mode) ? body.mode : 'full';
     const description = body.description?.trim() ?? '';
-    if (!description) {
+
+    if (mode === 'full' && !description) {
       return json(400, { success: false, error: 'やりたいことを文章で書いてください' });
+    }
+    if (mode !== 'full' && (!body.spec || !isStorySpec(body.spec))) {
+      return json(400, { success: false, error: 'いまの整理を渡してください' });
+    }
+    if (mode === 'story' && !body.storyId) {
+      return json(400, { success: false, error: '対象のストーリーを指定してください' });
+    }
+    if (mode === 'revise' && !body.instruction?.trim()) {
+      return json(400, { success: false, error: '直してほしいことを書いてください' });
     }
 
     const result = await chatCompletion(
       apiKey,
       {
         model,
-        max_tokens: 16000,
+        max_tokens: mode === 'asis' ? 8000 : 16000,
         temperature: 0.3,
         response_format: { type: 'json_object' },
         reasoning: { effort: 'low', exclude: true },
-        messages: [{ role: 'user', content: buildPrompt(description) }],
+        messages: [{ role: 'user', content: promptFor(body, mode) }],
       },
       { referer: 'https://beekle.jp', title: 'Beekle Story Spec' }
     );
 
-    const spec = parseStorySpecJson(result.text);
-    return json(200, { success: true, spec });
+    const parsed = parseRevisionPayload(result.text);
+    const spec =
+      mode === 'full' || !body.spec
+        ? parsed.spec
+        : applyRevision(body.spec, parsed.spec, mode, body.storyId);
+    return json(200, { success: true, spec, note: mode === 'full' ? undefined : parsed.note });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     return json(500, { success: false, error: 'Failed to generate', detail: message });

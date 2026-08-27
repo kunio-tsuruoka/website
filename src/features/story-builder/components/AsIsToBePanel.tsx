@@ -1,18 +1,27 @@
 import type { StorySpec } from '@/lib/story-spec';
-import { Eyebrow, FieldLabel, Sheet, SheetBody, fieldClass } from './sheet';
+import { Eyebrow, FieldLabel, Sheet, SheetBody, ToolButton, fieldClass } from './sheet';
 
 export function AsIsToBePanel({
   spec,
   onChange,
+  onRegenerate,
+  regenerating,
 }: {
   spec: StorySpec;
   onChange: (spec: StorySpec) => void;
+  onRegenerate: () => void;
+  regenerating: boolean;
 }) {
   return (
     <div className="overflow-hidden rounded-lg border border-neutral-200">
-      <p className="border-b border-neutral-200 bg-neutral-50 px-5 py-3 text-sm text-neutral-700 md:px-7">
-        生成結果はそのまま渡さず、現場の言葉に直してから次へ進みます。直した内容はストーリーとRFPにそのまま載ります。
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-neutral-200 bg-neutral-50 px-5 py-3 md:px-7">
+        <p className="text-sm text-neutral-700">
+          生成結果はそのまま渡さず、現場の言葉に直してから次へ進みます。直した内容はストーリーとRFPにそのまま載ります。
+        </p>
+        <ToolButton type="button" onClick={onRegenerate} disabled={regenerating}>
+          {regenerating ? '現状だけ直しています…' : '現状と目指す姿だけ再整理する'}
+        </ToolButton>
+      </div>
       <div className="grid gap-0 md:grid-cols-2">
         <Sheet
           accent="neutral"

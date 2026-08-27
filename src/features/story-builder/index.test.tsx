@@ -109,6 +109,71 @@ describe('StoryBuilder', () => {
     expect(screen.getByRole('button', { name: 'スコープ管理に送る' })).toBeInTheDocument();
   });
 
+  test('現状だけ再整理するとストーリーは残る', async () => {
+    localStorage.setItem(
+      'beekle-story-builder-v2',
+      JSON.stringify({ description: '既存メモ', spec })
+    );
+    const fetchMock = vi.fn().mockResolvedValue({
+      json: async () => ({
+        success: true,
+        spec: {
+          ...spec,
+          asIs: { ...spec.asIs, summary: '再整理した現状' },
+        },
+      }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<StoryBuilder />);
+    await waitFor(() => {
+      expect(screen.getByText('いまどうやっているか')).toBeInTheDocument();
+    });
+    fireEvent.click(screen.getByRole('button', { name: '現状と目指す姿だけ再整理する' }));
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('再整理した現状')).toBeInTheDocument();
+    });
+    const body = JSON.parse((fetchMock.mock.calls[0][1] as { body: string }).body) as {
+      mode: string;
+    };
+    expect(body.mode).toBe('asis');
+    fireEvent.click(screen.getByRole('button', { name: 'ストーリーを直す' }));
+    expect(screen.getByText('営業担当が、出張先で領収書を撮影して申請したい')).toBeInTheDocument();
+  });
+
+  test('会話の指示で整理を直す', async () => {
+    localStorage.setItem(
+      'beekle-story-builder-v2',
+      JSON.stringify({ description: '既存メモ', spec })
+    );
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        json: async () => ({
+          success: true,
+          spec: {
+            ...spec,
+            stories: [{ ...spec.stories[0], priority: '任意' }],
+          },
+          note: '上長の承認を任意にした。',
+        }),
+      })
+    );
+
+    render(<StoryBuilder />);
+    await waitFor(() => {
+      expect(screen.getByText('会話で直す')).toBeInTheDocument();
+    });
+    fireEvent.change(screen.getByPlaceholderText('例：上長の承認は必須じゃない。後回しでいい。'), {
+      target: { value: '上長の承認は後回しでいい' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'この指示で直す' }));
+    await waitFor(() => {
+      expect(screen.getByText('上長の承認を任意にした。')).toBeInTheDocument();
+    });
+    expect(screen.getByText('上長の承認は後回しでいい')).toBeInTheDocument();
+  });
+
   test('保存済みの仕様があれば現状タブから開く', async () => {
     localStorage.setItem(
       'beekle-story-builder-v2',
