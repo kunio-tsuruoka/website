@@ -31,13 +31,17 @@ type ToolResult = {
 
 const SERVER_INFO = {
   name: 'beekle-cms-marketing-mcp',
-  version: '0.3.1',
+  version: '0.3.2',
 };
 
 const DEFAULT_SCOPE = 'microcms:read microcms:write marketing:read';
 const AUTH_CODE_TTL_SECONDS = 10 * 60;
-const ACCESS_TOKEN_TTL_SECONDS = 8 * 60 * 60;
+/** ChatGPTが再認可なしで使い続けられるよう、アクセストークンは90日 */
+export const ACCESS_TOKEN_TTL_SECONDS = 90 * 24 * 60 * 60;
+/** リフレッシュでさらに延長する。1年以内に1回でも使えば継続できる */
+export const REFRESH_TOKEN_TTL_SECONDS = 365 * 24 * 60 * 60;
 const CLIENT_TTL_SECONDS = 365 * 24 * 60 * 60;
+const SUPPORTED_GRANT_TYPES = ['authorization_code', 'refresh_token'] as const;
 const DEFAULT_ALLOWED_ENDPOINTS = ['blogs', 'columns', 'categories', 'qas', 'qa-categories'];
 
 const JSON_HEADERS = {
@@ -73,6 +77,18 @@ type AccessTokenPayload = {
   sub: string;
   aud: string;
   scope: string;
+  jti: string;
+  iat: number;
+  exp: number;
+};
+
+type RefreshTokenPayload = {
+  type: 'refresh_token';
+  sub: string;
+  aud: string;
+  scope: string;
+  client_id: string;
+  jti: string;
   iat: number;
   exp: number;
 };
@@ -534,7 +550,7 @@ function authorizationServerMetadata(request: Request) {
     token_endpoint: `${origin}/token`,
     registration_endpoint: `${origin}/register`,
     response_types_supported: ['code'],
-    grant_types_supported: ['authorization_code'],
+    grant_types_supported: [...SUPPORTED_GRANT_TYPES],
     token_endpoint_auth_methods_supported: ['none'],
     code_challenge_methods_supported: ['S256'],
     scopes_supported: DEFAULT_SCOPE.split(' '),
@@ -574,7 +590,7 @@ async function handleClientRegistration(request: Request, env: Env) {
       client_id_issued_at: now,
       client_secret_expires_at: 0,
       redirect_uris: redirectUris,
-      grant_types: ['authorization_code'],
+      grant_types: [...SUPPORTED_GRANT_TYPES],
       response_types: ['code'],
       token_endpoint_auth_method: 'none',
       scope: DEFAULT_SCOPE,
@@ -707,10 +723,20 @@ async function handleToken(request: Request, env: Env) {
   }
 
   const params = await readFormParams(request);
-  if ((params.get('grant_type') || '') !== 'authorization_code') {
-    return oauthError('unsupported_grant_type');
+  const grantType = params.get('grant_type') || '';
+
+  if (grantType === 'authorization_code') {
+    return handleAuthorizationCodeGrant(params, request, env);
   }
 
+  if (grantType === 'refresh_token') {
+    return handleRefreshTokenGrant(params, request, env);
+  }
+
+  return oauthError('unsupported_grant_type');
+}
+
+async function handleAuthorizationCodeGrant(params: URLSearchParams, request: Request, env: Env) {
   const code = params.get('code') || '';
   const codeVerifier = params.get('code_verifier') || '';
   const clientId = params.get('client_id') || '';
@@ -746,24 +772,86 @@ async function handleToken(request: Request, env: Env) {
     return oauthError('invalid_grant');
   }
 
+  return issueTokenSet({
+    clientId,
+    resource: payload.resource,
+    scope: payload.scope,
+    env,
+  });
+}
+
+async function handleRefreshTokenGrant(params: URLSearchParams, request: Request, env: Env) {
+  const refreshToken = params.get('refresh_token') || '';
+  const clientId = params.get('client_id') || '';
+
+  if (!refreshToken) {
+    return oauthError('invalid_request');
+  }
+
+  const payload = await verifySignedPayload<RefreshTokenPayload>(refreshToken, env).catch(
+    () => null
+  );
+  if (!payload || payload.type !== 'refresh_token' || isExpired(payload.exp)) {
+    return oauthError('invalid_grant');
+  }
+
+  if (clientId && clientId !== payload.client_id) {
+    return oauthError('invalid_client');
+  }
+
+  const requestedResource = params.get('resource') || payload.aud;
+  if (requestedResource !== payload.aud || !isAllowedResource(payload.aud, request)) {
+    return oauthError('invalid_target');
+  }
+
+  return issueTokenSet({
+    clientId: payload.client_id,
+    resource: payload.aud,
+    scope: payload.scope,
+    env,
+  });
+}
+
+async function issueTokenSet(input: {
+  clientId: string;
+  resource: string;
+  scope: string;
+  env: Env;
+}) {
   const now = unixSeconds();
   const accessToken = await signPayload(
     {
       type: 'access_token',
       sub: 'microcms-admin',
-      aud: payload.resource,
-      scope: payload.scope,
+      aud: input.resource,
+      scope: input.scope,
+      jti: crypto.randomUUID(),
       iat: now,
       exp: now + ACCESS_TOKEN_TTL_SECONDS,
     } satisfies AccessTokenPayload,
-    env
+    input.env
+  );
+  const refreshToken = await signPayload(
+    {
+      type: 'refresh_token',
+      sub: 'microcms-admin',
+      aud: input.resource,
+      scope: input.scope,
+      client_id: input.clientId,
+      jti: crypto.randomUUID(),
+      iat: now,
+      exp: now + REFRESH_TOKEN_TTL_SECONDS,
+    } satisfies RefreshTokenPayload,
+    input.env
   );
 
   return jsonResponse({
     access_token: accessToken,
     token_type: 'Bearer',
     expires_in: ACCESS_TOKEN_TTL_SECONDS,
-    scope: payload.scope,
+    refresh_token: refreshToken,
+    refresh_token_expires_in: REFRESH_TOKEN_TTL_SECONDS,
+    scope: input.scope,
   });
 }
 
