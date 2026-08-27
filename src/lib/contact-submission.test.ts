@@ -1,9 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  claimCrmInquirySync,
-  createContactSubmissionId,
-  crmSyncKvKey,
-} from './contact-submission';
+import { claimCrmInquirySync, createContactSubmissionId, crmSyncKvKey } from './contact-submission';
 
 function createMemoryKV() {
   const store = new Map<string, string>();
