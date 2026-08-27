@@ -37,7 +37,7 @@ import Layout from '../../layouts/layout.astro';
         },
         {
           name: 'ユーザーストーリー作成ツール',
-          description: 'やりたいことを書くだけで、ユーザーストーリーと要件のたたき台を自動生成。',
+          description: '現状と目指す姿を分け、ユーザーストーリー・シナリオ・RFPの下書きまで整理。',
           url: 'https://beekle.jp/tools/story-builder',
         },
         {
@@ -77,7 +77,7 @@ import Layout from '../../layouts/layout.astro';
               <strong>業務の見える化</strong> — 現状（As-Is）の業務フローを書き出して、どこに時間とコストがかかっているか把握する
             </li>
             <li>
-              <strong>やりたいことの言語化</strong> — 頭の中の「こうしたい」を、要件のたたき台にする（たたき台があれば社内議論が進む）
+              <strong>やりたいことの言語化</strong> — 現状と目指す姿を分け、誰が何をしたいかと、うまくいく／いかない場合を書く
             </li>
             <li>
               <strong>作る／作らないの判定</strong> — 全部作ると予算がパンクするので、ビジネス価値・現場で使えるか・コストで取捨選択する
@@ -134,13 +134,13 @@ import Layout from '../../layouts/layout.astro';
                   </h3>
                 </div>
                 <p class="text-sm text-gray-700 leading-relaxed mb-3">
-                  頭の中にある「こうしたい」を文章で書くだけで、AIが要件のたたき台（誰が／何を／なぜ）と、見落としやすい失敗パターンまで自動生成。開発会社との打ち合わせ前の抜け漏れチェックに使えます。
+                  いまのやり方と、こうしたいを書くと、現状（As-Is）と目指す姿（To-Be）、ユーザーストーリー、Gherkinシナリオ、RFPの下書きまで同じ流れで出ます。
                 </p>
                 <ul class="text-xs text-gray-600 space-y-1">
-                  <li>・ 普段の言葉で書けばOK、フォーマット不要</li>
-                  <li>・ 世界標準の要件記法（EARS）で整理</li>
-                  <li>・ 通信エラー・入力ミス・権限不足など失敗パターンも提案</li>
-                  <li>・ Markdown で出力、Slack や議事録にそのまま貼れる</li>
+                  <li>・ 要望の羅列ではなく、現状と目指す姿を先に分ける</li>
+                  <li>・ 「誰が／何を／なぜ」のストーリーにシナリオを付ける</li>
+                  <li>・ うまくいかない場合も、先に言語化する</li>
+                  <li>・ 同じ内容をRFPの章立てで書き出せる</li>
                 </ul>
               </div>
               <div class="hidden md:block flex-shrink-0 text-primary-500 self-center">
@@ -196,7 +196,7 @@ import Layout from '../../layouts/layout.astro';
                   </h3>
                 </div>
                 <p class="text-sm text-gray-700 leading-relaxed mb-3">
-                  Step 1〜3 で作ったデータと、ここで入力するプロジェクト基本情報（名称・予算・希望時期等）を統合して、開発会社に渡せる RFP（提案依頼書）の Markdown ドラフトを自動生成します。
+                  Step 1〜3 で作ったデータと、プロジェクト基本情報（名称・予算・希望時期等）を統合して、開発会社に渡せる RFP を一枚にします。ストーリー作成ツールの下書きを、予算と連絡先まで足して完成させます。
                 </p>
                 <ul class="text-xs text-gray-600 space-y-1">
                   <li>・ 章立て: 概要／背景／現状／改善後／要件と優先度／提案依頼／連絡先</li>

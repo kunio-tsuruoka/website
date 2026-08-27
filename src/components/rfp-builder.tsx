@@ -192,8 +192,8 @@ export function RfpBuilder() {
       <section className="rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
         <h2 className="text-xl font-bold text-gray-900 mb-1">2. RFPドラフトを生成</h2>
         <p className="text-sm text-gray-600 mb-4">
-          このボタンを押すと、業務フロー可視化ツール（現状／改善後）と
-          スコープ管理ツール（要件と優先度）の保存内容を統合し、RFP（提案依頼書）の章立てに整えます。
+          このボタンを押すと、業務フロー可視化（現状／改善後）、ユーザーストーリーとシナリオ、
+          スコープ管理（作る／後回し／作らない）の保存内容を統合し、RFPの章立てに整えます。
           各ツールを先に使っておくと内容が自動で埋まります。
         </p>
         <div className="flex flex-wrap gap-2">

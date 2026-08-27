@@ -30,7 +30,7 @@ const GOALS: Array<{
     recommendedHref: '/tools/story-builder',
     recommendedLabel: 'ユーザーストーリー作成ツールから始める',
     reason:
-      'まず「やりたいこと」を言葉にして、ユースケースとシナリオに落とすのが先。フロー整理は後でも追いつきます。',
+      'まず現状と目指す姿を分け、ユーザーストーリーとシナリオに落とすのが先。フローの図は後でも追いつきます。',
   },
   {
     id: 'requirements',

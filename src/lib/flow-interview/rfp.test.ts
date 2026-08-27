@@ -12,8 +12,23 @@ const rfp: FlowRfp = {
       want: '請求書を自動生成したい',
       benefit: '手作業を減らせる',
       acceptance: ['売上データから自動生成される', '誤りがない'],
+      scenarios: [
+        {
+          title: '売上が確定すると請求書ができる',
+          type: 'normal',
+          given: '当月の売上が確定している',
+          when: '経理担当が請求書を作成する',
+          outcome: '売上データから請求書が作られる',
+        },
+      ],
     },
-    { role: '営業', want: '売上を一度だけ入力したい', benefit: '二重入力をなくす', acceptance: [] },
+    {
+      role: '営業',
+      want: '売上を一度だけ入力したい',
+      benefit: '二重入力をなくす',
+      acceptance: [],
+      scenarios: [],
+    },
   ],
   nonFunctional: ['可用性を確保する'],
   constraints: [],
@@ -55,6 +70,14 @@ describe('formatRfpMarkdown', () => {
   test('受け入れ条件が空なら受け入れ条件行を出さない', () => {
     const us02 = md.slice(md.indexOf('### US-02'));
     expect(us02).not.toContain('受け入れ条件');
+  });
+
+  test('シナリオを Gherkin で出す', () => {
+    expect(md).toContain('#### 正常系: 売上が確定すると請求書ができる');
+    expect(md).toContain('```gherkin');
+    expect(md).toContain('Given 当月の売上が確定している');
+    expect(md).toContain('When 経理担当が請求書を作成する');
+    expect(md).toContain('Then 売上データから請求書が作られる');
   });
 
   test('空セクションは「要相談」を出す', () => {

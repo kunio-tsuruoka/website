@@ -53,7 +53,7 @@ async function generateDescription(title, content) {
       Authorization: `Bearer ${OPENROUTER_API_KEY}`,
     },
     body: JSON.stringify({
-      model: process.env.OPENROUTER_MODEL_TOOLS ?? 'deepseek/deepseek-v4-flash',
+      model: process.env.OPENROUTER_MODEL_TOOLS ?? 'qwen/qwen3-30b-a3b',
       max_tokens: 256,
       messages: [
         {

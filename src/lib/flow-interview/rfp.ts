@@ -1,6 +1,7 @@
 import type { FlowDiagram } from '@/features/flow-mapper/types';
 import { OpenRouterError, chatCompletionWithBudget } from '@/lib/openrouter';
 import { classifyUpstreamError, notifyOpsAlert } from '@/lib/ops-alert';
+import { formatGherkin, liftScenarioOutcome } from '@/lib/story-spec';
 import { z } from 'zod';
 import { formatDuration } from './format';
 import type { FlowSuggestion } from './suggest';
@@ -10,11 +11,20 @@ type KVNamespaceLike = {
   put(key: string, value: string, opts?: { expirationTtl?: number }): Promise<void>;
 };
 
+const ScenarioSchema = z.object({
+  title: z.string(),
+  type: z.enum(['normal', 'error', 'boundary']).default('normal'),
+  given: z.string().default(''),
+  when: z.string().default(''),
+  outcome: z.string().default(''),
+});
+
 const UserStorySchema = z.object({
   role: z.string(), // 誰が（As a）
   want: z.string(), // 何をしたい（I want）
   benefit: z.string(), // なぜ（So that）
   acceptance: z.array(z.string()).default([]), // 受け入れ条件
+  scenarios: z.array(ScenarioSchema).default([]),
 });
 
 const RfpSchema = z.object({
@@ -44,6 +54,8 @@ const SYSTEM_PROMPT = `あなたはBeekle株式会社の発注支援AIです。
 【方針】
 - 発注者（非エンジニア）がそのままベンダーに渡せる、平易で具体的な日本語
 - ユーザーストーリーは「誰が(role)／何をしたい(want)／なぜ(benefit)」の3点 + 受け入れ条件(acceptance)
+- 各ストーリーにシナリオを付ける。正常系1、異常系1を基本。必要なら境界1。画面名・ボタン名は書かない
+- シナリオは Gherkin。given / when / outcome。現在形。値の先頭に Given/When/Then は書かない
 - 現状フローと改善案に出てきた作業・困りごとに紐づける。一般論や誇張を避ける
 - ユーザーストーリーは3〜7件に絞る。優先度の高い順
 - 非機能要件・制約・提案依頼事項は、分かる範囲で簡潔に。不明な点は「要相談」と書く
@@ -57,7 +69,15 @@ const SYSTEM_PROMPT = `あなたはBeekle株式会社の発注支援AIです。
   "asIsSummary": "現状業務の要約（2〜3文）",
   "toBeSummary": "目指す姿の要約（2〜3文）",
   "userStories": [
-    { "role": "誰が", "want": "何をしたい", "benefit": "なぜ", "acceptance": ["受け入れ条件1", "条件2"] }
+    {
+      "role": "誰が",
+      "want": "何をしたい",
+      "benefit": "なぜ",
+      "acceptance": ["受け入れ条件1"],
+      "scenarios": [
+        { "title": "短いタイトル", "type": "normal", "given": "前提", "when": "操作1つ", "outcome": "結果" }
+      ]
+    }
   ],
   "nonFunctional": ["非機能要件（性能/セキュリティ/可用性 等、分かる範囲で）"],
   "constraints": ["制約・前提（既存システム/予算感/時期 等、不明なら要相談）"],
@@ -135,7 +155,7 @@ export async function runRfp(
         env.OPENROUTER_API_KEY,
         {
           model,
-          max_tokens: 2000,
+          max_tokens: 3500,
           temperature: 0.3,
           messages: finalMessages,
           response_format: { type: 'json_object' },
@@ -174,8 +194,20 @@ export async function runRfp(
 
 function validate(raw: string): FlowRfp | null {
   const parsed = tryParseJson(raw);
-  if (!parsed) return null;
-  const result = RfpSchema.safeParse(parsed);
+  if (!parsed || typeof parsed !== 'object') return null;
+  const rec = parsed as Record<string, unknown>;
+  const lifted = Array.isArray(rec.userStories)
+    ? {
+        ...rec,
+        userStories: rec.userStories.map((story) => {
+          if (!story || typeof story !== 'object') return story;
+          const next = story as Record<string, unknown>;
+          if (!Array.isArray(next.scenarios)) return story;
+          return { ...next, scenarios: next.scenarios.map(liftScenarioOutcome) };
+        }),
+      }
+    : parsed;
+  const result = RfpSchema.safeParse(lifted);
   return result.success ? result.data : null;
 }
 
@@ -231,7 +263,21 @@ export function formatRfpMarkdown(rfp: FlowRfp, diagram?: FlowDiagram): string {
       lines.push('- **受け入れ条件**:');
       for (const a of s.acceptance) lines.push(`  - ${a}`);
     }
-    lines.push('');
+    if (s.scenarios.length > 0) {
+      lines.push('');
+      for (const sc of s.scenarios) {
+        const typeLabel =
+          sc.type === 'error' ? '異常系' : sc.type === 'boundary' ? '境界' : '正常系';
+        lines.push(`#### ${typeLabel}: ${sc.title}`);
+        lines.push('');
+        lines.push('```gherkin');
+        for (const line of formatGherkin(sc)) lines.push(line);
+        lines.push('```');
+        lines.push('');
+      }
+    } else {
+      lines.push('');
+    }
   });
 
   const section = (title: string, items: string[]) => {
