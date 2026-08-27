@@ -78,23 +78,33 @@ describe('StoryBuilder', () => {
     await waitFor(() => {
       expect(screen.getByText('いまどうやっているか')).toBeInTheDocument();
     });
-    expect(screen.getByText('出張後に紙の領収書をまとめて申請している。')).toBeInTheDocument();
-    expect(screen.getByText('出張先からその場で申請できる。')).toBeInTheDocument();
+    expect(
+      screen.getByDisplayValue('出張後に紙の領収書をまとめて申請している。')
+    ).toBeInTheDocument();
+    expect(screen.getByDisplayValue('出張先からその場で申請できる。')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: 'ストーリーを見る' }));
+    fireEvent.change(screen.getByDisplayValue('出張後に紙の領収書をまとめて申請している。'), {
+      target: { value: '月末に紙の領収書をまとめて申請している。' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'ストーリーを直す' }));
     expect(screen.getByText('営業担当が、出張先で領収書を撮影して申請したい')).toBeInTheDocument();
-    expect(screen.getAllByText('撮影した領収書で申請する').length).toBeGreaterThan(0);
+    expect(screen.getByDisplayValue('撮影した領収書で申請する')).toBeInTheDocument();
     expect(screen.getAllByText('Given').length).toBeGreaterThan(0);
     expect(screen.getAllByText('When').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Then').length).toBeGreaterThan(0);
-    expect(screen.getByText('上長に承認依頼が届く')).toBeInTheDocument();
-    expect(screen.getAllByText('通信できないときに下書きが残る').length).toBeGreaterThan(0);
+    expect(screen.getByDisplayValue('上長に承認依頼が届く')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('通信できないときに下書きが残る')).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: 'Gherkin（.feature）をダウンロード' })
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: 'RFPを見る' }));
-    expect(screen.getByText('経費精算システムの要件整理')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'シナリオを足す' }));
+    expect(screen.getAllByRole('button', { name: 'このシナリオを消す' }).length).toBe(3);
+
+    fireEvent.click(screen.getByRole('button', { name: 'RFPに進む' }));
+    expect(screen.getByRole('heading', { name: '経費精算システムの要件整理' })).toBeInTheDocument();
+    expect(screen.getByText(/月末に紙の領収書をまとめて申請している。/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'RFPをダウンロード' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'スコープ管理に送る' })).toBeInTheDocument();
   });

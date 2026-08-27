@@ -328,9 +328,23 @@ export function StoryBuilder() {
         </Sheet>
       )}
 
-      {step === 'asis' && spec && <AsIsToBePanel spec={spec} />}
+      {loading && (
+        <div className="mb-5 border border-neutral-200 bg-white px-5 py-4 text-sm text-neutral-700">
+          <p className="font-semibold text-accent-950">整理しています（1〜2分）</p>
+          <p className="mt-1">
+            書いた内容を、現状と目指す姿、ストーリー、Gherkin、RFPの章立てに分けています。
+          </p>
+        </div>
+      )}
+
+      {step === 'asis' && spec && <AsIsToBePanel spec={spec} onChange={setSpec} />}
       {step === 'stories' && spec && (
-        <StoriesPanel spec={spec} onDownloadGherkin={downloadGherkin} onCopyGherkin={copyGherkin} />
+        <StoriesPanel
+          spec={spec}
+          onChange={setSpec}
+          onDownloadGherkin={downloadGherkin}
+          onCopyGherkin={copyGherkin}
+        />
       )}
       {step === 'rfp' && spec && (
         <RfpPanel
@@ -351,12 +365,12 @@ export function StoryBuilder() {
           )}
           {step !== 'stories' && (
             <ToolButton type="button" onClick={() => setStep('stories')}>
-              ストーリーを見る
+              ストーリーを直す
             </ToolButton>
           )}
           {step !== 'rfp' && (
             <ToolButton type="button" variant="primary" onClick={() => setStep('rfp')}>
-              RFPを見る
+              RFPに進む
             </ToolButton>
           )}
         </div>

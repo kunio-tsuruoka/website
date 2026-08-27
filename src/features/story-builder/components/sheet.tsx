@@ -50,3 +50,10 @@ export function ToolButton({
     </Button>
   );
 }
+
+export const fieldClass =
+  'w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm leading-relaxed text-accent-950 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-300';
+
+export function FieldLabel({ children }: { children: ReactNode }) {
+  return <p className="mb-1.5 text-xs font-semibold tracking-wide text-neutral-500">{children}</p>;
+}

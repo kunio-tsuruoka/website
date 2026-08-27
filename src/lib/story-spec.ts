@@ -402,3 +402,38 @@ export function storyCountSummary(spec: StorySpec): { stories: number; scenarios
     scenarios: spec.stories.reduce((sum, story) => sum + story.scenarios.length, 0),
   };
 }
+
+export function linesToList(text: string): string[] {
+  return text
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+export function createBlankStory(existingCount: number): UserStory {
+  const id = `US-${pad(existingCount + 1)}`;
+  return {
+    id,
+    role: '',
+    want: '',
+    benefit: '',
+    priority: '必須',
+    scenarios: [createBlankScenario(id, [], 'normal')],
+  };
+}
+
+export function createBlankScenario(
+  storyId: string,
+  existing: StoryScenario[],
+  type: ScenarioType = 'normal'
+): StoryScenario {
+  const count = existing.filter((item) => item.type === type).length + 1;
+  return {
+    id: `SC-${storyId}-${TYPE_PREFIX[type]}${count}`,
+    title: '',
+    type,
+    given: '',
+    when: '',
+    outcome: '',
+  };
+}
