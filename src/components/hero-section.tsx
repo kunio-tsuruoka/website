@@ -2,25 +2,41 @@ import { ArrowRight } from 'lucide-react';
 
 export const HeroSection = () => (
   <section className="relative overflow-hidden border-b border-neutral-300 bg-neutral-100 pt-20 text-accent-950">
-    <div className="absolute inset-x-0 top-20 h-px bg-neutral-300" />
+    <img
+      src="/images/home-hero-background.webp"
+      alt=""
+      width={1672}
+      height={941}
+      fetchPriority="high"
+      decoding="async"
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 h-full w-full object-cover object-left md:object-center"
+    />
+    <div className="home-hero-veil pointer-events-none absolute inset-0" aria-hidden="true" />
 
-    <div className="container relative mx-auto flex min-h-[420px] items-center px-8 py-14 lg:min-h-[480px] lg:px-12">
-      <div className="max-w-5xl">
-        <h1 className="text-5xl font-bold leading-[1.05] text-accent-950 sm:text-6xl md:text-7xl xl:text-8xl">
+    <div className="container relative mx-auto flex min-h-[420px] items-center px-8 py-14 lg:min-h-[560px] lg:px-12">
+      <div className="w-full max-w-[20rem] xl:max-w-[26rem]">
+        <h1 className="text-4xl font-bold leading-[1.35] text-accent-950 sm:text-5xl xl:text-6xl">
           爆速開発。
           <br />
-          <span className="text-primary-500">だから、開発費を抑えられる。</span>
+          <span className="text-primary-500">だから、</span>
+          <br />
+          <span className="text-primary-500">開発費を</span>
+          <br />
+          <span className="text-primary-500">抑えられる。</span>
         </h1>
 
-        <p className="mt-7 max-w-3xl text-lg font-semibold leading-relaxed text-neutral-700 md:text-xl">
-          AI前提で開発工数を圧縮。1日でデモ、1週間で触れる形に。
+        <p className="mt-6 text-base font-semibold leading-relaxed text-neutral-700 md:text-lg">
+          AI前提で開発工数を圧縮。
+          <br />
+          1日でデモ、1週間で触れる形に。
         </p>
 
         <a
           href="/contact?source=home-hero"
           data-cta-source="home-hero"
           data-cta-id="contact"
-          className="page-cta group mt-8 inline-flex items-center justify-center rounded-md bg-primary-500 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-primary-600"
+          className="page-cta group mt-8 inline-flex min-h-[52px] items-center justify-center rounded-md bg-primary-500 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-primary-600"
         >
           相談する
           <span className="transition-transform duration-200 group-hover:translate-x-1">
