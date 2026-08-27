@@ -55,4 +55,25 @@ describe('service page copy', () => {
     expect(config.heroLead).toContain('現場の仕事');
     expect(config.heroLead).toContain('削減時間');
   });
+
+  it('centers requirements definition support on PM on Rails instead of free tools', () => {
+    const service = services.find((item) => item.id === 'requirements-definition-support');
+    const config = aiServicePageConfig['requirements-definition-support'];
+    const pageCopy = JSON.stringify({ service, config });
+
+    expect(service).toBeDefined();
+    expect(pageCopy).not.toContain('無料ツール');
+    expect(pageCopy).not.toContain('/tools/flow-mapper');
+    expect(pageCopy).not.toContain('/tools/story-builder');
+    expect(pageCopy).not.toContain('/tools/scope-manager');
+    expect(pageCopy).not.toContain('/tools/rfp-builder');
+    expect(service?.seoDescription).toContain('PM on Rails');
+    expect(service?.solutions.some((item) => item.title.includes('PM on Rails'))).toBe(true);
+    expect(service?.faq.some((item) => item.question.includes('PM on Rails'))).toBe(true);
+    expect(config.headline).toContain('PM on Rails');
+    expect(config.rtb.title).toContain('PM on Rails');
+    expect(config.rtb.items.length).toBeGreaterThanOrEqual(4);
+    expect(config.rtb.note?.title).toContain('PM on Rails');
+    expect(config.flow.title).toContain('実装につながる仕様');
+  });
 });

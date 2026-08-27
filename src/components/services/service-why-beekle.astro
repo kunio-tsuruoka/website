@@ -9,7 +9,7 @@ interface Props {
     title: string;
     lead?: string;
     items: readonly RtbItem[];
-    note?: { title: string; description: string };
+    note?: { title: string; description: string; href?: string; hrefLabel?: string };
   };
   number?: string;
 }
@@ -47,6 +47,16 @@ const { rtb, number = '04' } = Astro.props;
             <p class="mt-3 text-sm leading-relaxed text-neutral-700 md:text-base">
               {rtb.note.description}
             </p>
+            {rtb.note.href && (
+              <a
+                href={rtb.note.href}
+                rel="noopener"
+                class="mt-4 inline-flex min-h-[44px] items-center text-sm font-bold text-primary-600 hover:text-primary-700"
+              >
+                {rtb.note.hrefLabel ?? rtb.note.href}
+                <span aria-hidden="true" class="ml-1">→</span>
+              </a>
+            )}
           </div>
         )}
       </div>
