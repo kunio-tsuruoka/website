@@ -10,17 +10,19 @@ export const HeroSection = () => (
       fetchPriority="high"
       decoding="async"
       aria-hidden="true"
-      className="pointer-events-none absolute inset-y-0 right-0 h-full w-full object-cover object-right opacity-20 md:w-[54%] md:opacity-90 xl:w-[52%]"
+      className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-[54%] object-cover object-[42%_center] md:block xl:w-[52%]"
     />
 
     <div className="container relative mx-auto flex min-h-[420px] items-center px-8 py-14 lg:min-h-[480px] lg:px-12">
       <div className="w-full max-w-[16.5rem] sm:max-w-[18rem] md:max-w-[20rem] xl:max-w-[22rem]">
-        <h1 className="text-4xl font-bold leading-[1.3] text-accent-950 sm:text-5xl xl:text-6xl">
+        <h1 className="text-4xl font-bold leading-[1.4] text-accent-950 sm:text-5xl">
           爆速開発。
           <br />
           <span className="text-primary-500">だから、</span>
           <br />
-          <span className="text-primary-500">開発費を抑えられる。</span>
+          <span className="text-primary-500">開発費を</span>
+          <br />
+          <span className="text-primary-500">抑えられる。</span>
         </h1>
 
         <p className="mt-6 text-base font-semibold leading-relaxed text-neutral-700 md:text-lg">
