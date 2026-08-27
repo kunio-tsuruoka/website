@@ -403,13 +403,6 @@ export function storyCountSummary(spec: StorySpec): { stories: number; scenarios
   };
 }
 
-export function linesToList(text: string): string[] {
-  return text
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
-}
-
 export function createBlankStory(existingCount: number): UserStory {
   const id = `US-${pad(existingCount + 1)}`;
   return {
