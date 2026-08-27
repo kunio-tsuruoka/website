@@ -5,6 +5,7 @@ import {
   buildRfpHtml,
   buildRfpMarkdown,
   buildRfpPlainText,
+  hasRfpSourceData,
 } from '@/lib/build-rfp-draft';
 import { markToolSaved } from '@/lib/tool-storage';
 import { useEffect, useState } from 'react';
@@ -26,6 +27,7 @@ function downloadFile(filename: string, content: string, mimeType: string) {
 export function RfpBuilder() {
   const [inputs, setInputs] = useState<RfpInputs>(EMPTY_INPUTS);
   const [preview, setPreview] = useState<string>('');
+  const [sources, setSources] = useState({ story: false, flow: false, scope: false });
 
   useEffect(() => {
     try {
@@ -37,6 +39,7 @@ export function RfpBuilder() {
     } catch {
       /* ignore */
     }
+    setSources(hasRfpSourceData());
     trackToolEvent('tool_start', { tool: 'flow-mapper', meta: { variant: 'rfp-builder' } });
   }, []);
 
@@ -95,8 +98,25 @@ export function RfpBuilder() {
   const inputCls =
     'w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-300';
 
+  const hasSource = sources.story || sources.flow || sources.scope;
+
   return (
     <div className="space-y-6">
+      {!hasSource && (
+        <section className="rounded-lg border border-neutral-200 bg-white p-5 md:p-6">
+          <p className="text-sm font-semibold text-accent-950">先に中身を書いてから開く</p>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-700">
+            このページは、予算と連絡先を足して一枚にする場所です。誰が何をしたいかがないと、章立てだけが残ります。
+          </p>
+          <a
+            href="/tools/story-builder"
+            className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-lg bg-primary-500 px-5 py-3 text-sm font-semibold text-white hover:bg-primary-600"
+          >
+            ユーザーストーリー作成ツールから始める
+          </a>
+        </section>
+      )}
+
       <section className="rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
         <h2 className="text-xl font-bold text-gray-900 mb-1">1. プロジェクトの基本情報を入力</h2>
         <p className="text-sm text-gray-600 mb-4">
@@ -253,16 +273,30 @@ export function RfpBuilder() {
         )}
       </section>
 
-      <section className="rounded-lg border border-blue-200 bg-blue-50 p-5 text-sm leading-relaxed text-blue-900">
-        <strong>ヒント</strong>: 業務フローやスコープがまだ埋まっていない場合は、
-        <a href="/tools/flow-mapper" className="underline mx-1">
-          業務フロー可視化ツール
+      <section className="rounded-lg border border-neutral-200 bg-neutral-50 p-5 text-sm leading-relaxed text-neutral-700">
+        <strong className="text-accent-950">順番</strong>
+        ：中身は
+        <a
+          href="/tools/story-builder"
+          className="mx-1 font-semibold text-primary-600 hover:underline"
+        >
+          ユーザーストーリー作成ツール
         </a>
-        や
-        <a href="/tools/scope-manager" className="underline mx-1">
+        で書き、優先度は
+        <a
+          href="/tools/scope-manager"
+          className="mx-1 font-semibold text-primary-600 hover:underline"
+        >
           スコープ管理ツール
         </a>
-        で先にデータを作ってから戻ってくると、より具体的な RFP ができ上がります。
+        で切ってから戻ると、章が埋まります。業務の図が先なら
+        <a
+          href="/tools/flow-mapper"
+          className="mx-1 font-semibold text-primary-600 hover:underline"
+        >
+          業務フロー可視化ツール
+        </a>
+        から入ってよい。
       </section>
     </div>
   );

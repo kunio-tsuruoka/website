@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 type Goal = 'dx' | 'new-app' | 'requirements' | 'rfp';
 
-const GOALS: Array<{
+export const TOOL_WIZARD_GOALS: Array<{
   id: Goal;
   emoji: string;
   title: string;
@@ -46,15 +46,16 @@ const GOALS: Array<{
     emoji: '📑',
     title: 'すぐにRFP（提案依頼書）を書きたい',
     description: '開発会社に渡す資料を、章立てに沿って手早く形にしたい',
-    recommendedHref: '/tools/rfp-builder',
-    recommendedLabel: 'RFPドラフト自動生成から始める',
-    reason: '基本情報だけ入れても章立てされたRFPテンプレが作れます。後から各ツールを足してOK。',
+    recommendedHref: '/tools/story-builder',
+    recommendedLabel: 'ユーザーストーリー作成ツールから始める',
+    reason:
+      '渡す文書の中身は、誰が何をしたいかと、うまくいく／いかない場合。章立てだけ先に作ると空になる。予算と連絡先は、あとから足せる。',
   },
 ];
 
 export function ToolWizard() {
   const [selected, setSelected] = useState<Goal | null>(null);
-  const goal = GOALS.find((g) => g.id === selected);
+  const goal = TOOL_WIZARD_GOALS.find((g) => g.id === selected);
 
   return (
     <section className="rounded-lg border border-primary-200 bg-white p-6 md:p-8">
@@ -65,7 +66,7 @@ export function ToolWizard() {
         いま一番困っていることに近いものを選んでください。最適なツールをご案内します。
       </p>
       <div className="grid sm:grid-cols-2 gap-3">
-        {GOALS.map((g) => (
+        {TOOL_WIZARD_GOALS.map((g) => (
           <button
             key={g.id}
             type="button"
