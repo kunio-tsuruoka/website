@@ -8,7 +8,8 @@ type RequestBody = {
   description?: string;
 };
 
-const DEFAULT_MODEL = 'deepseek/deepseek-v4-flash';
+// recommend-system の UNDERSTAND_MODEL（中村選定）。OpenRouter スラッグは同リポ wrangler.toml の記載どおり
+const DEFAULT_MODEL = 'qwen/qwen3-30b-a3b';
 
 function buildPrompt(description: string): string {
   return `あなたは要件定義の専門家です。発注側の担当者が書いた「やりたいこと」から、PM on Rails と同じ粒度で要件を整理してください。

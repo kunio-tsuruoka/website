@@ -7,6 +7,7 @@ export const MODEL_PRICING: Record<string, ModelPricing> = {
   'google/gemini-2.5-flash': { inputPerMtok: 0.3, outputPerMtok: 2.5 },
   'openai/gpt-4o-mini': { inputPerMtok: 0.15, outputPerMtok: 0.6 },
   'anthropic/claude-haiku-4-5': { inputPerMtok: 1, outputPerMtok: 5 },
+  'qwen/qwen3-30b-a3b': { inputPerMtok: 0.12, outputPerMtok: 0.5 },
 };
 
 export type ChatMessageContent =
