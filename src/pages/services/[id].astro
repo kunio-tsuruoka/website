@@ -48,13 +48,20 @@ const FINAL_CTA_HEADINGS: Record<string, string> = {
   'ai-chatbot-development': '自社の問い合わせは、どこまでAIに任せられるでしょうか',
   'ocr-ai-development': '自社の帳票なら、どこまで手入力を減らせるでしょうか',
   'ai-agent-development': 'どこまで任せて、どこから人が承認するか決めませんか',
+  'requirements-definition-support': '要件が固まっていなくても、進め方から相談できます',
+};
+const FINAL_CTA_LEADS: Record<string, string> = {
+  'requirements-definition-support':
+    '課題と今ある資料を伺い、要求と受入条件まで落とせる範囲をご案内します。',
 };
 const finalCtaHeading = servicePageConfig
   ? (FINAL_CTA_HEADINGS[service.id] ?? 'PoCで止めず、業務で使える形にしませんか')
   : 'どこから始めるか、無料相談で整理しませんか';
 const finalCtaLead = servicePageConfig
-  ? '業務内容と現在のデータを伺い、最初に検証すべき範囲をご案内します。'
+  ? (FINAL_CTA_LEADS[service.id] ??
+    '業務内容と現在のデータを伺い、最初に検証すべき範囲をご案内します。')
   : '業務・データ・既存システムを伺い、小さく検証できる範囲と概算費用の考え方をご案内します。';
+const isRequirementsSupport = service.id === 'requirements-definition-support';
 const isAiDevelopment = service.id === 'ai-development';
 const middleAdditionalSections =
   service.additionalSections?.filter((section) => section.placement === 'middle') ?? [];
@@ -69,15 +76,19 @@ type RtbConfig = {
   title: string;
   lead?: string;
   items: readonly { title: string; description: string }[];
-  note?: { title: string; description: string };
+  note?: { title: string; description: string; href?: string; hrefLabel?: string };
 };
 const rtb = (servicePageConfig as { rtb?: RtbConfig } | undefined)?.rtb;
 const sectionNumbers = rtb
   ? { painPoints: '01', whyBeekle: '02', caseStudies: '03', solutions: '04', features: '05' }
   : { painPoints: '01', whyBeekle: '02', caseStudies: '02', solutions: '03', features: '04' };
-const faqNumber = rtb ? '06' : '05';
+const faqNumber = rtb ? '07' : '05';
 
 const caseStudiesCopy: Record<string, { title: string; subtitle: string }> = {
+  'requirements-definition-support': {
+    title: '会話から、動くものまで持っていった例',
+    subtitle: '要件が固まる前に入り、画面で確かめてから本開発へ進めた案件',
+  },
   'ai-development': {
     title: '本当にできるのか、実案件で示します',
     subtitle: 'AIをどの業務に載せ、何が変わったか',
@@ -103,6 +114,16 @@ const sectionCopy: Record<
   string,
   { solutions: { title: string; subtitle: string }; features: { title: string; subtitle: string } }
 > = {
+  'requirements-definition-support': {
+    solutions: {
+      title: '要件定義と開発を、同じ速さで進める',
+      subtitle: '会話を仕様にし、動くものへつなぎ、確認結果を書き戻します',
+    },
+    features: {
+      title: 'このサービスで引き受ける範囲',
+      subtitle: 'ヒアリングから、実装につながる仕様と確認材料まで',
+    },
+  },
   'ai-development': {
     solutions: {
       title: 'どこから任せて、どこまで広げるか',
@@ -190,7 +211,9 @@ const featuresCopy = sectionCopy[service.id]?.features;
     )}
     {service.id !== 'ai-development' && <ServiceProductPackage serviceId={service.id} />}
     {servicePageConfig && !isAiDevelopment && <ServiceAiDesignStrength serviceId={service.id} />}
-    {servicePageConfig && !isAiDevelopment && <ServiceAiRiskManagement serviceId={service.id} />}
+    {servicePageConfig && !isAiDevelopment && !isRequirementsSupport && (
+      <ServiceAiRiskManagement serviceId={service.id} />
+    )}
     {rtb && !isAiDevelopment && <ServiceWhyBeekle rtb={rtb} number={sectionNumbers.whyBeekle} />}
 
     <ServiceCaseStudies
@@ -218,7 +241,7 @@ const featuresCopy = sectionCopy[service.id]?.features;
       <ServiceAdditionalSections sections={trailingAdditionalSections} />
     )}
 
-    {servicePageConfig && !isAiDevelopment && <ServiceEngagementFlow />}
+    {servicePageConfig && !isAiDevelopment && !isRequirementsSupport && <ServiceEngagementFlow />}
 
     {service.id === 'rag-system-development' && (
       <Section variant="light" padding="lg" decoration="none">
@@ -341,8 +364,12 @@ const featuresCopy = sectionCopy[service.id]?.features;
         <div class="max-w-5xl mx-auto relative z-10">
           <SectionHeader
             title="もっと詳しく知りたい方へ"
-            subtitle="このサービスの背景にあるデータ活用の考え方"
-            number={service.id === 'ai-development' ? '06' : '05'}
+            subtitle={
+              isRequirementsSupport
+                ? '要件定義と発注の判断に使える記事'
+                : 'このサービスの背景にあるデータ活用の考え方'
+            }
+            number={rtb ? '06' : service.id === 'ai-development' ? '06' : '05'}
             label="RELATED COLUMNS"
           />
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
