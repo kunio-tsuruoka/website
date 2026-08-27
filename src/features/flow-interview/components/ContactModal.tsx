@@ -1,6 +1,7 @@
 import { trackCtaClick } from '@/lib/analytics';
+import { createContactSubmissionId } from '@/lib/contact-submission';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useFlowInterviewStore } from '../store';
@@ -36,6 +37,7 @@ export function ContactModal() {
 
   const [done, setDone] = useState(false);
   const [serverError, setServerError] = useState('');
+  const submissionIdRef = useRef('');
 
   // ESC で閉じる（送信中は無効）
   useEffect(() => {
@@ -58,6 +60,9 @@ export function ContactModal() {
       suggestSummary: s.suggestSummary,
       rfpMarkdown: s.rfpMarkdown,
     });
+    if (!submissionIdRef.current) {
+      submissionIdRef.current = createContactSubmissionId();
+    }
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -70,6 +75,7 @@ export function ContactModal() {
           type: 'consultation',
           source: 'flow-interview',
           intent,
+          submissionId: submissionIdRef.current,
           // 会話開始時に Turnstile 検証済みのセッション。サーバーで KV 実在を確認して再検証を免除。
           sessionId: s.sessionId ?? '',
         }),
