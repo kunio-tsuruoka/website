@@ -105,7 +105,7 @@ async function completeAuthorization() {
         code_challenge_method: 'S256',
         resource: `${ORIGIN}/mcp`,
         password: PASSWORD,
-      }),
+      }).toString(),
       redirect: 'manual',
     }),
     TEST_ENV
@@ -153,7 +153,7 @@ async function requestToken(params: Record<string, string>) {
     new Request(`${ORIGIN}/token`, {
       method: 'POST',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(params),
+      body: new URLSearchParams(params).toString(),
     }),
     TEST_ENV
   );
