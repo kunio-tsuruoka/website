@@ -1,9 +1,11 @@
 // 3ツールの localStorage を読み、RFPドラフトの Markdown を生成する。
 // 読めない/空のセクションは「（未入力）」プレースホルダで残す。
 
+import { type StorySpec, formatRfpMarkdown as formatStoryRfp, isStorySpec } from './story-spec';
+
 const FLOW_KEY = 'beekle-flow-mapper-v2';
 const SCOPE_KEY = 'beekle-scope-manager-v1';
-const STORY_KEY = 'beekle-story-builder-v1';
+const STORY_KEY = 'beekle-story-builder-v2';
 
 type FlowState = {
   state?: {
@@ -27,23 +29,9 @@ type ScopeState = {
   requirements?: Array<{ id: string; body: string; verdict: string }>;
 };
 
-type StoryReq = { id: string; text: string; tag?: string };
-type StoryUsecase = {
-  id?: string;
-  title?: string;
-  actor?: string;
-  goal?: string;
-  motivation?: string;
-  happy?: StoryReq[];
-  unwanted?: StoryReq[];
-  boundary?: StoryReq[];
-};
 type StoryState = {
   description?: string;
-  result?: {
-    story?: { actor?: string; goal?: string; why?: string };
-    usecase?: StoryUsecase;
-  } | null;
+  spec?: StorySpec | null;
 };
 
 export type RfpInputs = {
@@ -91,30 +79,39 @@ function summarizeDiagram(d?: FlowState['state']['asIs']): string {
   return `- 業務名: ${d.title || '未設定'}\n- 工程: ${phases}\n- 担当: ${lanes}\n- ステップ数: ${d.steps.length}`;
 }
 
-function buildStorySection(story: StoryState | null): string {
-  if (!story?.result?.usecase) return '（ユーザーストーリー作成ツール未入力）';
-  const u = story.result.usecase;
-  const lines: string[] = [];
-  if (u.title) lines.push(`### ユースケース: ${u.title}`);
-  if (u.actor) lines.push(`- 利用者: ${u.actor}`);
-  if (u.goal) lines.push(`- やりたいこと: ${u.goal}`);
-  if (u.motivation) lines.push(`- 背景・動機: ${u.motivation}`);
-  if (Array.isArray(u.happy) && u.happy.length > 0) {
-    lines.push('');
-    lines.push('#### 正常系シナリオ（うまくいくケース）');
-    for (const r of u.happy) lines.push(`- **${r.id}**${r.tag ? ` [${r.tag}]` : ''}: ${r.text}`);
-  }
-  if (Array.isArray(u.unwanted) && u.unwanted.length > 0) {
-    lines.push('');
-    lines.push('#### 異常系シナリオ（見落としやすい失敗パターン）');
-    for (const r of u.unwanted) lines.push(`- **${r.id}**${r.tag ? ` [${r.tag}]` : ''}: ${r.text}`);
-  }
-  if (Array.isArray(u.boundary) && u.boundary.length > 0) {
-    lines.push('');
-    lines.push('#### 境界値シナリオ');
-    for (const r of u.boundary) lines.push(`- **${r.id}**${r.tag ? ` [${r.tag}]` : ''}: ${r.text}`);
-  }
-  return lines.length > 0 ? lines.join('\n') : '（ユーザーストーリー未生成）';
+function readStoryState(): StorySpec | null {
+  const current = readJson<StoryState>(STORY_KEY);
+  if (current?.spec && isStorySpec(current.spec)) return current.spec;
+  return null;
+}
+
+function buildStorySection(spec: StorySpec | null): string {
+  if (!spec) return '（ユーザーストーリー作成ツール未入力）';
+  const rfp = formatStoryRfp(spec);
+  const start = rfp.indexOf('## 4. 機能要件（ユーザーストーリーとシナリオ）');
+  const end = rfp.indexOf('## 5. 非機能要件');
+  if (start === -1) return '（ユーザーストーリー未生成）';
+  return rfp
+    .slice(start, end === -1 ? undefined : end)
+    .replace('## 4. 機能要件（ユーザーストーリーとシナリオ）\n\n', '')
+    .trim();
+}
+
+function storyAsIs(spec: StorySpec | null): string | null {
+  if (!spec?.asIs.summary) return null;
+  const extra = [
+    spec.asIs.actors.length > 0 && `- 登場人物: ${spec.asIs.actors.join('、')}`,
+    spec.asIs.tools.length > 0 && `- 使っているもの: ${spec.asIs.tools.join('、')}`,
+    spec.asIs.pains.length > 0 && `- 困りごと: ${spec.asIs.pains.join(' / ')}`,
+  ].filter(Boolean);
+  return [spec.asIs.summary, ...extra].join('\n');
+}
+
+function storyToBe(spec: StorySpec | null): string | null {
+  if (!spec?.toBe.summary) return null;
+  const extra =
+    spec.toBe.outcomes.length > 0 ? `- 実現したいこと: ${spec.toBe.outcomes.join(' / ')}` : '';
+  return extra ? `${spec.toBe.summary}\n${extra}` : spec.toBe.summary;
 }
 
 function buildScopeTable(scope: ScopeState | null): string {
@@ -143,17 +140,23 @@ function buildScopeTable(scope: ScopeState | null): string {
 export function buildRfpMarkdown(inputs: RfpInputs): string {
   const flow = readJson<FlowState>(FLOW_KEY);
   const scope = readJson<ScopeState>(SCOPE_KEY);
-  const story = readJson<StoryState>(STORY_KEY);
+  const spec = readStoryState();
   const today = new Date().toISOString().slice(0, 10);
+  const asIs = summarizeDiagram(flow?.state?.asIs);
+  const toBe = summarizeDiagram(flow?.state?.toBe);
+  const asIsText = asIs === '（業務フロー可視化ツール未入力）' ? storyAsIs(spec) || asIs : asIs;
+  const toBeText = toBe === '（業務フロー可視化ツール未入力）' ? storyToBe(spec) || toBe : toBe;
+  const background = inputs.background.trim() || spec?.background || '';
+  const projectName = inputs.projectName.trim() || spec?.title || '';
 
   const sections: string[] = [];
-  sections.push(`# RFP（提案依頼書）ドラフト: ${placeholder(inputs.projectName)}`);
+  sections.push(`# RFP（提案依頼書）ドラフト: ${placeholder(projectName)}`);
   sections.push('');
   sections.push(`> 作成日: ${today}　/　 Beekle 発注準備キットで自動生成`);
   sections.push('');
 
   sections.push('## 1. プロジェクト概要');
-  sections.push(`- プロジェクト名: ${placeholder(inputs.projectName)}`);
+  sections.push(`- プロジェクト名: ${placeholder(projectName)}`);
   sections.push(`- 希望開始時期: ${placeholder(inputs.desiredStartDate)}`);
   sections.push(`- 想定予算レンジ: ${placeholder(inputs.budgetRange)}`);
   sections.push(`- 発注担当者: ${placeholder(inputs.contactName)}`);
@@ -163,22 +166,22 @@ export function buildRfpMarkdown(inputs: RfpInputs): string {
 
   sections.push('## 2. 背景・目的');
   sections.push('### 背景');
-  sections.push(placeholder(inputs.background));
+  sections.push(placeholder(background));
   sections.push('');
   sections.push('### 達成したいゴール');
   sections.push(placeholder(inputs.goals));
   sections.push('');
 
   sections.push('## 3. 現状業務（As-Is）');
-  sections.push(summarizeDiagram(flow?.state?.asIs));
+  sections.push(asIsText);
   sections.push('');
 
   sections.push('## 4. 改善後の姿（To-Be）');
-  sections.push(summarizeDiagram(flow?.state?.toBe));
+  sections.push(toBeText);
   sections.push('');
 
   sections.push('## 5. ユーザーストーリーとシナリオ');
-  sections.push(buildStorySection(story));
+  sections.push(buildStorySection(spec));
   sections.push('');
 
   sections.push('## 6. 要件一覧と優先度');

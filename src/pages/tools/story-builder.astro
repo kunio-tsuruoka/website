@@ -8,8 +8,8 @@ import Layout from '../../layouts/layout.astro';
 ---
 
 <Layout
-  title="ユーザーストーリー作成ツール｜やりたいことを書くだけで要件定義書のたたき台ができる | Beekle"
-  description="頭の中にある『こうしたい』を文章で書くだけで、AIがユーザーストーリーと要件のたたき台を自動生成。失敗パターンも提案するので、開発会社との打ち合わせ前の抜け漏れチェックに使えます。"
+  title="ユーザーストーリー作成ツール｜現状と目指す姿からシナリオとRFPまで | Beekle"
+  description="やりたいことを書くと、現状（As-Is）と目指す姿（To-Be）、ユーザーストーリー、前提・操作・結果のシナリオ、RFPの下書きまで一気に整理します。開発会社との打ち合わせ前に使えます。"
 >
   <JsonLd
     slot="head"
@@ -17,7 +17,7 @@ import Layout from '../../layouts/layout.astro';
     data={{
       appName: 'ユーザーストーリー作成ツール（Story Builder）',
       appDescription:
-        '頭の中の「こうしたい」を文章で書くだけで、ユーザーストーリーと要件のたたき台を自動生成。失敗パターンの提案つき。開発会社との打ち合わせ前の抜け漏れチェックに。会員登録不要・ブラウザ完結。',
+        '現状と目指す姿を分け、ユーザーストーリーとシナリオ、RFPの下書きまで整理する発注準備ツール。会員登録不要・ブラウザ完結。',
       url: 'https://beekle.jp/tools/story-builder',
     }}
   />
@@ -36,13 +36,13 @@ import Layout from '../../layouts/layout.astro';
   <main class="bg-neutral-100 pt-20">
     <PageHero
       title="ユーザーストーリー作成ツール"
-      subtitle="頭の中にある「こうしたい」を文章で書くだけ。AIがユーザーストーリーと要件のたたき台を作り、見落としやすい失敗パターンも一緒に提案します。"
+      subtitle="いまのやり方と、こうしたいを書く。現状と目指す姿、誰が何をしたいか、うまくいく／いかない場合、RFPの下書きまでを同じ流れで整理します。"
       badge="Tools"
     />
 
     <div class="bg-amber-50 border-y border-amber-200">
       <div class="container mx-auto px-6 md:px-8 py-3 text-sm text-amber-900 flex flex-wrap items-center justify-center gap-2">
-        <span>何を書けばいいか分からない／業務が複雑で言語化できない場合は</span>
+        <span>業務が複雑で、自分では切り出せない場合は</span>
         <a
           href="/contact?source=tool-story-builder&intent=tool-stuck&phase=start"
           data-cta-source="tool-story-builder"
@@ -56,156 +56,50 @@ import Layout from '../../layouts/layout.astro';
 
     <section class="border-b border-neutral-300 bg-neutral-100 py-12 md:py-16">
       <div class="container mx-auto px-6 md:px-8 max-w-7xl">
-        {/* このツールでできること */}
         <div class="mb-10 grid md:grid-cols-3 gap-4">
           <div class="rounded-lg border border-neutral-200 bg-white p-5">
             <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-primary-100 font-bold text-primary-600">1</div>
-            <h3 class="font-bold text-gray-900 mb-1">考えを言葉にするだけ</h3>
-            <p class="text-sm text-gray-600 leading-relaxed">
-              「〇〇な業務をスマホでできるようにしたい」のように、ふだんの言葉で書けばOK。
-              フォーマットや専門用語は不要です。
+            <h3 class="font-bold text-gray-900 mb-1">現状と目指す姿</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              いま誰が何をどの道具でやっているかと、こうなっていてほしいを分けて書きます。要望の羅列で始めません。
             </p>
           </div>
           <div class="rounded-lg border border-neutral-200 bg-white p-5">
             <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-primary-100 font-bold text-primary-600">2</div>
-            <h3 class="font-bold text-gray-900 mb-1">AIが要件の型に整理</h3>
-            <p class="text-sm text-gray-600 leading-relaxed">
-              「誰が／何を／なぜ」のユーザーストーリーと、世界標準の要件記法（EARS）に沿った
-              「うまくいくケース」をまとめます。
+            <h3 class="font-bold text-gray-900 mb-1">ストーリーとシナリオ</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              「誰が／何を／なぜ」のストーリーに、前提・操作・結果のシナリオを付けます。うまくいかない場合も先に出します。
             </p>
           </div>
           <div class="rounded-lg border border-neutral-200 bg-white p-5">
             <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-primary-100 font-bold text-primary-600">3</div>
-            <h3 class="font-bold text-gray-900 mb-1">失敗パターンも自動提案</h3>
-            <p class="text-sm text-gray-600 leading-relaxed">
-              通信エラー・入力ミス・権限不足など、開発会社との打ち合わせで
-              見落としがちな「失敗ケース」も先回りで提案します。
+            <h3 class="font-bold text-gray-900 mb-1">RFPの下書き</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              同じ内容を、開発会社に渡せる提案依頼書の章立てへ落とします。Markdownで保存・共有できます。
             </p>
-          </div>
-        </div>
-
-        {/* 成果物のイメージ */}
-        <div class="mb-10 rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
-          <div class="flex items-baseline justify-between flex-wrap gap-2 mb-4">
-            <h2 class="text-lg font-bold text-gray-900">こんな成果物が手に入ります</h2>
-            <span class="text-xs text-gray-500">Markdownでダウンロード／コピー可能</span>
-          </div>
-          <p class="text-sm text-gray-600 leading-relaxed mb-5">
-            開発会社にそのまま渡せる形で、要件のたたき台が出力されます。
-            自社のSlackやNotion、議事録に貼り付けてレビューに使えます。
-          </p>
-
-          <div class="grid md:grid-cols-2 gap-4">
-            <div class="overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50">
-              <div class="px-4 py-2 bg-primary-500 text-white text-xs font-bold">
-                出力例 1：ユーザーストーリー＋うまくいくケース
-              </div>
-              <div class="p-4 text-xs leading-relaxed font-mono text-gray-700 space-y-2">
-                <div><span class="text-primary-600 font-bold">## ストーリー</span></div>
-                <div>- <strong>対象システム</strong>: 経費精算アプリ</div>
-                <div>- <strong>誰が</strong>: 営業担当者</div>
-                <div>- <strong>何をしたい</strong>: 出張先で領収書を撮影して即申請したい</div>
-                <div>- <strong>なぜ</strong>: 帰社後にまとめる手間と紛失をなくしたい</div>
-                <div class="pt-2"><span class="text-primary-600 font-bold">## うまくいくケース（EARS）</span></div>
-                <div class="pl-2 border-l-2 border-primary-200">
-                  <div><strong class="text-primary-700">REQ-HPY-001</strong> <span class="text-gray-500">[基本機能]</span></div>
-                  <div>システムは、撮影した領収書画像を申請に添付すること。</div>
-                </div>
-                <div class="pl-2 border-l-2 border-primary-200">
-                  <div><strong class="text-primary-700">REQ-HPY-002</strong> <span class="text-gray-500">[操作きっかけ]</span></div>
-                  <div>申請者が「申請する」を押したとき、システムは上長に通知を送信すること。</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50">
-              <div class="px-4 py-2 bg-amber-500 text-white text-xs font-bold">
-                出力例 2：見落としやすい失敗パターン
-              </div>
-              <div class="p-4 text-xs leading-relaxed font-mono text-gray-700 space-y-2">
-                <div class="pl-2 border-l-2 border-amber-300">
-                  <div>
-                    <strong class="text-amber-700">REQ-UNW-001</strong>
-                    <span class="ml-2 px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded text-[10px]">通信障害</span>
-                  </div>
-                  <div>もし送信中に圏外になった場合、システムは下書き保存し、再送できるようにすること。</div>
-                </div>
-                <div class="pl-2 border-l-2 border-amber-300">
-                  <div>
-                    <strong class="text-amber-700">REQ-UNW-002</strong>
-                    <span class="ml-2 px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded text-[10px]">入力検証</span>
-                  </div>
-                  <div>もし添付画像のサイズが10MBを超える場合、システムは申請を受理せずエラーを表示すること。</div>
-                </div>
-                <div class="pl-2 border-l-2 border-amber-300">
-                  <div>
-                    <strong class="text-amber-700">REQ-UNW-003</strong>
-                    <span class="ml-2 px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded text-[10px]">認証認可</span>
-                  </div>
-                  <div>もし上長が承認可能な担当に未設定の場合、システムは申請者にエラーを通知すること。</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p class="mt-4 text-xs text-gray-500">
-            ※ 上記はイメージです。実際の出力は入力した内容に応じて変わります。
-          </p>
-        </div>
-
-        {/* 使い方 */}
-        <div class="mb-8 rounded-lg border border-neutral-200 bg-white p-6">
-          <h2 class="text-lg font-bold text-gray-900 mb-3">使い方（3ステップ）</h2>
-          <ol class="space-y-3 text-sm text-gray-700 leading-relaxed">
-            <li class="flex gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">1</span>
-              <div>
-                <strong>やりたいことを文章で書く</strong>。「サンプルを試す」を押すと例文が入ります。お手元の議事録やメモ（.txt / .md）を読み込むこともできます。
-              </div>
-            </li>
-            <li class="flex gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">2</span>
-              <div>
-                <strong>「AIで仕様書を生成」を押す</strong>。1〜2分ほどで、ユーザーストーリーと要件のたたき台ができ上がります。
-              </div>
-            </li>
-            <li class="flex gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-bold">3</span>
-              <div>
-                <strong>結果を確認してダウンロード</strong>。開発会社にそのまま渡せる形式で保存・共有できます。次の工程は <a href="/tools/scope-manager" class="text-primary-500 hover:underline inline-block py-2">スコープ管理ツール</a> で「作る／後回し／作らない」を整理できます。
-              </div>
-            </li>
-          </ol>
-          <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 leading-relaxed">
-            <strong>このツールの位置付け</strong>：これは要件定義の<strong>たたき台</strong>を素早く作るためのツールです。最終的な仕様は、現場の方や開発会社と一緒にレビュー・調整してください。
           </div>
         </div>
 
         <StoryBuilder client:load />
 
-        {/* 関連リンク */}
         <div class="mt-10 rounded-lg border border-neutral-200 bg-white p-6">
-          <h2 class="text-lg font-bold text-gray-900 mb-3">あわせて使うと便利なもの</h2>
+          <h2 class="text-lg font-bold text-gray-900 mb-3">前後の工程</h2>
           <ul class="space-y-2 text-sm text-gray-700">
             <li>
-              <a href="/tools" class="text-primary-500 hover:underline font-semibold inline-block py-2">発注準備キット (3ツール全体像)</a>
-              ：このツールの位置づけと、前後で使うとよいツールを確認
+              <a href="/tools/flow-mapper" class="text-primary-500 hover:underline inline-block py-2">業務フロー可視化ツール</a>
+              ：担当と手順で現状を図にする
             </li>
             <li>
-              <a href="/tools/flow-mapper" class="text-primary-500 hover:underline inline-block py-2">1. 業務フロー可視化ツール</a>
-              ：このツールで言語化する前に、現状業務を関係者で見える化
+              <a href="/tools/scope-manager" class="text-primary-500 hover:underline inline-block py-2">スコープ管理ツール</a>
+              ：シナリオを「作る／後回し／作らない」に振り分ける
             </li>
             <li>
-              <a href="/tools/scope-manager" class="text-primary-500 hover:underline inline-block py-2">3. スコープ管理ツール</a>
-              ：このツールで作った要件のうち「作る／後回し／作らない」を整理
+              <a href="/tools/rfp-builder" class="text-primary-500 hover:underline inline-block py-2">RFPドラフト自動生成</a>
+              ：予算・時期・連絡先を足して発注用の一枚にする
             </li>
             <li>
-              <a href="/docs/user-stories-sample.md" download class="text-primary-500 hover:underline inline-block py-2">ユーザーストーリー仕様書サンプル(.md)</a>
-              ：本格的に書く際の章構成と書式の参考に
-            </li>
-            <li>
-              <a href="/column/project-management-complete-guide" class="text-primary-500 hover:underline inline-block py-2">プロジェクト管理 完全ガイド</a>
-              ：要件定義からプロジェクト全体の進め方までコラムで解説
+              <a href="/tools" class="text-primary-500 hover:underline font-semibold inline-block py-2">発注準備キット</a>
+              ：4つのツールの位置づけ
             </li>
           </ul>
         </div>
@@ -214,9 +108,9 @@ import Layout from '../../layouts/layout.astro';
 
     <section class="py-16 bg-accent-950 text-white">
       <div class="container mx-auto px-6 md:px-8 max-w-4xl text-center">
-        <h2 class="text-2xl md:text-3xl font-bold mb-4">要件整理の伴走、お任せください</h2>
+        <h2 class="text-2xl md:text-3xl font-bold mb-4">この整理を、現場ヒアリングまで進める</h2>
         <p class="text-white/80 leading-relaxed mb-8">
-          このツールでたたき台を作ったあとの、現場ヒアリング・優先度決め・開発会社との合意形成まで、Beekleがお手伝いします。
+          下書きのあと、関係者への確認、優先度、開発会社との合意まで Beekle が引き受けます。
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a
@@ -225,7 +119,7 @@ import Layout from '../../layouts/layout.astro';
             data-cta-id="contact-review-complete"
             class="tool-escape-cta inline-flex items-center justify-center rounded-md bg-white px-8 py-3 text-base font-semibold text-accent-950 transition-colors hover:bg-neutral-100"
           >
-            このたたき台をレビューしてもらう
+            この整理をレビューしてもらう
           </a>
           <a
             href="/tools/scope-manager"

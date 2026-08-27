@@ -8,7 +8,7 @@ export type ToolKey = 'flow-mapper' | 'story-builder' | 'scope-manager' | 'rfp-b
 
 export const TOOL_STORAGE_KEYS: Record<ToolKey, string> = {
   'flow-mapper': 'beekle-flow-mapper-v2',
-  'story-builder': 'beekle-story-builder-v1',
+  'story-builder': 'beekle-story-builder-v2',
   'scope-manager': 'beekle-scope-manager-v1',
   'rfp-builder': 'beekle-rfp-builder-v1',
 };

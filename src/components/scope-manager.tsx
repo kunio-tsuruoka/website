@@ -63,7 +63,7 @@ function parseMarkdown(md: string): Requirement[] {
       continue;
     }
     const m = line.match(
-      /^- \*\*(REQ-[A-Za-z0-9-]+)\*\*（([^・）]+)・([^・）]+)・由来:([^）]+)）\s*$/
+      /^- \*\*((?:REQ|SC)-[A-Za-z0-9-]+)\*\*（([^・）]+)・([^・）]+)・由来:([^）]+)）\s*$/
     );
     if (!m) {
       i++;
@@ -74,7 +74,7 @@ function parseMarkdown(md: string): Requirement[] {
     i++;
     while (i < lines.length) {
       const next = lines[i];
-      if (/^- \*\*REQ-/.test(next) || /^#{1,6}\s/.test(next) || /^---\s*$/.test(next)) break;
+      if (/^- \*\*(?:REQ|SC)-/.test(next) || /^#{1,6}\s/.test(next) || /^---\s*$/.test(next)) break;
       if (next.startsWith('  ')) {
         bodyLines.push(next.trim());
       } else if (next.trim() === '') {
@@ -84,7 +84,7 @@ function parseMarkdown(md: string): Requirement[] {
       }
       i++;
     }
-    const categoryMatch = id.match(/^REQ-([A-Za-z]+-\d+)-/);
+    const categoryMatch = id.match(/^(?:REQ|SC)-([A-Za-z]+-\d+)-/);
     reqs.push({
       id,
       category: categoryMatch?.[1] ?? '',
@@ -365,7 +365,7 @@ export function ScopeManager() {
     const parsed = parseMarkdown(markdown);
     if (parsed.length === 0) {
       setParseHint(
-        '要求文を見つけられませんでした。まず「まずサンプルで試す」を押すか、ユーザーストーリー作成ツールの出力（`- **REQ-XXX-NNN**（種別・優先度・由来:XX）` 形式の行を含むもの）を貼り付けてください。'
+        '要求文を見つけられませんでした。まず「まずサンプルで試す」を押すか、ユーザーストーリー作成ツールの出力（`- **SC-US-01-N1**（正常系・必須・由来:AI整理）` 形式の行を含むもの）を貼り付けてください。'
       );
       return;
     }
