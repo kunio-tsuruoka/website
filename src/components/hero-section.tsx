@@ -10,12 +10,13 @@ export const HeroSection = () => (
       fetchPriority="high"
       decoding="async"
       aria-hidden="true"
-      className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-[54%] object-cover object-[42%_center] md:block xl:w-[52%]"
+      className="pointer-events-none absolute inset-0 h-full w-full object-cover object-left md:object-center"
     />
+    <div className="home-hero-veil pointer-events-none absolute inset-0" aria-hidden="true" />
 
-    <div className="container relative mx-auto flex min-h-[420px] items-center px-8 py-14 lg:min-h-[480px] lg:px-12">
-      <div className="w-full max-w-[16.5rem] sm:max-w-[18rem] md:max-w-[20rem] xl:max-w-[22rem]">
-        <h1 className="text-4xl font-bold leading-[1.4] text-accent-950 sm:text-5xl">
+    <div className="container relative mx-auto flex min-h-[420px] items-center px-8 py-14 lg:min-h-[560px] lg:px-12">
+      <div className="w-full max-w-[20rem] xl:max-w-[26rem]">
+        <h1 className="text-4xl font-bold leading-[1.35] text-accent-950 sm:text-5xl xl:text-6xl">
           爆速開発。
           <br />
           <span className="text-primary-500">だから、</span>

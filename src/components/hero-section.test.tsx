@@ -45,16 +45,20 @@ describe('HeroSection', () => {
     expect(html).not.toContain('NDA可');
   });
 
-  it('uses a compact single-column hero', () => {
+  it('uses a full-bleed background with copy constrained to the left', () => {
     const html = renderHeroHtml();
 
-    expect(html).toContain('lg:min-h-[480px]');
+    expect(html).toContain('absolute inset-0 h-full w-full object-cover');
+    expect(html).toContain('home-hero-veil');
+    expect(html).toContain('lg:min-h-[560px]');
     expect(html).not.toContain('lg:min-h-[640px]');
     expect(html).not.toContain('lg:grid-cols');
+    expect(html).not.toContain('w-[54%]');
+    expect(html).not.toContain('w-[52%]');
     expect(html).not.toContain('md:hidden');
     expect(html).not.toContain('hidden border-y border-neutral-300 bg-white md:block');
-    expect(html).toContain('max-w-[16.5rem]');
-    expect(html).toContain('xl:max-w-[22rem]');
+    expect(html).toContain('max-w-[20rem]');
+    expect(html).toContain('xl:max-w-[26rem]');
     expect(html).not.toContain('xl:text-8xl');
     expect(html).not.toContain('md:text-7xl');
   });
