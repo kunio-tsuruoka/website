@@ -25,6 +25,7 @@ export type ChatCompletionRequest = {
   max_tokens?: number;
   temperature?: number;
   response_format?: { type: 'json_object' };
+  reasoning?: { effort?: 'none' | 'low' | 'medium' | 'high'; exclude?: boolean };
 };
 
 export type ChatCompletionResult = {

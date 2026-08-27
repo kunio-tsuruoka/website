@@ -20,8 +20,10 @@ ${description}
 # 整理の順番
 1. 現状（As-Is）と目指す姿（To-Be）を分ける。入力に現状が薄くても、書かれている範囲だけ書く。一般論で埋めない
 2. ユーザーストーリーは「登場人物の目標」単位。システム機能の一覧にしない。3〜6件
-3. 各ストーリーに Gherkin シナリオを付ける。正常系1〜2、異常系1、必要なら境界1。画面名やボタン名は業務シナリオ（normal / error / boundary）に書かない
+3. 各ストーリーに Gherkin シナリオを付ける。正常系1〜2、異常系1、必要なら境界1
 4. シナリオは Given / When / Then。when は意図した行為を1つ。then は業務上の帰結。現在形・三人称。値の先頭に Given/When/Then は書かない
+   - 良い when: 「営業担当が出張先で領収書を申請する」
+   - 悪い when: 「申請ボタンをタップする」「申請画面を開く」
 5. 非機能・制約・提案依頼は分かる範囲だけ。不明なら空配列
 
 # 出力
@@ -98,9 +100,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
       apiKey,
       {
         model,
-        max_tokens: 8000,
+        max_tokens: 16000,
         temperature: 0.3,
         response_format: { type: 'json_object' },
+        reasoning: { effort: 'low', exclude: true },
         messages: [{ role: 'user', content: buildPrompt(description) }],
       },
       { referer: 'https://beekle.jp', title: 'Beekle Story Spec' }
