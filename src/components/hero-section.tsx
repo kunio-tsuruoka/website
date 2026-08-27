@@ -20,11 +20,7 @@ const speedRows = [
   },
 ];
 
-const proofItems = [
-  '1日でデモ',
-  '1週間程度で触れる形',
-  '3週間で難航案件を立て直し',
-];
+const proofItems = ['1日でデモ', '1週間程度で触れる形', '3週間で難航案件を立て直し'];
 
 export const HeroSection = () => (
   <section className="relative overflow-hidden border-b border-neutral-300 bg-neutral-100 pt-20 text-accent-950">
