@@ -1,7 +1,7 @@
 import type { FlowDiagram } from '@/features/flow-mapper/types';
 import { OpenRouterError, chatCompletionWithBudget } from '@/lib/openrouter';
 import { classifyUpstreamError, notifyOpsAlert } from '@/lib/ops-alert';
-import { liftScenarioOutcome } from '@/lib/story-spec';
+import { formatGherkin, liftScenarioOutcome } from '@/lib/story-spec';
 import { z } from 'zod';
 import { formatDuration } from './format';
 import type { FlowSuggestion } from './suggest';
@@ -55,7 +55,7 @@ const SYSTEM_PROMPT = `あなたはBeekle株式会社の発注支援AIです。
 - 発注者（非エンジニア）がそのままベンダーに渡せる、平易で具体的な日本語
 - ユーザーストーリーは「誰が(role)／何をしたい(want)／なぜ(benefit)」の3点 + 受け入れ条件(acceptance)
 - 各ストーリーにシナリオを付ける。正常系1、異常系1を基本。必要なら境界1。画面名・ボタン名は書かない
-- シナリオは given=前提 / when=操作1つ / outcome=業務上の結果。現在形。Given/When/Then という語は書かない
+- シナリオは Gherkin。given / when / outcome。現在形。値の先頭に Given/When/Then は書かない
 - 現状フローと改善案に出てきた作業・困りごとに紐づける。一般論や誇張を避ける
 - ユーザーストーリーは3〜7件に絞る。優先度の高い順
 - 非機能要件・制約・提案依頼事項は、分かる範囲で簡潔に。不明な点は「要相談」と書く
@@ -270,9 +270,9 @@ export function formatRfpMarkdown(rfp: FlowRfp, diagram?: FlowDiagram): string {
           sc.type === 'error' ? '異常系' : sc.type === 'boundary' ? '境界' : '正常系';
         lines.push(`#### ${typeLabel}: ${sc.title}`);
         lines.push('');
-        if (sc.given) lines.push(`- **前提**: ${sc.given}`);
-        if (sc.when) lines.push(`- **操作**: ${sc.when}`);
-        if (sc.outcome) lines.push(`- **結果**: ${sc.outcome.replace(/\n/g, ' / ')}`);
+        lines.push('```gherkin');
+        for (const line of formatGherkin(sc)) lines.push(line);
+        lines.push('```');
         lines.push('');
       }
     } else {

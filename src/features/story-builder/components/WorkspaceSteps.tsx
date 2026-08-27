@@ -3,7 +3,7 @@ type Step = 'input' | 'asis' | 'stories' | 'rfp';
 const STEPS: { key: Step; n: number; label: string }[] = [
   { key: 'input', n: 1, label: '入力' },
   { key: 'asis', n: 2, label: '現状と目指す姿' },
-  { key: 'stories', n: 3, label: 'ストーリー' },
+  { key: 'stories', n: 3, label: 'ストーリーとGherkin' },
   { key: 'rfp', n: 4, label: 'RFP' },
 ];
 

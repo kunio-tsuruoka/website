@@ -72,11 +72,12 @@ describe('formatRfpMarkdown', () => {
     expect(us02).not.toContain('受け入れ条件');
   });
 
-  test('シナリオを前提・操作・結果で出す', () => {
+  test('シナリオを Gherkin で出す', () => {
     expect(md).toContain('#### 正常系: 売上が確定すると請求書ができる');
-    expect(md).toContain('**前提**: 当月の売上が確定している');
-    expect(md).toContain('**操作**: 経理担当が請求書を作成する');
-    expect(md).toContain('**結果**: 売上データから請求書が作られる');
+    expect(md).toContain('```gherkin');
+    expect(md).toContain('Given 当月の売上が確定している');
+    expect(md).toContain('When 経理担当が請求書を作成する');
+    expect(md).toContain('Then 売上データから請求書が作られる');
   });
 
   test('空セクションは「要相談」を出す', () => {

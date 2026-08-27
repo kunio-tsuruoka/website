@@ -200,21 +200,56 @@ function scenarioBody(scenario: StoryScenario): string {
   return parts.join('と、');
 }
 
-export function formatGherkin(scenario: StoryScenario): string[] {
-  const lines = [`シナリオ: ${scenario.title}`];
-  if (scenario.given) lines.push(`前提: ${scenario.given}`);
-  if (scenario.when) lines.push(`操作: ${scenario.when}`);
-  if (scenario.outcome) {
-    const thenLines = scenario.outcome
-      .split(/\n/)
-      .map((s) => s.trim())
-      .filter(Boolean);
-    thenLines.forEach((line, i) => {
-      const body = line.replace(/^(And|そして|かつ)\s+/, '');
-      lines.push(i === 0 ? `結果: ${body}` : `かつ: ${body}`);
+export type GherkinSteps = {
+  title: string;
+  given?: string;
+  when?: string;
+  outcome?: string;
+};
+
+function gherkinThenLines(outcome: string): string[] {
+  return outcome
+    .split(/\n/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((line, i) => {
+      const body = line.replace(/^(And|Then|そして|かつ|ならば)\s+/, '');
+      return i === 0 ? `Then ${body}` : `And ${body}`;
     });
+}
+
+/** 1シナリオ分の Gherkin（キーワードは Beekle の知識記事と同じ Given / When / Then） */
+export function formatGherkin(scenario: GherkinSteps, indent = ''): string[] {
+  const lines = [`${indent}Scenario: ${scenario.title}`];
+  if (scenario.given) lines.push(`${indent}  Given ${scenario.given}`);
+  if (scenario.when) lines.push(`${indent}  When ${scenario.when}`);
+  if (scenario.outcome) {
+    for (const line of gherkinThenLines(scenario.outcome)) {
+      lines.push(`${indent}  ${line}`);
+    }
   }
   return lines;
+}
+
+/** 仕様全体を .feature として書き出す */
+export function formatGherkinFeature(spec: StorySpec): string {
+  const lines: string[] = ['# language: ja', `Feature: ${spec.title}`];
+  if (spec.background) {
+    lines.push('  """');
+    for (const para of spec.background.split('\n')) lines.push(`  ${para}`);
+    lines.push('  """');
+  }
+  lines.push('');
+  for (const story of spec.stories) {
+    lines.push(`  Rule: ${story.id} ${story.role}が${story.want}`);
+    if (story.benefit) lines.push(`    # なぜ: ${story.benefit}`);
+    lines.push('');
+    for (const scenario of story.scenarios) {
+      lines.push(...formatGherkin(scenario, '    '));
+      lines.push('');
+    }
+  }
+  return `${lines.join('\n').trimEnd()}\n`;
 }
 
 export function formatStoryMarkdown(spec: StorySpec): string {
@@ -267,7 +302,9 @@ export function formatStoryMarkdown(spec: StorySpec): string {
     for (const scenario of story.scenarios) {
       lines.push(`#### ${scenario.id} ${SCENARIO_TYPE_LABEL[scenario.type]}: ${scenario.title}`);
       lines.push('');
+      lines.push('```gherkin');
       for (const line of formatGherkin(scenario)) lines.push(line);
+      lines.push('```');
       lines.push('');
     }
   }
@@ -322,9 +359,9 @@ export function formatRfpMarkdown(spec: StorySpec): string {
     for (const scenario of story.scenarios) {
       lines.push(`#### ${scenario.id} ${SCENARIO_TYPE_LABEL[scenario.type]}: ${scenario.title}`);
       lines.push('');
-      if (scenario.given) lines.push(`- **前提**: ${scenario.given}`);
-      if (scenario.when) lines.push(`- **操作**: ${scenario.when}`);
-      if (scenario.outcome) lines.push(`- **結果**: ${scenario.outcome.replace(/\n/g, ' / ')}`);
+      lines.push('```gherkin');
+      for (const line of formatGherkin(scenario)) lines.push(line);
+      lines.push('```');
       lines.push('');
     }
   }

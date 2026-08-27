@@ -28,7 +28,7 @@ export function RfpPanel({
         </p>
         <ul className="text-sm text-gray-700 space-y-1 mb-5">
           <li>・ 背景 / 現状（As-Is） / 目指す姿（To-Be）</li>
-          <li>・ ユーザーストーリーと、前提・操作・結果のシナリオ</li>
+          <li>・ ユーザーストーリーと、Gherkin（Given / When / Then）のシナリオ</li>
           <li>・ 非機能、制約、提案してほしい事項</li>
         </ul>
         <div className="flex flex-wrap gap-2">

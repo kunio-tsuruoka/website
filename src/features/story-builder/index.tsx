@@ -3,6 +3,7 @@ import { trackToolEvent } from '@/lib/analytics';
 import { buildShareUrl, clearShareHash, readSharedFromHash } from '@/lib/share-url';
 import {
   type StorySpec,
+  formatGherkinFeature,
   formatRfpMarkdown,
   formatScopeMarkdown,
   isStorySpec,
@@ -168,16 +169,35 @@ export function StoryBuilder() {
     }
   }
 
-  function downloadRfp() {
-    if (!spec) return;
-    const blob = new Blob([formatRfpMarkdown(spec)], { type: 'text/markdown;charset=utf-8' });
+  function fileStem(): string {
+    return spec?.title.replace(/[^\p{L}\p{N}_-]+/gu, '_').slice(0, 40) || 'story-spec';
+  }
+
+  function downloadText(content: string, filename: string, format: string) {
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${spec.title.replace(/[^\p{L}\p{N}_-]+/gu, '_').slice(0, 40) || 'rfp'}.md`;
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
-    fireExportEvent('rfp-markdown');
+    fireExportEvent(format);
+  }
+
+  function downloadGherkin() {
+    if (!spec) return;
+    downloadText(formatGherkinFeature(spec), `${fileStem()}.feature`, 'gherkin-feature');
+  }
+
+  function copyGherkin() {
+    if (!spec) return;
+    void navigator.clipboard.writeText(formatGherkinFeature(spec));
+    fireExportEvent('gherkin-clipboard');
+  }
+
+  function downloadRfp() {
+    if (!spec) return;
+    downloadText(formatRfpMarkdown(spec), `${fileStem()}.md`, 'rfp-markdown');
   }
 
   function copyRfp() {
@@ -321,7 +341,9 @@ export function StoryBuilder() {
       )}
 
       {step === 'asis' && spec && <AsIsToBePanel spec={spec} />}
-      {step === 'stories' && spec && <StoriesPanel spec={spec} />}
+      {step === 'stories' && spec && (
+        <StoriesPanel spec={spec} onDownloadGherkin={downloadGherkin} onCopyGherkin={copyGherkin} />
+      )}
       {step === 'rfp' && spec && (
         <RfpPanel
           spec={spec}

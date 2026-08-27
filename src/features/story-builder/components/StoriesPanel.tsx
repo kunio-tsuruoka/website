@@ -4,6 +4,7 @@ import {
   type StoryScenario,
   type StorySpec,
   type UserStory,
+  formatGherkin,
 } from '@/lib/story-spec';
 
 const TYPE_STYLE: Record<ScenarioType, string> = {
@@ -18,6 +19,46 @@ const PRIORITY_STYLE: Record<UserStory['priority'], string> = {
   任意: 'bg-gray-100 text-gray-700',
 };
 
+const KEYWORD_STYLE: Record<string, string> = {
+  'Scenario:': 'bg-gray-800 text-white',
+  Given: 'bg-slate-800 text-white',
+  When: 'bg-primary-600 text-white',
+  Then: 'bg-emerald-700 text-white',
+  And: 'bg-emerald-700 text-white',
+};
+
+function GherkinBlock({ scenario }: { scenario: StoryScenario }) {
+  const lines = formatGherkin(scenario);
+  return (
+    <pre className="mt-3 overflow-x-auto rounded-md border border-neutral-200 bg-white p-3 text-xs leading-relaxed text-gray-800">
+      {lines.map((line, i) => {
+        const match = line.match(/^( *)(Scenario:|Given|When|Then|And)\s+(.*)$/);
+        if (!match) {
+          return (
+            <span key={`${scenario.id}-${i}`} className="block">
+              {line}
+            </span>
+          );
+        }
+        const indent = match[1];
+        const keyword = match[2];
+        const rest = match[3];
+        return (
+          <span key={`${scenario.id}-${i}`} className="block">
+            {indent}
+            <span
+              className={`mr-2 inline-block min-w-[4.5rem] rounded px-1.5 py-0.5 text-[10px] font-bold ${KEYWORD_STYLE[keyword] ?? 'bg-gray-700 text-white'}`}
+            >
+              {keyword}
+            </span>
+            {rest}
+          </span>
+        );
+      })}
+    </pre>
+  );
+}
+
 function ScenarioCard({ scenario }: { scenario: StoryScenario }) {
   return (
     <article className="rounded-lg border border-neutral-200 bg-neutral-50 p-4">
@@ -30,33 +71,38 @@ function ScenarioCard({ scenario }: { scenario: StoryScenario }) {
         <h4 className="text-sm font-bold text-gray-900">{scenario.title}</h4>
         <span className="text-xs text-gray-500 font-mono">{scenario.id}</span>
       </div>
-      <dl className="space-y-2 text-sm leading-relaxed">
-        {scenario.given && (
-          <div>
-            <dt className="text-xs font-semibold text-gray-500">前提</dt>
-            <dd className="text-gray-800">{scenario.given}</dd>
-          </div>
-        )}
-        {scenario.when && (
-          <div>
-            <dt className="text-xs font-semibold text-gray-500">操作</dt>
-            <dd className="text-gray-800">{scenario.when}</dd>
-          </div>
-        )}
-        {scenario.outcome && (
-          <div>
-            <dt className="text-xs font-semibold text-gray-500">結果</dt>
-            <dd className="text-gray-800 whitespace-pre-wrap">{scenario.outcome}</dd>
-          </div>
-        )}
-      </dl>
+      <GherkinBlock scenario={scenario} />
     </article>
   );
 }
 
-export function StoriesPanel({ spec }: { spec: StorySpec }) {
+export function StoriesPanel({
+  spec,
+  onDownloadGherkin,
+  onCopyGherkin,
+}: {
+  spec: StorySpec;
+  onDownloadGherkin: () => void;
+  onCopyGherkin: () => void;
+}) {
   return (
     <div className="space-y-5">
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={onDownloadGherkin}
+          className="min-h-[44px] px-4 py-2 text-sm font-semibold text-white bg-primary-500 rounded-md hover:bg-primary-600"
+        >
+          Gherkin（.feature）をダウンロード
+        </button>
+        <button
+          type="button"
+          onClick={onCopyGherkin}
+          className="min-h-[44px] px-4 py-2 text-sm font-semibold text-primary-700 border border-primary-300 rounded-md hover:bg-primary-50"
+        >
+          Gherkinをコピー
+        </button>
+      </div>
       {spec.stories.map((story) => (
         <section
           key={story.id}

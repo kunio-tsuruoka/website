@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import {
+  formatGherkinFeature,
   formatRfpMarkdown,
   formatScopeMarkdown,
   formatStoryMarkdown,
@@ -123,12 +124,27 @@ describe('formatStoryMarkdown', () => {
     expect(stories).toBeGreaterThan(toBe);
   });
 
-  test('シナリオを日本語の前提・操作・結果で書く', () => {
-    expect(md).toContain('前提: 営業担当が出張中である');
-    expect(md).toContain('操作: 領収書を撮影して申請する');
-    expect(md).toContain('結果: 上長に承認依頼が届く');
-    expect(md).toContain('かつ: 申請内容が保存される');
-    expect(md).not.toContain('Given:');
+  test('シナリオを Gherkin で書く', () => {
+    expect(md).toContain('```gherkin');
+    expect(md).toContain('Scenario: 撮影した領収書で申請する');
+    expect(md).toContain('Given 営業担当が出張中である');
+    expect(md).toContain('When 領収書を撮影して申請する');
+    expect(md).toContain('Then 上長に承認依頼が届く');
+    expect(md).toContain('And 申請内容が保存される');
+  });
+});
+
+describe('formatGherkinFeature', () => {
+  test('Feature / Rule / Scenario の .feature を出す', () => {
+    const feature = formatGherkinFeature(normalizeStorySpec(raw));
+    expect(feature).toContain('# language: ja');
+    expect(feature).toContain('Feature: 経費精算システムの要件整理');
+    expect(feature).toContain('Rule: US-01 営業担当が出張先で領収書を撮影して申請したい');
+    expect(feature).toContain('Scenario: 撮影した領収書で申請する');
+    expect(feature).toContain('Given 営業担当が出張中である');
+    expect(feature).toContain('When 領収書を撮影して申請する');
+    expect(feature).toContain('Then 上長に承認依頼が届く');
+    expect(feature).toContain('And 申請内容が保存される');
   });
 });
 

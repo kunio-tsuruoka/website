@@ -9,7 +9,7 @@ import Layout from '../../layouts/layout.astro';
 
 <Layout
   title="ユーザーストーリー作成ツール｜現状と目指す姿からシナリオとRFPまで | Beekle"
-  description="やりたいことを書くと、現状（As-Is）と目指す姿（To-Be）、ユーザーストーリー、前提・操作・結果のシナリオ、RFPの下書きまで一気に整理します。開発会社との打ち合わせ前に使えます。"
+  description="やりたいことを書くと、現状（As-Is）と目指す姿（To-Be）、ユーザーストーリー、Gherkinシナリオ、RFPの下書きまで一気に整理します。開発会社との打ち合わせ前に使えます。"
 >
   <JsonLd
     slot="head"
@@ -17,7 +17,7 @@ import Layout from '../../layouts/layout.astro';
     data={{
       appName: 'ユーザーストーリー作成ツール（Story Builder）',
       appDescription:
-        '現状と目指す姿を分け、ユーザーストーリーとシナリオ、RFPの下書きまで整理する発注準備ツール。会員登録不要・ブラウザ完結。',
+        '現状と目指す姿を分け、ユーザーストーリーとGherkinシナリオ、RFPの下書きまで整理する発注準備ツール。会員登録不要・ブラウザ完結。',
       url: 'https://beekle.jp/tools/story-builder',
     }}
   />
@@ -68,7 +68,7 @@ import Layout from '../../layouts/layout.astro';
             <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-primary-100 font-bold text-primary-600">2</div>
             <h3 class="font-bold text-gray-900 mb-1">ストーリーとシナリオ</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
-              「誰が／何を／なぜ」のストーリーに、前提・操作・結果のシナリオを付けます。うまくいかない場合も先に出します。
+              「誰が／何を／なぜ」のストーリーに、Given / When / Then のGherkinシナリオを付けます。うまくいかない場合も先に出します。
             </p>
           </div>
           <div class="rounded-lg border border-neutral-200 bg-white p-5">

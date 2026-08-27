@@ -83,9 +83,15 @@ describe('StoryBuilder', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'ストーリーを見る' }));
     expect(screen.getByText('営業担当が、出張先で領収書を撮影して申請したい')).toBeInTheDocument();
-    expect(screen.getByText('撮影した領収書で申請する')).toBeInTheDocument();
+    expect(screen.getAllByText('撮影した領収書で申請する').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Given').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('When').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Then').length).toBeGreaterThan(0);
     expect(screen.getByText('上長に承認依頼が届く')).toBeInTheDocument();
-    expect(screen.getByText('通信できないときに下書きが残る')).toBeInTheDocument();
+    expect(screen.getAllByText('通信できないときに下書きが残る').length).toBeGreaterThan(0);
+    expect(
+      screen.getByRole('button', { name: 'Gherkin（.feature）をダウンロード' })
+    ).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'RFPを見る' }));
     expect(screen.getByText('経費精算システムの要件整理')).toBeInTheDocument();
