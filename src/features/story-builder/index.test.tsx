@@ -177,6 +177,14 @@ describe('StoryBuilder', () => {
     expect(screen.getByText('上長の承認は後回しでいい')).toBeInTheDocument();
   });
 
+  test('空の入力では生成できない', () => {
+    render(<StoryBuilder />);
+    fireEvent.click(screen.getByRole('button', { name: '現状・ストーリー・RFPに整理する' }));
+    expect(
+      screen.getByText('やりたいこと、またはいま困っていることを書いてください')
+    ).toBeInTheDocument();
+  });
+
   test('保存済みの仕様があれば現状タブから開く', async () => {
     localStorage.setItem(
       'beekle-story-builder-v2',
