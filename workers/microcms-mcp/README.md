@@ -4,7 +4,9 @@ MicroCMS の `blogs` / `columns` / `categories` / `qas` / `qa-categories` を直
 
 リード・商談などCRMの正本は `beekle-crm`。CRMデータの確認は別の `beekle-crm` コネクタを使い、このMCPではHubSpot認証やHubSpot API読み取りを扱わない。
 
-ChatGPT の Remote MCP から使えるよう、OAuth 2.1 相当の Authorization Code + PKCE に対応している。認可画面では `OAUTH_PASSWORD` を入力し、発行したアクセストークンで `/mcp` を呼び出す。
+ChatGPT の Remote MCP から使えるよう、OAuth 2.1 相当の Authorization Code + PKCE と refresh_token に対応している。認可画面では `OAUTH_PASSWORD` を入力し、発行したアクセストークンで `/mcp` を呼び出す。
+
+アクセストークンは90日、リフレッシュトークンは1年有効。ChatGPT は期限前に `grant_type=refresh_token` で更新できるので、毎回パスワードを入れ直す必要はない。
 
 ## Endpoints
 
