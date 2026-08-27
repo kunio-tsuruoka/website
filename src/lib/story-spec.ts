@@ -118,17 +118,20 @@ export function normalizeStorySpec(input: unknown): StorySpec {
           ...scenario,
           id: scenario.id.trim() || generated,
           title: scenario.title.trim(),
-          given: stripKeywordPrefix(scenario.given, ['前提', 'Given']),
-          when: stripKeywordPrefix(scenario.when, ['操作', 'When']),
-          outcome: stripKeywordPrefix(scenario.outcome, ['結果', 'Then']),
+          given: stripEnglishLead(stripKeywordPrefix(scenario.given, ['前提']), ['Given']),
+          when: stripEnglishLead(stripKeywordPrefix(scenario.when, ['操作']), ['When']),
+          outcome: stripEnglishLead(
+            stripKeywordPrefix(scenario.outcome, ['結果', '期待する結果']),
+            ['Then']
+          ),
         };
       });
     return {
       ...story,
       id,
-      role: story.role.trim(),
-      want: story.want.trim(),
-      benefit: story.benefit.trim(),
+      role: stripEnglishLead(story.role, ['As a', 'As an']),
+      want: stripEnglishLead(story.want, ['I want to', 'I want']),
+      benefit: stripEnglishLead(story.benefit, ['So that']),
       scenarios,
     };
   });
@@ -171,10 +174,23 @@ export function isStorySpec(value: unknown): value is StorySpec {
   return StorySpecSchema.safeParse(liftSpecOutcomes(value)).success;
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function stripKeywordPrefix(text: string, keywords: string[]): string {
   let next = text.trim();
   for (const keyword of keywords) {
-    const re = new RegExp(`^${keyword}\\s*[:：]\\s*`, 'i');
+    const re = new RegExp(`^${escapeRegExp(keyword)}\\s*[:：]\\s*`, 'i');
+    next = next.replace(re, '');
+  }
+  return next.trim();
+}
+
+function stripEnglishLead(text: string, keywords: string[]): string {
+  let next = text.trim();
+  for (const keyword of keywords) {
+    const re = new RegExp(`^${escapeRegExp(keyword)}\\s*[:：]?\\s*`, 'i');
     next = next.replace(re, '');
   }
   return next.trim();
@@ -295,7 +311,7 @@ export function formatStoryMarkdown(spec: StorySpec): string {
     lines.push(`### ${story.id} ${story.role}が${story.want}`);
     lines.push('');
     lines.push(`- **誰が**: ${story.role}`);
-    lines.push(`- **何をしたい**: ${story.want}`);
+    lines.push(`- **何を**: ${story.want}`);
     lines.push(`- **なぜ**: ${story.benefit}`);
     lines.push(`- **優先度**: ${story.priority}`);
     lines.push('');
@@ -351,9 +367,9 @@ export function formatRfpMarkdown(spec: StorySpec): string {
   for (const story of spec.stories) {
     lines.push(`### ${story.id}`);
     lines.push('');
-    lines.push(`- **誰が（As a）**: ${story.role}`);
-    lines.push(`- **何をしたい（I want）**: ${story.want}`);
-    lines.push(`- **なぜ（So that）**: ${story.benefit}`);
+    lines.push(`- **誰が**: ${story.role}`);
+    lines.push(`- **何を**: ${story.want}`);
+    lines.push(`- **なぜ**: ${story.benefit}`);
     lines.push(`- **優先度**: ${story.priority}`);
     lines.push('');
     for (const scenario of story.scenarios) {

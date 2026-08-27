@@ -35,37 +35,41 @@ function GherkinFields({
   return (
     <div className="grid gap-3 border-l-4 border-primary-500 bg-neutral-50 px-4 py-4">
       <label className="block">
-        <span className="mb-1.5 block font-mono text-xs font-bold text-primary-600">Scenario</span>
+        <FieldLabel>シナリオ名</FieldLabel>
         <input
           value={scenario.title}
           onChange={(e) => onChange({ ...scenario, title: e.target.value })}
+          placeholder="例：出張先で領収書を申請する"
           className={fieldClass}
         />
       </label>
       <label className="block">
-        <span className="mb-1.5 block font-mono text-xs font-bold text-neutral-500">Given</span>
+        <FieldLabel>前提（Given）</FieldLabel>
         <textarea
           value={scenario.given}
           onChange={(e) => onChange({ ...scenario, given: e.target.value })}
           rows={2}
+          placeholder="例：営業担当が出張中である"
           className={fieldClass}
         />
       </label>
       <label className="block">
-        <span className="mb-1.5 block font-mono text-xs font-bold text-primary-600">When</span>
+        <FieldLabel>操作（When）</FieldLabel>
         <textarea
           value={scenario.when}
           onChange={(e) => onChange({ ...scenario, when: e.target.value })}
           rows={2}
+          placeholder="例：領収書を撮影して申請する"
           className={fieldClass}
         />
       </label>
       <label className="block">
-        <span className="mb-1.5 block font-mono text-xs font-bold text-accent-950">Then</span>
+        <FieldLabel>期待する結果（Then）</FieldLabel>
         <textarea
           value={scenario.outcome}
           onChange={(e) => onChange({ ...scenario, outcome: e.target.value })}
           rows={3}
+          placeholder="例：上長に承認依頼が届く"
           className={fieldClass}
         />
       </label>
@@ -141,7 +145,7 @@ export function StoriesPanel({
             {spec.title || 'ストーリーと受け入れ条件'}
           </p>
           <p className="mt-1 text-sm text-neutral-700">
-            誰が・何を・なぜを直し、Given / When / Then を現場の言葉にします。
+            誰が／何を／なぜと、前提／操作／結果を現場の言葉で直します。
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -220,7 +224,7 @@ export function StoriesPanel({
               </div>
             </div>
             <h3 className="mb-4 text-xl font-bold leading-snug text-accent-950">
-              {story.role || '（誰）'}が、{story.want || '（何をしたいか）'}
+              {story.role || '（誰）'}が、{story.want || '（何を）'}
             </h3>
             <div className="grid gap-3 md:grid-cols-2">
               <label className="block">
@@ -230,28 +234,31 @@ export function StoriesPanel({
                   onChange={(e) =>
                     onChange(patchStory(spec, story.id, { ...story, role: e.target.value }))
                   }
+                  placeholder="例：営業担当"
                   className={fieldClass}
                 />
               </label>
               <label className="block">
-                <FieldLabel>何をしたいか</FieldLabel>
+                <FieldLabel>何を</FieldLabel>
                 <input
                   value={story.want}
                   onChange={(e) =>
                     onChange(patchStory(spec, story.id, { ...story, want: e.target.value }))
                   }
+                  placeholder="例：出張先で領収書を申請する"
                   className={fieldClass}
                 />
               </label>
             </div>
             <label className="mt-3 block">
-              <FieldLabel>なぜなら</FieldLabel>
+              <FieldLabel>なぜ</FieldLabel>
               <textarea
                 value={story.benefit}
                 onChange={(e) =>
                   onChange(patchStory(spec, story.id, { ...story, benefit: e.target.value }))
                 }
                 rows={2}
+                placeholder="例：月末にまとめる手間をなくす"
                 className={fieldClass}
               />
             </label>

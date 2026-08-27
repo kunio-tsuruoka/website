@@ -74,6 +74,24 @@ describe('normalizeStorySpec', () => {
     expect(spec.stories[0].scenarios[0].given).toBe('営業担当が出張中である');
     expect(spec.stories[0].scenarios[0].when).toBe('領収書を撮影して申請する');
   });
+
+  test('As a / I want / So that の接頭辞を落とす', () => {
+    const next = normalizeStorySpec({
+      ...raw,
+      stories: [
+        {
+          role: 'As a 営業担当',
+          want: 'I want to 出張先で申請する',
+          benefit: 'So that 月末作業をなくす',
+          priority: '必須',
+          scenarios: [],
+        },
+      ],
+    });
+    expect(next.stories[0].role).toBe('営業担当');
+    expect(next.stories[0].want).toBe('出張先で申請する');
+    expect(next.stories[0].benefit).toBe('月末作業をなくす');
+  });
 });
 
 describe('parseStorySpecJson', () => {
@@ -157,7 +175,12 @@ describe('formatRfpMarkdown', () => {
     expect(md).toContain('## 3. 目指す姿（To-Be）');
     expect(md).toContain('## 4. 機能要件（ユーザーストーリーとシナリオ）');
     expect(md).toContain('### US-01');
-    expect(md).toContain('**誰が（As a）**: 営業担当');
+    expect(md).toContain('**誰が**: 営業担当');
+    expect(md).toContain('**何を**: 出張先で領収書を撮影して申請したい');
+    expect(md).toContain('**なぜ**: 帰社後にまとめる手間をなくしたい');
+    expect(md).not.toContain('As a');
+    expect(md).not.toContain('I want');
+    expect(md).not.toContain('So that');
   });
 
   test('空の制約は要相談にする', () => {

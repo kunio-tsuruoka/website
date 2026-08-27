@@ -36,7 +36,7 @@ export function RfpPanel({
             </li>
             <li className="border-b border-neutral-200 px-4 py-3 md:border-b-0 md:border-r">
               <span className="mr-2 font-Poppins text-xs text-primary-500">02</span>
-              ストーリーと Gherkin
+              ストーリーとシナリオ
             </li>
             <li className="px-4 py-3">
               <span className="mr-2 font-Poppins text-xs text-primary-500">03</span>

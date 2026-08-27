@@ -22,7 +22,10 @@ export type ChatTurn = {
   content: string;
 };
 
-const GHERKIN_RULES = `シナリオは Given / When / Then。when は意図した行為を1つ。then は業務上の帰結。現在形・三人称。値の先頭に Given/When/Then は書かない。
+const LANGUAGE_RULES = `値はすべて日本語。英語の As a / I want / So that は使わない。
+role は「営業担当」、want は「出張先で領収書を申請する」、benefit は「月末にまとめる手間をなくす」のように、現場の人が話す言葉。
+シナリオの本文も日本語。when は意図した行為を1つ。then は業務上の帰結。現在形・三人称。
+値の先頭に Given / When / Then / 前提 / 操作 / 結果 は書かない。
 画面名・ボタン名を normal / error / boundary に書かない。入力にない数値・固有名詞は捏造しない。`;
 
 function specJson(spec: StorySpec): string {
@@ -38,8 +41,8 @@ ${description}
 # 整理の順番
 1. 現状（As-Is）と目指す姿（To-Be）を分ける。入力に現状が薄くても、書かれている範囲だけ書く。一般論で埋めない
 2. ユーザーストーリーは「登場人物の目標」単位。システム機能の一覧にしない。3〜6件
-3. 各ストーリーに Gherkin シナリオを付ける。正常系1〜2、異常系1、必要なら境界1
-4. ${GHERKIN_RULES}
+3. 各ストーリーにシナリオを付ける。正常系1〜2、異常系1、必要なら境界1
+4. ${LANGUAGE_RULES}
    - 良い when: 「営業担当が出張先で領収書を申請する」
    - 悪い when: 「申請ボタンをタップする」「申請画面を開く」
 5. 非機能・制約・提案依頼は分かる範囲だけ。不明なら空配列
@@ -63,18 +66,18 @@ ${description}
   "stories": [
     {
       "id": "US-01",
-      "role": "誰が",
-      "want": "何をしたいか",
-      "benefit": "なぜか",
+      "role": "営業担当",
+      "want": "出張先で領収書を申請する",
+      "benefit": "月末にまとめる手間をなくす",
       "priority": "必須",
       "scenarios": [
         {
           "id": "SC-US-01-N1",
           "title": "短いタイトル",
           "type": "normal",
-          "given": "前提（キーワードは値に含めない）",
-          "when": "操作1つ（キーワードは値に含めない）",
-          "then": "結果。複数なら改行で続ける"
+          "given": "営業担当が出張中である",
+          "when": "領収書を撮影して申請する",
+          "then": "上長に承認依頼が届く"
         }
       ]
     }
@@ -100,7 +103,7 @@ ${specJson(spec)}
 
 # 出力
 有効な JSON オブジェクト1つだけ。title / background / asIs / toBe を含む完全な StorySpec を返す。stories はいまの整理をそのまま残す。
-${GHERKIN_RULES}
+${LANGUAGE_RULES}
 前置きは出さない。`;
 }
 
@@ -120,9 +123,9 @@ ${story ? JSON.stringify(story, null, 2) : ''}
 
 # 出力
 有効な JSON オブジェクト1つだけ。完全な StorySpec を返す。対象ストーリー以外はそのまま残す。
-対象ストーリーは id を ${storyId} のまま、role / want / benefit / scenarios を現場の言葉で書き直す。
+対象ストーリーは id を ${storyId} のまま、誰が／何を／なぜとシナリオを現場の言葉で書き直す。
 正常系1〜2、異常系1、必要なら境界1。
-${GHERKIN_RULES}
+${LANGUAGE_RULES}
 前置きは出さない。`;
 }
 
@@ -150,7 +153,7 @@ ${instruction}
   "spec": { いまの整理と同じ形の完全な StorySpec }
 }
 
-${GHERKIN_RULES}`;
+${LANGUAGE_RULES}`;
 }
 
 export function applyRevision(

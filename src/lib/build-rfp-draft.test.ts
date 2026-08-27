@@ -48,7 +48,8 @@ describe('buildRfpMarkdown', () => {
     expect(md).toContain('# RFP（提案依頼書）ドラフト: 経費精算システムの要件整理');
     expect(md).toContain('出張後に紙の領収書をまとめて申請している。');
     expect(md).toContain('出張先からその場で申請できる。');
-    expect(md).toContain('**誰が（As a）**: 営業担当');
+    expect(md).toContain('**誰が**: 営業担当');
+    expect(md).not.toContain('As a');
     expect(md).toContain('Given 出張中である');
     expect(md).toContain('When 領収書を撮影して申請する');
   });

@@ -89,10 +89,13 @@ describe('StoryBuilder', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'ストーリーを直す' }));
     expect(screen.getByText('営業担当が、出張先で領収書を撮影して申請したい')).toBeInTheDocument();
+    expect(screen.getByText('誰が')).toBeInTheDocument();
+    expect(screen.getByText('何を')).toBeInTheDocument();
+    expect(screen.getByText('なぜ')).toBeInTheDocument();
     expect(screen.getByDisplayValue('撮影した領収書で申請する')).toBeInTheDocument();
-    expect(screen.getAllByText('Given').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('When').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Then').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('前提（Given）').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('操作（When）').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('期待する結果（Then）').length).toBeGreaterThan(0);
     expect(screen.getByDisplayValue('上長に承認依頼が届く')).toBeInTheDocument();
     expect(screen.getByDisplayValue('通信できないときに下書きが残る')).toBeInTheDocument();
     expect(
