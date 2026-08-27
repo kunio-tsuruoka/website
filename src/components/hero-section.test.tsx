@@ -1,12 +1,13 @@
-import { renderToStaticMarkup } from 'react-dom/server';
+import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { HeroSection } from './hero-section';
 
 const visibleText = (html: string) => html.replace(/<[^>]+>/g, '').replace(/\s+/g, '');
+const renderHeroHtml = () => render(<HeroSection />).container.innerHTML;
 
 describe('HeroSection', () => {
   it('renders the first-view copy visible in the initial HTML', () => {
-    const html = renderToStaticMarkup(<HeroSection />);
+    const html = renderHeroHtml();
     const text = visibleText(html);
 
     expect(text).toContain('要件が固まる前のAI・DX・業務システム相談');
@@ -15,6 +16,9 @@ describe('HeroSection', () => {
     expect(text).toContain('何を作るべきかから一緒に考える。');
     expect(html).toContain('text-4xl font-bold leading-[1.05] text-accent-950 sm:text-5xl');
     expect(html).toContain('発注前に相談する');
+    expect(html).toContain('実案件の判断材料を見る');
+    expect(html).toContain('AIに相談する');
+    expect(html).not.toContain('PM on Rails');
     expect(html).toContain('要件が固まる前から、業務課題を整理し、まず動く形で検証します。');
     expect(html).toContain('試してから本開発を決めるためのAI・業務システム開発です。');
     expect(html).not.toContain('数百万円を発注する前に、本当に作るべきか確かめる。');
@@ -32,7 +36,7 @@ describe('HeroSection', () => {
   });
 
   it('uses a restrained decision sheet instead of a faux app dashboard', () => {
-    const html = renderToStaticMarkup(<HeroSection />);
+    const html = renderHeroHtml();
 
     expect(html).toContain('発注判断シート');
     expect(html).toContain('判断の根拠');
@@ -52,7 +56,7 @@ describe('HeroSection', () => {
   });
 
   it('keeps the hero compact enough for the proof section to appear next', () => {
-    const html = renderToStaticMarkup(<HeroSection />);
+    const html = renderHeroHtml();
 
     expect(html).not.toContain('min-h-[calc(100vh-88px)]');
     expect(html).not.toContain('lg:min-h-[720px]');
@@ -62,7 +66,7 @@ describe('HeroSection', () => {
   });
 
   it('uses restrained brand accents instead of broad generated-looking purple surfaces', () => {
-    const html = renderToStaticMarkup(<HeroSection />);
+    const html = renderHeroHtml();
 
     expect(html).toContain('border-l-8 border-primary-500');
     expect(html).toContain('border-l-2 border-primary-500 pl-3');

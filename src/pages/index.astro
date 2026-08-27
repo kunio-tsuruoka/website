@@ -1,4 +1,6 @@
 ---
+import { AskAiButton } from '@/components/ask-ai-button';
+import { AskAiSection } from '@/components/ask-ai-section';
 import ContactForm from '@/components/contact-form';
 import { HeroSection } from '@/components/hero-section';
 import { ProcessFAQ } from '@/components/process-faq-section';
@@ -155,7 +157,7 @@ try {
   <Header />
   <main class="">
     {/* メインビジュアル */}
-    <HeroSection />
+    <HeroSection client:visible />
 
     {/* 発注前の不安 */}
     <section class="relative overflow-hidden bg-neutral-50 py-12 md:py-14">
@@ -515,6 +517,13 @@ try {
       <ProcessFAQ client:visible />
     </section>
 
+    <AskAiSection
+      client:visible
+      source="home-ask-ai"
+      pageTitle="AI・DXで、何を作るべきかから一緒に考える。"
+      pageSummary="要件が固まる前から、業務課題を整理し、まず動く形で検証します。作ってから後悔するのではなく、試してから本開発を決めるためのAI・業務システム開発です。"
+    />
+
     {/* お問い合わせフォーム */}
     <section class="py-16 md:py-20 bg-neutral-50 relative overflow-hidden">
       <div class="container mx-auto px-8 lg:px-12 relative">
@@ -578,6 +587,14 @@ try {
             >
               導入事例を見る
             </a>
+            <AskAiButton
+              client:visible
+              source="home-final-cta"
+              variant="link"
+              tone="dark"
+              pageTitle="AI・DXで、何を作るべきかから一緒に考える。"
+              pageSummary="要件が固まる前から、業務課題を整理し、まず動く形で検証します。作ってから後悔するのではなく、試してから本開発を決めるためのAI・業務システム開発です。"
+            />
           </div>
         </div>
       </div>

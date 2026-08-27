@@ -1,4 +1,5 @@
 ---
+import { AskAiButton } from '@/components/ask-ai-button';
 import type { ServiceDetail } from '@/types/service';
 
 type Metric = { label: string; value: string };
@@ -96,6 +97,14 @@ const heroVisualItems = config?.visualItems ?? config?.illustration?.stages ?? b
               </a>
             )
           }
+          <AskAiButton
+            client:visible
+            source={`services-${service.id}-hero`}
+            variant="link"
+            pageTitle={config?.headline ?? service.title}
+            pageSummary={config?.heroLead ?? service.description}
+            serviceName={service.title}
+          />
         </div>
       </div>
 
