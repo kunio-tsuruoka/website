@@ -9,30 +9,30 @@ import {
 } from '@/lib/story-spec';
 import { ToolButton } from './sheet';
 
-const TYPE_BADGE: Record<ScenarioType, 'primaryLight' | 'warning' | 'secondaryLight'> = {
+const TYPE_BADGE: Record<ScenarioType, 'primaryLight' | 'muted' | 'outline'> = {
   normal: 'primaryLight',
-  error: 'warning',
-  boundary: 'secondaryLight',
+  error: 'outline',
+  boundary: 'muted',
 };
 
-const PRIORITY_BADGE: Record<UserStory['priority'], 'error' | 'warning' | 'muted'> = {
-  必須: 'error',
-  推奨: 'warning',
+const PRIORITY_BADGE: Record<UserStory['priority'], 'primaryLight' | 'muted'> = {
+  必須: 'primaryLight',
+  推奨: 'muted',
   任意: 'muted',
 };
 
 const KEYWORD_CLASS: Record<string, string> = {
-  'Scenario:': 'text-highlight-500',
-  Given: 'text-white/55',
-  When: 'text-secondary-400',
-  Then: 'text-white',
-  And: 'text-white/80',
+  'Scenario:': 'text-primary-600',
+  Given: 'text-neutral-500',
+  When: 'text-primary-600',
+  Then: 'text-accent-950',
+  And: 'text-neutral-600',
 };
 
 function GherkinBlock({ scenario }: { scenario: StoryScenario }) {
   const lines = formatGherkin(scenario);
   return (
-    <pre className="mt-4 overflow-x-auto bg-accent-950 px-4 py-4 font-mono text-xs leading-7 text-white/90">
+    <pre className="overflow-x-auto border-l-4 border-primary-500 bg-neutral-50 px-4 py-4 font-mono text-xs leading-7 text-accent-950">
       {lines.map((line, i) => {
         const match = line.match(/^( *)(Scenario:|Given|When|Then|And)\s+(.*)$/);
         if (!match) {
@@ -53,7 +53,7 @@ function GherkinBlock({ scenario }: { scenario: StoryScenario }) {
             >
               {keyword}
             </span>
-            <span className="text-white">{rest}</span>
+            <span className="text-accent-950">{rest}</span>
           </span>
         );
       })}
@@ -99,7 +99,7 @@ export function StoriesPanel({
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <ToolButton variant="accent" onClick={onDownloadGherkin}>
+          <ToolButton variant="primary" onClick={onDownloadGherkin}>
             Gherkin（.feature）をダウンロード
           </ToolButton>
           <ToolButton onClick={onCopyGherkin}>Gherkinをコピー</ToolButton>
@@ -121,12 +121,12 @@ export function StoriesPanel({
             <h3 className="text-xl font-bold leading-snug text-accent-950">
               {story.role}が、{story.want}
             </h3>
-            <p className="mt-3 border-l-2 border-primary-500 pl-4 text-sm leading-relaxed text-neutral-700">
+            <p className="mt-3 border-l-4 border-primary-500 pl-4 text-sm leading-relaxed text-neutral-700">
               なぜなら、{story.benefit}
             </p>
           </header>
           {story.scenarios.length > 0 && (
-            <div className="grid gap-0 divide-y divide-neutral-200 bg-neutral-50 p-4 md:p-5">
+            <div className="grid gap-3 bg-neutral-50 p-4 md:p-5">
               {story.scenarios.map((scenario) => (
                 <ScenarioCard key={scenario.id} scenario={scenario} />
               ))}

@@ -31,7 +31,10 @@ function Meta({ label, value }: { label: string; value: string }) {
 export function AsIsToBePanel({ spec }: { spec: StorySpec }) {
   return (
     <div className="grid gap-0 overflow-hidden rounded-lg border border-neutral-200 md:grid-cols-2">
-      <Sheet accent="neutral" className="rounded-none border-0 border-b md:border-b-0 md:border-r">
+      <Sheet
+        accent="neutral"
+        className="rounded-none border-0 border-b border-l-4 border-l-neutral-300 md:border-b-0 md:border-r"
+      >
         <SheetBody>
           <Eyebrow>01 AS-IS</Eyebrow>
           <p className="mb-1 text-xs font-semibold tracking-wide text-neutral-500">現状</p>
@@ -47,10 +50,10 @@ export function AsIsToBePanel({ spec }: { spec: StorySpec }) {
         </SheetBody>
       </Sheet>
 
-      <Sheet accent="primary" className="rounded-none border-0 bg-primary-50/50">
+      <Sheet accent="primary" className="rounded-none border-0 border-l-4 border-l-primary-500">
         <SheetBody>
           <Eyebrow>02 TO-BE</Eyebrow>
-          <p className="mb-1 text-xs font-semibold tracking-wide text-primary-700">目指す姿</p>
+          <p className="mb-1 text-xs font-semibold tracking-wide text-neutral-500">目指す姿</p>
           <h3 className="mb-4 text-xl font-bold leading-snug text-accent-950">
             どうなっていたいか
           </h3>

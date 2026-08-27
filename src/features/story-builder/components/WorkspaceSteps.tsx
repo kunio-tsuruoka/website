@@ -38,16 +38,18 @@ export function WorkspaceSteps({
               disabled={!enabled}
               onClick={() => onChange(item.key)}
               className={cn(
-                'flex w-full min-h-[56px] flex-col items-start justify-center gap-0.5 px-4 py-3 text-left transition-colors',
-                active && 'bg-accent-950 text-white',
-                !active && enabled && 'bg-white text-accent-950 hover:bg-neutral-50',
-                !enabled && 'cursor-not-allowed bg-neutral-50 text-neutral-400'
+                'flex w-full min-h-[56px] flex-col items-start justify-center gap-0.5 border-l-4 px-4 py-3 text-left transition-colors',
+                active && 'border-l-primary-500 bg-primary-50 text-accent-950',
+                !active &&
+                  enabled &&
+                  'border-l-transparent bg-white text-accent-950 hover:bg-neutral-50',
+                !enabled && 'cursor-not-allowed border-l-transparent bg-neutral-50 text-neutral-400'
               )}
             >
               <span
                 className={cn(
                   'font-Poppins text-[11px] font-semibold tracking-[0.16em]',
-                  active ? 'text-secondary-400' : enabled ? 'text-primary-500' : 'text-neutral-400'
+                  active ? 'text-primary-500' : enabled ? 'text-neutral-500' : 'text-neutral-400'
                 )}
               >
                 {item.n}

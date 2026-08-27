@@ -233,7 +233,7 @@ export function StoryBuilder() {
       <WorkspaceSteps step={step} hasSpec={!!spec} onChange={setStep} />
 
       {step === 'input' && (
-        <Sheet accent="navy">
+        <Sheet accent="primary">
           <SheetBody>
             <Eyebrow>01 INPUT</Eyebrow>
             <h2 className="mb-2 text-xl font-bold text-accent-950">
@@ -310,7 +310,7 @@ export function StoryBuilder() {
               className="w-full rounded-md border border-neutral-300 bg-neutral-50 px-4 py-3 text-sm leading-relaxed text-accent-950 focus:border-primary-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-300"
             />
             <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <ToolButton type="button" variant="accent" onClick={generate} disabled={loading}>
+              <ToolButton type="button" variant="primary" onClick={generate} disabled={loading}>
                 {loading ? '整理しています…（1〜2分）' : '現状・ストーリー・RFPに整理する'}
               </ToolButton>
               {spec && (
@@ -345,17 +345,17 @@ export function StoryBuilder() {
       {spec && step !== 'input' && (
         <div className="mt-5 flex flex-wrap gap-2">
           {step !== 'asis' && (
-            <ToolButton type="button" variant="outlineNavy" onClick={() => setStep('asis')}>
+            <ToolButton type="button" onClick={() => setStep('asis')}>
               現状と目指す姿
             </ToolButton>
           )}
           {step !== 'stories' && (
-            <ToolButton type="button" variant="outlineNavy" onClick={() => setStep('stories')}>
+            <ToolButton type="button" onClick={() => setStep('stories')}>
               ストーリーを見る
             </ToolButton>
           )}
           {step !== 'rfp' && (
-            <ToolButton type="button" variant="accent" onClick={() => setStep('rfp')}>
+            <ToolButton type="button" variant="primary" onClick={() => setStep('rfp')}>
               RFPを見る
             </ToolButton>
           )}

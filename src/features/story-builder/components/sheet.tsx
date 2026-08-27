@@ -9,14 +9,13 @@ export function Sheet({
 }: {
   children: ReactNode;
   className?: string;
-  accent?: 'neutral' | 'primary' | 'navy';
+  accent?: 'neutral' | 'primary';
 }) {
   return (
     <section
       className={cn(
         'rounded-lg border border-neutral-200 bg-white',
         accent === 'primary' && 'border-l-4 border-l-primary-500',
-        accent === 'navy' && 'border-l-4 border-l-accent-950',
         accent === 'neutral' && 'border-l-4 border-l-neutral-300',
         className
       )}
@@ -43,7 +42,7 @@ export function ToolButton({
   variant = 'outlinePrimary',
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'primary' | 'accent' | 'outlinePrimary' | 'outlineNavy' | 'ghost' | 'secondary';
+  variant?: 'primary' | 'outlinePrimary' | 'ghost';
 }) {
   return (
     <Button size="sm" variant={variant} className="min-h-[44px]" {...props}>
