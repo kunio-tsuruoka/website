@@ -305,8 +305,7 @@ export const consultationSituations: ConsultationSituation[] = [
     description:
       '現行の画面、コード、データ、外部連携、実際の運用から仕様を復元し、残す・捨てる・変えるを整理して段階的に刷新します。',
     lead: '全部を一から作り直しません。いま本当に使われている機能を読み解き、不要な再実装と移行リスクを減らします。',
-    audience:
-      '情シス、DX推進、事業責任者、古い基幹・業務システムの保守や刷新を任された担当者',
+    audience: '情シス、DX推進、事業責任者、古い基幹・業務システムの保守や刷新を任された担当者',
     symptoms: [
       '仕様書が古い、または存在せず、改修のたびに調査費用が増える',
       '担当者しか分からない例外処理があり、置き換えで業務が止まるのが怖い',
@@ -329,18 +328,15 @@ export const consultationSituations: ConsultationSituation[] = [
     returnMaterials: [
       {
         title: '現行仕様マップ',
-        description:
-          '画面、機能、データ、外部連携、権限、定期処理、利用部門を一つの地図にします。',
+        description: '画面、機能、データ、外部連携、権限、定期処理、利用部門を一つの地図にします。',
       },
       {
         title: '刷新スコープ',
-        description:
-          '残す・変える・捨てる・後回しにする範囲を分け、全面刷新と部分刷新を比較します。',
+        description: '残す・変える・捨てる・後回しにする範囲を分け、全面刷新と部分刷新を比較します。',
       },
       {
         title: '移行計画と概算レンジ',
-        description:
-          '最初に置き換える範囲、並行運用、データ移行、停止時間、主なリスクと費用前提を整理します。',
+        description: '最初に置き換える範囲、並行運用、データ移行、停止時間、主なリスクと費用前提を整理します。',
       },
     ],
     proof: {
@@ -358,20 +354,17 @@ export const consultationSituations: ConsultationSituation[] = [
       {
         label: '成果物サンプル',
         value: '現行仕様マップ',
-        description:
-          '資料だけを信じず、実際の画面、コード、データ、運用から現行仕様を復元します。',
+        description: '資料だけを信じず、実際の画面、コード、データ、運用から現行仕様を復元します。',
       },
       {
         label: '判断材料',
         value: '残す・捨てる・変える',
-        description:
-          '使われていない機能まで再実装せず、投資する範囲を機能単位で決めます。',
+        description: '使われていない機能まで再実装せず、投資する範囲を機能単位で決めます。',
       },
       {
         label: '次に確認すること',
         value: '段階移行の条件',
-        description:
-          '旧システムとの並行運用、データ移行、切替手順、停止時間を確認します。',
+        description: '旧システムとの並行運用、データ移行、切替手順、停止時間を確認します。',
       },
     ],
     deferCriteria: [
@@ -383,14 +376,12 @@ export const consultationSituations: ConsultationSituation[] = [
       {
         label: '要件定義から伴走する開発',
         href: '/services/requirements-definition-support',
-        description:
-          '現行仕様の復元から、受入条件、変更履歴、実装まで同じ流れで進めます。',
+        description: '現行仕様の復元から、受入条件、変更履歴、実装まで同じ流れで進めます。',
       },
       {
         label: 'Web・モバイルアプリ開発',
         href: '/services/web-mobile-development',
-        description:
-          '古い業務システムの段階的な再設計、再実装、移行、保守まで対応します。',
+        description: '古い業務システムの段階的な再設計、再実装、移行、保守まで対応します。',
       },
     ],
   },
