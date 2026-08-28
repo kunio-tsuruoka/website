@@ -50,6 +50,20 @@ describe('consultation situation IA', () => {
     );
   });
 
+  it('explains what PM on Rails is inside the legacy modernization LP', () => {
+    const detailPage = readSource('src/pages/situations/[slug].astro');
+    const section = readSource('src/components/pm-on-rails-section.astro');
+
+    expect(detailPage).toContain("situation.slug === 'legacy-system-modernization'");
+    expect(detailPage).toContain('<PmOnRailsSection />');
+    expect(section).toContain('PM on Railsとは');
+    expect(section).toContain('Beekleが自社開発し、実際の開発で使っている');
+    expect(section).toContain('現行システムから仕様を読み解く');
+    expect(section).toContain('要求・利用場面・確認条件へ分ける');
+    expect(section).toContain('実装とテストの結果を書き戻す');
+    expect(section).toContain('https://pmonrails.com/');
+  });
+
   it('keeps buyer-facing situation copy free of internal CEP/RTB jargon', () => {
     const indexPage = readSource('src/pages/situations/index.astro');
     const detailPage = readSource('src/pages/situations/[slug].astro');
