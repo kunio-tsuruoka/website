@@ -32,7 +32,7 @@ describe('consultation situation IA', () => {
 
   it('adds legacy system modernization to the consultation hub and home cards', () => {
     const situation = consultationSituations.find(
-      (item) => item.slug === 'legacy-system-modernization'
+      (item) => item.slug === 'legacy-system-modernization',
     );
 
     expect(situation).toMatchObject({
@@ -46,7 +46,7 @@ describe('consultation situation IA', () => {
       '移行計画と概算レンジ',
     ]);
     expect(featuredConsultationSituations.map((item) => item.slug)).toContain(
-      'legacy-system-modernization'
+      'legacy-system-modernization',
     );
   });
 
@@ -88,15 +88,15 @@ describe('consultation situation IA', () => {
     const headerHtml = renderToStaticMarkup(createElement(Header));
 
     for (const slug of situationSlugs) {
-      expect(headerHtml).toContain(`href=\"/situations/${slug}\"`);
+      expect(headerHtml).toContain(`href="/situations/${slug}"`);
     }
 
     expect(home).toContain('featuredConsultationSituations');
     expect(home).toContain('/situations');
     expect(home).toContain('場面別に判断材料を見る');
     expect(headerHtml).toContain('相談が始まる場面一覧');
-    expect(headerHtml).toContain('href=\"/situations\"');
-    expect(home).not.toContain('href=\"/services/mvp-poc-development\" class=\"group block\"');
-    expect(home).not.toContain('href=\"/services/ai-adoption\" class=\"group block\"');
+    expect(headerHtml).toContain('href="/situations"');
+    expect(home).not.toContain('href="/services/mvp-poc-development" class="group block"');
+    expect(home).not.toContain('href="/services/ai-adoption" class="group block"');
   });
 });
