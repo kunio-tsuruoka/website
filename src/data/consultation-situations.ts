@@ -332,11 +332,13 @@ export const consultationSituations: ConsultationSituation[] = [
       },
       {
         title: '刷新スコープ',
-        description: '残す・変える・捨てる・後回しにする範囲を分け、全面刷新と部分刷新を比較します。',
+        description:
+          '残す・変える・捨てる・後回しにする範囲を分け、全面刷新と部分刷新を比較します。',
       },
       {
         title: '移行計画と概算レンジ',
-        description: '最初に置き換える範囲、並行運用、データ移行、停止時間、主なリスクと費用前提を整理します。',
+        description:
+          '最初に置き換える範囲、並行運用、データ移行、停止時間、主なリスクと費用前提を整理します。',
       },
     ],
     proof: {
