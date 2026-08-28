@@ -32,7 +32,7 @@ describe('consultation situation IA', () => {
 
   it('adds legacy system modernization to the consultation hub and home cards', () => {
     const situation = consultationSituations.find(
-      (item) => item.slug === 'legacy-system-modernization',
+      (item) => item.slug === 'legacy-system-modernization'
     );
 
     expect(situation).toMatchObject({
@@ -46,7 +46,7 @@ describe('consultation situation IA', () => {
       '移行計画と概算レンジ',
     ]);
     expect(featuredConsultationSituations.map((item) => item.slug)).toContain(
-      'legacy-system-modernization',
+      'legacy-system-modernization'
     );
   });
 
