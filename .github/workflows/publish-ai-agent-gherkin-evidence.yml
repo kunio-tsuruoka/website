@@ -10,7 +10,6 @@ on:
 
 jobs:
   publish:
-    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'content: publish AI agent Gherkin evidence article'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
