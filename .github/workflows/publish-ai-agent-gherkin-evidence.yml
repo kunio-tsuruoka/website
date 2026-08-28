@@ -1,0 +1,25 @@
+name: Publish AI Agent Gherkin Evidence Article
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/publish-ai-agent-gherkin-evidence.mjs
+      - .github/workflows/publish-ai-agent-gherkin-evidence.yml
+  workflow_dispatch:
+
+jobs:
+  publish:
+    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'content: publish AI agent Gherkin evidence article'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Publish and verify MicroCMS article
+        run: bun scripts/publish-ai-agent-gherkin-evidence.mjs --apply
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
