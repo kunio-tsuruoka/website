@@ -297,6 +297,104 @@ export const consultationSituations: ConsultationSituation[] = [
     ],
   },
   {
+    slug: 'legacy-system-modernization',
+    href: '/situations/legacy-system-modernization',
+    navLabel: '古いシステムをコスパよく刷新したい',
+    cardTitle: '仕様書がなく、古いシステムの改修費と保守負担が増えている',
+    title: '古いシステムを、必要な機能だけ次へ移す。',
+    description:
+      '現行の画面、コード、データ、外部連携、実際の運用から仕様を復元し、残す・捨てる・変えるを整理して段階的に刷新します。',
+    lead: '全部を一から作り直しません。いま本当に使われている機能を読み解き、不要な再実装と移行リスクを減らします。',
+    audience:
+      '情シス、DX推進、事業責任者、古い基幹・業務システムの保守や刷新を任された担当者',
+    symptoms: [
+      '仕様書が古い、または存在せず、改修のたびに調査費用が増える',
+      '担当者しか分からない例外処理があり、置き換えで業務が止まるのが怖い',
+      '全面刷新の見積もりが高く、どこから移せばよいか判断できない',
+    ],
+    judgmentRows: [
+      {
+        label: '現行仕様の復元',
+        text: '画面、コード、データベース、外部連携、定期処理、実際の運用から、いま使われている仕様を読み解きます。',
+      },
+      {
+        label: '刷新範囲',
+        text: '機能ごとに、残す・改善して残す・廃止する・他サービスへ置き換える・後回しにするを分けます。',
+      },
+      {
+        label: '移行方法',
+        text: '機能、部署、データの単位で段階移行できるかを確認し、並行運用と切替条件を整理します。',
+      },
+    ],
+    returnMaterials: [
+      {
+        title: '現行仕様マップ',
+        description:
+          '画面、機能、データ、外部連携、権限、定期処理、利用部門を一つの地図にします。',
+      },
+      {
+        title: '刷新スコープ',
+        description:
+          '残す・変える・捨てる・後回しにする範囲を分け、全面刷新と部分刷新を比較します。',
+      },
+      {
+        title: '移行計画と概算レンジ',
+        description:
+          '最初に置き換える範囲、並行運用、データ移行、停止時間、主なリスクと費用前提を整理します。',
+      },
+    ],
+    proof: {
+      label: 'Beekleの進め方',
+      title: '復元した仕様を、PM on Railsから実装とテストへ',
+      description:
+        '現行システムから読み解いた業務、利用場面、データ、権限、例外処理、確認条件をPM on Railsへ構造化し、そのままAIエージェントによる再実装と確認へつなぎます。',
+      points: [
+        '調査資料を別会社へ渡し直さず、仕様化から実装まで同じ流れで進行',
+        '現行の利用場面を確認条件として残し、新旧システムの動きを比較',
+        '変更理由と仕様を蓄積し、移行後の改修しやすさまで改善',
+      ],
+    },
+    rtbItems: [
+      {
+        label: '成果物サンプル',
+        value: '現行仕様マップ',
+        description:
+          '資料だけを信じず、実際の画面、コード、データ、運用から現行仕様を復元します。',
+      },
+      {
+        label: '判断材料',
+        value: '残す・捨てる・変える',
+        description:
+          '使われていない機能まで再実装せず、投資する範囲を機能単位で決めます。',
+      },
+      {
+        label: '次に確認すること',
+        value: '段階移行の条件',
+        description:
+          '旧システムとの並行運用、データ移行、切替手順、停止時間を確認します。',
+      },
+    ],
+    deferCriteria: [
+      '現行システムの画面、コード、データ、運用担当者のいずれにもアクセスできない',
+      '残す業務と廃止する業務を判断する責任者が決まっていない',
+      'データ移行後の照合方法や業務停止の許容時間を決められない',
+    ],
+    relatedServices: [
+      {
+        label: '要件定義から伴走する開発',
+        href: '/services/requirements-definition-support',
+        description:
+          '現行仕様の復元から、受入条件、変更履歴、実装まで同じ流れで進めます。',
+      },
+      {
+        label: 'Web・モバイルアプリ開発',
+        href: '/services/web-mobile-development',
+        description:
+          '古い業務システムの段階的な再設計、再実装、移行、保守まで対応します。',
+      },
+    ],
+  },
+  {
     slug: 'internal-document-search',
     href: '/situations/internal-document-search',
     navLabel: '社内資料を根拠付きで検索したい',
@@ -565,7 +663,7 @@ export const consultationSituations: ConsultationSituation[] = [
   },
 ];
 
-export const featuredConsultationSituations = consultationSituations.slice(0, 6);
+export const featuredConsultationSituations = consultationSituations.slice(0, 7);
 
 export const consultationNavigationItems = [
   { label: '相談が始まる場面一覧', href: consultationHub.href },
