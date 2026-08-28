@@ -1,6 +1,10 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { Header } from '@/components/header';
+import {
+  consultationSituations,
+  featuredConsultationSituations,
+} from '@/data/consultation-situations';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -13,6 +17,7 @@ const situationSlugs = [
   'requirements-unclear',
   'ai-adoption',
   'business-systemization',
+  'legacy-system-modernization',
   'internal-document-search',
   'customer-data-foundation',
   'stalled-project',
@@ -23,6 +28,26 @@ describe('consultation situation IA', () => {
     expect(existsSync(pathFor('src/data/consultation-situations.ts'))).toBe(true);
     expect(existsSync(pathFor('src/pages/situations/index.astro'))).toBe(true);
     expect(existsSync(pathFor('src/pages/situations/[slug].astro'))).toBe(true);
+  });
+
+  it('adds legacy system modernization to the consultation hub and home cards', () => {
+    const situation = consultationSituations.find(
+      (item) => item.slug === 'legacy-system-modernization'
+    );
+
+    expect(situation).toMatchObject({
+      href: '/situations/legacy-system-modernization',
+      navLabel: '古いシステムをコスパよく刷新したい',
+      title: '古いシステムを、必要な機能だけ次へ移す。',
+    });
+    expect(situation?.returnMaterials.map((item) => item.title)).toEqual([
+      '現行仕様マップ',
+      '刷新スコープ',
+      '移行計画と概算レンジ',
+    ]);
+    expect(featuredConsultationSituations.map((item) => item.slug)).toContain(
+      'legacy-system-modernization'
+    );
   });
 
   it('keeps buyer-facing situation copy free of internal CEP/RTB jargon', () => {
@@ -62,7 +87,7 @@ describe('consultation situation IA', () => {
     const home = readSource('src/pages/index.astro');
     const headerHtml = renderToStaticMarkup(createElement(Header));
 
-    for (const slug of situationSlugs.slice(0, 5)) {
+    for (const slug of situationSlugs) {
       expect(headerHtml).toContain(`href="/situations/${slug}"`);
     }
 
