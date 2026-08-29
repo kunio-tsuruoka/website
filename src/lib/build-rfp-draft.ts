@@ -79,6 +79,19 @@ function summarizeDiagram(d?: FlowState['state']['asIs']): string {
   return `- 業務名: ${d.title || '未設定'}\n- 工程: ${phases}\n- 担当: ${lanes}\n- ステップ数: ${d.steps.length}`;
 }
 
+export function hasRfpSourceData(): { story: boolean; flow: boolean; scope: boolean } {
+  const spec = readStoryState();
+  const flow = readJson<FlowState>(FLOW_KEY);
+  const scope = readJson<ScopeState>(SCOPE_KEY);
+  const flowSteps =
+    (flow?.state?.asIs?.steps?.length ?? 0) + (flow?.state?.toBe?.steps?.length ?? 0);
+  return {
+    story: !!spec,
+    flow: flowSteps > 0,
+    scope: (scope?.requirements?.length ?? 0) > 0,
+  };
+}
+
 function readStoryState(): StorySpec | null {
   const current = readJson<StoryState>(STORY_KEY);
   if (current?.spec && isStorySpec(current.spec)) return current.spec;

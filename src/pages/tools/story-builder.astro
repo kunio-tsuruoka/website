@@ -2,6 +2,7 @@
 import { Header } from '../../components/header';
 import JsonLd from '../../components/seo/json-ld.astro';
 import { StoryBuilder } from '../../components/story-builder';
+import ToolPath from '../../components/tool-path.astro';
 import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
 import Layout from '../../layouts/layout.astro';
@@ -9,7 +10,7 @@ import Layout from '../../layouts/layout.astro';
 
 <Layout
   title="ユーザーストーリー作成ツール｜現状と目指す姿からシナリオとRFPまで | Beekle"
-  description="やりたいことを書くと、現状（As-Is）と目指す姿（To-Be）、ユーザーストーリー、Gherkinシナリオ、RFPの下書きまで一気に整理します。開発会社との打ち合わせ前に使えます。"
+  description="やりたいことを書くと、現状と目指す姿、誰が／何を／なぜ、前提／操作／結果、RFPの下書きまで一気に整理します。開発会社との打ち合わせ前に使えます。"
 >
   <JsonLd
     slot="head"
@@ -56,6 +57,10 @@ import Layout from '../../layouts/layout.astro';
 
     <section class="border-b border-neutral-300 bg-neutral-100 py-12 md:py-16">
       <div class="container mx-auto px-6 md:px-8 max-w-7xl">
+        <div class="mb-10">
+          <ToolPath current="story-builder" />
+        </div>
+
         <ol class="mb-10 grid overflow-hidden rounded-lg border border-neutral-200 bg-white md:grid-cols-3">
           <li class="border-b border-neutral-200 p-6 md:border-b-0 md:border-r">
             <p class="mb-3 font-Poppins text-3xl font-bold text-primary-500">01</p>
@@ -81,31 +86,6 @@ import Layout from '../../layouts/layout.astro';
         </ol>
 
         <StoryBuilder client:load />
-
-        <div class="mt-10 border border-neutral-200 bg-white">
-          <div class="border-b border-neutral-200 px-6 py-4">
-            <p class="font-Poppins text-[11px] font-semibold tracking-[0.16em] text-primary-500">NEXT</p>
-            <h2 class="mt-1 text-lg font-bold text-accent-950">前後の工程</h2>
-          </div>
-          <ul class="divide-y divide-neutral-200 text-sm text-neutral-700">
-            <li class="flex flex-col gap-1 px-6 py-3 md:flex-row md:items-baseline md:gap-3">
-              <a href="/tools/flow-mapper" class="inline-block min-h-[44px] py-2 font-semibold text-primary-600 hover:underline">業務フロー可視化ツール</a>
-              <span>担当と手順で現状を図にする</span>
-            </li>
-            <li class="flex flex-col gap-1 px-6 py-3 md:flex-row md:items-baseline md:gap-3">
-              <a href="/tools/scope-manager" class="inline-block min-h-[44px] py-2 font-semibold text-primary-600 hover:underline">スコープ管理ツール</a>
-              <span>シナリオを「作る／後回し／作らない」に振り分ける</span>
-            </li>
-            <li class="flex flex-col gap-1 px-6 py-3 md:flex-row md:items-baseline md:gap-3">
-              <a href="/tools/rfp-builder" class="inline-block min-h-[44px] py-2 font-semibold text-primary-600 hover:underline">RFPドラフト自動生成</a>
-              <span>予算・時期・連絡先を足して発注用の一枚にする</span>
-            </li>
-            <li class="flex flex-col gap-1 px-6 py-3 md:flex-row md:items-baseline md:gap-3">
-              <a href="/tools" class="inline-block min-h-[44px] py-2 font-semibold text-primary-600 hover:underline">発注準備キット</a>
-              <span>4つのツールの位置づけ</span>
-            </li>
-          </ul>
-        </div>
       </div>
     </section>
 

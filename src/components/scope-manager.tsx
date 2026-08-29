@@ -713,6 +713,15 @@ export function ScopeManager() {
             </div>
           </div>
 
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <a
+              href="/tools/rfp-builder"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-primary-500 px-5 py-3 text-sm font-semibold text-white hover:bg-primary-600"
+            >
+              予算と連絡先を足してRFPにする
+            </a>
+            <p className="text-xs text-neutral-600">判定はブラウザに残る。次の画面で読み込む。</p>
+          </div>
           <p className="text-xs text-gray-500 mt-4">
             データはお使いのブラウザにのみ保存されます（サーバーには送信されません）。別の端末で続きを行いたい場合はCSV/Markdown出力をご利用ください。
           </p>

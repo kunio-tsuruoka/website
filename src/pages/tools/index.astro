@@ -2,6 +2,7 @@
 import { DataHousekeeping } from '../../components/data-housekeeping';
 import { Header } from '../../components/header';
 import JsonLd from '../../components/seo/json-ld.astro';
+import ToolPath from '../../components/tool-path.astro';
 import { ToolWizard } from '../../components/tool-wizard';
 import FloatingCTA from '../../components/ui/floating-cta.astro';
 import { PageHero } from '../../components/ui/page-hero';
@@ -10,7 +11,7 @@ import Layout from '../../layouts/layout.astro';
 
 <Layout
   title="発注準備キット｜業務の見える化から要件のたたき台まで | Beekle"
-  description="システム発注の前に、業務の見える化・やりたいことの言語化・作る／作らないの判定を、3つの無料ツールで一気通貫にサポート。発注前の検討材料がそろいます。ブラウザ完結で会員登録不要。"
+  description="システム発注の前に、見る→書く→切る→出すの順で、業務の見える化・やりたいことの言語化・作る／作らないの判定・RFPの下書きまで一気通貫にサポート。ブラウザ完結で会員登録不要。"
 >
   <JsonLd
     slot="head"
@@ -45,6 +46,11 @@ import Layout from '../../layouts/layout.astro';
           description: '要件を「作る／後回し／作らない」に振り分け、予算オーバーを防ぐ。',
           url: 'https://beekle.jp/tools/scope-manager',
         },
+        {
+          name: 'RFPドラフト自動生成',
+          description: '予算・時期・連絡先を足して、開発会社に渡す提案依頼書の一枚にする。',
+          url: 'https://beekle.jp/tools/rfp-builder',
+        },
       ],
     }}
   />
@@ -52,37 +58,18 @@ import Layout from '../../layouts/layout.astro';
   <main class="bg-neutral-100 pt-20">
     <PageHero
       title="発注準備キット"
-      subtitle="システムを発注する前に、現場と一緒に「何を作るか」を決めるための3つの無料ツール。業務の見える化 → やりたいことの言語化 → 作る／作らないの判定 を順に進められます。"
+      subtitle="システムを発注する前に、現場と一緒に「何を作るか」を決める。見る → 書く → 切る → 出す、の順で進められます。"
       badge="Tools"
     />
 
     <section class="border-b border-neutral-300 bg-neutral-100 py-12 md:py-16">
       <div class="container mx-auto px-6 md:px-8 max-w-6xl">
-        {/* ウィザード型オンボーディング: 状況に応じてスタート地点を提案 */}
         <div class="mb-12">
-          <ToolWizard client:load />
+          <ToolPath />
         </div>
 
-        {/* 全体の流れ */}
-        <div class="mb-12 rounded-lg border border-primary-200 bg-white p-6 md:p-8">
-          <h2 class="text-lg md:text-xl font-bold text-primary-900 mb-4">
-            発注前にやることは、だいたい3つ
-          </h2>
-          <p class="text-sm text-gray-700 leading-relaxed mb-5">
-            「いきなり開発会社に相談」が失敗の原因。発注の前に、社内で<strong>業務の現状・やりたいこと・優先順位</strong>を関係者と握っておくと、見積もりブレと作り直しが激減します。
-            それぞれの工程に対応する無料ツールを用意しました。
-          </p>
-          <ol class="space-y-3 text-sm text-gray-800 leading-relaxed list-decimal list-inside">
-            <li>
-              <strong>業務の見える化</strong> — 現状（As-Is）の業務フローを書き出して、どこに時間とコストがかかっているか把握する
-            </li>
-            <li>
-              <strong>やりたいことの言語化</strong> — 現状と目指す姿を分け、誰が何をしたいかと、うまくいく／いかない場合を書く
-            </li>
-            <li>
-              <strong>作る／作らないの判定</strong> — 全部作ると予算がパンクするので、ビジネス価値・現場で使えるか・コストで取捨選択する
-            </li>
-          </ol>
+        <div class="mb-12">
+          <ToolWizard client:load />
         </div>
 
         {/* ツール紹介カード */}
@@ -94,9 +81,12 @@ import Layout from '../../layouts/layout.astro';
           >
             <div class="flex items-start gap-4">
               <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-primary-100 text-lg font-bold text-primary-600">
-                1
+                01
               </div>
               <div class="flex-1 min-w-0">
+                <p class="mb-1 font-Poppins text-[11px] font-semibold tracking-[0.16em] text-primary-500">
+                  見る
+                </p>
                 <div class="flex items-baseline justify-between flex-wrap gap-2 mb-2">
                   <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
                     業務フロー可視化ツール
@@ -125,16 +115,19 @@ import Layout from '../../layouts/layout.astro';
           >
             <div class="flex items-start gap-4">
               <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-primary-100 text-lg font-bold text-primary-600">
-                2
+                02
               </div>
               <div class="flex-1 min-w-0">
+                <p class="mb-1 font-Poppins text-[11px] font-semibold tracking-[0.16em] text-primary-500">
+                  書く
+                </p>
                 <div class="flex items-baseline justify-between flex-wrap gap-2 mb-2">
                   <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
                     ユーザーストーリー作成ツール
                   </h3>
                 </div>
                 <p class="text-sm text-gray-700 leading-relaxed mb-3">
-                  いまのやり方と、こうしたいを書くと、現状（As-Is）と目指す姿（To-Be）、ユーザーストーリー、Gherkinシナリオ、RFPの下書きまで同じ流れで出ます。
+                  いまのやり方と、こうしたいを書くと、現状と目指す姿、誰が／何を／なぜ、前提／操作／結果、RFPの下書きまで同じ流れで出ます。
                 </p>
                 <ul class="text-xs text-gray-600 space-y-1">
                   <li>・ 要望の羅列ではなく、現状と目指す姿を先に分ける</li>
@@ -156,9 +149,12 @@ import Layout from '../../layouts/layout.astro';
           >
             <div class="flex items-start gap-4">
               <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-primary-100 text-lg font-bold text-primary-600">
-                3
+                03
               </div>
               <div class="flex-1 min-w-0">
+                <p class="mb-1 font-Poppins text-[11px] font-semibold tracking-[0.16em] text-primary-500">
+                  切る
+                </p>
                 <div class="flex items-baseline justify-between flex-wrap gap-2 mb-2">
                   <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
                     スコープ管理ツール
@@ -187,22 +183,25 @@ import Layout from '../../layouts/layout.astro';
           >
             <div class="flex items-start gap-4">
               <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-primary-500 text-lg font-bold text-white">
-                4
+                04
               </div>
               <div class="flex-1 min-w-0">
+                <p class="mb-1 font-Poppins text-[11px] font-semibold tracking-[0.16em] text-primary-500">
+                  出す
+                </p>
                 <div class="flex items-baseline justify-between flex-wrap gap-2 mb-2">
                   <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
                     RFPドラフト自動生成 <span class="text-xs font-medium text-primary-500 align-middle ml-1">最終アウトプット</span>
                   </h3>
                 </div>
                 <p class="text-sm text-gray-700 leading-relaxed mb-3">
-                  Step 1〜3 で作ったデータと、プロジェクト基本情報（名称・予算・希望時期等）を統合して、開発会社に渡せる RFP を一枚にします。ストーリー作成ツールの下書きを、予算と連絡先まで足して完成させます。
+                  02と03で作った中身に、プロジェクト名、予算、希望時期、連絡先を足して、開発会社に渡す一枚にします。先に中身がないと、空の章立てになります。
                 </p>
                 <ul class="text-xs text-gray-600 space-y-1">
                   <li>・ 章立て: 概要／背景／現状／改善後／要件と優先度／提案依頼／連絡先</li>
                   <li>・ 各ツールがブラウザに保存しているデータを読み込んで自動で章を埋める</li>
                   <li>・ Markdown でダウンロード、クリップボードにコピー</li>
-                  <li>・ 単独でも基本情報だけ書いて RFP テンプレとして使える</li>
+                  <li>・ 中身は 02 で書き、優先度は 03 で切ってから開く</li>
                 </ul>
               </div>
               <div class="hidden md:block flex-shrink-0 text-primary-500 self-center">
@@ -218,10 +217,10 @@ import Layout from '../../layouts/layout.astro';
         </div>
 
         {/* 使い方の補足 */}
-        <div class="mb-12 rounded-lg border border-blue-200 bg-blue-50 p-6">
-          <h2 class="text-base font-bold text-blue-900 mb-2">順番に使う必要はありません</h2>
-          <p class="text-sm text-blue-900 leading-relaxed">
-            「やりたいことが先に頭にある → Step2 から」「すでに要件定義書がある → Step3 から」「とにかく RFP を書きたい → Step4 から」など、状況に応じて単独で使えます。すべてブラウザだけで動作し、データはお使いの端末にのみ保存されます（サーバーには送信されません）。会員登録も不要です。
+        <div class="mb-12 rounded-lg border border-neutral-200 bg-white p-6">
+          <h2 class="text-base font-bold text-accent-950 mb-2">途中から入ってよい</h2>
+          <p class="text-sm leading-relaxed text-neutral-700">
+            業務の図が先なら 01 から。やりたいことが先なら 02 から。要件が溜まっているなら 03 から。ただし、誰が何をしたいかがないまま 04 だけ開くと、空の章立てになる。データは端末にだけ残る。会員登録は不要。
           </p>
         </div>
 
