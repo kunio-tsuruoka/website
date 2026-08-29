@@ -1,8 +1,7 @@
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-const root = fileURLToPath(new URL('..', import.meta.url));
+const root = process.cwd();
 const authorByline = readFileSync(`${root}/src/components/seo/author-byline.astro`, 'utf8');
 const shareComponent = readFileSync(
   `${root}/src/components/blog/social-share-buttons.astro`,
