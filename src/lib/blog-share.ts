@@ -3,6 +3,8 @@ import { trackEvent } from './analytics';
 export type BlogShareTarget = 'x' | 'linkedin' | 'line' | 'copy' | 'native';
 export type BlogSharePosition = 'header' | 'footer';
 
+type SocialShareTarget = Extract<BlogShareTarget, 'x' | 'linkedin' | 'line'>;
+
 type BuildBlogShareLinksInput = {
   title: string;
   url: string;
@@ -14,16 +16,24 @@ type BuildBlogShareEventParamsInput = {
   position: BlogSharePosition;
 };
 
+function buildTrackedArticleUrl(url: string, source: SocialShareTarget): string {
+  const trackedUrl = new URL(url);
+  trackedUrl.searchParams.set('utm_source', source);
+  trackedUrl.searchParams.set('utm_medium', 'social');
+  trackedUrl.searchParams.set('utm_campaign', 'blog_share');
+  return trackedUrl.toString();
+}
+
 export function buildBlogShareLinks({ title, url }: BuildBlogShareLinksInput) {
-  const x = new URL('https://twitter.com/intent/tweet');
+  const x = new URL('https://x.com/intent/tweet');
   x.searchParams.set('text', title);
-  x.searchParams.set('url', url);
+  x.searchParams.set('url', buildTrackedArticleUrl(url, 'x'));
 
   const linkedin = new URL('https://www.linkedin.com/sharing/share-offsite/');
-  linkedin.searchParams.set('url', url);
+  linkedin.searchParams.set('url', buildTrackedArticleUrl(url, 'linkedin'));
 
   const line = new URL('https://social-plugins.line.me/lineit/share');
-  line.searchParams.set('url', url);
+  line.searchParams.set('url', buildTrackedArticleUrl(url, 'line'));
   line.searchParams.set('text', title);
 
   return {
@@ -39,8 +49,9 @@ export function buildBlogShareEventParams({
   position,
 }: BuildBlogShareEventParamsInput): Record<string, string> {
   return {
-    article_slug: slug,
-    share_target: target,
+    method: target,
+    content_type: 'blog_article',
+    item_id: slug,
     share_position: position,
   };
 }
@@ -51,7 +62,7 @@ function trackBlogShare(root: HTMLElement, target: BlogShareTarget): void {
   if (!slug || !position) return;
 
   trackEvent(
-    'blog_share',
+    'share',
     buildBlogShareEventParams({
       slug,
       target,
@@ -84,10 +95,11 @@ async function copyShareUrl(url: string): Promise<void> {
   if (!copied) throw new Error('URLをコピーできませんでした');
 }
 
-export function initBlogShareButtons(root: ParentNode = document): void {
+export function initBlogShareButtons(root?: ParentNode): void {
   if (typeof document === 'undefined') return;
+  const scope = root ?? document;
 
-  for (const shareRoot of root.querySelectorAll<HTMLElement>('[data-blog-share-root]')) {
+  for (const shareRoot of scope.querySelectorAll<HTMLElement>('[data-blog-share-root]')) {
     if (shareRoot.dataset.shareBound === 'true') continue;
     shareRoot.dataset.shareBound = 'true';
 
