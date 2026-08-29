@@ -16,7 +16,9 @@ describe('buildBlogShareLinks', () => {
   it('LinkedInへ記事URLを渡す', () => {
     const shareUrl = new URL(buildBlogShareLinks({ title, url }).linkedin);
 
-    expect(shareUrl.origin + shareUrl.pathname).toBe('https://www.linkedin.com/sharing/share-offsite/');
+    expect(shareUrl.origin + shareUrl.pathname).toBe(
+      'https://www.linkedin.com/sharing/share-offsite/'
+    );
     expect(shareUrl.searchParams.get('url')).toBe(url);
   });
 
