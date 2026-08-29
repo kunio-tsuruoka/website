@@ -14,37 +14,29 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 3
     steps:
-      - name: Wait for the deployed updater and verify the published article
+      - name: Update and verify the published article
         env:
           UPDATE_URL: https://beekle.jp/api/ops/update-small-rag-graphrag-examples-545a918ef1539e3a
         run: |
           set -euo pipefail
 
-          for attempt in $(seq 1 60); do
-            status="$(curl --silent --show-error --location \
-              --output response.json \
-              --write-out '%{http_code}' \
-              "$UPDATE_URL" || true)"
+          status="$(curl --silent --show-error --location \
+            --output response.json \
+            --write-out '%{http_code}' \
+            "$UPDATE_URL" || true)"
 
-            if [ "$status" = "200" ] && jq -e '
-              (.ok == true) and
-              (.headingCount == 1) and
-              (.productExampleVerified == true) and
-              (.regulationExampleVerified == true) and
-              (.fraudExampleVerified == true) and
-              (.boundaryVerified == true) and
-              (.pmOnRailsVerified == true)
-            ' response.json >/dev/null; then
-              cat response.json
-              exit 0
-            fi
+          echo "status=$status"
+          cat response.json 2>/dev/null || true
 
-            echo "attempt=$attempt status=$status"
-            cat response.json 2>/dev/null || true
-            sleep 10
-          done
-
-          echo 'The fixed content updater did not return a verified result.' >&2
-          exit 1
+          [ "$status" = "200" ]
+          jq -e '
+            (.ok == true) and
+            (.headingCount == 1) and
+            (.productExampleVerified == true) and
+            (.regulationExampleVerified == true) and
+            (.fraudExampleVerified == true) and
+            (.boundaryVerified == true) and
+            (.pmOnRailsVerified == true)
+          ' response.json >/dev/null
