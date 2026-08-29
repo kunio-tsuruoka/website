@@ -139,14 +139,14 @@ export const GET: APIRoute = async ({ locals }) => {
     MICROCMS_SERVICE_DOMAIN: serviceDomain,
     MICROCMS_API_KEY: apiKey,
     MCP_BEARER_TOKEN: LOCAL_MCP_BEARER_TOKEN,
-    ALLOWED_ENDPOINTS: 'columns',
+    ALLOWED_ENDPOINTS: 'blogs',
   };
 
   try {
     const current = await callMcpTool(
       'microcms_get_content',
       {
-        endpoint: 'columns',
+        endpoint: 'blogs',
         contentId: CONTENT_ID,
         fields: 'id,title,description,category,publishedAt,updatedAt,content',
       },
@@ -182,7 +182,7 @@ export const GET: APIRoute = async ({ locals }) => {
     const updateResult = await callMcpTool(
       'microcms_update_content',
       {
-        endpoint: 'columns',
+        endpoint: 'blogs',
         contentId: CONTENT_ID,
         status: 'published',
         fields: { content: nextContent },
@@ -194,7 +194,7 @@ export const GET: APIRoute = async ({ locals }) => {
     const verified = await callMcpTool(
       'microcms_get_content',
       {
-        endpoint: 'columns',
+        endpoint: 'blogs',
         contentId: CONTENT_ID,
         fields: 'id,title,description,category,publishedAt,updatedAt,content',
       },
