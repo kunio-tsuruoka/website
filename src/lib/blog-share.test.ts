@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  buildBlogShareEventParams,
-  buildBlogShareLinks,
-} from './blog-share';
+import { buildBlogShareEventParams, buildBlogShareLinks } from './blog-share';
 
 describe('buildBlogShareLinks', () => {
   const title = '小さな社内システムのRAGに、ベクトルDBはいらないかもしれない';
@@ -19,18 +16,14 @@ describe('buildBlogShareLinks', () => {
   it('LinkedInへ記事URLを渡す', () => {
     const shareUrl = new URL(buildBlogShareLinks({ title, url }).linkedin);
 
-    expect(shareUrl.origin + shareUrl.pathname).toBe(
-      'https://www.linkedin.com/sharing/share-offsite/'
-    );
+    expect(shareUrl.origin + shareUrl.pathname).toBe('https://www.linkedin.com/sharing/share-offsite/');
     expect(shareUrl.searchParams.get('url')).toBe(url);
   });
 
   it('LINEへ記事タイトルとURLを渡す', () => {
     const shareUrl = new URL(buildBlogShareLinks({ title, url }).line);
 
-    expect(shareUrl.origin + shareUrl.pathname).toBe(
-      'https://social-plugins.line.me/lineit/share'
-    );
+    expect(shareUrl.origin + shareUrl.pathname).toBe('https://social-plugins.line.me/lineit/share');
     expect(shareUrl.searchParams.get('text')).toBe(title);
     expect(shareUrl.searchParams.get('url')).toBe(url);
   });
