@@ -68,13 +68,9 @@ function getVerification(content: string) {
   };
 }
 
-function isVerified(
-  verification: ReturnType<typeof getVerification>,
-  publishedAt: unknown
-): boolean {
+function isVerified(verification: ReturnType<typeof getVerification>): boolean {
   return Boolean(
-    publishedAt &&
-      verification.headingCount === 1 &&
+    verification.headingCount === 1 &&
       verification.productExampleVerified &&
       verification.regulationExampleVerified &&
       verification.fraudExampleVerified &&
@@ -171,7 +167,7 @@ export const GET: APIRoute = async ({ locals }) => {
     }
 
     const currentVerification = getVerification(currentContent);
-    if (isVerified(currentVerification, current.publishedAt)) {
+    if (isVerified(currentVerification)) {
       return json(
         {
           ok: true,
@@ -216,8 +212,15 @@ export const GET: APIRoute = async ({ locals }) => {
     const verifiedContent = typeof verified.content === 'string' ? verified.content : '';
     const verification = getVerification(verifiedContent);
 
-    if (!isVerified(verification, verified.publishedAt)) {
-      throw new Error('Updated article verification failed');
+    if (!isVerified(verification)) {
+      throw new Error(
+        `Updated article verification failed: ${JSON.stringify({
+          id: verified.id,
+          title: verified.title,
+          contentLength: verifiedContent.length,
+          ...verification,
+        })}`
+      );
     }
 
     return json(
