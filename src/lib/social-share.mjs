@@ -1,8 +1,8 @@
 /**
- * Build the external share destinations used on blog detail pages.
+ * Build the external share destinations used on column detail pages.
  *
  * @param {{ title: string; url: string }} input
- * @returns {{ x: string; linkedin: string; facebook: string }}
+ * @returns {{ x: string; linkedin: string; line: string }}
  */
 export function buildSocialShareLinks({ title, url }) {
   const articleUrl = new URL(url);
@@ -10,19 +10,26 @@ export function buildSocialShareLinks({ title, url }) {
     throw new TypeError('Share URLs must use http or https.');
   }
 
-  const normalizedUrl = articleUrl.toString();
   const normalizedTitle = title.trim();
+  const trackedUrl = (source) => {
+    const value = new URL(articleUrl);
+    value.searchParams.set('utm_source', source);
+    value.searchParams.set('utm_medium', 'social');
+    value.searchParams.set('utm_campaign', 'column_share');
+    return value.toString();
+  };
 
   return {
-    x: `https://twitter.com/intent/tweet?${new URLSearchParams({
+    x: `https://x.com/intent/tweet?${new URLSearchParams({
       text: normalizedTitle,
-      url: normalizedUrl,
+      url: trackedUrl('x'),
     })}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({
-      url: normalizedUrl,
+      url: trackedUrl('linkedin'),
     })}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({
-      u: normalizedUrl,
+    line: `https://social-plugins.line.me/lineit/share?${new URLSearchParams({
+      text: normalizedTitle,
+      url: trackedUrl('line'),
     })}`,
   };
 }
