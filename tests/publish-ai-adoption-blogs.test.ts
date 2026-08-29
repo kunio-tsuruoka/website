@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { POSTS, validatePosts } from '../scripts/publish-ai-adoption-blogs.mjs';
 
@@ -34,16 +34,27 @@ describe('AI導入ブログ公開データ', () => {
     expect(operator.content).toContain('会社そのものが学習し、判断し、改善できる状態');
   });
 
-  it('Cloudflare Pagesの本番ビルドだけが公開処理を実行する', () => {
+  it('ビルド中にはMicroCMSへ書き込まない', () => {
     const packageJson = JSON.parse(readFileSync('package.json', 'utf8')) as {
       scripts?: { build?: string };
     };
-    const build = packageJson.scripts?.build;
 
-    expect(build).toContain('${CF_PAGES:-}');
-    expect(build).toContain('${CF_PAGES_BRANCH:-}');
-    expect(build).toContain('= "1"');
-    expect(build).toContain('= "main"');
-    expect(build).toContain('scripts/publish-ai-adoption-blogs.mjs --apply');
+    expect(packageJson.scripts?.build).not.toContain(
+      'scripts/publish-ai-adoption-blogs.mjs --apply'
+    );
+  });
+
+  it('Cloudflare Functions実行時のSecretsで固定2記事だけを公開する', () => {
+    const routePath = 'src/pages/api/internal/publish-ai-adoption-blogs-20260829.ts';
+
+    expect(existsSync(routePath)).toBe(true);
+    if (!existsSync(routePath)) return;
+
+    const route = readFileSync(routePath, 'utf8');
+    expect(route).toContain('export const POST');
+    expect(route).toContain('publishPosts(POSTS');
+    expect(route).toContain('MICROCMS_SERVICE_DOMAIN');
+    expect(route).toContain('MICROCMS_API_KEY');
+    expect(route).not.toContain('request.json');
   });
 });
