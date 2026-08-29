@@ -1,0 +1,60 @@
+name: Publish AI adoption leadership blogs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/publish-ai-adoption-blogs.mjs
+      - tests/publish-ai-adoption-blogs.test.ts
+      - .github/workflows/publish-ai-adoption-blogs.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: "github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'content: publish AI adoption leadership blogs')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Validate blog publication data
+        run: bun x vitest run tests/publish-ai-adoption-blogs.test.ts
+      - name: Publish both blogs to MicroCMS
+        run: bun scripts/publish-ai-adoption-blogs.mjs --apply
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+      - name: Verify public blog pages
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          verify_page() {
+            local slug="$1"
+            local title="$2"
+            local body=""
+
+            for attempt in $(seq 1 20); do
+              body="$(curl -fsSL "https://beekle.jp/blog/${slug}" || true)"
+              if grep -Fq "$title" <<< "$body"; then
+                echo "verified https://beekle.jp/blog/${slug}"
+                return 0
+              fi
+              sleep 3
+            done
+
+            echo "public verification failed for ${slug}" >&2
+            return 1
+          }
+
+          verify_page \
+            'ai-adoption-management-led' \
+            'AI導入を担当者に丸投げしても、たぶん進まない'
+          verify_page \
+            'ai-adoption-person-in-charge' \
+            'AI導入を丸投げされた担当者へ。整理されていなくても、全部持ってきてください'
