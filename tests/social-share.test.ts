@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { buildSocialShareLinks } from '../src/lib/social-share.mjs';
+import * as socialShare from '../src/lib/social-share.mjs';
 
+const { buildSocialShareLinks } = socialShare;
 const title = 'AI受託開発とは？';
 const articleUrl = 'https://beekle.jp/column/ai-development-guide';
 
@@ -43,5 +44,27 @@ describe('buildSocialShareLinks', () => {
     expect(() => buildSocialShareLinks({ title: '記事', url: 'javascript:alert(1)' })).toThrow(
       /http/i
     );
+  });
+});
+
+describe('buildSocialShareEventParams', () => {
+  it('GA4の推奨shareイベント向けの項目へ変換する', () => {
+    const eventBuilder = Reflect.get(socialShare, 'buildSocialShareEventParams');
+
+    expect(eventBuilder).toBeTypeOf('function');
+    if (typeof eventBuilder !== 'function') return;
+
+    expect(
+      eventBuilder({
+        slug: 'ai-development-guide',
+        target: 'copy',
+        placement: 'footer',
+      })
+    ).toEqual({
+      method: 'copy',
+      content_type: 'column_article',
+      item_id: 'ai-development-guide',
+      share_position: 'footer',
+    });
   });
 });
