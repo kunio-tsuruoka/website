@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import {
-  handleMicrocmsMcpRequest,
   type MicrocmsMcpEnv,
+  handleMicrocmsMcpRequest,
 } from '../../../../workers/microcms-mcp/src/index';
 import {
   GRAPH_RAG_EXAMPLES_HEADING,
