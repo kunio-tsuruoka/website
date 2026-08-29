@@ -18,8 +18,7 @@ const EXPECTED_PRODUCT_TEXT = '不良部品の製造番号';
 const EXPECTED_REGULATION_TEXT = '法改正から、直すべき規程・画面・研修資料までたどる';
 const EXPECTED_FRAUD_TEXT = '一件ずつ見ると普通な不正利用を、つながりで見つける';
 const EXPECTED_BOUNDARY_TEXT = '関係を一覧で返すだけなら';
-const GRAPH_RAG_BOUNDARY_ANCHOR =
-  '<p>データが多いから必要になるわけではありません。';
+const GRAPH_RAG_BOUNDARY_ANCHOR = '<p>データが多いから必要になるわけではありません。';
 const GRAPH_RAG_BOUNDARY_NOTE = `<p>ここで、グラフ型データベースとGraphRAGは分けた方がいいです。部品から製品、製品から顧客まで、決まった関係をたどって一覧を返すだけなら、通常のデータベース検索やグラフ検索で足ります。生成AIまで呼ぶ必要はありません。</p>
 
 <p>GraphRAGが必要になるのは、規程、会議記録、障害報告、契約書のような文章と、顧客・製品・作業の関係をまたぎ、質問ごとに違う経路を選び、集めた根拠を人が読める説明へまとめるときです。全部をグラフにすればよいわけではありません。</p>`;
