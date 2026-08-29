@@ -68,3 +68,18 @@ describe('buildSocialShareEventParams', () => {
     });
   });
 });
+
+describe('isColumnArticlePath', () => {
+  it('コラムとナレッジの記事詳細だけを共有対象にする', () => {
+    const predicate = Reflect.get(socialShare, 'isColumnArticlePath');
+
+    expect(predicate).toBeTypeOf('function');
+    if (typeof predicate !== 'function') return;
+
+    expect(predicate('/column/ai-development-guide')).toBe(true);
+    expect(predicate('/knowledge/gherkin-bdd-introduction')).toBe(true);
+    expect(predicate('/blog/small-internal-rag-without-vector-db')).toBe(false);
+    expect(predicate('/column')).toBe(false);
+    expect(predicate('/knowledge/')).toBe(false);
+  });
+});
