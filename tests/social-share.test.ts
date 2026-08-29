@@ -1,31 +1,45 @@
 import { describe, expect, it } from 'vitest';
 import { buildSocialShareLinks } from '../src/lib/social-share.mjs';
 
+const title = 'AI受託開発とは？';
+const articleUrl = 'https://beekle.jp/column/ai-development-guide';
+
+function expectTrackedArticleUrl(value: string | null, source: string): void {
+  expect(value).not.toBeNull();
+  const trackedUrl = new URL(value as string);
+  expect(trackedUrl.origin + trackedUrl.pathname).toBe(articleUrl);
+  expect(trackedUrl.searchParams.get('utm_source')).toBe(source);
+  expect(trackedUrl.searchParams.get('utm_medium')).toBe('social');
+  expect(trackedUrl.searchParams.get('utm_campaign')).toBe('column_share');
+}
+
 describe('buildSocialShareLinks', () => {
-  it('preserves Japanese titles and article URLs in each share destination', () => {
-    const title = '小さな社内システムのRAGは、ベクトルDBから始めなくていい';
-    const articleUrl = 'https://beekle.jp/blog/small-internal-rag-without-vector-db';
+  it('Xへコラムタイトルと計測可能なURLを渡す', () => {
+    const shareUrl = new URL(buildSocialShareLinks({ title, url: articleUrl }).x);
 
-    const links = buildSocialShareLinks({ title, url: articleUrl });
-
-    const x = new URL(links.x);
-    expect(x.origin).toBe('https://twitter.com');
-    expect(x.pathname).toBe('/intent/tweet');
-    expect(x.searchParams.get('text')).toBe(title);
-    expect(x.searchParams.get('url')).toBe(articleUrl);
-
-    const linkedin = new URL(links.linkedin);
-    expect(linkedin.origin).toBe('https://www.linkedin.com');
-    expect(linkedin.pathname).toBe('/sharing/share-offsite/');
-    expect(linkedin.searchParams.get('url')).toBe(articleUrl);
-
-    const facebook = new URL(links.facebook);
-    expect(facebook.origin).toBe('https://www.facebook.com');
-    expect(facebook.pathname).toBe('/sharer/sharer.php');
-    expect(facebook.searchParams.get('u')).toBe(articleUrl);
+    expect(shareUrl.origin + shareUrl.pathname).toBe('https://x.com/intent/tweet');
+    expect(shareUrl.searchParams.get('text')).toBe(title);
+    expectTrackedArticleUrl(shareUrl.searchParams.get('url'), 'x');
   });
 
-  it('rejects non-http URLs so share buttons cannot emit unsafe schemes', () => {
+  it('LinkedInへ計測可能なコラムURLを渡す', () => {
+    const shareUrl = new URL(buildSocialShareLinks({ title, url: articleUrl }).linkedin);
+
+    expect(shareUrl.origin + shareUrl.pathname).toBe(
+      'https://www.linkedin.com/sharing/share-offsite/'
+    );
+    expectTrackedArticleUrl(shareUrl.searchParams.get('url'), 'linkedin');
+  });
+
+  it('LINEへコラムタイトルと計測可能なURLを渡す', () => {
+    const shareUrl = new URL(buildSocialShareLinks({ title, url: articleUrl }).line);
+
+    expect(shareUrl.origin + shareUrl.pathname).toBe('https://social-plugins.line.me/lineit/share');
+    expect(shareUrl.searchParams.get('text')).toBe(title);
+    expectTrackedArticleUrl(shareUrl.searchParams.get('url'), 'line');
+  });
+
+  it('安全でないURLスキームを拒否する', () => {
     expect(() => buildSocialShareLinks({ title: '記事', url: 'javascript:alert(1)' })).toThrow(
       /http/i
     );
