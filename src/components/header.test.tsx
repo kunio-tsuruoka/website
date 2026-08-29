@@ -23,6 +23,13 @@ describe('Header', () => {
     expect(html.match(/進め方/g)?.length).toBeGreaterThanOrEqual(2);
   });
 
+  it('exposes AI agent development in both desktop and mobile service menus', () => {
+    const html = renderToStaticMarkup(<Header />);
+
+    expect(html.match(/AIエージェント開発/g)).toHaveLength(2);
+    expect(html.match(/\/services\/ai-agent-development/g)).toHaveLength(2);
+  });
+
   it('uses customer-facing labels in the global navigation', () => {
     const html = renderToStaticMarkup(<Header />);
 

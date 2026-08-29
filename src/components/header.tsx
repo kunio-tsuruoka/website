@@ -14,6 +14,7 @@ const methodItems = [
 const serviceItems = [
   { label: 'MVP・PoC・プロトタイプ開発', href: '/services/mvp-poc-development' },
   { label: '生成AI受託開発', href: '/services/ai-development' },
+  { label: 'AIエージェント開発', href: '/services/ai-agent-development' },
   { label: 'RAGシステム構築', href: '/services/rag-system-development' },
   { label: 'Webアプリ・モバイルアプリ開発', href: '/services/web-mobile-development' },
   { label: 'CDP構築・顧客データ基盤開発', href: '/services/cdp-development' },
