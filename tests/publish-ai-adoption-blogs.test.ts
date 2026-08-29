@@ -1,8 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import * as publisher from '../scripts/publish-ai-adoption-blogs.mjs';
-
-const { POSTS, validatePosts } = publisher;
+import { POSTS, validatePosts } from '../scripts/publish-ai-adoption-blogs.mjs';
 
 describe('AI導入ブログ公開データ', () => {
   it('経営者向けと担当者向けの2本を持つ', () => {
@@ -21,7 +19,7 @@ describe('AI導入ブログ公開データ', () => {
       expect(post.description.length).toBeGreaterThanOrEqual(70);
       expect(post.description.length).toBeLessThanOrEqual(130);
       expect(post.content).not.toContain('<h1');
-      expect(post.content.length).toBeGreaterThan(3_000);
+      expect(post.content.length).toBeGreaterThan(3000);
     }
   });
 
@@ -36,29 +34,16 @@ describe('AI導入ブログ公開データ', () => {
     expect(operator.content).toContain('会社そのものが学習し、判断し、改善できる状態');
   });
 
-  it('Cloudflare Pagesの本番ブランチだけで公開処理を許可する', () => {
-    const productionGuard = (
-      publisher as unknown as {
-        shouldPublishOnProductionBuild?: (environment: Record<string, string | undefined>) => boolean;
-      }
-    ).shouldPublishOnProductionBuild;
-
-    expect(productionGuard).toBeTypeOf('function');
-    if (!productionGuard) return;
-
-    expect(productionGuard({ CF_PAGES: '1', CF_PAGES_BRANCH: 'main' })).toBe(true);
-    expect(productionGuard({ CF_PAGES: '1', CF_PAGES_BRANCH: 'preview' })).toBe(false);
-    expect(productionGuard({ CF_PAGES_BRANCH: 'main' })).toBe(false);
-    expect(productionGuard({})).toBe(false);
-  });
-
-  it('本番ビルドが公開ガードを実行する', () => {
+  it('Cloudflare Pagesの本番ビルドだけが公開処理を実行する', () => {
     const packageJson = JSON.parse(readFileSync('package.json', 'utf8')) as {
       scripts?: { build?: string };
     };
+    const build = packageJson.scripts?.build;
 
-    expect(packageJson.scripts?.build).toContain(
-      'scripts/publish-ai-adoption-blogs.mjs --apply-on-production-build'
-    );
+    expect(build).toContain('${CF_PAGES:-}');
+    expect(build).toContain('${CF_PAGES_BRANCH:-}');
+    expect(build).toContain('= "1"');
+    expect(build).toContain('= "main"');
+    expect(build).toContain('scripts/publish-ai-adoption-blogs.mjs --apply');
   });
 });
