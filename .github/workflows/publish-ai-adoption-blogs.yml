@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - package.json
       - scripts/publish-ai-adoption-blogs.mjs
       - tests/publish-ai-adoption-blogs.test.ts
       - .github/workflows/publish-ai-adoption-blogs.yml
@@ -13,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  publish:
+  verify:
     if: "github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'content: publish AI adoption leadership blogs')"
     runs-on: ubuntu-latest
     steps:
@@ -24,37 +25,37 @@ jobs:
       - run: bun install --frozen-lockfile
       - name: Validate blog publication data
         run: bun x vitest run tests/publish-ai-adoption-blogs.test.ts
-      - name: Publish both blogs to MicroCMS
-        run: bun scripts/publish-ai-adoption-blogs.mjs --apply
-        env:
-          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
-          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
-      - name: Verify public blog pages
+      - name: Verify Cloudflare production publication
         shell: bash
         run: |
           set -euo pipefail
 
-          verify_page() {
-            local slug="$1"
-            local title="$2"
-            local body=""
+          management_title='AI導入を担当者に丸投げしても、たぶん進まない'
+          operator_title='AI導入を丸投げされた担当者へ。整理されていなくても、全部持ってきてください'
 
-            for attempt in $(seq 1 20); do
-              body="$(curl -fsSL "https://beekle.jp/blog/${slug}" || true)"
-              if grep -Fq "$title" <<< "$body"; then
-                echo "verified https://beekle.jp/blog/${slug}"
-                return 0
-              fi
-              sleep 3
-            done
+          for attempt in $(seq 1 120); do
+            management_body="$(
+              curl -fsSL \
+                -H 'Cache-Control: no-cache' \
+                "https://beekle.jp/blog/ai-adoption-management-led?verify=${GITHUB_SHA}-${attempt}" \
+                || true
+            )"
+            operator_body="$(
+              curl -fsSL \
+                -H 'Cache-Control: no-cache' \
+                "https://beekle.jp/blog/ai-adoption-person-in-charge?verify=${GITHUB_SHA}-${attempt}" \
+                || true
+            )"
 
-            echo "public verification failed for ${slug}" >&2
-            return 1
-          }
+            if grep -Fq "$management_title" <<< "$management_body" \
+              && grep -Fq "$operator_title" <<< "$operator_body"; then
+              echo 'verified https://beekle.jp/blog/ai-adoption-management-led'
+              echo 'verified https://beekle.jp/blog/ai-adoption-person-in-charge'
+              exit 0
+            fi
 
-          verify_page \
-            'ai-adoption-management-led' \
-            'AI導入を担当者に丸投げしても、たぶん進まない'
-          verify_page \
-            'ai-adoption-person-in-charge' \
-            'AI導入を丸投げされた担当者へ。整理されていなくても、全部持ってきてください'
+            sleep 5
+          done
+
+          echo 'Cloudflare production publication was not visible on both URLs.' >&2
+          exit 1
