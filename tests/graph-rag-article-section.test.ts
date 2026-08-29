@@ -5,8 +5,7 @@ import {
   upsertGraphRagExamplesSection,
 } from '../src/lib/content-updates/graph-rag-examples.mjs';
 
-const PM_ON_RAILS_HEADING =
-  '<h2 id="h188ee2fd52">PM on Railsでは、検索より関係の方が難しい</h2>';
+const PM_ON_RAILS_HEADING = '<h2 id="h188ee2fd52">PM on Railsでは、検索より関係の方が難しい</h2>';
 
 function article(...parts: string[]): string {
   return parts.join('\n');
@@ -14,17 +13,13 @@ function article(...parts: string[]): string {
 
 describe('upsertGraphRagExamplesSection', () => {
   it('inserts the GraphRAG examples immediately before the PM on Rails section', () => {
-    const current = article(
-      '<p>既存本文</p>',
-      PM_ON_RAILS_HEADING,
-      '<p>PM on Rails本文</p>'
-    );
+    const current = article('<p>既存本文</p>', PM_ON_RAILS_HEADING, '<p>PM on Rails本文</p>');
 
     const updated = upsertGraphRagExamplesSection(current);
 
     expect(updated).toContain(GRAPH_RAG_EXAMPLES_SECTION);
     expect(updated.indexOf(GRAPH_RAG_EXAMPLES_HEADING)).toBeLessThan(
-      updated.indexOf(PM_ON_RAILS_HEADING)
+      updated.indexOf(PM_ON_RAILS_HEADING),
     );
   });
 
@@ -34,7 +29,7 @@ describe('upsertGraphRagExamplesSection', () => {
       `<h2>${GRAPH_RAG_EXAMPLES_HEADING}</h2>`,
       '<p>古い説明</p>',
       PM_ON_RAILS_HEADING,
-      '<p>PM on Rails本文</p>'
+      '<p>PM on Rails本文</p>',
     );
 
     const updated = upsertGraphRagExamplesSection(current);
@@ -48,7 +43,7 @@ describe('upsertGraphRagExamplesSection', () => {
 
   it('fails safely when the insertion anchor is missing', () => {
     expect(() => upsertGraphRagExamplesSection('<p>本文だけ</p>')).toThrow(
-      /PM on Rails section heading/i
+      /PM on Rails section heading/i,
     );
   });
 });
