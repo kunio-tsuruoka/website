@@ -33,3 +33,18 @@ export function buildSocialShareLinks({ title, url }) {
     })}`,
   };
 }
+
+/**
+ * Build the GA4 recommended share event payload for a column article.
+ *
+ * @param {{ slug: string; target: string; placement: 'header' | 'footer' }} input
+ * @returns {{ method: string; content_type: string; item_id: string; share_position: string }}
+ */
+export function buildSocialShareEventParams({ slug, target, placement }) {
+  return {
+    method: target,
+    content_type: 'column_article',
+    item_id: slug,
+    share_position: placement,
+  };
+}
