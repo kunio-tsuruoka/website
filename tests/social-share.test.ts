@@ -27,7 +27,7 @@ describe('buildSocialShareLinks', () => {
 
   it('rejects non-http URLs so share buttons cannot emit unsafe schemes', () => {
     expect(() => buildSocialShareLinks({ title: '記事', url: 'javascript:alert(1)' })).toThrow(
-      /http/i,
+      /http/i
     );
   });
 });
