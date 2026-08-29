@@ -1,0 +1,42 @@
+name: One-time blog language finalization
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/one-time-blog-language-finalize.yml
+
+permissions:
+  contents: read
+
+jobs:
+  finalize-blog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Update through MCP and verify published content
+        env:
+          UPDATE_URL: https://beekle.jp/api/ops/finalize-blog-language-9f2a6c1d18b24e7a
+        run: |
+          set -euo pipefail
+          : > response.json
+          for attempt in $(seq 1 36); do
+            status="$(curl -sS --connect-timeout 10 --max-time 60 -o response.json -w '%{http_code}' "$UPDATE_URL" || true)"
+            if [ "$status" = "200" ] && jq -e '
+              .ok == true and
+              .forbiddenTermsOutsideGherkin == [] and
+              .escapedHtml == false and
+              .gherkinSyntaxPreserved == true and
+              .gherkinBlockCount >= 1
+            ' response.json >/dev/null; then
+              cat response.json
+              exit 0
+            fi
+            echo "Attempt $attempt returned HTTP $status"
+            head -c 1200 response.json || true
+            echo
+            sleep 15
+          done
+          echo "Final published-content verification failed."
+          cat response.json || true
+          exit 1
