@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  POSTS,
-  validatePosts,
-} from '../scripts/publish-ai-adoption-blogs.mjs';
+import { POSTS, validatePosts } from '../scripts/publish-ai-adoption-blogs.mjs';
 
 describe('AI導入ブログ公開データ', () => {
   it('経営者向けと担当者向けの2本を持つ', () => {

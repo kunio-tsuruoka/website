@@ -483,8 +483,7 @@ async function main() {
   console.log(JSON.stringify({ mode: 'published', results }, null, 2));
 }
 
-const isMain =
-  Boolean(process.argv[1]) && import.meta.url === pathToFileURL(process.argv[1]).href;
+const isMain = Boolean(process.argv[1]) && import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (isMain) {
   main().catch((error) => {
