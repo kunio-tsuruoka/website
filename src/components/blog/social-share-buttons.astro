@@ -1,101 +1,152 @@
 ---
-import { buildSocialShareLinks } from '../../lib/social-share.mjs';
+import { isColumnArticlePath } from '../../lib/social-share.mjs';
 
 interface Props {
-  title: string;
-  url: string;
+  title?: string;
+  url?: string;
   placement?: 'header' | 'footer';
 }
 
-const { title, url, placement = 'header' } = Astro.props;
-const links = buildSocialShareLinks({ title, url });
+const { title = '', url, placement = 'header' } = Astro.props;
+const pathname = Astro.url.pathname;
+const enabled = isColumnArticlePath(pathname);
+const articleUrl = url ?? new URL(pathname, 'https://beekle.jp').toString();
+const articleSlug = pathname.split('/').filter(Boolean).at(-1) ?? '';
 const heading =
   placement === 'footer' ? 'この記事が役に立ったら共有してください' : 'この記事を共有';
+const headingId = `column-share-${placement}-${articleSlug}`;
+const buttonClass =
+  'inline-flex min-h-[44px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-4 text-sm font-semibold text-gray-800 transition-colors hover:border-gray-500 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500';
 ---
 
-<section
-  class:list={[
-    'blog-social-share',
-    placement === 'footer'
-      ? 'mt-12 rounded-lg border border-neutral-200 bg-neutral-100 p-5 md:p-6'
-      : 'mt-6 border-t border-neutral-200 pt-5',
-  ]}
-  data-blog-share
-  data-share-placement={placement}
-  aria-label="記事の共有"
->
-  <p class="text-sm font-bold text-gray-700">{heading}</p>
-  <div class="mt-3 flex flex-wrap gap-2">
-    <a
-      href={links.x}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-4 text-sm font-semibold text-gray-800 transition-colors hover:border-gray-500 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
-      data-share-platform="x"
-      aria-label="Xでこの記事を共有"
+{
+  enabled && (
+    <section
+      class:list={[
+        'column-social-share',
+        placement === 'footer'
+          ? 'mt-8 rounded-lg border border-neutral-200 bg-neutral-100 p-5 md:p-6'
+          : 'mt-6 border-t border-neutral-200 pt-5',
+      ]}
+      data-column-share
+      data-share-placement={placement}
+      data-share-url={articleUrl}
+      data-share-title={title}
+      data-share-slug={articleSlug}
+      aria-labelledby={headingId}
+      hidden
     >
-      <span aria-hidden="true" class="text-base font-bold">𝕏</span>
-      <span>X</span>
-    </a>
-    <a
-      href={links.linkedin}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-4 text-sm font-semibold text-gray-800 transition-colors hover:border-gray-500 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
-      data-share-platform="linkedin"
-      aria-label="LinkedInでこの記事を共有"
-    >
-      <span
-        aria-hidden="true"
-        class="inline-flex h-5 w-5 items-center justify-center rounded-sm bg-gray-800 text-[11px] font-bold leading-none text-white"
-      >
-        in
-      </span>
-      <span>LinkedIn</span>
-    </a>
-    <a
-      href={links.facebook}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-4 text-sm font-semibold text-gray-800 transition-colors hover:border-gray-500 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
-      data-share-platform="facebook"
-      aria-label="Facebookでこの記事を共有"
-    >
-      <span
-        aria-hidden="true"
-        class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-gray-800 text-xs font-bold leading-none text-white"
-      >
-        f
-      </span>
-      <span>Facebook</span>
-    </a>
-    <button
-      type="button"
-      class="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-neutral-300 bg-white px-4 text-sm font-semibold text-gray-800 transition-colors hover:border-gray-500 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
-      data-share-copy
-      data-share-url={url}
-      aria-label="この記事のURLをコピー"
-    >
-      <svg
-        class="h-4 w-4"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-      </svg>
-      <span data-share-copy-label>URLをコピー</span>
-    </button>
-  </div>
-  <p class="sr-only" data-share-status aria-live="polite"></p>
-</section>
+      <p id={headingId} class="text-sm font-bold text-gray-700">
+        {heading}
+      </p>
+      {placement === 'footer' && (
+        <p class="mt-1 text-sm leading-relaxed text-gray-600">
+          同じテーマに関心がある方へ届くとうれしいです。
+        </p>
+      )}
+      <div class="mt-3 flex flex-wrap gap-2">
+        <a
+          href={articleUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={buttonClass}
+          data-share-platform="x"
+          aria-label="Xでこの記事を共有"
+        >
+          <span aria-hidden="true" class="text-base font-bold">𝕏</span>
+          <span>X</span>
+        </a>
+        <a
+          href={articleUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={buttonClass}
+          data-share-platform="linkedin"
+          aria-label="LinkedInでこの記事を共有"
+        >
+          <span
+            aria-hidden="true"
+            class="inline-flex h-5 w-5 items-center justify-center rounded-sm bg-gray-800 text-[11px] font-bold leading-none text-white"
+          >
+            in
+          </span>
+          <span>LinkedIn</span>
+        </a>
+        <a
+          href={articleUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={buttonClass}
+          data-share-platform="line"
+          aria-label="LINEでこの記事を共有"
+        >
+          <span
+            aria-hidden="true"
+            class="inline-flex h-5 w-5 items-center justify-center rounded-sm bg-gray-800 text-[10px] font-bold leading-none text-white"
+          >
+            LINE
+          </span>
+          <span>LINEで送る</span>
+        </a>
+        <button
+          type="button"
+          class={buttonClass}
+          data-share-copy
+          aria-label="この記事のURLをコピー"
+        >
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+          </svg>
+          <span data-share-copy-label>URLをコピー</span>
+        </button>
+        <button
+          type="button"
+          class={buttonClass}
+          data-share-native
+          aria-label="端末の共有画面を開く"
+          hidden
+        >
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"></path>
+          </svg>
+          <span>共有</span>
+        </button>
+      </div>
+      <p class="sr-only" data-share-status aria-live="polite"></p>
+    </section>
+  )
+}
 
 <script>
+  import {
+    buildSocialShareEventParams,
+    buildSocialShareLinks,
+  } from '../../lib/social-share.mjs';
+
+  type ShareTarget = 'x' | 'linkedin' | 'line' | 'copy' | 'native';
+  type SharePlacement = 'header' | 'footer';
   type GtagWindow = Window & {
     gtag?: (...args: unknown[]) => void;
   };
@@ -119,54 +170,105 @@ const heading =
     if (!copied) throw new Error('URL copy failed');
   }
 
-  function trackShare(platform: string, placement: string): void {
-    (window as GtagWindow).gtag?.('event', 'share', {
-      method: platform,
-      content_type: 'blog',
-      item_id: window.location.pathname,
-      placement,
-    });
+  function resolveArticleTitle(root: HTMLElement): string {
+    const explicitTitle = root.dataset.shareTitle?.trim();
+    if (explicitTitle) return explicitTitle;
+
+    const headingTitle = document.querySelector('h1')?.textContent?.trim();
+    if (headingTitle) return headingTitle;
+
+    return document.title.replace(/\s*\|\s*Beekle.*$/, '').trim();
   }
 
-  function initBlogShareButtons(): void {
-    document.querySelectorAll<HTMLElement>('[data-blog-share]').forEach((root) => {
-      if (root.dataset.shareReady === 'true') return;
-      root.dataset.shareReady = 'true';
+  function trackShare(
+    root: HTMLElement,
+    target: ShareTarget,
+    placement: SharePlacement
+  ): void {
+    const slug = root.dataset.shareSlug;
+    if (!slug) return;
 
-      const placement = root.dataset.sharePlacement ?? 'unknown';
+    (window as GtagWindow).gtag?.(
+      'event',
+      'share',
+      buildSocialShareEventParams({
+        slug,
+        target,
+        placement,
+      })
+    );
+  }
+
+  function announce(root: HTMLElement, message: string): void {
+    const status = root.querySelector<HTMLElement>('[data-share-status]');
+    if (status) status.textContent = message;
+  }
+
+  function initColumnShareButtons(): void {
+    document.querySelectorAll<HTMLElement>('[data-column-share]').forEach((root) => {
+      if (root.dataset.shareReady === 'true') return;
+
+      const articleUrl = root.dataset.shareUrl;
+      const title = resolveArticleTitle(root);
+      const placement: SharePlacement =
+        root.dataset.sharePlacement === 'footer' ? 'footer' : 'header';
+      if (!articleUrl || !title) return;
+
+      let links: ReturnType<typeof buildSocialShareLinks>;
+      try {
+        links = buildSocialShareLinks({ title, url: articleUrl });
+      } catch {
+        return;
+      }
+
       root.querySelectorAll<HTMLAnchorElement>('[data-share-platform]').forEach((link) => {
-        link.addEventListener('click', () => {
-          trackShare(link.dataset.sharePlatform ?? 'unknown', placement);
-        });
+        const target = link.dataset.sharePlatform as ShareTarget | undefined;
+        if (target === 'x' || target === 'linkedin' || target === 'line') {
+          link.href = links[target];
+          link.addEventListener('click', () => trackShare(root, target, placement));
+        }
       });
 
       const copyButton = root.querySelector<HTMLButtonElement>('[data-share-copy]');
-      const label = root.querySelector<HTMLElement>('[data-share-copy-label]');
-      const status = root.querySelector<HTMLElement>('[data-share-status]');
-      if (!copyButton || !label || !status) return;
-
-      copyButton.addEventListener('click', async () => {
-        const shareUrl = copyButton.dataset.shareUrl;
-        if (!shareUrl) return;
+      const copyLabel = root.querySelector<HTMLElement>('[data-share-copy-label]');
+      copyButton?.addEventListener('click', async () => {
+        if (!copyLabel) return;
 
         try {
-          await copyText(shareUrl);
-          label.textContent = 'コピーしました';
-          status.textContent = '記事のURLをコピーしました。';
-          trackShare('copy', placement);
+          await copyText(articleUrl);
+          copyLabel.textContent = 'コピーしました';
+          announce(root, '記事のURLをコピーしました。');
+          trackShare(root, 'copy', placement);
         } catch {
-          label.textContent = 'コピーできませんでした';
-          status.textContent = '記事のURLをコピーできませんでした。';
+          copyLabel.textContent = 'コピーできませんでした';
+          announce(root, '記事のURLをコピーできませんでした。');
         }
 
         window.setTimeout(() => {
-          label.textContent = 'URLをコピー';
-          status.textContent = '';
+          copyLabel.textContent = 'URLをコピー';
+          announce(root, '');
         }, 2400);
       });
+
+      const nativeButton = root.querySelector<HTMLButtonElement>('[data-share-native]');
+      if (nativeButton && typeof navigator.share === 'function') {
+        nativeButton.hidden = false;
+        nativeButton.addEventListener('click', async () => {
+          try {
+            await navigator.share({ title, url: articleUrl });
+            trackShare(root, 'native', placement);
+          } catch (error) {
+            if (error instanceof DOMException && error.name === 'AbortError') return;
+            announce(root, '共有画面を開けませんでした。');
+          }
+        });
+      }
+
+      root.dataset.shareReady = 'true';
+      root.hidden = false;
     });
   }
 
-  initBlogShareButtons();
-  document.addEventListener('astro:page-load', initBlogShareButtons);
+  initColumnShareButtons();
+  document.addEventListener('astro:page-load', initColumnShareButtons);
 </script>
