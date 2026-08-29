@@ -1,5 +1,6 @@
 ---
 import { Renderer, marked } from 'marked';
+import BlogSocialShare from '../../components/blog/social-share-buttons.astro';
 import { Header } from '../../components/header';
 import AuthorByline from '../../components/seo/author-byline.astro';
 import JsonLd from '../../components/seo/json-ld.astro';
@@ -199,6 +200,7 @@ const tags = normalizeTags(blog.tags);
               ))}
             </div>
           )}
+          <BlogSocialShare title={blog.title} url={articleUrl} placement="header" />
         </div>
         {imageUrl && (
           <div class="container mx-auto mt-10 max-w-5xl px-6 md:px-8">
@@ -236,6 +238,7 @@ const tags = normalizeTags(blog.tags);
           <div class="blog-content">
             <Fragment set:html={htmlContent} />
           </div>
+          <BlogSocialShare title={blog.title} url={articleUrl} placement="footer" />
         </div>
       </section>
     </article>
