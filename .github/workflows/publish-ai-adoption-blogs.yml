@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   publish:
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'content: publish AI adoption leadership blogs')
+    if: "github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'content: publish AI adoption leadership blogs')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
