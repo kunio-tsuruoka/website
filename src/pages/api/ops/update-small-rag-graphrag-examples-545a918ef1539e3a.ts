@@ -10,13 +10,19 @@ import {
 
 export const prerender = false;
 
-const EXPECTED_TOKEN_SHA256 = '545a918ef1539e3ae3e480a001ef5dd2faa710434a494b98cdb385a0e7189254';
+// One-time, fixed and idempotent content update. Remove this route after publication is verified.
 const LOCAL_MCP_BEARER_TOKEN = 'one-time-small-rag-graphrag-updater';
 const CONTENT_ID = 'small-internal-rag-without-vector-db';
 const EXPECTED_EXISTING_TEXT = '質問は「未対応は何件？」なのに、検索基盤だけ宇宙開発になる。';
 const EXPECTED_PRODUCT_TEXT = '不良部品の製造番号';
 const EXPECTED_REGULATION_TEXT = '法改正から、直すべき規程・画面・研修資料までたどる';
 const EXPECTED_FRAUD_TEXT = '一件ずつ見ると普通な不正利用を、つながりで見つける';
+const EXPECTED_BOUNDARY_TEXT = '関係を一覧で返すだけなら';
+const GRAPH_RAG_BOUNDARY_ANCHOR =
+  '<p>データが多いから必要になるわけではありません。';
+const GRAPH_RAG_BOUNDARY_NOTE = `<p>ここで、グラフ型データベースとGraphRAGは分けた方がいいです。部品から製品、製品から顧客まで、決まった関係をたどって一覧を返すだけなら、通常のデータベース検索やグラフ検索で足ります。生成AIまで呼ぶ必要はありません。</p>
+
+<p>GraphRAGが必要になるのは、規程、会議記録、障害報告、契約書のような文章と、顧客・製品・作業の関係をまたぎ、質問ごとに違う経路を選び、集めた根拠を人が読める説明へまとめるときです。全部をグラフにすればよいわけではありません。</p>`;
 
 type RuntimeEnv = {
   MICROCMS_SERVICE_DOMAIN?: string;
@@ -42,9 +48,39 @@ function json(body: unknown, status: number) {
   });
 }
 
-async function sha256Hex(value: string): Promise<string> {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
-  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
+function addGraphRagBoundaryNote(content: string): string {
+  if (content.includes(EXPECTED_BOUNDARY_TEXT)) return content;
+
+  const anchorIndex = content.indexOf(GRAPH_RAG_BOUNDARY_ANCHOR);
+  if (anchorIndex < 0) throw new Error('GraphRAG boundary insertion anchor was not found');
+
+  return `${content.slice(0, anchorIndex)}${GRAPH_RAG_BOUNDARY_NOTE}\n\n${content.slice(anchorIndex)}`;
+}
+
+function getVerification(content: string) {
+  return {
+    headingCount: content.split(GRAPH_RAG_EXAMPLES_HEADING).length - 1,
+    productExampleVerified: content.includes(EXPECTED_PRODUCT_TEXT),
+    regulationExampleVerified: content.includes(EXPECTED_REGULATION_TEXT),
+    fraudExampleVerified: content.includes(EXPECTED_FRAUD_TEXT),
+    boundaryVerified: content.includes(EXPECTED_BOUNDARY_TEXT),
+    pmOnRailsVerified: content.includes('PM on Railsでは、検索より関係の方が難しい'),
+  };
+}
+
+function isVerified(
+  verification: ReturnType<typeof getVerification>,
+  publishedAt: unknown
+): boolean {
+  return Boolean(
+    publishedAt &&
+      verification.headingCount === 1 &&
+      verification.productExampleVerified &&
+      verification.regulationExampleVerified &&
+      verification.fraudExampleVerified &&
+      verification.boundaryVerified &&
+      verification.pmOnRailsVerified
+  );
 }
 
 async function callMcpTool(
@@ -82,14 +118,7 @@ async function callMcpTool(
   return JSON.parse(text) as Record<string, unknown>;
 }
 
-export const GET: APIRoute = async ({ locals, url }) => {
-  const token = url.searchParams.get('token') ?? '';
-  const confirmed = url.searchParams.get('confirm') === 'update';
-
-  if (!confirmed || !token || (await sha256Hex(token)) !== EXPECTED_TOKEN_SHA256) {
-    return json({ ok: false, error: 'not_found' }, 404);
-  }
-
+export const GET: APIRoute = async ({ locals }) => {
   const runtime = (locals as { runtime?: { env?: RuntimeEnv } }).runtime;
   const runtimeEnv = runtime?.env ?? {};
   const serviceDomain = runtimeEnv.MICROCMS_SERVICE_DOMAIN ?? '';
@@ -131,7 +160,25 @@ export const GET: APIRoute = async ({ locals, url }) => {
       throw new Error('Existing article validation failed');
     }
 
-    const nextContent = upsertGraphRagExamplesSection(currentContent);
+    const currentVerification = getVerification(currentContent);
+    if (isVerified(currentVerification, current.publishedAt)) {
+      return json(
+        {
+          ok: true,
+          action: 'already_updated',
+          id: current.id,
+          slug: CONTENT_ID,
+          title: current.title,
+          publishedAt: current.publishedAt,
+          updatedAt: current.updatedAt,
+          contentLength: currentContent.length,
+          ...currentVerification,
+        },
+        200
+      );
+    }
+
+    const nextContent = addGraphRagBoundaryNote(upsertGraphRagExamplesSection(currentContent));
 
     const updateResult = await callMcpTool(
       'microcms_update_content',
@@ -157,19 +204,9 @@ export const GET: APIRoute = async ({ locals, url }) => {
     );
 
     const verifiedContent = typeof verified.content === 'string' ? verified.content : '';
-    const headingCount = verifiedContent.split(GRAPH_RAG_EXAMPLES_HEADING).length - 1;
-    const productExampleVerified = verifiedContent.includes(EXPECTED_PRODUCT_TEXT);
-    const regulationExampleVerified = verifiedContent.includes(EXPECTED_REGULATION_TEXT);
-    const fraudExampleVerified = verifiedContent.includes(EXPECTED_FRAUD_TEXT);
+    const verification = getVerification(verifiedContent);
 
-    if (
-      !verified.publishedAt ||
-      headingCount !== 1 ||
-      !productExampleVerified ||
-      !regulationExampleVerified ||
-      !fraudExampleVerified ||
-      !verifiedContent.includes('PM on Railsでは、検索より関係の方が難しい')
-    ) {
+    if (!isVerified(verification, verified.publishedAt)) {
       throw new Error('Updated article verification failed');
     }
 
@@ -183,10 +220,7 @@ export const GET: APIRoute = async ({ locals, url }) => {
         publishedAt: verified.publishedAt,
         updatedAt: verified.updatedAt,
         contentLength: verifiedContent.length,
-        headingCount,
-        productExampleVerified,
-        regulationExampleVerified,
-        fraudExampleVerified,
+        ...verification,
         mcpTool: 'microcms_update_content',
         updateResult,
       },
