@@ -1,5 +1,6 @@
 ---
 import { Renderer, marked } from 'marked';
+import BlogShare from '../../components/blog/blog-share.astro';
 import { Header } from '../../components/header';
 import AuthorByline from '../../components/seo/author-byline.astro';
 import JsonLd from '../../components/seo/json-ld.astro';
@@ -115,6 +116,7 @@ const relatedBlogs = await getRelatedBlogs(blogId, 4, env);
 const metaDescription = getExcerpt(blog);
 const articleUrl = `https://beekle.jp/blog/${blogId}`;
 const imageUrl = getImageUrl(blog);
+const socialImageUrl = blog.ogimage?.url || imageUrl;
 const tags = normalizeTags(blog.tags);
 ---
 
@@ -122,7 +124,7 @@ const tags = normalizeTags(blog.tags);
   title={`${blog.title} | Beekle`}
   description={metaDescription}
   ogType="article"
-  ogImage={imageUrl}
+  ogImage={socialImageUrl}
   publishedTime={blog.publishedAt}
   modifiedTime={blog.updatedAt}
   canonical={articleUrl}
@@ -136,7 +138,7 @@ const tags = normalizeTags(blog.tags);
       publishedTime: blog.publishedAt,
       modifiedTime: blog.updatedAt,
       url: articleUrl,
-      image: imageUrl,
+      image: socialImageUrl,
       reviewerId: null,
       articleSection: 'ブログ',
       keywords: tags.length > 0 ? tags.join(',') : 'Beekle,ブログ',
@@ -199,6 +201,7 @@ const tags = normalizeTags(blog.tags);
               ))}
             </div>
           )}
+          <BlogShare title={blog.title} url={articleUrl} slug={blogId} position="header" />
         </div>
         {imageUrl && (
           <div class="container mx-auto mt-10 max-w-5xl px-6 md:px-8">
@@ -235,6 +238,9 @@ const tags = normalizeTags(blog.tags);
         <div class="container mx-auto max-w-3xl px-6 md:px-8">
           <div class="blog-content">
             <Fragment set:html={htmlContent} />
+          </div>
+          <div class="mt-12">
+            <BlogShare title={blog.title} url={articleUrl} slug={blogId} position="footer" />
           </div>
         </div>
       </section>
