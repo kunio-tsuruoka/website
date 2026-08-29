@@ -48,3 +48,13 @@ export function buildSocialShareEventParams({ slug, target, placement }) {
     share_position: placement,
   };
 }
+
+/**
+ * Determine whether a pathname represents a shareable column-style article.
+ *
+ * @param {string} pathname
+ * @returns {boolean}
+ */
+export function isColumnArticlePath(pathname) {
+  return /^\/(?:column|knowledge)\/[^/]+\/?$/.test(pathname);
+}
