@@ -13,7 +13,8 @@ export const prerender = false;
 // One-time, fixed and idempotent content update. Remove this route after publication is verified.
 const LOCAL_MCP_BEARER_TOKEN = 'one-time-small-rag-graphrag-updater';
 const CONTENT_ID = 'small-internal-rag-without-vector-db';
-const EXPECTED_EXISTING_TEXT = '質問は「未対応は何件？」なのに、検索基盤だけ宇宙開発になる。';
+const EXPECTED_TITLE = '小さな社内システムのRAGは、ベクトルDBから始めなくていい';
+const MIN_EXISTING_CONTENT_LENGTH = 5_000;
 const EXPECTED_PRODUCT_TEXT = '不良部品の製造番号';
 const EXPECTED_REGULATION_TEXT = '法改正から、直すべき規程・画面・研修資料までたどる';
 const EXPECTED_FRAUD_TEXT = '一件ずつ見ると普通な不正利用を、つながりで見つける';
@@ -155,8 +156,18 @@ export const GET: APIRoute = async ({ locals }) => {
     );
 
     const currentContent = typeof current.content === 'string' ? current.content : '';
-    if (!currentContent.includes(EXPECTED_EXISTING_TEXT) || currentContent.length < 10_000) {
-      throw new Error('Existing article validation failed');
+    const sourceLooksValid =
+      current.id === CONTENT_ID &&
+      current.title === EXPECTED_TITLE &&
+      currentContent.length >= MIN_EXISTING_CONTENT_LENGTH &&
+      currentContent.includes('PM on Railsでは、検索より関係の方が難しい');
+
+    if (!sourceLooksValid) {
+      throw new Error(
+        `Existing article validation failed: id=${String(current.id)} title=${String(
+          current.title
+        )} contentLength=${currentContent.length}`
+      );
     }
 
     const currentVerification = getVerification(currentContent);
