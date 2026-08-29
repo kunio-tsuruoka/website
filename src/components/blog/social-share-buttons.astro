@@ -9,7 +9,8 @@ interface Props {
 
 const { title, url, placement = 'header' } = Astro.props;
 const links = buildSocialShareLinks({ title, url });
-const heading = placement === 'footer' ? 'この記事が役に立ったら共有してください' : 'この記事を共有';
+const heading =
+  placement === 'footer' ? 'この記事が役に立ったら共有してください' : 'この記事を共有';
 ---
 
 <section
