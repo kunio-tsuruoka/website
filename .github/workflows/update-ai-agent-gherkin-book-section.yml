@@ -1,0 +1,88 @@
+name: Update AI Agent Gherkin Book Section
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - src/pages/api/ops/update-ai-agent-gherkin-book-section-ae1a625eb65b9bc29553c257ae165e81.ts
+      - .github/workflows/update-ai-agent-gherkin-book-section.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update the published article through Beekle MCP
+        shell: bash
+        run: |
+          set -euo pipefail
+          update_url='https://beekle.jp/api/ops/update-ai-agent-gherkin-book-section-ae1a625eb65b9bc29553c257ae165e81?confirm=update&token=d-wAaniCVKwZSpRTZUgwCmu1mNy9xw-DGHkMXfwUmKU'
+
+          for attempt in $(seq 1 90); do
+            status="$(curl --silent --show-error --location \
+              --output /tmp/update-result.json \
+              --write-out '%{http_code}' \
+              "$update_url" || true)"
+            body="$(head -c 1600 /tmp/update-result.json 2>/dev/null || true)"
+            echo "update attempt=${attempt} status=${status} body=${body}"
+
+            if [[ "$status" == '200' ]] \
+              && grep -q '"ok":true' /tmp/update-result.json \
+              && grep -q '"action":"updated"' /tmp/update-result.json \
+              && grep -q '"headingCount":1' /tmp/update-result.json \
+              && grep -q '"bookSectionVerified":true' /tmp/update-result.json \
+              && grep -q '"methodSectionVerified":true' /tmp/update-result.json \
+              && grep -q '"mcpTool":"microcms_update_content"' /tmp/update-result.json; then
+              break
+            fi
+
+            if [[ "$attempt" == '90' ]]; then
+              echo 'Article updater did not become available or did not complete successfully.' >&2
+              exit 1
+            fi
+
+            sleep 5
+          done
+
+      - name: Verify the public article
+        shell: bash
+        run: |
+          set -euo pipefail
+          article_url='https://beekle.jp/column/ai-agent-gherkin-evidence'
+
+          for attempt in $(seq 1 45); do
+            status="$(curl --silent --show-error --location \
+              --output /tmp/article.html \
+              --write-out '%{http_code}' \
+              "$article_url" || true)"
+
+            if [[ "$status" == '200' ]] \
+              && grep -q '古い本だから間違っている、と言いたいわけではありません' /tmp/article.html \
+              && grep -q 'UIをBusiness Scenarioへ混ぜない代わりに' /tmp/article.html; then
+              echo "verified article_url=${article_url} status=${status}"
+              exit 0
+            fi
+
+            echo "verify attempt=${attempt} status=${status}"
+            sleep 3
+          done
+
+          echo 'The MicroCMS update succeeded but the public article could not be verified.' >&2
+          exit 1
+
+      - name: Remove the one-time updater
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm 'src/pages/api/ops/update-ai-agent-gherkin-book-section-ae1a625eb65b9bc29553c257ae165e81.ts' '.github/workflows/update-ai-agent-gherkin-book-section.yml'
+          git commit -m 'ops: remove one-time AI Gherkin book-section updater'
+          git push origin HEAD:main
