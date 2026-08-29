@@ -1,0 +1,112 @@
+---
+import {
+  type BlogSharePosition,
+  buildBlogShareLinks,
+} from '../../lib/blog-share';
+
+interface Props {
+  title: string;
+  url: string;
+  slug: string;
+  position: BlogSharePosition;
+}
+
+const { title, url, slug, position } = Astro.props;
+const links = buildBlogShareLinks({ title, url });
+const labelId = `blog-share-${position}-${slug}`;
+const isFooter = position === 'footer';
+const buttonClass =
+  'inline-flex min-h-[44px] items-center justify-center rounded-full border border-neutral-300 bg-white px-4 text-sm font-bold text-gray-700 transition-colors hover:border-primary-300 hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2';
+---
+
+<section
+  class:list={[
+    isFooter
+      ? 'rounded-lg border border-primary-100 bg-primary-50/50 p-5 md:p-6'
+      : 'mt-6 border-t border-neutral-200 pt-5',
+  ]}
+  data-blog-share-root
+  data-article-slug={slug}
+  data-share-position={position}
+  aria-labelledby={labelId}
+>
+  {
+    isFooter ? (
+      <div>
+        <p id={labelId} class="text-base font-bold text-gray-900 md:text-lg">
+          この記事が参考になったら共有してください
+        </p>
+        <p class="mt-1 text-sm leading-relaxed text-gray-600">
+          社内システムへのAI導入を検討している方へ届けてもらえるとうれしいです。
+        </p>
+      </div>
+    ) : (
+      <p id={labelId} class="text-sm font-bold text-gray-700">
+        この記事を共有
+      </p>
+    )
+  }
+
+  <div class="mt-3 flex flex-wrap gap-2">
+    <a
+      class={buttonClass}
+      href={links.x}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-share-link
+      data-share-target="x"
+      aria-label="Xでこの記事を共有"
+    >
+      X
+    </a>
+    <a
+      class={buttonClass}
+      href={links.linkedin}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-share-link
+      data-share-target="linkedin"
+      aria-label="LinkedInでこの記事を共有"
+    >
+      LinkedIn
+    </a>
+    <a
+      class={buttonClass}
+      href={links.line}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-share-link
+      data-share-target="line"
+      aria-label="LINEでこの記事を共有"
+    >
+      LINE
+    </a>
+    <button
+      type="button"
+      class={buttonClass}
+      data-share-copy
+      data-share-url={url}
+      aria-label="この記事のURLをコピー"
+    >
+      <span data-share-label>URLをコピー</span>
+    </button>
+    <button
+      type="button"
+      class={buttonClass}
+      data-share-native
+      data-share-title={title}
+      data-share-url={url}
+      aria-label="端末の共有画面を開く"
+      hidden
+    >
+      共有
+    </button>
+  </div>
+  <p class="sr-only" aria-live="polite" data-share-status></p>
+</section>
+
+<script>
+  import { initBlogShareButtons } from '../../lib/blog-share';
+
+  initBlogShareButtons();
+</script>
