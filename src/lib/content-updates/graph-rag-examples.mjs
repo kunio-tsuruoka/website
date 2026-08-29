@@ -115,10 +115,7 @@ function escapeRegExp(value) {
 }
 
 function findH2(content, heading) {
-  const pattern = new RegExp(
-    `<h2(?:\\s[^>]*)?>${escapeRegExp(heading)}<\\/h2>`,
-    'i'
-  );
+  const pattern = new RegExp(`<h2(?:\\s[^>]*)?>${escapeRegExp(heading)}<\\/h2>`, 'i');
   const match = pattern.exec(content);
   if (!match) return null;
   return { start: match.index, end: match.index + match[0].length };
