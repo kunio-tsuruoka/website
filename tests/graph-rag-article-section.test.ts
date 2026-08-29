@@ -19,7 +19,7 @@ describe('upsertGraphRagExamplesSection', () => {
 
     expect(updated).toContain(GRAPH_RAG_EXAMPLES_SECTION);
     expect(updated.indexOf(GRAPH_RAG_EXAMPLES_HEADING)).toBeLessThan(
-      updated.indexOf(PM_ON_RAILS_HEADING),
+      updated.indexOf(PM_ON_RAILS_HEADING)
     );
   });
 
@@ -29,7 +29,7 @@ describe('upsertGraphRagExamplesSection', () => {
       `<h2>${GRAPH_RAG_EXAMPLES_HEADING}</h2>`,
       '<p>古い説明</p>',
       PM_ON_RAILS_HEADING,
-      '<p>PM on Rails本文</p>',
+      '<p>PM on Rails本文</p>'
     );
 
     const updated = upsertGraphRagExamplesSection(current);
@@ -43,7 +43,7 @@ describe('upsertGraphRagExamplesSection', () => {
 
   it('fails safely when the insertion anchor is missing', () => {
     expect(() => upsertGraphRagExamplesSection('<p>本文だけ</p>')).toThrow(
-      /PM on Rails section heading/i,
+      /PM on Rails section heading/i
     );
   });
 });
