@@ -1,0 +1,32 @@
+name: Diagnose data-company-learning publication endpoint
+
+on:
+  push:
+    branches:
+      - ops/diagnose-data-company-learning-publication-20260831
+    paths:
+      - .github/workflows/diagnose-data-company-learning-publication.yml
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Fetch production publication endpoint once
+        shell: bash
+        run: |
+          set -uo pipefail
+          endpoint='https://beekle.jp/api/internal/publish-data-company-learning-sensor-8c5e4f6a2d1b49c1a7e309d4478df6cd'
+          status="$(curl --silent --show-error --location \
+            --output response.txt \
+            --write-out '%{http_code}' \
+            --header 'Cache-Control: no-cache' \
+            "$endpoint" || true)"
+          echo "HTTP_STATUS=$status"
+          echo '--- response ---'
+          cat response.txt || true
+          echo
+          test "$status" = '200'
