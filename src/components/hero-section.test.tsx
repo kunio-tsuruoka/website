@@ -10,7 +10,7 @@ describe('HeroSection', () => {
     const html = renderHeroHtml();
     const text = visibleText(html);
 
-    expect(text).toContain('数千万円を発注する前に、まず動くものを。');
+    expect(text).toContain('数百万円を発注する前に、まず動くものを。');
     expect(text).toContain(
       '要件が固まっていなくても、最短1日でデモ、1週間程度で触れる形へ。作る・見送る・範囲を変える判断材料を揃えます。'
     );
