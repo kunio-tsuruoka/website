@@ -48,7 +48,7 @@ describe('HeroSection', () => {
     expect(html).not.toContain('NDA可');
   });
 
-  it('uses a full-bleed background with copy constrained to the left', () => {
+  it('uses a full-bleed background with longer copy still constrained to the left', () => {
     const html = renderHeroHtml();
 
     expect(html).toContain('absolute inset-0 h-full w-full object-cover');
@@ -60,8 +60,11 @@ describe('HeroSection', () => {
     expect(html).not.toContain('w-[52%]');
     expect(html).not.toContain('md:hidden');
     expect(html).not.toContain('hidden border-y border-neutral-300 bg-white md:block');
-    expect(html).toContain('max-w-[20rem]');
-    expect(html).toContain('xl:max-w-[26rem]');
+    expect(html).toContain('max-w-[28rem]');
+    expect(html).toContain('xl:max-w-[36rem]');
+    expect(html).toContain('xl:text-5xl');
+    expect(html).not.toContain('max-w-[20rem]');
+    expect(html).not.toContain('xl:max-w-[26rem]');
     expect(html).not.toContain('xl:text-8xl');
     expect(html).not.toContain('md:text-7xl');
   });
