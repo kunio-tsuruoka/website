@@ -1,4 +1,4 @@
-name: Diagnose data-company-learning publication endpoint
+name: Verify data-company-learning public article
 
 on:
   push:
@@ -11,22 +11,23 @@ permissions:
   contents: read
 
 jobs:
-  diagnose:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 3
     steps:
-      - name: Fetch production publication endpoint once
+      - name: Verify the published article page
         shell: bash
         run: |
-          set -uo pipefail
-          endpoint='https://beekle.jp/api/internal/publish-data-company-learning-sensor-8c5e4f6a2d1b49c1a7e309d4478df6cd'
+          set -euo pipefail
+          article='https://beekle.jp/column/data-company-learning-sensor'
           status="$(curl --silent --show-error --location \
-            --output response.txt \
+            --output article.html \
             --write-out '%{http_code}' \
             --header 'Cache-Control: no-cache' \
-            "$endpoint" || true)"
+            "$article")"
           echo "HTTP_STATUS=$status"
-          echo '--- response ---'
-          cat response.txt || true
-          echo
           test "$status" = '200'
+          grep -Fq 'データは、会社が現実から学ぶためのセンサーだ' article.html
+          grep -Fq 'BigQueryやDatabricksへ接続するのは、アプリの本番データベース' article.html
+          grep -Fq 'データは、報告書を作るためにあるのではない。会社が現実から学び続けるためにある。' article.html
+          echo "VERIFIED_URL=$article"
