@@ -17,19 +17,17 @@ export const HeroSection = () => (
     <div className="container relative mx-auto flex min-h-[420px] items-center px-8 py-14 lg:min-h-[560px] lg:px-12">
       <div className="w-full max-w-[20rem] xl:max-w-[26rem]">
         <h1 className="text-4xl font-bold leading-[1.35] text-accent-950 sm:text-5xl xl:text-6xl">
-          爆速開発。
+          数千万円を
           <br />
-          <span className="text-primary-500">だから、</span>
+          <span className="text-primary-500">発注する前に、</span>
           <br />
-          <span className="text-primary-500">開発費を</span>
-          <br />
-          <span className="text-primary-500">抑えられる。</span>
+          まず動くものを。
         </h1>
 
         <p className="mt-6 text-base font-semibold leading-relaxed text-neutral-700 md:text-lg">
-          AI前提で開発工数を圧縮。
+          要件が固まっていなくても、最短1日でデモ、1週間程度で触れる形へ。
           <br />
-          1日でデモ、1週間で触れる形に。
+          作る・見送る・範囲を変える判断材料を揃えます。
         </p>
 
         <a
@@ -38,7 +36,7 @@ export const HeroSection = () => (
           data-cta-id="contact"
           className="page-cta group mt-8 inline-flex min-h-[52px] items-center justify-center rounded-md bg-primary-500 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-primary-600"
         >
-          相談する
+          発注前の判断材料をつくる
           <span className="transition-transform duration-200 group-hover:translate-x-1">
             <ArrowRight className="ml-2 h-5 w-5" />
           </span>
