@@ -6,18 +6,20 @@ const visibleText = (html: string) => html.replace(/<[^>]+>/g, '').replace(/\s+/
 const renderHeroHtml = () => render(<HeroSection />).container.innerHTML;
 
 describe('HeroSection', () => {
-  it('sells an investment decision rather than raw development speed', () => {
+  it('sells a faster decision and a continuous path to production', () => {
     const html = renderHeroHtml();
     const text = visibleText(html);
 
-    expect(text).toContain('数千万円を発注する前に、まず動くものを。');
     expect(text).toContain(
-      '要件が固まっていなくても、最短1日でデモ、1週間程度で触れる形へ。作る・見送る・範囲を変える判断材料を揃えます。'
+      '爆速デモで、長い検討をスキップ。動くものを見て決め、そのまま本番運用まで。'
     );
-    expect(text).toContain('発注前の判断材料をつくる');
-    expect(text).not.toContain('爆速開発。だから、開発費を抑えられる。');
-    expect(text).not.toContain('AI前提で開発工数を圧縮。');
-    expect(text).not.toContain('相談する');
+    expect(text).toContain(
+      '資料と見積書だけで何週間も悩まず、まず実際に動く形を確認できます。進めると決めたものは、使い捨ての試作品で終わらせず、そのまま本番運用まで育てます。'
+    );
+    expect(text).toContain('爆速デモについて相談する');
+    expect(text).not.toContain('数千万円を発注する前に、まず動くものを。');
+    expect(text).not.toContain('作る・見送る・範囲を変える判断材料を揃えます。');
+    expect(text).not.toContain('発注前の判断材料をつくる');
   });
 
   it('uses the supplied background image instead of a faux app dashboard', () => {
@@ -46,7 +48,7 @@ describe('HeroSection', () => {
     expect(html).not.toContain('NDA可');
   });
 
-  it('uses a full-bleed background with copy constrained to the left', () => {
+  it('uses a full-bleed background with longer copy still constrained to the left', () => {
     const html = renderHeroHtml();
 
     expect(html).toContain('absolute inset-0 h-full w-full object-cover');
@@ -58,8 +60,11 @@ describe('HeroSection', () => {
     expect(html).not.toContain('w-[52%]');
     expect(html).not.toContain('md:hidden');
     expect(html).not.toContain('hidden border-y border-neutral-300 bg-white md:block');
-    expect(html).toContain('max-w-[20rem]');
-    expect(html).toContain('xl:max-w-[26rem]');
+    expect(html).toContain('max-w-[28rem]');
+    expect(html).toContain('xl:max-w-[36rem]');
+    expect(html).toContain('xl:text-5xl');
+    expect(html).not.toContain('max-w-[20rem]');
+    expect(html).not.toContain('xl:max-w-[26rem]');
     expect(html).not.toContain('xl:text-8xl');
     expect(html).not.toContain('md:text-7xl');
   });
