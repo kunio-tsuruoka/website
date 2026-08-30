@@ -29,10 +29,23 @@ describe('contactTypeLabel', () => {
 });
 
 describe('isPartnershipInquiry', () => {
-  it('協業・パートナー種別だけ true', () => {
+  it('協業・提携種別だけ true', () => {
     expect(isPartnershipInquiry('partner')).toBe(true);
     expect(isPartnershipInquiry('consultation')).toBe(false);
     expect(isPartnershipInquiry('estimate')).toBe(false);
     expect(isPartnershipInquiry('')).toBe(false);
+  });
+
+  it('開発の依頼・外注は発注側なので false', () => {
+    expect(isPartnershipInquiry('partner_request')).toBe(false);
+  });
+});
+
+describe('contactTypeLabel（協業と依頼の分離）', () => {
+  it('依頼と協業で別ラベルを返す', () => {
+    expect(contactTypeLabel('partner_request')).toBe(
+      '開発の依頼・外注のご相談（開発会社・SIer様）'
+    );
+    expect(contactTypeLabel('partner')).toBe('協業・提携のご相談');
   });
 });

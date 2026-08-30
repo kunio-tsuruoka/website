@@ -197,10 +197,12 @@ function normalizeIntent(intent: string): string {
 }
 
 // 流入 intent → 相談種別 select の初期値。該当なしは空（既定 consultation のまま）。
-function intentToType(intent: string): string {
+// intent=partner の導線（/partner LP・コラムのPARTNER_CONSULT）は「実装を任せたい元請け」向け、
+// つまり発注側なので partner_request に寄せる。対等な協業は自分で選び直してもらう。
+export function intentToType(intent: string): string {
   const normalized = normalizeIntent(intent);
   if (INTENT_TYPE_MAP[normalized]) return INTENT_TYPE_MAP[normalized];
-  if (normalized.startsWith('partner')) return 'partner';
+  if (normalized.startsWith('partner')) return 'partner_request';
   if (normalized.startsWith('ai-development')) return 'ai';
   if (normalized.startsWith('genai-adoption')) return 'ai';
   if (normalized.startsWith('cdp')) return 'cdp';
@@ -401,7 +403,8 @@ const ContactForm = ({ sitekey }: ContactFormProps) => {
             <option value="ai">社内資料や業務データをAIで使いたい</option>
             <option value="cdp">顧客データを整理・活用したい</option>
             <option value="mvp_poc">MVP・PoC・新規事業検証について</option>
-            <option value="partner">開発パートナー・協業のご相談（開発会社・SIer様）</option>
+            <option value="partner_request">開発の依頼・外注のご相談（開発会社・SIer様）</option>
+            <option value="partner">協業・提携のご相談</option>
             <option value="other">その他</option>
           </select>
         </div>

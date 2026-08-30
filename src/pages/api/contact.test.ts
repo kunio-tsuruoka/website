@@ -438,6 +438,25 @@ describe('POST /api/contact の協業・パートナー仕分け', () => {
     expect(slackBody(fetchMock)).toContain('見送り（協業・提携と判定: 業務提携の打診）');
   });
 
+  it('開発の依頼・外注種別は発注側なのでCRMに送る', async () => {
+    const fetchMock = routeFetch({
+      openrouter: () => llmVerdict('lead', '自社案件の外注先を探している'),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await POST({
+      request: contactRequest({
+        type: 'partner_request',
+        message: '受注済み案件の実装をお願いできる先を探しています。',
+      }),
+      locals: baseEnv(),
+    } as never);
+
+    expect(res.status).toBe(200);
+    expect(calledUrls(fetchMock)).toContain(CRM_URL);
+    expect(slackBody(fetchMock)).toContain('実施（問い合わせと判定）');
+  });
+
   it('顧客からの見積もり依頼はCRMに送る', async () => {
     const fetchMock = routeFetch({
       openrouter: () => llmVerdict('lead', '見積もり依頼'),
