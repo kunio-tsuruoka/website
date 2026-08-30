@@ -40,3 +40,11 @@ export function requiresCompanyName(type: string): boolean {
 export function contactTypeLabel(type: string): string {
   return TYPE_LABELS[type] || type || '未選択';
 }
+
+/**
+ * 協業・パートナーのご相談は「Beekle に発注する顧客」ではないため、顧客リード（CRM）には載せない。
+ * Slack 通知は従来どおり全件出すので、取りこぼしにはならない。
+ */
+export function isPartnershipInquiry(type: string): boolean {
+  return type === 'partner';
+}

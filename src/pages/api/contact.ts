@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { z } from 'zod';
 import {
   contactTypeLabel,
+  isPartnershipInquiry,
   isRecruitmentInquiry,
   requiresCompanyName,
 } from '../../lib/contact-inquiry';
@@ -249,6 +250,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const typeStr = type;
     const typeLabel = contactTypeLabel(typeStr);
     const recruitment = isRecruitmentInquiry(typeStr);
+    const partnership = isPartnershipInquiry(typeStr);
     const BUYING_STAGE_LABELS: Record<string, string> = {
       problem_recognition: '課題を整理している',
       research: '情報収集中',
@@ -294,13 +296,20 @@ export const POST: APIRoute = async ({ request, locals }) => {
       .filter(Boolean)
       .join('\n');
 
-    // 営業メールを CRM に入れないための LLM 判定。Slack には判定結果に関わらず全件通知する。
+    // CRM に載せるのは「Beekle に発注・相談する顧客」だけ。
+    // Slack には判定結果に関わらず全件通知するので、対象外にしても取りこぼしにはならない。
+    //
+    // 判定は本文の推測より先にフォームの種別を使う（確定情報を推測で上書きしない）:
+    // - 採用は営業パイプラインに載せない
+    // - 協業・パートナーのご相談は顧客ではないので載せない（LLM も呼ばない）
+    // 種別で確定できないもの（その他・まずは相談したい等）だけ LLM で仕分ける。
     // CRM 連携が無効なら判定自体を省く（無駄なコストを掛けない）。
-    // 採用は営業パイプラインに載せない。
     const crmConfigured = !!(crmWebhookUrl && crmWebhookToken);
     let classification: LeadClassification = { verdict: 'unknown', reason: 'AI判定は未実行' };
     if (recruitment) {
       classification = { verdict: 'unknown', reason: '採用のお問い合わせのためCRM対象外' };
+    } else if (partnership) {
+      classification = { verdict: 'partnership', reason: 'フォームで協業・パートナーを選択' };
     } else if (crmConfigured) {
       if (openrouterApiKey) {
         classification = await classifyInquiry(
@@ -327,16 +336,20 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
     // 判定不能（キー未設定・タイムアウト・パース失敗）は CRM に通す。
     // 営業を1件通す損失より、本物のリードを1件落とす損失の方が大きいため。
-    const syncToCrm = !recruitment && crmConfigured && classification.verdict !== 'sales';
+    const nonCustomer =
+      classification.verdict === 'sales' || classification.verdict === 'partnership';
+    const syncToCrm = !recruitment && crmConfigured && !nonCustomer;
     const crmStatusText = recruitment
       ? '対象外（採用）'
       : classification.verdict === 'sales'
         ? `見送り（営業と判定: ${escapeSlack(classification.reason)}）`
-        : classification.verdict === 'lead'
-          ? '実施（問い合わせと判定）'
-          : crmConfigured
-            ? `実施（AI判定できず: ${escapeSlack(classification.reason)}）`
-            : '未設定';
+        : classification.verdict === 'partnership'
+          ? `見送り（協業・提携と判定: ${escapeSlack(classification.reason)}）`
+          : classification.verdict === 'lead'
+            ? '実施（問い合わせと判定）'
+            : crmConfigured
+              ? `実施（AI判定できず: ${escapeSlack(classification.reason)}）`
+              : '未設定';
 
     const slackHeader = recruitment ? '採用のお問い合わせ' : '新しいお問い合わせ';
     const slackFields = [
@@ -428,7 +441,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
         console.info('[contact] CRM sync skipped as duplicate submission:', submissionId);
       }
     } else if (crmConfigured) {
-      console.info('[contact] CRM sync skipped as sales outreach:', classification.reason);
+      console.info(
+        `[contact] CRM sync skipped (${recruitment ? 'recruitment' : classification.verdict}):`,
+        classification.reason
+      );
     } else if (crmWebhookUrl || crmWebhookToken) {
       console.warn('[contact] CRM webhook is partially configured; skipping CRM sync');
     }

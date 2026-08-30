@@ -384,3 +384,76 @@ describe('POST /api/contact の会社名と採用仕分け', () => {
     expect(slackBody(fetchMock)).not.toContain('検討状況');
   });
 });
+
+describe('POST /api/contact の協業・パートナー仕分け', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn());
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.spyOn(console, 'info').mockImplementation(() => {});
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('協業種別ならLLMを呼ばずCRMに送らず、Slackには通知する', async () => {
+    const fetchMock = routeFetch({
+      openrouter: () => {
+        throw new Error('should not call openrouter');
+      },
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await POST({
+      request: contactRequest({
+        type: 'partner',
+        message: '弊社と協業させていただけないかご相談です。',
+      }),
+      locals: baseEnv(),
+    } as never);
+
+    expect(res.status).toBe(200);
+    expect(calledUrls(fetchMock)).toEqual([SLACK_URL]);
+    expect(slackBody(fetchMock)).toContain(
+      '見送り（協業・提携と判定: フォームで協業・パートナーを選択）'
+    );
+  });
+
+  it('本文が協業提案ならCRMに送らない', async () => {
+    const fetchMock = routeFetch({
+      openrouter: () => llmVerdict('partnership', '業務提携の打診'),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await POST({
+      request: contactRequest({
+        type: 'other',
+        message: '業務提携のご相談です。案件を紹介し合える体制を作りたいです。',
+      }),
+      locals: baseEnv(),
+    } as never);
+
+    expect(res.status).toBe(200);
+    expect(calledUrls(fetchMock)).not.toContain(CRM_URL);
+    expect(slackBody(fetchMock)).toContain('見送り（協業・提携と判定: 業務提携の打診）');
+  });
+
+  it('顧客からの見積もり依頼はCRMに送る', async () => {
+    const fetchMock = routeFetch({
+      openrouter: () => llmVerdict('lead', '見積もり依頼'),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await POST({
+      request: contactRequest({
+        type: 'estimate',
+        message: '社内システムの開発をお願いしたく、概算費用を伺いたいです。',
+      }),
+      locals: baseEnv(),
+    } as never);
+
+    expect(res.status).toBe(200);
+    expect(calledUrls(fetchMock)).toContain(CRM_URL);
+    expect(slackBody(fetchMock)).toContain('実施（問い合わせと判定）');
+  });
+});
