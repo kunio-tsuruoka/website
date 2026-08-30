@@ -1,0 +1,81 @@
+name: Trigger and verify data-company-learning publication
+
+on:
+  push:
+    branches:
+      - ops/trigger-data-company-learning-publication-20260831
+    paths:
+      - .github/workflows/trigger-data-company-learning-publication.yml
+
+permissions:
+  contents: read
+
+jobs:
+  publish-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Wait for the fixed publication endpoint and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          endpoint='https://beekle.jp/api/internal/publish-data-company-learning-sensor-8c5e4f6a2d1b49c1a7e309d4478df6cd'
+          rm -f publish-response.json
+
+          for attempt in $(seq 1 90); do
+            status="$(curl --silent --show-error --location \
+              --output publish-response.json \
+              --write-out '%{http_code}' \
+              --header 'Cache-Control: no-cache' \
+              "$endpoint" || true)"
+
+            if [ "$status" = '200' ] && python - <<'PY'
+          import json
+          with open('publish-response.json', encoding='utf-8') as handle:
+              body = json.load(handle)
+          assert body.get('ok') is True, body
+          assert body.get('id') == 'data-company-learning-sensor', body
+          assert body.get('title') == 'データは、会社が現実から学ぶためのセンサーだ', body
+          assert body.get('category') == 'cdp-development', body
+          assert body.get('publishedAt'), body
+          PY
+            then
+              cat publish-response.json
+              exit 0
+            fi
+
+            echo "publication endpoint not ready (attempt=$attempt status=$status)"
+            sleep 5
+          done
+
+          echo 'Publication endpoint never returned a verified success response.' >&2
+          test -f publish-response.json && cat publish-response.json >&2
+          exit 1
+
+      - name: Verify the public article page
+        shell: bash
+        run: |
+          set -euo pipefail
+          article='https://beekle.jp/column/data-company-learning-sensor'
+          rm -f article.html
+
+          for attempt in $(seq 1 60); do
+            status="$(curl --silent --show-error --location \
+              --output article.html \
+              --write-out '%{http_code}' \
+              --header 'Cache-Control: no-cache' \
+              "$article" || true)"
+
+            if [ "$status" = '200' ] \
+              && grep -Fq 'データは、会社が現実から学ぶためのセンサーだ' article.html \
+              && grep -Fq 'BigQueryやDatabricksへ接続するのは、アプリの本番データベース' article.html; then
+              echo "Verified public article: $article"
+              exit 0
+            fi
+
+            echo "public article not ready (attempt=$attempt status=$status)"
+            sleep 5
+          done
+
+          echo 'Public article page verification failed.' >&2
+          exit 1
