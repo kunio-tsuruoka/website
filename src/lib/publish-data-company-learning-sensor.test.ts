@@ -52,9 +52,7 @@ describe('publishDataCompanyLearningSensor', () => {
     expect(result.operation).toBe('created');
     expect(result.id).toBe(CONTENT_ID);
     expect(calls.map((call) => call.method)).toEqual(['GET', 'PUT', 'GET']);
-    expect(calls[1]?.url).toBe(
-      `https://example.microcms.io/api/v1/${ENDPOINT}/${CONTENT_ID}`,
-    );
+    expect(calls[1]?.url).toBe(`https://example.microcms.io/api/v1/${ENDPOINT}/${CONTENT_ID}`);
     expect(JSON.parse(String(calls[1]?.body))).toEqual(ARTICLE_FIELDS);
   });
 
@@ -83,13 +81,13 @@ describe('publishDataCompanyLearningSensor', () => {
       jsonResponse(expectedPublished({ title: '別の記事' }));
 
     await expect(publishDataCompanyLearningSensor(env, fetchImpl)).rejects.toThrow(
-      'Refusing to overwrite content with another title',
+      'Refusing to overwrite content with another title'
     );
   });
 
   it('requires runtime microCMS credentials', async () => {
     await expect(
-      publishDataCompanyLearningSensor({}, async () => jsonResponse({})),
+      publishDataCompanyLearningSensor({}, async () => jsonResponse({}))
     ).rejects.toThrow('MICROCMS_SERVICE_DOMAIN and MICROCMS_API_KEY are required');
   });
 });

@@ -1,8 +1,7 @@
 export const ENDPOINT = 'columns';
 export const CONTENT_ID = 'data-company-learning-sensor';
 export const EXPECTED_TITLE = 'データは、会社が現実から学ぶためのセンサーだ';
-export const EXPECTED_PHRASE =
-  'BigQueryやDatabricksへ接続するのは、アプリの本番データベース';
+export const EXPECTED_PHRASE = 'BigQueryやDatabricksへ接続するのは、アプリの本番データベース';
 export const ARTICLE_FIELDS = {
   title: 'データは、会社が現実から学ぶためのセンサーだ',
   content:
@@ -32,7 +31,7 @@ async function requestJson(
   fetchImpl: FetchLike,
   url: string,
   apiKey: string,
-  init: RequestInit = {},
+  init: RequestInit = {}
 ): Promise<JsonResult> {
   const response = await fetchImpl(url, {
     ...init,
@@ -64,14 +63,14 @@ function publishedRecord(body: unknown): Record<string, unknown> | null {
 async function verifyPublished(
   fetchImpl: FetchLike,
   contentUrl: string,
-  apiKey: string,
+  apiKey: string
 ): Promise<Record<string, unknown>> {
   let last: JsonResult | null = null;
   for (let attempt = 0; attempt < 12; attempt += 1) {
     last = await requestJson(
       fetchImpl,
       `${contentUrl}?fields=id,title,content,description,category,publishedAt,revisedAt`,
-      apiKey,
+      apiKey
     );
     const body = publishedRecord(last.body);
     if (
@@ -93,13 +92,13 @@ async function verifyPublished(
   throw new Error(
     last
       ? formatError('Published-content verification failed', last)
-      : 'Published-content verification failed',
+      : 'Published-content verification failed'
   );
 }
 
 export async function publishDataCompanyLearningSensor(
   env: MicroCmsEnv,
-  fetchImpl: FetchLike = fetch,
+  fetchImpl: FetchLike = fetch
 ) {
   const serviceDomain = env.MICROCMS_SERVICE_DOMAIN?.trim();
   const apiKey = env.MICROCMS_API_KEY?.trim();
@@ -121,7 +120,7 @@ export async function publishDataCompanyLearningSensor(
     const currentBody = publishedRecord(current.body);
     if (currentBody?.title && currentBody.title !== EXPECTED_TITLE) {
       throw new Error(
-        `Refusing to overwrite content with another title: ${String(currentBody.title)}`,
+        `Refusing to overwrite content with another title: ${String(currentBody.title)}`
       );
     }
     const updated = await requestJson(fetchImpl, contentUrl, apiKey, {
