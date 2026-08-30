@@ -30,6 +30,10 @@ jobs:
           grep -Fq 'データは、会社が現実から学ぶためのセンサーだ' article.html
           grep -Fq 'BigQueryやDatabricksへ接続するのは、アプリの本番データベース' article.html
           grep -Fq 'データは、報告書を作るためにあるのではない。会社が現実から学び続けるためにある。' article.html
+          if grep -Fq '{{CONTACT_CTA}}' article.html; then
+            echo 'Raw CONTACT_CTA marker is exposed on the public page.' >&2
+            exit 1
+          fi
           echo "VERIFIED_URL=$article"
 
       - name: Verify the one-shot publication endpoint has been removed
