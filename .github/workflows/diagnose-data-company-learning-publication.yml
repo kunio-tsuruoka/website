@@ -1,4 +1,4 @@
-name: Verify data-company-learning public article
+name: Verify article and publication endpoint removal
 
 on:
   push:
@@ -25,9 +25,22 @@ jobs:
             --write-out '%{http_code}' \
             --header 'Cache-Control: no-cache' \
             "$article")"
-          echo "HTTP_STATUS=$status"
+          echo "ARTICLE_HTTP_STATUS=$status"
           test "$status" = '200'
           grep -Fq 'データは、会社が現実から学ぶためのセンサーだ' article.html
           grep -Fq 'BigQueryやDatabricksへ接続するのは、アプリの本番データベース' article.html
           grep -Fq 'データは、報告書を作るためにあるのではない。会社が現実から学び続けるためにある。' article.html
           echo "VERIFIED_URL=$article"
+
+      - name: Verify the one-shot publication endpoint has been removed
+        shell: bash
+        run: |
+          set -euo pipefail
+          endpoint='https://beekle.jp/api/internal/publish-data-company-learning-sensor-8c5e4f6a2d1b49c1a7e309d4478df6cd'
+          status="$(curl --silent --show-error --location \
+            --output endpoint-response.txt \
+            --write-out '%{http_code}' \
+            --header 'Cache-Control: no-cache' \
+            "$endpoint")"
+          echo "REMOVED_ENDPOINT_HTTP_STATUS=$status"
+          test "$status" = '404'
