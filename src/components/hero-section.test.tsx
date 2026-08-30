@@ -6,17 +6,18 @@ const visibleText = (html: string) => html.replace(/<[^>]+>/g, '').replace(/\s+/
 const renderHeroHtml = () => render(<HeroSection />).container.innerHTML;
 
 describe('HeroSection', () => {
-  it('keeps the first view to one message, one proof line, and one CTA', () => {
+  it('sells an investment decision rather than raw development speed', () => {
     const html = renderHeroHtml();
     const text = visibleText(html);
 
-    expect(text).toContain('爆速開発。だから、開発費を抑えられる。');
-    expect(text).toContain('AI前提で開発工数を圧縮。1日でデモ、1週間で触れる形に。');
-    expect(text).toContain('相談する');
-    expect(text).not.toContain('開発が速い。だから、同じ予算でより多く前に進める。');
-    expect(text).not.toContain('発注前に相談する');
-    expect(text).not.toContain('速さの実績を見る');
-    expect(text).not.toContain('AIに相談する');
+    expect(text).toContain('数千万円を発注する前に、まず動くものを。');
+    expect(text).toContain(
+      '要件が固まっていなくても、最短1日でデモ、1週間程度で触れる形へ。作る・見送る・範囲を変える判断材料を揃えます。'
+    );
+    expect(text).toContain('発注前の判断材料をつくる');
+    expect(text).not.toContain('爆速開発。だから、開発費を抑えられる。');
+    expect(text).not.toContain('AI前提で開発工数を圧縮。');
+    expect(text).not.toContain('相談する');
   });
 
   it('uses the supplied background image instead of a faux app dashboard', () => {
