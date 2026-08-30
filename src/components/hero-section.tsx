@@ -17,7 +17,7 @@ export const HeroSection = () => (
     <div className="container relative mx-auto flex min-h-[420px] items-center px-8 py-14 lg:min-h-[560px] lg:px-12">
       <div className="w-full max-w-[20rem] xl:max-w-[26rem]">
         <h1 className="text-4xl font-bold leading-[1.35] text-accent-950 sm:text-5xl xl:text-6xl">
-          数百万円を
+          数千万円を
           <br />
           <span className="text-primary-500">発注する前に、</span>
           <br />
