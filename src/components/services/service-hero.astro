@@ -1,5 +1,6 @@
 ---
 import { AskAiButton } from '@/components/ask-ai-button';
+import { resolveServiceHeroCopy } from '@/data/outcome-led-copy';
 import type { ServiceDetail } from '@/types/service';
 
 type Metric = { label: string; value: string };
@@ -26,7 +27,12 @@ interface Props {
 const { service, config } = Astro.props;
 const benefits = service.benefits.slice(0, 3);
 const contactIntent = config?.contactIntent ?? 'consult';
-const contactLabel = config?.contactLabel ?? '発注前に相談する';
+const resolvedCopy = resolveServiceHeroCopy(service.id, {
+  headline: config?.headline ?? service.title,
+  heroLead: config?.heroLead ?? service.description,
+  contactLabel: config?.contactLabel ?? '発注前に相談する',
+});
+const contactLabel = resolvedCopy.contactLabel;
 const heroVisualItems = config?.visualItems ?? config?.illustration?.stages ?? benefits;
 ---
 
@@ -45,10 +51,10 @@ const heroVisualItems = config?.visualItems ?? config?.illustration?.stages ?? b
         <h1
           class="mt-6 max-w-4xl text-balance text-3xl font-bold leading-tight text-navy-950 [word-break:keep-all] md:text-5xl lg:text-5xl"
         >
-          {config?.headline ?? service.title}
+          {resolvedCopy.headline}
         </h1>
         <p class="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-600 md:text-xl">
-          {config?.heroLead ?? service.description}
+          {resolvedCopy.heroLead}
         </p>
         {
           config?.primaryOutcome && (
@@ -101,8 +107,8 @@ const heroVisualItems = config?.visualItems ?? config?.illustration?.stages ?? b
             client:visible
             source={`services-${service.id}-hero`}
             variant="link"
-            pageTitle={config?.headline ?? service.title}
-            pageSummary={config?.heroLead ?? service.description}
+            pageTitle={resolvedCopy.headline}
+            pageSummary={resolvedCopy.heroLead}
             serviceName={service.title}
           />
         </div>
