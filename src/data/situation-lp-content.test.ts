@@ -33,13 +33,14 @@ describe('situation LP decision content', () => {
     expect(content.match(/\n    deepDiveLinks:/g) ?? []).toHaveLength(expectedSlugs.length);
   });
 
-  it('reuses verified service case studies instead of duplicating free-text claims', () => {
+  it('reuses three verified service case studies per LP instead of duplicating free-text claims', () => {
     const content = source('src/data/situation-lp-content.ts');
+    const expectedCaseReferences = expectedSlugs.length * 3;
 
     expect(content).toContain("import { services } from '@/data/service';");
     expect(content).toContain('resolveSituationCaseStudies');
-    expect(content).toContain('serviceId:');
-    expect(content).toContain('caseIndex:');
+    expect(content.match(/serviceId:/g) ?? []).toHaveLength(expectedCaseReferences);
+    expect(content.match(/caseIndex:/g) ?? []).toHaveLength(expectedCaseReferences + 1);
     expect(content).not.toContain('challenge:');
     expect(content).not.toContain('solution:');
     expect(content).not.toContain('results:');
