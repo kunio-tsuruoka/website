@@ -1,0 +1,17 @@
+commit=c49c32de19f091583744ae7087f9b7b846140494
+outcome=failure
+run_id=33382898317
+---
+ 6 | 
+ 7 | const serviceDomain = process.env.MICROCMS_SERVICE_DOMAIN;
+ 8 | const apiKey = process.env.MICROCMS_API_KEY;
+ 9 | 
+10 | if (!serviceDomain || !apiKey) {
+11 |   throw new Error('MICROCMS_SERVICE_DOMAIN / MICROCMS_API_KEY are required');
+                 ^
+error: MICROCMS_SERVICE_DOMAIN / MICROCMS_API_KEY are required
+      at /home/runner/work/website/website/scripts/migrate-beekle-process-standard.mjs:11:13
+
+::error file=scripts/migrate-beekle-process-standard.mjs,line=11,col=13,title=error: MICROCMS_SERVICE_DOMAIN / MICROCMS_API_KEY are required::%0A      at /home/runner/work/website/website/scripts/migrate-beekle-process-standard.mjs:11:13
+
+Bun v1.4.0 (Linux x64)
