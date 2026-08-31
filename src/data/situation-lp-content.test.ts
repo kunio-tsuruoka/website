@@ -39,8 +39,8 @@ describe('situation LP decision content', () => {
 
     expect(content).toContain("import { services } from '@/data/service';");
     expect(content).toContain('resolveSituationCaseStudies');
-    expect(content.match(/serviceId:/g) ?? []).toHaveLength(expectedCaseReferences);
-    expect(content.match(/caseIndex:/g) ?? []).toHaveLength(expectedCaseReferences + 1);
+    expect(content.match(/\n      \{ serviceId:/g) ?? []).toHaveLength(expectedCaseReferences);
+    expect(content.match(/caseIndex: 0 \}/g) ?? []).toHaveLength(expectedCaseReferences);
     expect(content).not.toContain('challenge:');
     expect(content).not.toContain('solution:');
     expect(content).not.toContain('results:');
