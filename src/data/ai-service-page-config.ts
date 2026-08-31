@@ -477,6 +477,13 @@ export const aiServicePageConfig = {
             'CSVを出して終わりではなく、APIで会計・基幹・業務システムへ接続します。読み取り結果を人が別システムへ入力し直す、という作業が残りません。',
         },
       ],
+      note: {
+        title: '実際の読み取りを、その場で試せます',
+        description:
+          '公開しているAI領収書OCRのデモで、画像から店舗名・日付・合計・明細を読み取り、確認しやすい形に整理するところまで触れます。資料ではなく実際の挙動で判断してください。',
+        href: '/demos/ocr',
+        hrefLabel: 'AI領収書OCRのデモを試す',
+      },
     },
   },
   'ai-agent-development': {
