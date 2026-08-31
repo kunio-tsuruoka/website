@@ -46,6 +46,7 @@ function renderCases(): string {
       [
         `### Case: ${entry.title}`,
         ...(entry.client ? [`- Client: ${entry.client}（掲載許諾済み）`] : []),
+        ...(entry.project ? [`- Project: ${entry.project}`] : []),
         `- Domain: ${entry.domain}`,
         `- Situation: ${entry.situation}`,
         '- Initial problems:',

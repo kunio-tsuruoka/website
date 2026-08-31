@@ -250,6 +250,8 @@ export type CaseReference = {
   title: string;
   /** 掲載許諾を得ている場合のみ社名を書く。未取得なら省略し、匿名で記述する */
   client?: string;
+  /** 掲載許諾を得ている場合のみ案件名・サービス名を書く */
+  project?: string;
   domain: string;
   situation: string;
   problems: readonly string[];
@@ -286,6 +288,7 @@ export const caseReferences: readonly CaseReference[] = [
     id: 'recovery-in-progress',
     title: '他社が完成に至らなかった案件の引き継ぎ（進行中）',
     client: '株式会社イデアラボ',
+    project: 'エスペシャリーミー',
     domain: '業務システム開発',
     situation: '先行していたベンダーが完成に至らず、開発が止まっていた。',
     problems: [
