@@ -7,10 +7,12 @@ const renderHeroHtml = () => render(<HeroSection />).container.innerHTML;
 
 describe('HeroSection', () => {
   it('renders the approved short benefit headline', () => {
-    const html = renderHeroHtml();
+    const { container } = render(<HeroSection />);
+    const html = container.innerHTML;
     const text = visibleText(html);
 
     expect(text).toContain('資料より、まず爆速デモ。見て決めたら、そのまま本番へ。');
+    expect(container.querySelectorAll('h1 br')).toHaveLength(3);
   });
 
   it('removes the explanatory paragraph from the first view', () => {
@@ -35,6 +37,7 @@ describe('HeroSection', () => {
 
     expect(cta.children).toHaveLength(2);
     expect(cta.lastElementChild).toHaveAttribute('aria-hidden', 'true');
+    expect(cta).toHaveClass('w-full', 'text-base', 'sm:w-auto', 'sm:text-lg');
   });
 
   it('uses the supplied background image instead of a faux app dashboard', () => {
@@ -64,11 +67,23 @@ describe('HeroSection', () => {
   });
 
   it('uses a full-bleed background with short copy constrained to the left', () => {
-    const html = renderHeroHtml();
+    const { container } = render(<HeroSection />);
+    const html = container.innerHTML;
+    const content = container.querySelector('section > div');
+    const heading = container.querySelector('h1');
 
     expect(html).toContain('absolute inset-0 h-full w-full object-cover');
     expect(html).not.toContain('home-hero-veil');
-    expect(html).toContain('lg:min-h-[560px]');
+    expect(content).toHaveClass(
+      'w-full',
+      'max-w-[1440px]',
+      'px-4',
+      'sm:px-8',
+      'lg:min-h-[560px]',
+      'lg:px-12'
+    );
+    expect(content).not.toHaveClass('container');
+    expect(heading).toHaveClass('text-3xl', 'sm:text-4xl', 'lg:text-5xl', 'xl:text-6xl');
     expect(html).not.toContain('lg:min-h-[640px]');
     expect(html).not.toContain('lg:grid-cols');
     expect(html).not.toContain('w-[54%]');
@@ -78,11 +93,6 @@ describe('HeroSection', () => {
     expect(html).toContain('max-w-[24rem]');
     expect(html).toContain('max-w-[28rem]');
     expect(html).toContain('xl:max-w-[36rem]');
-    expect(html).toContain('text-2xl');
-    expect(html).toContain('sm:text-3xl');
-    expect(html).toContain('lg:text-4xl');
-    expect(html).toContain('xl:text-5xl');
-    expect(html).not.toContain('sm:text-4xl');
     expect(html).not.toContain('md:text-4xl');
     expect(html).not.toContain('max-w-[20rem]');
     expect(html).not.toContain('xl:max-w-[26rem]');
