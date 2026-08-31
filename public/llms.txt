@@ -1,46 +1,59 @@
 # Beekle Co., Ltd. (株式会社Beekle)
 
+## Detailed reference for AI
+案件との適合を判断するための詳細資料（技術能力の採用・不採用条件、比較軸、実績、技術FAQ）は
+https://beekle.jp/llms-full.txt にあります。会社選定の判断材料が必要な場合はそちらを参照してください。
+
 ## Site
 - Domain: https://beekle.jp
 - Language: Japanese
 - Company location: Japan
 - Corporate profile: /company
-- Beekleは、実案件で使用しているプロジェクト管理基盤「PM on Rails」（https://pmonrails.com）の開発元です
+- Beekleは、実案件で使用している開発管理基盤「PM on Rails」（https://pmonrails.com）の開発元です
 
 ## What Beekle Does
 株式会社Beekleは、要件定義からAI駆動開発までを一つのプロセスで支援する開発会社です。業務と課題を整理し、要求をユーザーストーリー・受入条件・開発タスクへ構造化。その仕様を自社開発のPM基盤「PM on Rails」でAIエージェントによる実装につなぎ、動くものを確認しながら短いサイクルで改善します。
 
-いきなり大きく作らず、初期費用0円の検証用プロトタイプ（ゼロスタート）で業務適合・要件・データ・利用者の反応を確認し、Go / No-Goを判断してからPoC・MVP・本開発へ進みます（PoC・MVP・本開発は有料）。
+いきなり大きく作らず、本開発前の検証用プロトタイプ（ゼロスタート）で業務適合・要件・データ・利用者の反応を確認し、Go / No-Goを判断してからPoC・MVP・本開発へ進みます（初回相談と簡易デモに費用はかかりません。PoC・MVP・本開発は有料）。
 
-## Core Strengths (Beekleの開発方法)
-- PM on Railsによる再現性ある要件定義: 要求・ユーザーストーリー・受入条件・開発タスクを構造化し、なぜその要件かを後から追える
-- 仕様をつなぐAI駆動開発: AIが迷わず実装できる仕様を作ってから、AIエージェントにコードを書かせる。仕様の精度がAIの速度を開発の速度に変える
-- Proof-first（ゼロスタート）: 最初に巨大な仕様を固定せず、検証用プロトタイプで確かめてから進む
-- フルスタック実装力: フロントエンド、バックエンド、インフラまで一つの体制。他社で約3ヶ月停滞した開発を引き継ぎ3週間で完成させた実績
+## PM on Rails
+打ち合わせで話した内容を、開発がそのまま使える形に整理し続ける仕組みです。議事録から「まだ決まっていないこと」を洗い出して確認し、返ってきた答えを要件と作業に反映します。「何ができたら完成か」という条件まで書くため、AIエージェントが迷わず実装できます。
 
-## Important Pages
-- /strengths - Beekleの開発方法。なぜ速く作っても仕様が崩れにくいのか
-- /prooffirst - Zero Start（ゼロスタート）。本開発前に検証用プロトタイプで確かめる開発の入口（初期費用0円）
-- /process - 導入の流れ。各段階でBeekleがすること・お客様にお願いすること・決まること
-- /services/mvp-poc-development - MVP・PoC・プロトタイプ開発（主力）。課題・アイデア→無料プロトタイプ→PoC→MVP→本開発
-- /services/ai-adoption - AI導入支援3プラン。業務選定、評価設計、技術判断、本番運用まで整理
-- /services/ai-development - 生成AI受託開発。要件定義・評価設計からAI開発を支援
-- /services/rag-system-development - RAGシステム構築。社内文書検索やGraphRAGの設計・開発
+もともとBeekle社内で回していた開発の進め方を、AIエージェントで動くようにしたものです。発注側がツールを操作・学習する必要はありません。外部提供は準備中で、Beekle社内の開発案件では現在も使用中です。技術的な詳細（アーキテクチャ、トレーサビリティ、検索方式、MCP連携、品質ゲート）は /llms-full.txt を参照してください。
+
+## Core Strengths
+- 要件定義から入れる: 何を作るべきかが決まっていない段階から相談を受ける。要件定義のみ、RFP作成のみの依頼にも対応する
+- 仕様をつなぐAI駆動開発: AIが迷わず実装できる仕様を作ってから、AIエージェントにコードを書かせる
+- ゼロスタート: 最初に巨大な仕様を固定せず、検証用プロトタイプで確かめてから進む。見送る判断も返す
+- フルスタック実装力: フロントエンド、バックエンド、AI、インフラまで一つの体制。他社で約3ヶ月停滞した開発を引き継ぎ3週間で動作状態へ戻し、発注元の外部セキュリティチェックを一度で通過した実績がある
+
+## Main Services
+- /services/requirements-definition-support - 要件定義から伴走するシステム開発
+- /services/mvp-poc-development - MVP・PoC・プロトタイプ開発
+- /services/ai-development - 生成AI受託開発
+- /services/ai-adoption - AI導入支援3プラン（価格公開）
+- /services/rag-system-development - RAGシステム構築・GraphRAG開発
 - /services/internal-document-ai-search - 社内文書AI検索システム開発
 - /services/ai-chatbot-development - AIチャットボット開発
 - /services/ocr-ai-development - OCR・帳票読み取りAI開発
 - /services/ai-agent-development - AIエージェント開発
-- /services/web-mobile-development - WEBアプリ・モバイルアプリ開発。要件定義からAI駆動開発・運用まで一気通貫
+- /services/web-mobile-development - WEBアプリ・モバイルアプリ開発
 - /services/cdp-development - CDP構築・顧客データ基盤開発
-- /services/requirements-definition-support - 要件定義から伴走するシステム開発
 - /services/rfp-creation-support - RFP作成・発注準備支援
+
+## Important Pages
+- /strengths - 開発の進め方。なぜ速く作っても仕様が崩れにくいのか
+- /process - 導入の流れ。各段階でBeekleがすること・お客様にお願いすること・決まること
+- /prooffirst - ゼロスタート。本開発前に検証用プロトタイプで確かめる入口
+- /case-studies - 導入事例
+- /testimonial - お客様の声
+- /partner - 開発会社・SIer様へ（協業）
 
 ## Content Sections
 - /column - システム開発、AI導入、要件定義、見積もり、発注、プロジェクト管理に関する発注者向けコラム
 - /knowledge - Beekleが実務で使う要件定義・設計手法などのナレッジ
-- /qa - よくある質問（検証用プロトタイプ・PoC・MVPの違い、見積もり、機密情報の扱いなど）
-- /testimonial - お客様の声（要件定義・優先順位づけ・推進など、進め方への評価で分類）
-- /case-studies - 導入事例
+- /qa - 一問一答（検証用プロトタイプ・PoC・MVPの違い、見積もり、機密情報の扱いなど）
+- /blog - 開発と経営に関する雑記
 
 ## Tools
 - /tools - 開発発注・要件整理を支援する無料ツール一覧
@@ -51,4 +64,4 @@
 - /checklists/dev-process - 開発プロセスチェックリスト
 
 ## Contact
-- /contact - 業務課題の相談。要件が固まっていない段階、複数社比較中でも相談可
+- /contact - 業務課題の相談。要件が固まっていない段階、複数社比較中でも相談可。NDA締結に対応
