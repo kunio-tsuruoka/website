@@ -1,10 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { resolveSituationCaseStudies, situationLpContents } from '@/data/situation-lp-content';
 import { describe, expect, it } from 'vitest';
-import {
-  resolveSituationCaseStudies,
-  situationLpContents,
-} from '@/data/situation-lp-content';
 
 const root = process.cwd();
 const source = (path: string) => {
