@@ -1,70 +1,538 @@
+import { createClient } from 'microcms-js-sdk';
+
 const APPLY = process.argv.includes('--apply');
+const client = createClient({
+  serviceDomain: process.env.MICROCMS_SERVICE_DOMAIN,
+  apiKey: process.env.MICROCMS_API_KEY,
+});
 
-if (!APPLY) {
-  throw new Error('Run with --apply to publish');
-}
-
-const serviceDomain = process.env.MICROCMS_SERVICE_DOMAIN;
-const apiKey = process.env.MICROCMS_API_KEY;
-
-if (!serviceDomain || !apiKey) {
+if (!process.env.MICROCMS_SERVICE_DOMAIN || !process.env.MICROCMS_API_KEY) {
   throw new Error('MICROCMS_SERVICE_DOMAIN / MICROCMS_API_KEY are required');
 }
 
-const TITLE = "1,100万円超が投じられたシステムを、340万円で作り直しても採算が残る理由";
-const DESCRIPTION = "正式公開直前に止まったシステムを引き継ぎ、PM on RailsとCursorエージェントを組み合わせ、3日強で要件を整理し、約2週間で開発59％まで進めた実案件の記録です。";
-const CONTENT = "2026年4月、正式公開を予定していた、あるシステムを止めました。\n\n公開前日の調査で、決済、権限、エラー処理、個人情報の扱い、自動テストなどに重大な問題が見つかったからです。数か所を直せば公開できる状態ではありませんでした。\n\n先方から共有された以前の開発費は、約1,100万〜1,200万円でした。今回、Beekleが受けた再構築本体は340万円、追加開発64万円を含めても404万円です。いずれも税別です。\n\n半額ではなく、だいたい3分の1です。\n\n事情があったので、かなり抑えた金額で受けました。でも、これでも採算は残っています。\n\nなんでそんなことができるのか。\n\n人を安くしたからではなく、開発の進め方そのものを変えたからです。\n\n## まず、何でも3分の1で作れるという話ではありません\n\n前回の開発と今回の再構築では、契約範囲も前提条件も完全には同じではありません。今回は、既存の画面設計、過去の資料、コードなど、使えるものは使っています。先方の事情を踏まえた特別な条件でもあります。\n\nそのため、「1,000万円かかるシステムなら、何でも340万円で作れます」と言うつもりはありません。そこまで単純な話ではないです。\n\nただし、同じサービスを正式公開できる状態へ持っていくために、以前の開発費が約1,100万〜1,200万円、今回の再構築本体が340万円という数字は事実です。\n\n以前の開発費と比べると、本体価格は約69〜72％低くなっています。追加開発を含めた404万円で比べても、約63〜66％低い金額です。\n\n安売りして赤字になっているわけでもありません。価格を下げても採算が残る作り方へ変えました。\n\n## 3日強でやったのは、仕様書をきれいに書き直すことではありません\n\n再構築を始める前に、既存のコード、画面設計、過去の仕様書、会議の記録、お客さんからの回答、実際に動いている画面を集めました。\n\n問題は、情報がないことではありませんでした。情報はかなりある。でも、置かれている場所が違い、内容も少しずつ違っていました。\n\n画面にはあるのに資料へ書かれていない。資料ごとに数字が違う。実装されているけれど、なぜそうしたのか分からない。後から決まった内容が、以前の仕様へ戻っていない。\n\nこの状態で実装だけ速くすると、違うものが速く完成します。普通にまずい。\n\nそこで使ったのが、私たちが開発している[PM on Rails](https://pmonrails.com/)です。\n\nPM on Railsは、単なる作業一覧ではありません。お客さんが実現したいことから、利用者が何をしたいのか、どんな場面でどう動けば正しいのか、何を作るのか、何を確認すれば完成なのかまでをつなげて管理する仕組みです。\n\n今回は、集めた情報を次の順番で整理しました。\n\n1. お客さんが実現したいこと\n2. 誰が何をできる必要があるか\n3. 通常時にどう動くか\n4. 入力ミス、権限不足、通信失敗などが起きたらどうするか\n5. 上限、期限、0件などの境目でどう動くか\n6. 何を作る必要があるか\n7. 何を確認できれば完成とするか\n\nこの再整理にかかった実作業が、3日強です。\n\n3日強で開発を60％まで進めた、という意味ではありません。3日強でやったのは、開発する人とAIが迷わず動ける状態へ戻すことです。\n\nここを分けないと、さすがに話が変わってきます。\n\n## PM on Railsから、Cursorエージェントへ仕事を流しました\n\n要件を整理した後は、PM on Railsに登録された作業を、人間の開発担当とCursorエージェントへ流しました。\n\nCursorエージェントは、開発用のAIです。指示されたファイルだけを直すのではなく、コード全体を読み、必要な処理がすでにあるかを探し、なければ実装し、テスト結果まで返します。\n\n実際の流れは、だいたい次の形です。\n\n1. PM on Railsで、残っている作業や仕様の食い違いを確認する\n2. Cursorエージェントへ、対象のコードを読ませる\n3. すでに実装済みなら、対応する作業へ結びつける\n4. 未実装なら、必要な画面や処理を作る\n5. 自動テストを行い、結果を確認する\n6. 私が設計、仕様、操作性、安全性を確認する\n7. 必要なら、お客さんへ確認し、回答をPM on Railsへ戻す\n\nSlackからPM on Railsへ「残っている作業は何か」と聞き、そのまま作業を作ったり、お客さんの回答を記録したりもしています。作業一覧を見るために別の場所へ移動し、内容をコピーし、また別の場所へ貼り直す回数を減らしました。\n\n私は何もしていないわけではありません。決済のように設計判断が重い部分は、自分で設計し、実装することもあります。\n\nただ、私が全部の画面と処理を順番に書いているわけでもないです。私が主に見ているのは、決済、曖昧な仕様、全体設計、デザイン、安全性、最後の確認です。\n\nつまり、判断が必要なところへ人間の時間を使い、調査、実装、繰り返し確認できる部分を人とAIへ分けています。\n\n## 安くなる理由は、単価ではなく時間の使い方です\n\nシステム開発の費用は、かなりの部分が人の時間で決まります。\n\n実装だけではありません。資料を探す、仕様を読み直す、分からない点を整理する、作業へ分ける、コードの場所を探す、すでに作られているか確認する、テストする、結果を報告する。全部、人の時間です。\n\n従来は、この途中で何度も情報を受け渡します。要件を考える人、作業へ分ける人、実装する人、確認する人が別なら、そのたびに読み直しと説明が発生します。\n\n今回の進め方では、PM on Railsに「なぜ作るか」から「何を確認するか」までを残し、Cursorエージェントが同じ情報を参照してコードを読みます。人間は、AIが判断してはいけない部分と、最終的な品質確認へ集中します。\n\n人の単価を下げたのではありません。人が同じ説明を繰り返す時間、コードを探す時間、作った後に大きく戻る時間を減らしました。\n\nだから、顧客の開発費を大きく抑えても、開発会社側に採算が残ります。\n\nこれでも元が取れているなら、安売りというより、作り方の差だと思う。\n\n## 約2週間で、全作業の59％まで進みました\n\n開発を本格的に進めてから約2週間後の2026年8月31日時点で、PM on Railsには1,414件の作業が登録され、そのうち830件が完了しています。\n\n| 見ている数字 | 件数 | 進捗 |\n|---|---:|---:|\n| 全作業 | 830 / 1,414件 | 59％ |\n| 8月25日〜9月7日の開発サイクル | 276 / 310件 | 89％ |\n\n見出しでは分かりやすく「約60％」と書けますが、正確には全作業の件数ベースで59％です。\n\nこの数字には注意点もあります。1時間で終わる作業も、数日かかる作業も、件数では同じ1件です。59％だから、残り期間が41％という意味ではありません。\n\nまた、要件を細かく確認するほど、最初は見えていなかった作業も追加されます。進めるほど母数が増えるので、進捗率だけ見ると少し損をします。\n\nでも、見えていない作業を隠したまま「ほぼ完成です」と言うより、その方がいい。\n\n何が終わり、何が確認中で、何が未確定なのかを説明できることの方が大事です。\n\n## 速いだけでは、前回と同じことになります\n\n今回、速さだけを優先したわけではありません。\n\n現在レビュー中の大きな変更では、自動テスト604件が通り、その中で5,811個の確認が実行されています。決済の二重処理、権限、データの整合性、通知、削除、入力確認など、以前の調査で問題になった部分も確認対象へ入れました。\n\n画面についても、機能ごとの確認結果を画像で残し、お客さんが実際の動きを見て指摘できる状態にしています。\n\nお客さんからは、運営管理画面について「操作性、デザインともにすでに前回を超えているのがわかります」と言っていただきました。\n\nまだ完成前なので、これで品質を証明し終えたとは思っていません。ただ、少なくとも「安く速くした代わりに、確認を減らした」という進め方ではないです。\n\n速く作り、同時に確認できる範囲も増やす。ここまで揃って、初めて価格を下げられます。\n\n## AIでコードを書いたことより、工程をつないだことが大きい\n\n生成AIを使った開発というと、コードを速く書いた話になりがちです。\n\nでも、今回一番効いたのは、コードを書く部分だけではありません。\n\n散らばった資料を読み、矛盾を見つけ、お客さんへ聞く内容を分け、具体的な利用場面へ変え、作業を作り、コードを調べ、実装し、テスト結果を戻す。この流れを一つにつないだことが大きいです。\n\nPM on Railsだけでも足りません。作業をきれいに並べても、実装する人が毎回ゼロから読み直せば時間はかかります。\n\nCursorエージェントだけでも足りません。何を作れば正しいかが曖昧なままなら、間違ったものを速く作ります。\n\n人間だけでも、この速度では回しにくい。\n\nPM on Railsで正解と進捗をつなぎ、Cursorエージェントがコードを読んで実行し、人間が設計と品質を判断する。この組み合わせで、初めて全体の時間が縮みました。\n\n結局、AIに人間の仕事を全部渡したのではなく、人間がやるべき仕事を絞ったんだと思います。\n\n## この案件が完成したら、お客さんにインタビューします\n\nこの案件は、2026年8月31日時点では開発途中です。この記事も、完成事例ではなく中間報告です。\n\n完成したら、お客さんへあらためてインタビューしようと思っています。\n\n以前の開発と比べて何が変わったのか。PM on Railsを使った確認や進捗共有はどうだったか。実際に使ってみて、操作性や品質をどう感じたか。費用と速度に納得感があったか。こちらの進め方で分かりにくかったことはなかったか。\n\n良かった話だけでなく、足りなかった点も聞く予定です。\n\n自分たちが「速くできた」「安くできた」と言うだけでは、事例としては片側しかありません。最終的には、お客さんがどう感じ、実際の運用で何が変わったかまで確認したいです。\n\n完成後にインタビュー内容を公開できる範囲でまとめ、この続きとして追記します。\n\n---\n\n※本記事は2026年8月31日時点の情報です。案件を特定できる社名、サービス名、設計情報は伏せています。金額は税別です。進捗率はPM on Railsに登録された作業件数を基準にしており、工数による重み付けはしていません。\n\n止まった開発や、仕様が散らばった既存システムの再構築で困っている方は、[Beekleへご相談ください](/contact?source=blog-system-rebuild-cost)。\n";
-const endpoint = `https://${serviceDomain}.microcms.io/api/v1/blogs`;
-const headers = {
-  'X-MICROCMS-API-KEY': apiKey,
-  'Content-Type': 'application/json',
-};
+const STANDARD_FLOW = '要求（Why） → User Story → 具体例 → Gherkin → レビュー → 実装・検証';
 
-async function readJson(response, label) {
-  const text = await response.text();
-  let data = null;
-  try {
-    data = text ? JSON.parse(text) : {};
-  } catch {
-    throw new Error(`${label} returned non-JSON (${response.status}): ${text.slice(0, 500)}`);
-  }
-  if (!response.ok) {
-    throw new Error(`${label} failed (${response.status}): ${JSON.stringify(data)}`);
-  }
-  return data;
+function esc(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-const searchUrl = new URL(endpoint);
-searchUrl.searchParams.set('q', TITLE);
-searchUrl.searchParams.set('limit', '100');
-
-const searchResponse = await fetch(searchUrl, { headers });
-const searchData = await readJson(searchResponse, 'MicroCMS search');
-const existing = Array.isArray(searchData.contents)
-  ? searchData.contents.find((item) => item?.title === TITLE)
-  : null;
-
-const payload = {
-  title: TITLE,
-  description: DESCRIPTION,
-  content: CONTENT,
-};
-
-const publishUrl = existing ? `${endpoint}/${existing.id}` : endpoint;
-const method = existing ? 'PATCH' : 'POST';
-const publishResponse = await fetch(publishUrl, {
-  method,
-  headers,
-  body: JSON.stringify(payload),
-});
-const published = await readJson(publishResponse, `MicroCMS ${method}`);
-
-const id = existing?.id || published.id;
-if (!id) {
-  throw new Error(`MicroCMS response did not include content ID: ${JSON.stringify(published)}`);
+function replaceSection(content, startHeading, endHeading, replacement, changes, label) {
+  const re = new RegExp(
+    `<h2(?:\\s[^>]*)?>\\s*${esc(startHeading)}\\s*</h2>[\\s\\S]*?(?=<h2(?:\\s[^>]*)?>\\s*${esc(endHeading)}\\s*</h2>)`,
+    'm'
+  );
+  if (!re.test(content)) return content;
+  changes.push(label);
+  return content.replace(re, replacement.trim());
 }
 
-console.log(`PUBLISH_ACTION=${existing ? 'updated' : 'created'}`);
-console.log(`PUBLISHED_BLOG_ID=${id}`);
-console.log(`PUBLISHED_BLOG_URL=https://beekle.jp/blog/${id}`);
-console.log(`PUBLISHED_BLOG_TITLE=${TITLE}`);
+function replaceRegex(content, re, replacement, changes, label) {
+  if (!re.test(content)) return content;
+  changes.push(label);
+  return content.replace(re, replacement);
+}
+
+function removeWorkflowLinks(content, changes) {
+  const before = content;
+  let nextContent = content.replace(
+    /<li[^>]*>[\s\S]*?href=["']\/column\/ears-gherkin-workflow["'][\s\S]*?<\/li>/gi,
+    ''
+  );
+  nextContent = nextContent.replace(
+    /<a[^>]*href=["']\/column\/ears-gherkin-workflow["'][^>]*>[\s\S]*?<\/a>/gi,
+    ''
+  );
+  if (nextContent !== before) changes.push('旧EARS×Gherkin主要導線を削除');
+  return nextContent;
+}
+
+const gherkinExampleSection = `
+<h2>Gherkinは「具体例」から書く</h2>
+<p>Beekleでは、User Storyを書いたあとに別の記法へ機械的に変換するのではなく、まず<strong>具体例</strong>を出します。User Storyは「誰が・何を・なぜ」を共有するためのものですが、それだけでは完成条件までは決まりません。</p>
+<p>実装前に、少なくとも次の観点で「実際に何が起きれば完成なのか」を確認します。</p>
+<ul>
+<li>正常系：期待どおり使えた場合</li>
+<li>異常系：入力不備、権限不足、外部サービス障害など</li>
+<li>境界値：0件、上限値、期限直前など</li>
+<li>再送・二重操作：同じ操作を繰り返した場合</li>
+<li>業務上の例外：現場で起こる特殊ケース</li>
+</ul>
+<p>関係者で合意できた具体例だけをGiven / When / Thenへ落とします。これにより、Gherkinは「それらしい仕様文」ではなく、<strong>これが動けば完成と判断できるExecutable Specification</strong>になります。</p>
+<p>EARSは、条件付きの要件文を短く揃えたい案件では補助的に使える記法です。ただし、<strong>Beekleの標準工程では必須の中間成果物ではありません</strong>。標準は「${STANDARD_FLOW}」です。</p>
+`;
+
+const gherkinStepsSection = `
+<h2>Gherkinを導入するステップ</h2>
+<h3>Step 1: User Storyで「誰が・何を・なぜ」を揃える</h3>
+<p>機能名ではなく、利用者が達成したいことと、その理由を明確にします。</p>
+<h3>Step 2: 正常系・異常系・境界値の具体例を出す</h3>
+<p>いきなりGherkinを書かず、「この場合はどうなる？」を先に出します。答えが決まっていない例は、未確定事項として残します。</p>
+<h3>Step 3: 決まった具体例だけをGherkinにする</h3>
+<p>1 Scenario = 1つの検証可能な振る舞いを原則に、Given / When / Thenで完成条件を固定します。</p>
+<h3>Step 4: 実装前にGherkinをレビューする</h3>
+<p>正常系しかない、境界値が抜けている、Scenario同士が矛盾している、ThenがUser Storyの価値とつながっていない、といった問題をAIと人間の両方で確認します。</p>
+<h3>Step 5: ステップ定義を実装する</h3>
+<p>Cucumber、Behave、pytest-bdd、Playwright BDDなどでGherkinを実行可能なテストへ接続します。UI selectorや関数名などの実装詳細はGherkinへ書かず、ステップ定義側へ閉じ込めます。</p>
+<h3>Step 6: CIで継続実行する</h3>
+<p>毎回のpush / PRでScenarioを実行します。仕様変更時はUser Story・具体例・Gherkin・実装を同じ変更として更新し、仕様とテストの乖離を防ぎます。</p>
+`;
+
+const gherkinSummary = `
+<h2>まとめ</h2>
+<p>Gherkinは、ビジネスサイドが読める自然言語と、自動実行できる受入テストをつなぐための記法です。Beekleでは、Gherkin単体ではなく、<strong>${STANDARD_FLOW}</strong>という流れの中で使います。</p>
+<ul>
+<li>User Story：誰が・何を・なぜ必要としているか</li>
+<li>具体例：正常系・異常系・境界値で完成条件を具体化する</li>
+<li>Gherkin：合意した具体例をGiven / When / Thenで固定する</li>
+<li>レビュー：抜け漏れ・矛盾・未確定事項を実装前に潰す</li>
+<li>CI：Scenarioを受入テスト・回帰テストとして継続実行する</li>
+</ul>
+<p>EARSは案件によって補助的に使えますが、Beekle標準工程の必須ステップではありません。</p>
+`;
+
+const projectStep5 = `
+<h2>STEP 5: User Story → 具体例 → Gherkinで「作る」要件を仕様化する</h2>
+<p>FMで「作る」と判定された要求だけを詳細化します。先に書式を埋めるのではなく、<strong>User Storyで目的を揃え、具体例で完成条件を詰め、決まった例をGherkinにする</strong>のがポイントです。</p>
+<h3>User Storyで「誰が・何を・なぜ」を揃える</h3>
+<p>「As a 〜 / I want to 〜 / So that 〜」で、利用者・達成したいこと・価値を1つにまとめます。書き方は<a href="/column/user-story-template-examples">ユーザーストーリーの書き方完全ガイド</a>を参照してください。</p>
+<h3>具体例を先に出す</h3>
+<p>ストーリーごとに正常系だけでなく、異常系・境界値・権限差・再送・外部サービス障害などを確認します。「もしネットワークが切れたら？」「同じボタンを2回押したら？」「権限が違ったら？」のように、実際の業務で起きる例を先に出します。答えが決まっていないものは未確定事項として残し、勝手に仕様化しません。</p>
+<h3>決まった具体例をGherkinで完成条件にする</h3>
+<p>合意できた例をGiven / When / Thenへ落とします。Gherkinは仕様書として読めるだけでなく、受入デモと自動テストの共通ソースにできます。記法は<a href="/column/gherkin-bdd-introduction">Gherkin入門</a>を参照してください。</p>
+<pre><code>Scenario: 在庫検索の応答時間
+  Given 商品マスタが10万件登録されている
+  When 店舗マネージャーがキーワード「冷凍」で検索する
+  Then 検索結果は1秒以内に表示される</code></pre>
+<h3>実装前にGherkinをレビューする</h3>
+<p>実装へ渡す前に、正常系しか書かれていない、境界値が抜けている、Scenario同士が矛盾している、ThenがUser Storyの「なぜ」とつながっていない、といった問題をレビューします。ここで抜け漏れを潰してから実装へ進むことで、AIでコードを書く速度が上がっても手戻りが増えにくくなります。</p>
+<h3>非機能要件・制約は別枠で明示する</h3>
+<p>性能・セキュリティ・可用性・法務・外部サービス制約などは、User Storyだけに押し込まず明示的に管理します。観測可能な完成条件はGherkin Scenarioとして受入テストへ接続します。</p>
+`;
+
+const requirementsExamplesSection = `
+<h2>User Storyを具体例と受け入れ条件へ落とす</h2>
+<p>機能要件を曖昧さなくするために重要なのは、記法を先に選ぶことではなく、<strong>実際に起こる具体例を先に確認すること</strong>です。</p>
+<ol>
+<li>User Storyで「誰が・何を・なぜ」を揃える</li>
+<li>正常系・異常系・境界値・権限差などの具体例を出す</li>
+<li>決まっていない例は未確定事項として残す</li>
+<li>合意できた例をGherkinのGiven / When / Thenで完成条件にする</li>
+<li>実装前に抜け漏れと矛盾をレビューする</li>
+</ol>
+<pre><code>Scenario: 在庫がない商品を注文できない
+  Given 商品Aの在庫が0件である
+  When 顧客が商品Aをカートに追加する
+  Then 「在庫がありません」と表示される
+  And 注文データは作成されない</code></pre>
+<p>この形なら、業務担当者が読める仕様と、実装後に自動実行する受入テストを同じScenarioでつなげられます。詳しくは<a href="/column/gherkin-bdd-introduction">Gherkin入門</a>を参照してください。</p>
+<p>EARSは、条件付きの要件文を一定の構文で揃えたい場合に使える補助記法です。ただし、Beekle標準工程では必須ではありません。</p>
+`;
+
+const aiStep3 = `
+<h2>STEP 3: 具体例をGherkinにして、実装前にレビューする</h2>
+<p>FMで「作る」と判定されたUser Storyについて、まず正常系・異常系・境界値の具体例を出します。ここを飛ばしていきなりGherkinへ変換すると、形式は整っていても重要な例外が抜けた仕様になりがちです。</p>
+<p>合意できた具体例だけをGiven / When / ThenのGherkinにします。Gherkinは3つの役割を1つの記述で兼ねられます。</p>
+<ul>
+<li>仕様書として業務担当者が読める</li>
+<li>受入デモのシナリオとして確認できる</li>
+<li>自動テストとしてCIで継続実行できる</li>
+</ul>
+<p>書いた後は実装前にレビューします。「正常系しかないか」「0件・上限・権限差などの境界が抜けていないか」「Scenario同士が矛盾していないか」「ThenがUser Storyの目的とつながっているか」を確認してからAI実装へ渡します。</p>
+<p>書き方は<a href="/column/gherkin-bdd-introduction">Gherkin入門</a>、全体の流れは<a href="/column/requirements-definition-template">要件定義書テンプレート</a>を参照してください。</p>
+`;
+
+const requirementsTemplateExamples = `
+<h2>具体例からGherkinで完成条件を作る</h2>
+<p>User Storyで「誰が・何を・なぜ」を共有したら、次はそのストーリーが<strong>どんな場合にどう動けば完成なのか</strong>を具体例で確認します。</p>
+<h3>先に具体例を出す</h3>
+<ul>
+<li>正常系：登録済みメールアドレスでパスワード再設定する</li>
+<li>異常系：未登録メールアドレスを入力する</li>
+<li>境界値：再設定リンクの有効期限を過ぎる</li>
+<li>セキュリティ：登録有無を第三者に推測させない</li>
+</ul>
+<p>答えが決まっていない例は、この段階で未確定事項として残します。実装者や生成AIに推測で埋めさせないことが重要です。</p>
+<h3>決まった例をGherkinにする</h3>
+<pre><code>Feature: パスワード再設定
+  Scenario: 登録済みメールアドレスへ再設定リンクを送る
+    Given ユーザーのメールアドレスが登録済みである
+    When ユーザーがパスワード再設定を申請する
+    Then 1時間有効な再設定リンクがメールで送信される
+
+  Scenario: 未登録メールアドレスでも登録有無を漏らさない
+    Given 入力されたメールアドレスが未登録である
+    When ユーザーがパスワード再設定を申請する
+    Then 登録済みの場合と同じ完了メッセージが表示される</code></pre>
+<p>Gherkinを書いたら実装前に、正常系だけに偏っていないか、境界値・権限差・再送・外部サービス障害が抜けていないかをレビューします。そのScenarioをstep definitionへ接続し、CIの受入・回帰テストとして継続実行します。</p>
+<p><strong>EARSは補助記法です。</strong> 条件付きの要件文を一定の型で揃えたい案件では有効ですが、Beekle標準工程の必須成果物ではありません。標準は「${STANDARD_FLOW}」です。</p>
+`;
+
+const requirementsTemplateSummary = `
+<h2>まとめ：要件定義は「Why → User Story → 具体例 → Gherkin」でつなぐ</h2>
+<p>重要なのは、テンプレートを埋めること自体ではなく、要求の背景から完成条件までが一本につながっていることです。</p>
+<ul>
+<li>要求（Why）で、なぜ必要なのかを残す</li>
+<li>User Storyで、誰が・何を・なぜを揃える</li>
+<li>具体例で、正常系・異常系・境界値を確認する</li>
+<li>Gherkinで、合意した具体例を実行可能な完成条件にする</li>
+<li>実装前レビューで抜け漏れと矛盾を潰す</li>
+</ul>
+<p>この流れにすると、要件定義書・受入テスト・実装の間で情報が落ちにくくなります。</p>
+`;
+
+const legacyEarsContent = `
+<h2>先に結論：EARSは補助記法で、Beekle標準の必須工程ではありません</h2>
+<p>EARSとGherkinは併用できます。ただし、現在のBeekleでは<strong>EARSを必須の中間成果物にはしていません</strong>。標準の流れは「${STANDARD_FLOW}」です。</p>
+<p>理由はシンプルで、要件を別の記法へ変換すること自体よりも、業務担当者と開発者が<strong>具体例を使って完成条件を発見すること</strong>の方が重要だからです。</p>
+
+<h2>現在のBeekle標準フロー</h2>
+<ol>
+<li><strong>要求（Why）</strong>：背景、課題、期待する価値を確認する</li>
+<li><strong>User Story</strong>：誰が・何を・なぜ必要としているかを揃える</li>
+<li><strong>具体例</strong>：正常系・異常系・境界値・権限差・再送などを洗い出す</li>
+<li><strong>Gherkin</strong>：合意した具体例をGiven / When / Thenで完成条件にする</li>
+<li><strong>レビュー</strong>：抜け漏れ・矛盾・未確定事項を実装前に確認する</li>
+<li><strong>実装・検証</strong>：step definitionへ接続し、CIで受入・回帰テストとして実行する</li>
+</ol>
+
+<h2>EARSを使うと有効な場面</h2>
+<p>EARSは不要という意味ではありません。次のような場面では、要件文の補助記法として有効です。</p>
+<ul>
+<li>安全性・規制対応など、条件とシステムの振る舞いを厳密な一文で残したい</li>
+<li>大量の機能要件を同じ文型でレビューしたい</li>
+<li>非機能要件や例外条件を文章として監査可能に残したい</li>
+<li>既存組織ですでにEARSが標準化されている</li>
+</ul>
+<p>この場合でも、EARSから機械的にGherkinへ変換して終わりにはしません。User Storyの目的と具体例を確認し、Gherkinは受入可能な振る舞いとしてレビューします。</p>
+
+<h2>なぜ「EARS → Gherkin」を標準にしないのか</h2>
+<ul>
+<li>中間成果物が増えるほど、同じ仕様を二重管理しやすい</li>
+<li>文型が整っていても、業務上の例外や境界値が見つかるとは限らない</li>
+<li>生成AIは形式変換が得意なので、誤った前提まで綺麗に変換してしまう</li>
+<li>受入テストで本当に必要なのは、関係者が合意した具体例である</li>
+</ul>
+<p>そのためBeekleでは、まず具体例を発見し、決まった例だけをExecutable Specificationへ変換する流れを採っています。</p>
+
+<h2>例：パスワード再設定</h2>
+<h3>User Story</h3>
+<p>利用者として、パスワードを忘れたときに自分で再設定したい。なぜなら、問い合わせを待たずにログインを回復したいから。</p>
+<h3>具体例</h3>
+<ul>
+<li>登録済みメールアドレスなら再設定リンクが届く</li>
+<li>未登録メールアドレスでも登録有無を漏らさない</li>
+<li>期限切れリンクは使用できない</li>
+<li>同じリンクを再利用できない</li>
+</ul>
+<h3>Gherkin</h3>
+<pre><code>Scenario: 未登録メールアドレスでも登録有無を漏らさない
+  Given 入力されたメールアドレスが未登録である
+  When パスワード再設定を申請する
+  Then 登録済みの場合と同じ完了メッセージが表示される
+  And 再設定メールは送信されない</code></pre>
+<p>EARSを採用する案件であれば、この具体例の一部を条件付き要件文として併記できます。重要なのは、EARSの有無ではなく、User Story・具体例・Gherkin・テストの意味が一致していることです。</p>
+
+<h2>Gherkinは実装前にレビューする</h2>
+<p>Gherkinを書いたら、実装へ渡す前にAIと人間で敵対的にレビューします。正常系しかない、境界値がない、Scenario同士が矛盾している、ThenがUser Storyの価値とつながっていない、未確定事項を勝手に確定している、といった問題をここで潰します。</p>
+
+<h2>まとめ</h2>
+<p>EARSとGherkinは併用可能ですが、現在のBeekle標準はEARSを必須にしません。<strong>${STANDARD_FLOW}</strong>を一気通貫にし、Gherkinを受入テスト・回帰テストとしてCIで実行することを重視しています。</p>
+<ul>
+<li><a href="/column/requirements-definition-template">要件定義書テンプレート</a></li>
+<li><a href="/column/user-story-template-examples">ユーザーストーリーの書き方</a></li>
+<li><a href="/column/gherkin-bdd-introduction">Gherkin入門</a></li>
+<li><a href="/column/ears-requirements-syntax-guide">EARS入門（補助記法として使う場合）</a></li>
+</ul>
+`;
+
+function transformColumn(id, article) {
+  let content = article.content;
+  let title = article.title;
+  const changes = [];
+
+  if (id === 'gherkin-bdd-introduction') {
+    content = replaceSection(
+      content,
+      'Gherkin と EARS の関係',
+      'Gherkin を実行する：主要フレームワーク',
+      gherkinExampleSection,
+      changes,
+      'EARS変換節 → 具体例起点へ'
+    );
+    content = replaceSection(
+      content,
+      'Gherkin を導入するステップ',
+      'Gherkin を使う／使わない場面',
+      gherkinStepsSection,
+      changes,
+      '導入ステップをBeekle標準へ'
+    );
+    content = replaceSection(
+      content,
+      'まとめ',
+      '関連記事',
+      gherkinSummary,
+      changes,
+      'まとめをBeekle標準へ'
+    );
+    content = removeWorkflowLinks(content, changes);
+    content = replaceRegex(
+      content,
+      /EARS記法やGherkinを実際のプロジェクトで使うには/g,
+      'User StoryやGherkinを実際のプロジェクトで使うには',
+      changes,
+      'CTAの旧EARS標準表現を修正'
+    );
+  }
+
+  if (id === 'project-management-complete-guide') {
+    content = replaceSection(
+      content,
+      'STEP 5: ユーザーストーリー＋EARS＋Gherkin で「作る」要件を仕様化する',
+      'STEP 6: Laravel + Inertia でプロトタイプを実装する',
+      projectStep5,
+      changes,
+      'STEP 5をBeekle標準へ'
+    );
+    content = replaceRegex(
+      content,
+      /STEP 5 ユーザーストーリー＋EARS＋Gherkin/g,
+      'STEP 5 User Story → 具体例 → Gherkin → レビュー',
+      changes,
+      'まとめのSTEP 5表記を修正'
+    );
+    content = removeWorkflowLinks(content, changes);
+  }
+
+  if (id === 'requirements-definition-complete-guide') {
+    content = replaceSection(
+      content,
+      '要件の書き方ルール：EARS記法',
+      '要件定義のスコープ管理',
+      requirementsExamplesSection,
+      changes,
+      'EARS標準節 → 具体例/Gherkinへ'
+    );
+  }
+
+  if (id === 'ai-development-speed') {
+    content = replaceSection(
+      content,
+      'STEP 3: 残った要件を Gherkin に変換する',
+      'STEP 4: Laravel Inertia でプロトタイプを実装する',
+      aiStep3,
+      changes,
+      'STEP 3を具体例/Gherkinレビューへ'
+    );
+    content = removeWorkflowLinks(content, changes);
+  }
+
+  if (id === 'user-story-template-examples') {
+    content = replaceRegex(
+      content,
+      /<p>近年は、受入条件をさらに曖昧さなく書く構文として[\s\S]*?現代のベストプラクティスです。[\s\S]*?<\/p>/,
+      '<p>受入条件を書いたら、正常系だけでなく異常系・境界値・権限差などの<strong>具体例</strong>を先に出します。合意できた例をGherkinのGiven / When / Thenにすると、「これが動けば完成」という受入条件をそのまま自動テストへ接続できます。EARSは条件付き要件文を一定の型で揃えたい場合に使える補助記法ですが、Beekle標準工程の必須ステップではありません。</p>',
+      changes,
+      '受入条件のEARS標準表現を修正'
+    );
+  }
+
+  if (id === 'requirements-definition-template') {
+    if (title?.includes('EARS記法とユーザーストーリー')) {
+      title =
+        '要件定義書のテンプレート・サンプル｜User Story・具体例・Gherkinの実例＋Word/Markdown無料DL';
+      changes.push('タイトルを現行標準へ');
+    }
+    content = replaceRegex(
+      content,
+      /その書き方の核となる2つの記法（EARS／ユーザーストーリー）を、サンプル付きで公開します。/g,
+      'その書き方の核となる「User Story → 具体例 → Gherkin」の流れを、サンプル付きで公開します。',
+      changes,
+      '導入文を現行標準へ'
+    );
+    content = replaceRegex(
+      content,
+      /4\. 機能要件（EARS記法）/g,
+      '4. 具体例・受け入れ条件（Gherkin）',
+      changes,
+      'テンプレート章立てを現行標準へ'
+    );
+    content = replaceSection(
+      content,
+      'EARS記法の5パターン（実例付き）',
+      'テンプレート無料ダウンロード',
+      requirementsTemplateExamples,
+      changes,
+      'EARS標準節 → 具体例/Gherkinへ'
+    );
+    content = replaceRegex(
+      content,
+      /「作る」と判定した要求をユーザーストーリー化し、EARS記法で機能要件[^<]*/g,
+      '「作る」と判定した要求をUser Story化し、正常系・異常系・境界値の具体例を出してGherkinで完成条件を固定する',
+      changes,
+      '進め方のSTEP 4を修正'
+    );
+    content = replaceSection(
+      content,
+      'まとめ：要件定義は「ストーリー＋EARS」で曖昧さを潰す',
+      'Beekleの進め方',
+      requirementsTemplateSummary,
+      changes,
+      'まとめを現行標準へ'
+    );
+    content = replaceRegex(
+      content,
+      /Beekleでは、要件定義フェーズで[^<]*ユーザーストーリーとEARS要件を書き起こすワークショップ[^<]*。/g,
+      'Beekleでは、要件定義フェーズで発注側と共同し、要求（Why）からUser Story、具体例、Gherkinまでをつなげてレビューするワークショップを行います。',
+      changes,
+      'Beekleの進め方を修正'
+    );
+  }
+
+  if (id === 'engineer-communication') {
+    content = replaceRegex(
+      content,
+      /ユーザーストーリー＋EARS＋Gherkin/g,
+      'User Story → 具体例 → Gherkin',
+      changes,
+      '旧3層表記を修正'
+    );
+    content = replaceRegex(
+      content,
+      /ユーザーストーリー＋EARS/g,
+      'User Story → 具体例',
+      changes,
+      '旧2層表記を修正'
+    );
+    content = removeWorkflowLinks(content, changes);
+  }
+
+  if (id === 'ears-gherkin-workflow') {
+    title = 'EARS×Gherkinの使い分け｜EARSは補助記法、具体例→GherkinがBeekle標準';
+    content = legacyEarsContent;
+    changes.push('旧標準ワークフロー記事を現行方針へ全面改稿');
+  }
+
+  return { title, content, changes };
+}
+
+const qaUpdates = {
+  'requirements-8': {
+    answer:
+      '<p><strong>EARS（Easy Approach to Requirements Syntax）は、条件とシステムの振る舞いを一定の型で書くための要件記法です。</strong></p><p>安全性・規制対応などで要件文の形式を揃えたい場合や、大量の条件付き要件をレビューしたい場合には有効です。ただし、現在のBeekleではEARSを標準工程の必須ステップにはしていません。</p><p>Beekleの標準は「要求（Why） → User Story → 具体例 → Gherkin → レビュー → 実装・検証」です。EARSは必要な案件で補助的に使います。EARSそのものの5パターンと書き方は<a href="/column/ears-requirements-syntax-guide">EARS入門</a>を参照してください。</p>',
+  },
+  'requirements-9': {
+    answer:
+      '<p><strong>Gherkinは、関係者で合意した具体例をGiven / When / Thenで「これが動けば完成」という形に固定したい場面で使います。</strong></p><p>BeekleではUser Storyを書いた後、いきなりGherkinへ変換せず、正常系・異常系・境界値などの具体例を先に出します。決まった例だけをGherkinにし、実装前に抜け漏れ・矛盾をレビューします。</p><p>そのScenarioをCucumber、pytest-bdd、Playwright BDDなどのstep definitionへ接続すると、同じ記述を受入テスト・回帰テストとしてCIで継続実行できます。詳しくは<a href="/column/gherkin-bdd-introduction">Gherkin入門</a>と<a href="/column/requirements-definition-template">要件定義書テンプレート</a>を参照してください。</p>',
+  },
+  'requirements-14': {
+    question: 'User StoryからGherkinへはどうつなげますか？',
+    answer:
+      '<p><strong>User Storyを書いたら、いきなりGherkinへ変換せず、まず具体例を出します。</strong></p><p>正常系・異常系・境界値について「実際に何が起きれば完成なのか」を業務担当者と確認し、決まった例だけをGiven / When / Thenへ落とします。Gherkinを書いた後は、実装前に抜け漏れ・矛盾・未確定事項をレビューします。</p><p>実装後はScenarioをstep definitionへ接続し、受入テスト・回帰テストとしてCIで継続実行します。流れは「要求（Why） → User Story → 具体例 → Gherkin → レビュー → 実装・検証」です。</p>',
+  },
+  'project-management-15': {
+    answer:
+      '<p><strong>要件定義は「ベンダー任せ」では失敗します。発注者が担うのは、文書を大量に書くことではなく、業務上のWhyと優先順位、完成条件の意思決定です。</strong></p><p>進め方は、(1) ステークホルダー特定 → (2) 業務目的とKPI → (3) As-Is / To-Be → (4) 要求をUser Storyへ整理 → (5) FM法で作る／後回し／作らないを決定 → (6) 正常系・異常系・境界値の具体例を出す → (7) Gherkinで完成条件を固定し、実装前レビュー → プロトタイプ／実装、という流れです。</p><p>記法を埋めることよりも、「誰が何のために使い、どの例が動けば受け入れられるか」を合意することが重要です。詳しくは<a href="/column/project-management-01">要件定義の進め方</a>を参照してください。</p>',
+  },
+  'project-management-16': {
+    answer:
+      '<p><strong>「今どの工程の話をしているか」を最初に揃え、そのうえで「もし◯◯が起きたら？」という具体例を聞くと抜け漏れが減ります。</strong></p><p>Beekleでは「アクター → As-Is / To-Be → 要求（Why） → User Story → 具体例 → Gherkin／レビュー → 実装」のどこを議論しているかを明示します。場所のない依頼は、仕様なのか要望なのか実装案なのかが混ざるためです。</p><p>具体例では「ネットが不安定だったら？」「権限が違ったら？」「0件だったら？」「同じ操作を2回したら？」「外部サービスが落ちたら？」などを確認します。すぐ答えが出ないものは未確定事項として残し、Gherkinへ勝手に埋めません。詳しくは<a href="/column/engineer-communication">エンジニアとのコミュニケーション基礎</a>と<a href="/column/gherkin-bdd-introduction">Gherkin入門</a>を参照してください。</p>',
+  },
+};
+
+const columnIds = [
+  'gherkin-bdd-introduction',
+  'project-management-complete-guide',
+  'requirements-definition-complete-guide',
+  'ai-development-speed',
+  'user-story-template-examples',
+  'requirements-definition-template',
+  'engineer-communication',
+  'ears-gherkin-workflow',
+];
+
+const planned = [];
+for (const id of columnIds) {
+  const article = await client.get({
+    endpoint: 'columns',
+    contentId: id,
+    queries: { fields: 'id,title,content' },
+  });
+  const next = transformColumn(id, article);
+  if (next.title !== article.title || next.content !== article.content) {
+    planned.push({
+      endpoint: 'columns',
+      id,
+      content: { title: next.title, content: next.content },
+      changes: next.changes,
+    });
+  }
+}
+
+for (const [id, patch] of Object.entries(qaUpdates)) {
+  const qa = await client.get({
+    endpoint: 'qas',
+    contentId: id,
+    queries: { fields: 'id,question,answer' },
+  });
+  const content = {};
+  if (patch.question && patch.question !== qa.question) content.question = patch.question;
+  if (patch.answer && patch.answer !== qa.answer) content.answer = patch.answer;
+  if (Object.keys(content).length)
+    planned.push({ endpoint: 'qas', id, content, changes: ['QAを現行Beekle標準へ'] });
+}
+
+const forbiddenChecks = [
+  [
+    'gherkin-bdd-introduction',
+    /ユーザーストーリーと\s*EARS\s*で要件を整える|EARS\s*と組み合わせることで/,
+  ],
+  ['project-management-complete-guide', /ユーザーストーリー＋EARS＋Gherkin|EARSで分解した受入条件/],
+  ['requirements-definition-complete-guide', /要件の書き方ルール：EARS記法/],
+  ['ai-development-speed', /EARS記法[^<]{0,80}ワンクッション/],
+  [
+    'user-story-template-examples',
+    /EARS\s*で受入条件と非機能要件を書く[^<]{0,80}ベストプラクティス/,
+  ],
+  [
+    'requirements-definition-template',
+    /まとめ：要件定義は「ストーリー＋EARS」|共同でユーザーストーリーとEARS要件/,
+  ],
+];
+
+for (const [id, re] of forbiddenChecks) {
+  const candidate = planned.find((x) => x.endpoint === 'columns' && x.id === id);
+  const content = candidate?.content?.content;
+  if (content && re.test(content))
+    throw new Error(`preflight failed: old standard wording remains in ${id}: ${re}`);
+}
+
+console.log(`[mode] ${APPLY ? 'APPLY' : 'DRY-RUN'}`);
+console.log(`[standard] ${STANDARD_FLOW}`);
+for (const item of planned) {
+  console.log(`\n[${item.endpoint}] ${item.id}`);
+  for (const change of item.changes) console.log(`  - ${change}`);
+}
+console.log(`\n[plan] ${planned.length} content items will change`);
+
+if (!APPLY) process.exit(0);
+
+for (const item of planned) {
+  await client.update({ endpoint: item.endpoint, contentId: item.id, content: item.content });
+  console.log(`[updated] ${item.endpoint}/${item.id}`);
+}
+
+for (const item of planned) {
+  const fields = item.endpoint === 'columns' ? 'id,title,content' : 'id,question,answer';
+  const verify = await client.get({
+    endpoint: item.endpoint,
+    contentId: item.id,
+    queries: { fields },
+  });
+  for (const [key, value] of Object.entries(item.content)) {
+    if (verify[key] !== value)
+      throw new Error(`verify failed: ${item.endpoint}/${item.id} field=${key}`);
+  }
+}
+
+console.log(`\n[done] verified ${planned.length} MicroCMS updates`);
