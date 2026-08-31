@@ -82,8 +82,7 @@ export const situationLpContents: SituationLpContent[] = [
     capabilities: [
       {
         title: 'AIチャットボット・カスタマーサポートAI',
-        description:
-          '回答できる質問、人へ引き継ぐ質問、改善に使う会話ログまで含めて設計します。',
+        description: '回答できる質問、人へ引き継ぐ質問、改善に使う会話ログまで含めて設計します。',
       },
       {
         title: 'RAG・GraphRAGによる社内文書検索',
@@ -155,8 +154,7 @@ export const situationLpContents: SituationLpContent[] = [
       },
       {
         title: '顧客・受注・在庫・案件管理',
-        description:
-          '複数の表やメールに散らばった情報を、一つの業務データと操作履歴へまとめます。',
+        description: '複数の表やメールに散らばった情報を、一つの業務データと操作履歴へまとめます。',
       },
       {
         title: 'スキャン・印刷・外部API連携',
@@ -223,8 +221,7 @@ export const situationLpContents: SituationLpContent[] = [
       },
       {
         title: '保守しやすいWebシステムへの再構築',
-        description:
-          '変更理由と確認条件を残し、刷新後の改修や引き継ぎがしやすい構成へ変えます。',
+        description: '変更理由と確認条件を残し、刷新後の改修や引き継ぎがしやすい構成へ変えます。',
       },
     ],
     strengthsLead:
@@ -271,23 +268,19 @@ export const situationLpContents: SituationLpContent[] = [
     capabilities: [
       {
         title: '社内文書AI検索',
-        description:
-          '規程、マニュアル、議事録、FAQ、PDFを横断し、答えと参照元を同時に表示します。',
+        description: '規程、マニュアル、議事録、FAQ、PDFを横断し、答えと参照元を同時に表示します。',
       },
       {
         title: 'RAG・GraphRAGシステム',
-        description:
-          '全文検索、意味検索、文書構造、情報同士の関係を質問に応じて組み合わせます。',
+        description: '全文検索、意味検索、文書構造、情報同士の関係を質問に応じて組み合わせます。',
       },
       {
         title: 'FAQ・問い合わせ対応チャットボット',
-        description:
-          '社内ヘルプデスクや顧客対応で、回答できる範囲と人へ引き継ぐ条件を設計します。',
+        description: '社内ヘルプデスクや顧客対応で、回答できる範囲と人へ引き継ぐ条件を設計します。',
       },
       {
         title: '権限・出典・更新管理',
-        description:
-          '部署別の閲覧権限、最新版の扱い、引用箇所、検索ログ、改善手順まで実装します。',
+        description: '部署別の閲覧権限、最新版の扱い、引用箇所、検索ログ、改善手順まで実装します。',
       },
     ],
     strengthsLead:
@@ -334,8 +327,7 @@ export const situationLpContents: SituationLpContent[] = [
     capabilities: [
       {
         title: 'CDP・顧客データ統合',
-        description:
-          'EC、CRM、広告、問い合わせ、契約、アプリ利用データを顧客単位でつなぎます。',
+        description: 'EC、CRM、広告、問い合わせ、契約、アプリ利用データを顧客単位でつなぎます。',
       },
       {
         title: 'BigQuery・Databricksへのデータ接続',
@@ -426,8 +418,7 @@ export const situationLpContents: SituationLpContent[] = [
       },
       {
         title: '直す・残す・後回しを分ける',
-        description:
-          '全部を作り直す前提にせず、事業上必要な範囲と安全に変更できる順番を決めます。',
+        description: '全部を作り直す前提にせず、事業上必要な範囲と安全に変更できる順番を決めます。',
       },
       {
         title: '調査から再実装まで切らない',

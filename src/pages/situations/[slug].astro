@@ -5,10 +5,7 @@ import JsonLd from '@/components/seo/json-ld.astro';
 import SituationDecisionContent from '@/components/situations/situation-decision-content.astro';
 import { consultationHub, getConsultationSituation } from '@/data/consultation-situations';
 import { resolveSituationHeroCopy } from '@/data/outcome-led-copy';
-import {
-  getSituationLpContent,
-  resolveSituationCaseStudies,
-} from '@/data/situation-lp-content';
+import { getSituationLpContent, resolveSituationCaseStudies } from '@/data/situation-lp-content';
 import Layout from '@/layouts/layout.astro';
 
 export const prerender = false;
