@@ -106,7 +106,7 @@ const faqItems = [
             動くもので確かめる。
           </h1>
           <p class="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-700 md:text-xl">
-            相談内容を検証用プロトタイプに落とし込み、業務に合うか、次に投資する条件があるかを判断できる状態にします。
+            ゼロスタートは、本開発に入る前に動くプロトタイプ（試作）を作って確かめる、Beekleの進め方の呼び名です。相談内容を検証用プロトタイプに落とし込み、業務に合うか、次に投資する条件があるかを判断できる状態にします。
           </p>
           <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
             <ButtonLink
@@ -189,6 +189,25 @@ const faqItems = [
               <p class="text-sm font-bold leading-relaxed text-accent-950">{row.decision}</p>
             </div>
           ))}
+        </div>
+
+        <div class="mt-10 border-l-8 border-primary-500 bg-white px-6 py-6">
+          <p class="text-sm font-bold text-primary-700">実案件</p>
+          <h3 class="mt-2 text-xl font-bold leading-snug text-accent-950">
+            ヒアリング議事録から、その日のうちに動くデモまで
+          </h3>
+          <p class="mt-3 leading-relaxed text-neutral-700">
+            構想段階で要件が言語化されていない状態から、議事録をもとにRFP（提案依頼書）を作り、その仕様で実装しました。1日で動作するデモを完成させ、画面を見ながら認識を合わせています。発注者からは「イメージとずれていない」と評価いただき、以降の打ち合わせを認識合わせではなく中身の検討に使えました。
+          </p>
+          <p class="mt-4 text-sm leading-relaxed text-neutral-700">
+            他にも、LINE上でタップするだけのプロトタイプで操作感を確かめてから本開発へ進み、約2ヶ月でリリースした案件（実サービスとして公開中）や、2週間の試作で発注範囲と要件を確定した案件があります。
+          </p>
+          <a
+            href="/case-studies"
+            class="mt-5 inline-flex min-h-[44px] items-center text-sm font-bold text-primary-600 hover:text-primary-700"
+          >
+            他の事例を見る →
+          </a>
         </div>
       </div>
     </section>
