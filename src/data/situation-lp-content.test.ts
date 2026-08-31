@@ -27,10 +27,10 @@ describe('situation LP decision content', () => {
       expect(content).toContain(`'${slug}'`);
     }
 
-    expect(content.match(/capabilities:/g) ?? []).toHaveLength(expectedSlugs.length);
-    expect(content.match(/strengths:/g) ?? []).toHaveLength(expectedSlugs.length);
-    expect(content.match(/caseStudyRefs:/g) ?? []).toHaveLength(expectedSlugs.length);
-    expect(content.match(/deepDiveLinks:/g) ?? []).toHaveLength(expectedSlugs.length);
+    expect(content.match(/\n    capabilities:/g) ?? []).toHaveLength(expectedSlugs.length);
+    expect(content.match(/\n    strengths:/g) ?? []).toHaveLength(expectedSlugs.length);
+    expect(content.match(/\n    caseStudyRefs:/g) ?? []).toHaveLength(expectedSlugs.length);
+    expect(content.match(/\n    deepDiveLinks:/g) ?? []).toHaveLength(expectedSlugs.length);
   });
 
   it('reuses verified service case studies instead of duplicating free-text claims', () => {
