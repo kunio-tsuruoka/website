@@ -84,7 +84,7 @@ TranscriptSource -[HAS_CHUNK]-> TranscriptChunk -[MENTIONS]-> Concept
 - 類似要求の検出は3層合成（ベクトル類似度 + 人のフィードバック + グラフ構造の近さ）。重複判定 0.85 / 提案 0.65 を閾値にする
 - グラフ近接は1ホップごとに減衰、時間減衰は半減期を設ける
 - Cypherテンプレートの実行は常に読み取り専用セッション、タイムアウトと行数上限つき
-- Cross-Encoder による再ランクは実装済みだが、現在チャット経路では既定で無効
+- 融合後の候補は Cross-Encoder（bge-reranker-v2-m3）で再ランクする。バイエンコーダの類似度だけでは拾えない、質問と文書の対応関係を見て並べ直す
 
 ### AIエージェント連携（MCP）
 - MCPサーバを内蔵する（FastMCP / Streamable HTTP）。公開ツール数151
