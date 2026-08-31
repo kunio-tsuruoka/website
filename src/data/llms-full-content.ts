@@ -248,6 +248,8 @@ export const vendorSelection = {
 export type CaseReference = {
   id: string;
   title: string;
+  /** 掲載許諾を得ている場合のみ社名を書く。未取得なら省略し、匿名で記述する */
+  client?: string;
   domain: string;
   situation: string;
   problems: readonly string[];
@@ -283,6 +285,7 @@ export const caseReferences: readonly CaseReference[] = [
   {
     id: 'recovery-in-progress',
     title: '他社が完成に至らなかった案件の引き継ぎ（進行中）',
+    client: '株式会社イデアラボ',
     domain: '業務システム開発',
     situation: '先行していたベンダーが完成に至らず、開発が止まっていた。',
     problems: [
@@ -298,7 +301,7 @@ export const caseReferences: readonly CaseReference[] = [
     ],
     outcome: ['要件の再整理を約3日で完了した', '最初の2週間サイクルで、開発の約60%が完了した'],
     evidenceStatus:
-      '進行中の案件であり、完了実績ではない。数値は現時点の進捗。顧客へのヒアリングと最終結果は、完了後に追記する。発注元の社名は非公開。',
+      '発注元より掲載許諾を得ている。進行中の案件であり、完了実績ではない。数値は現時点の進捗であり、最終結果ではない。顧客へのヒアリングと完了時の結果は、完了後に追記する。',
   },
   {
     id: 'meeting-notes-to-demo',
@@ -466,6 +469,11 @@ export const technicalFaq: readonly { question: string; answer: string }[] = [
     question: '機密情報や個人情報を扱えますか？',
     answer:
       'NDAの締結に対応します。データを外部に出さない構成（自社管理のVPS上で完結させる構成）の実績があります。マルチテナントの分離は、識別子でのロード後に所属を再検証する二重の防御と、権限がない場合は存在自体を隠す方式で設計します。ナレッジには閲覧・編集・管理のアクセス制御を持たせ、検索結果にも後段でフィルタをかけます。',
+  },
+  {
+    question: '相談の段階で、どこまで費用をかけずに見られますか？',
+    answer:
+      '初回相談と、商談時に持参する簡易デモに費用はかかりません。相談内容にもとづいて動くデモを作り、商談の場に持っていきます。資料やスライドではなく実物を見てから、進めるかどうかを判断できます。有償になるのは、実データ連携、個別業務フローへの適合、精度検証、セキュリティ要件を含むPoC以降です。その線引きは、範囲と判断基準を整理したうえで事前に合意します。',
   },
   {
     question: '費用と期間はどう決まりますか？',
