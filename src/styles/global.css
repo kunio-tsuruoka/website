@@ -55,10 +55,23 @@
   .home-hero-veil {
     background-image: linear-gradient(
       to right,
-      rgb(241 245 249 / 0.28) 0%,
-      rgb(241 245 249 / 0.1) 32%,
-      rgb(241 245 249 / 0) 50%
+      rgb(241 245 249) 0%,
+      rgb(241 245 249) 68%,
+      rgb(241 245 249 / 0.86) 78%,
+      rgb(241 245 249 / 0.12) 100%
     );
+  }
+
+  @media (min-width: 1024px) {
+    .home-hero-veil {
+      background-image: linear-gradient(
+        to right,
+        rgb(241 245 249) 0%,
+        rgb(241 245 249) 50%,
+        rgb(241 245 249 / 0.55) 60%,
+        rgb(241 245 249 / 0) 72%
+      );
+    }
   }
 
   /* コンテナ */

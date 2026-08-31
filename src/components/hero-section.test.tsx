@@ -60,9 +60,13 @@ describe('HeroSection', () => {
     expect(html).not.toContain('w-[52%]');
     expect(html).not.toContain('md:hidden');
     expect(html).not.toContain('hidden border-y border-neutral-300 bg-white md:block');
+    expect(html).toContain('max-w-[24rem]');
     expect(html).toContain('max-w-[28rem]');
     expect(html).toContain('xl:max-w-[36rem]');
+    expect(html).toContain('lg:text-4xl');
     expect(html).toContain('xl:text-5xl');
+    expect(html).not.toContain('sm:text-4xl');
+    expect(html).not.toContain('md:text-4xl');
     expect(html).not.toContain('max-w-[20rem]');
     expect(html).not.toContain('xl:max-w-[26rem]');
     expect(html).not.toContain('xl:text-8xl');
