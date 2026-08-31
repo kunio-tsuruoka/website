@@ -1,6 +1,10 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import {
+  resolveSituationCaseStudies,
+  situationLpContents,
+} from '@/data/situation-lp-content';
 
 const root = process.cwd();
 const source = (path: string) => {
@@ -20,30 +24,26 @@ const expectedSlugs = [
 
 describe('situation LP decision content', () => {
   it('defines capabilities, strengths, case references, and deep-dive links for all seven LPs', () => {
-    const content = source('src/data/situation-lp-content.ts');
+    expect(situationLpContents.map((content) => content.slug)).toEqual(expectedSlugs);
 
-    expect(content).not.toBe('');
-    for (const slug of expectedSlugs) {
-      expect(content).toContain(`'${slug}'`);
+    for (const content of situationLpContents) {
+      expect(content.capabilities).toHaveLength(4);
+      expect(content.strengths).toHaveLength(3);
+      expect(content.deepDiveLinks).toHaveLength(2);
     }
-
-    expect(content.match(/\n    capabilities:/g) ?? []).toHaveLength(expectedSlugs.length);
-    expect(content.match(/\n    strengths:/g) ?? []).toHaveLength(expectedSlugs.length);
-    expect(content.match(/\n    caseStudyRefs:/g) ?? []).toHaveLength(expectedSlugs.length);
-    expect(content.match(/\n    deepDiveLinks:/g) ?? []).toHaveLength(expectedSlugs.length);
   });
 
-  it('reuses three verified service case studies per LP instead of duplicating free-text claims', () => {
-    const content = source('src/data/situation-lp-content.ts');
-    const expectedCaseReferences = expectedSlugs.length * 3;
+  it('resolves three verified service case studies per LP instead of duplicating free-text claims', () => {
+    const contentSource = source('src/data/situation-lp-content.ts');
 
-    expect(content).toContain("import { services } from '@/data/service';");
-    expect(content).toContain('resolveSituationCaseStudies');
-    expect(content.match(/\n      \{ serviceId:/g) ?? []).toHaveLength(expectedCaseReferences);
-    expect(content.match(/caseIndex: 0 \}/g) ?? []).toHaveLength(expectedCaseReferences);
-    expect(content).not.toContain('challenge:');
-    expect(content).not.toContain('solution:');
-    expect(content).not.toContain('results:');
+    for (const content of situationLpContents) {
+      expect(resolveSituationCaseStudies(content)).toHaveLength(3);
+    }
+
+    expect(contentSource).toContain("import { services } from '@/data/service';");
+    expect(contentSource).not.toContain('challenge:');
+    expect(contentSource).not.toContain('solution:');
+    expect(contentSource).not.toContain('results:');
   });
 
   it('renders what Beekle can do, multiple cases, and situation-specific strengths before the consultation materials', () => {
