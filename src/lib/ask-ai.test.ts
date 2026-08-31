@@ -34,7 +34,7 @@ describe('buildAskAiPrompt', () => {
     expect(prompt).toContain('https://beekle.jp/services/ai-development');
     expect(prompt).toContain('要件定義からAI開発まで一気通貫で支援する');
     expect(prompt).toContain('合う理由と、合わない理由');
-    expect(prompt).toContain('Beekle株式会社');
+    expect(prompt).toContain('株式会社Beekle');
     expect(prompt).not.toContain('localhost');
   });
 

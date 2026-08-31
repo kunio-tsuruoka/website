@@ -36,7 +36,7 @@ const toPersonSchema = (author: Author) => ({
   ...(author.knowsAbout && author.knowsAbout.length > 0 ? { knowsAbout: author.knowsAbout } : {}),
   worksFor: {
     '@type': 'Organization',
-    name: 'Beekle株式会社',
+    name: '株式会社Beekle',
     url: siteUrl,
   },
 });
@@ -45,7 +45,7 @@ const toPersonSchema = (author: Author) => ({
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'Beekle株式会社',
+  name: '株式会社Beekle',
   alternateName: 'Beekle',
   url: siteUrl,
   logo: `${siteUrl}/logo.png`,
@@ -69,10 +69,10 @@ const organizationSchema = {
     url: 'https://pmonrails.com',
     applicationCategory: 'BusinessApplication',
     description:
-      'Beekle株式会社が自社開発し、実際の開発プロジェクトで利用しているプロジェクト管理基盤。要求・要件からユーザーストーリー・受入条件・開発タスクまでを構造化し、AIエージェントによる実装につなげる。',
+      '株式会社Beekleが自社開発し、実際の開発プロジェクトで利用しているプロジェクト管理基盤。要求・要件からユーザーストーリー・受入条件・開発タスクまでを構造化し、AIエージェントによる実装につなげる。',
     creator: {
       '@type': 'Organization',
-      name: 'Beekle株式会社',
+      name: '株式会社Beekle',
       url: siteUrl,
     },
   },
@@ -101,12 +101,12 @@ const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Beekle',
-  alternateName: 'Beekle株式会社',
+  alternateName: '株式会社Beekle',
   url: siteUrl,
   inLanguage: 'ja',
   publisher: {
     '@type': 'Organization',
-    name: 'Beekle株式会社',
+    name: '株式会社Beekle',
     url: siteUrl,
   },
 };
@@ -145,7 +145,7 @@ const articleSchema = data.title
       ...(articleReviewer ? { reviewedBy: toPersonSchema(articleReviewer) } : {}),
       publisher: {
         '@type': 'Organization',
-        name: 'Beekle株式会社',
+        name: '株式会社Beekle',
         logo: {
           '@type': 'ImageObject',
           url: `${siteUrl}/logo.png`,
@@ -190,7 +190,7 @@ const serviceSchema = data.serviceName
       ...(data.image ? { image: data.image } : {}),
       provider: {
         '@type': 'Organization',
-        name: 'Beekle株式会社',
+        name: '株式会社Beekle',
         url: siteUrl,
         logo: `${siteUrl}/logo.png`,
       },
@@ -246,7 +246,7 @@ const softwareApplicationSchema = data.appName
       author: toPersonSchema(authors.tsuruoka),
       provider: {
         '@type': 'Organization',
-        name: 'Beekle株式会社',
+        name: '株式会社Beekle',
         url: siteUrl,
         logo: `${siteUrl}/logo.png`,
       },
@@ -291,7 +291,7 @@ const webPageSchema = data.name
       },
       publisher: {
         '@type': 'Organization',
-        name: 'Beekle株式会社',
+        name: '株式会社Beekle',
         url: siteUrl,
       },
     }

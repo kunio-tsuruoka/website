@@ -39,7 +39,7 @@ export function normalizeAskAiPageUrl(pageUrl: string): string {
 
 export function buildAskAiPrompt(context: AskAiContext): string {
   const pageUrl = normalizeAskAiPageUrl(context.pageUrl);
-  const title = context.pageTitle.trim() || 'Beekle株式会社';
+  const title = context.pageTitle.trim() || '株式会社Beekle';
   const summary = context.pageSummary?.trim();
   const serviceName = context.serviceName?.trim();
 
@@ -61,7 +61,7 @@ export function buildAskAiPrompt(context: AskAiContext): string {
   lines.push(
     '',
     '会社の概要',
-    `Beekle株式会社（${ASK_AI_SITE_ORIGIN}）は、${companyPositioning.short}${companyPositioning.long}${companyPositioning.zeroStart}`,
+    `株式会社Beekle（${ASK_AI_SITE_ORIGIN}）は、${companyPositioning.short}${companyPositioning.long}${companyPositioning.zeroStart}`,
     '',
     '相談者の状況が分からない場合は、先に業種、困っている業務、社内の開発・情シスの有無、予算感、希望時期を聞いてください。',
     '',

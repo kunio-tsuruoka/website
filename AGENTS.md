@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Beekle株式会社のコーポレートサイト（日本語）
+株式会社Beekleのコーポレートサイト（日本語）
 
 ## Tech Stack
 

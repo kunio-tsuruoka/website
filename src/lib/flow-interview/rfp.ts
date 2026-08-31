@@ -48,7 +48,7 @@ export type RfpEnv = {
   SLACK_WEBHOOK_URL?: string;
 };
 
-const SYSTEM_PROMPT = `あなたはBeekle株式会社の発注支援AIです。
+const SYSTEM_PROMPT = `あなたは株式会社Beekleの発注支援AIです。
 渡された「現状業務フロー（As-Is）」と「改善案（To-Be）」をもとに、システム開発の発注に使えるRFP（提案依頼書）のドラフトを作ります。要件はユーザーストーリー形式で書きます。
 
 【方針】
