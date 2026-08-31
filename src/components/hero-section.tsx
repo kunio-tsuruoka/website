@@ -12,11 +12,10 @@ export const HeroSection = () => (
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 h-full w-full object-cover object-left lg:object-center"
     />
-    <div className="home-hero-veil pointer-events-none absolute inset-0" aria-hidden="true" />
 
     <div className="container relative mx-auto flex min-h-[420px] items-center px-8 py-14 lg:min-h-[560px] lg:px-12">
       <div className="w-full max-w-[24rem] lg:max-w-[28rem] xl:max-w-[36rem]">
-        <h1 className="text-3xl font-bold leading-[1.35] text-accent-950 lg:text-4xl xl:text-5xl">
+        <h1 className="text-2xl font-bold leading-[1.35] text-accent-950 sm:text-3xl lg:text-4xl xl:text-5xl">
           資料より、まず<span className="text-primary-500">爆速デモ。</span>
           <br />
           見て決めたら、
@@ -28,11 +27,14 @@ export const HeroSection = () => (
           href="/contact?source=home-hero"
           data-cta-source="home-hero"
           data-cta-id="contact"
-          className="page-cta group mt-8 inline-flex min-h-[52px] items-center justify-center rounded-md bg-primary-500 px-8 py-4 text-center text-lg font-semibold leading-snug text-white transition-colors hover:bg-primary-600"
+          className="page-cta group mt-8 inline-flex min-h-[56px] overflow-hidden rounded-md border border-primary-500 bg-primary-500 text-center text-lg font-semibold leading-snug text-white transition-colors hover:border-primary-600 hover:bg-primary-600"
         >
-          爆速デモを相談する
-          <span className="transition-transform duration-200 group-hover:translate-x-1">
-            <ArrowRight className="ml-2 h-5 w-5" />
+          <span className="flex items-center px-6 py-4 sm:px-8">爆速デモについて相談する</span>
+          <span
+            aria-hidden="true"
+            className="flex items-center self-stretch border-l border-white/30 bg-primary-600 px-4 transition-colors group-hover:bg-accent-950"
+          >
+            <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
           </span>
         </a>
       </div>

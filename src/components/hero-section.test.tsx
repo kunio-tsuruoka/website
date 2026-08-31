@@ -21,12 +21,20 @@ describe('HeroSection', () => {
     expect(html).not.toContain('資料と見積書だけで何週間も悩まず');
   });
 
-  it('uses a concise demo CTA', () => {
+  it('uses the wider consultation CTA', () => {
     const html = renderHeroHtml();
     const text = visibleText(html);
 
-    expect(text).toContain('爆速デモを相談する');
-    expect(text).not.toContain('爆速デモについて相談する');
+    expect(text).toContain('爆速デモについて相談する');
+    expect(text).not.toContain('爆速デモを相談する');
+  });
+
+  it('separates the CTA arrow into its own visual segment', () => {
+    const { getByRole } = render(<HeroSection />);
+    const cta = getByRole('link', { name: '爆速デモについて相談する' });
+
+    expect(cta.children).toHaveLength(2);
+    expect(cta.lastElementChild).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('uses the supplied background image instead of a faux app dashboard', () => {
@@ -59,7 +67,7 @@ describe('HeroSection', () => {
     const html = renderHeroHtml();
 
     expect(html).toContain('absolute inset-0 h-full w-full object-cover');
-    expect(html).toContain('home-hero-veil');
+    expect(html).not.toContain('home-hero-veil');
     expect(html).toContain('lg:min-h-[560px]');
     expect(html).not.toContain('lg:min-h-[640px]');
     expect(html).not.toContain('lg:grid-cols');
@@ -70,6 +78,8 @@ describe('HeroSection', () => {
     expect(html).toContain('max-w-[24rem]');
     expect(html).toContain('max-w-[28rem]');
     expect(html).toContain('xl:max-w-[36rem]');
+    expect(html).toContain('text-2xl');
+    expect(html).toContain('sm:text-3xl');
     expect(html).toContain('lg:text-4xl');
     expect(html).toContain('xl:text-5xl');
     expect(html).not.toContain('sm:text-4xl');

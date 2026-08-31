@@ -51,29 +51,6 @@
     background-image: none;
   }
 
-  /* トップヒーロー: 背景画像の左余白にコピーを載せるための薄いベール */
-  .home-hero-veil {
-    background-image: linear-gradient(
-      to right,
-      rgb(241 245 249) 0%,
-      rgb(241 245 249) 50%,
-      rgb(241 245 249 / 0.7) 58%,
-      rgb(241 245 249 / 0) 68%
-    );
-  }
-
-  @media (min-width: 1024px) {
-    .home-hero-veil {
-      background-image: linear-gradient(
-        to right,
-        rgb(241 245 249) 0%,
-        rgb(241 245 249) 48%,
-        rgb(241 245 249 / 0.55) 54%,
-        rgb(241 245 249 / 0) 62%
-      );
-    }
-  }
-
   /* コンテナ */
   .container-wide {
     @apply container mx-auto px-8 lg:px-12;
