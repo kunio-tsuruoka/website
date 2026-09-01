@@ -46,9 +46,9 @@ describe('transformAiDevelopmentCostOperations', () => {
   });
 
   it('対象となる価格表がない場合は別の表を書き換えず失敗する', () => {
-    expect(() =>
-      transformAiDevelopmentCostOperations('<table><tbody></tbody></table>')
-    ).toThrow('費用の目安');
+    expect(() => transformAiDevelopmentCostOperations('<table><tbody></tbody></table>')).toThrow(
+      '費用の目安'
+    );
   });
 
   it('運用費の行だけ存在する場合は注記だけを補う', () => {
@@ -66,7 +66,7 @@ describe('transformAiDevelopmentCostOperations', () => {
 
   it('同じ文言を含む別の表ではなく、費用表だけを更新する', () => {
     const withAnotherTable =
-      '<table><tbody><tr><td><p>本番開発</p></td></tr></tbody></table>' + currentContent;
+      `<table><tbody><tr><td><p>本番開発</p></td></tr></tbody></table>${currentContent}`;
 
     const result = transformAiDevelopmentCostOperations(withAnotherTable);
     const firstTableEnd = result.content.indexOf('</table>');
@@ -82,11 +82,11 @@ describe('transformAiDevelopmentCostOperations', () => {
         githubEventName: 'pull_request',
       })
     ).toBe(false);
-    expect(
-      shouldApplyAiDevelopmentCostOperations({ apply: true, githubEventName: 'push' })
-    ).toBe(true);
-    expect(
-      shouldApplyAiDevelopmentCostOperations({ apply: false, githubEventName: 'push' })
-    ).toBe(false);
+    expect(shouldApplyAiDevelopmentCostOperations({ apply: true, githubEventName: 'push' })).toBe(
+      true
+    );
+    expect(shouldApplyAiDevelopmentCostOperations({ apply: false, githubEventName: 'push' })).toBe(
+      false
+    );
   });
 });
