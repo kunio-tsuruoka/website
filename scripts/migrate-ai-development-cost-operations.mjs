@@ -2,6 +2,8 @@ import { createClient } from 'microcms-js-sdk';
 import { transformAiDevelopmentCostOperations } from './lib/ai-development-cost-operations.mjs';
 
 const APPLY = process.argv.includes('--apply');
+const IS_PULL_REQUEST = process.env.GITHUB_EVENT_NAME === 'pull_request';
+const SHOULD_APPLY = APPLY && !IS_PULL_REQUEST;
 const CONTENT_ID = 'ai-development-cost-guide';
 
 if (!process.env.MICROCMS_SERVICE_DOMAIN || !process.env.MICROCMS_API_KEY) {
@@ -22,7 +24,9 @@ const article = await client.get({
 
 const next = transformAiDevelopmentCostOperations(article.content);
 
-console.log(`[mode] ${APPLY ? 'APPLY' : 'DRY-RUN'}`);
+console.log(
+  `[mode] ${SHOULD_APPLY ? 'APPLY' : 'DRY-RUN'}${IS_PULL_REQUEST ? ' (pull_request)' : ''}`
+);
 console.log(`[columns] ${CONTENT_ID}`);
 console.log(
   next.changed
@@ -30,7 +34,7 @@ console.log(
     : '  - 変更なし（追加済み）'
 );
 
-if (!APPLY || !next.changed) process.exit(0);
+if (!SHOULD_APPLY || !next.changed) process.exit(0);
 
 await client.update({
   endpoint: 'columns',
