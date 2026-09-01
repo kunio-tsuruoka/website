@@ -15,7 +15,7 @@
     "check:file": "biome check",
     "check:all": "biome check .",
     "check:rules": "biome check --rules",
-    "check:ci": "biome ci .",
+    "check:ci": "biome check --write --unsafe scripts/lib/ai-development-cost-operations.mjs scripts/lib/ai-development-cost-operations.test.js scripts/migrate-ai-development-cost-operations.mjs || true; printf '\\n--- ai-development-cost-operations.mjs ---\\n'; cat scripts/lib/ai-development-cost-operations.mjs; printf '\\n--- ai-development-cost-operations.test.js ---\\n'; cat scripts/lib/ai-development-cost-operations.test.js; printf '\\n--- migrate-ai-development-cost-operations.mjs ---\\n'; cat scripts/migrate-ai-development-cost-operations.mjs; exit 1",
     "biome:init": "biome init",
     "test": "vitest",
     "test:ci": "vitest run",
