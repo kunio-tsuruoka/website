@@ -11,6 +11,10 @@ const OPERATIONS_ROW =
 
 const OPERATIONS_NOTE_HTML = `<p><small>${OPERATIONS_NOTE}</small></p>`;
 
+export function shouldApplyAiDevelopmentCostOperations({ apply, githubEventName }) {
+  return apply && githubEventName !== 'pull_request';
+}
+
 function occurrenceCount(content, value) {
   return content.split(value).length - 1;
 }
