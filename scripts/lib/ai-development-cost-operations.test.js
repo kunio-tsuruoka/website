@@ -65,8 +65,7 @@ describe('transformAiDevelopmentCostOperations', () => {
   });
 
   it('同じ文言を含む別の表ではなく、費用表だけを更新する', () => {
-    const withAnotherTable =
-      `<table><tbody><tr><td><p>本番開発</p></td></tr></tbody></table>${currentContent}`;
+    const withAnotherTable = `<table><tbody><tr><td><p>本番開発</p></td></tr></tbody></table>${currentContent}`;
 
     const result = transformAiDevelopmentCostOperations(withAnotherTable);
     const firstTableEnd = result.content.indexOf('</table>');
