@@ -1,6 +1,6 @@
 export const OPERATIONS_ROW_LABEL = '運用・保守・継続改善';
 export const OPERATIONS_NOTE =
-  '※複数システムとの連携、高頻度の改善、手厚い監視・サポートが必要な場合は、月120万円以上となることがあります。';
+  '※複数システムとの連携、高頻度のAI改善、継続的な要件整理・プロジェクト管理が必要で、AIエンジニアとPM（プロジェクトマネージャー）が継続して参画する場合は、月120万円以上となることがあります。';
 
 const PRICE_TABLE_HEADER_MARKER = '<p>費用の目安</p>';
 const TARGET_ROW_LABEL = '本番開発';
