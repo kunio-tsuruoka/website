@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   OPERATIONS_NOTE,
   OPERATIONS_ROW_LABEL,
+  shouldApplyAiDevelopmentCostOperations,
   transformAiDevelopmentCostOperations,
 } from './ai-development-cost-operations.mjs';
 
@@ -56,5 +57,20 @@ describe('transformAiDevelopmentCostOperations', () => {
     expect(result.changed).toBe(true);
     expect(result.content.split(OPERATIONS_ROW_LABEL)).toHaveLength(2);
     expect(result.content.split(OPERATIONS_NOTE)).toHaveLength(2);
+  });
+
+  it('PRビルドでは書き込まず、mainへの反映時だけ適用する', () => {
+    expect(
+      shouldApplyAiDevelopmentCostOperations({
+        apply: true,
+        githubEventName: 'pull_request',
+      })
+    ).toBe(false);
+    expect(
+      shouldApplyAiDevelopmentCostOperations({ apply: true, githubEventName: 'push' })
+    ).toBe(true);
+    expect(
+      shouldApplyAiDevelopmentCostOperations({ apply: false, githubEventName: 'push' })
+    ).toBe(false);
   });
 });
