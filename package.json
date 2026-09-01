@@ -16,6 +16,7 @@
     "check:all": "biome check .",
     "check:rules": "biome check --rules",
     "check:ci": "biome ci .",
+    "biome:init": "biome init",
     "test": "vitest",
     "test:ci": "vitest run",
     "test:ui": "vitest --ui",
