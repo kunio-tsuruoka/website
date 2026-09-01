@@ -35,9 +35,7 @@ console.log(
 );
 console.log(`[columns] ${CONTENT_ID}`);
 console.log(
-  next.changed
-    ? '  - 運用・保守・継続改善の月額目安と上振れ条件を追加'
-    : '  - 変更なし（追加済み）'
+  next.changed ? '  - 運用・保守・継続改善の月額目安と上振れ条件を追加' : '  - 変更なし（追加済み）'
 );
 
 if (!SHOULD_APPLY || !next.changed) process.exit(0);
