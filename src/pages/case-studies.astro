@@ -8,7 +8,9 @@ import Layout from '../layouts/layout.astro';
 // ページネーション設定
 const ITEMS_PER_PAGE = 8;
 const url = new URL(Astro.request.url);
-const currentPage = Math.max(1, Number(url.searchParams.get('page')) || 1);
+const requestedPage = Math.max(1, Number(url.searchParams.get('page')) || 1);
+// /strengths などから ?case=<anchor> で特定事例へ直接飛べるようにする（ページ番号を知らなくてよい）
+const focusAnchor = url.searchParams.get('case');
 
 const allCases = [
   {
@@ -348,6 +350,7 @@ const allCases = [
     },
   },
   {
+    anchor: 'iroai-care',
     title: 'iroAI介護 - 介護情報マッチングプラットフォーム',
     industry: '介護・ヘルスケア',
     scale: '株式会社iroAI',
@@ -720,6 +723,7 @@ const allCases = [
     },
   },
   {
+    anchor: 'recovery',
     title: 'メンタルヘルス記録アプリの開発（他社難航案件のフルスタック・リカバリー）',
     industry: 'ヘルスケア・メンタルヘルスSaaS',
     scale: '大手企業のDXプロジェクト',
@@ -767,6 +771,7 @@ const allCases = [
     },
   },
   {
+    anchor: 'demo-in-a-day',
     title: 'ヒアリング議事録からRFP生成 → 仕様駆動開発で即日デモ構築',
     industry: '新規事業・業務システム',
     scale: 'デモ開発（仕様駆動開発の実証）',
@@ -814,6 +819,7 @@ const allCases = [
     },
   },
   {
+    anchor: 'new-business-in-a-week',
     title: 'インフルエンサーマッチングプラットフォームの開発',
     industry: '広告・マーケティング／マッチングプラットフォーム',
     scale: '大手商社の新規事業',
@@ -1141,6 +1147,10 @@ const orderedCases = [...allCases].sort(
   (a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured))
 );
 const totalPages = Math.ceil(orderedCases.length / ITEMS_PER_PAGE);
+const focusIndex = focusAnchor
+  ? orderedCases.findIndex((c) => 'anchor' in c && c.anchor === focusAnchor)
+  : -1;
+const currentPage = focusIndex >= 0 ? Math.floor(focusIndex / ITEMS_PER_PAGE) + 1 : requestedPage;
 const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
 const cases = orderedCases.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 const hasNextPage = currentPage < totalPages;
@@ -1206,7 +1216,10 @@ const hasPrevPage = currentPage > 1;
 
       <div class="space-y-24">
         {cases.map((case_study) => (
-          <div class="overflow-hidden rounded-lg border border-neutral-200 bg-white">
+          <div
+            id={'anchor' in case_study ? case_study.anchor : undefined}
+            class="scroll-mt-28 overflow-hidden rounded-lg border border-neutral-200 bg-white"
+          >
             <div class="p-8 lg:p-12">
               <div class="lg:grid lg:grid-cols-12 lg:gap-8">
                 {/* ヘッダー情報 */}

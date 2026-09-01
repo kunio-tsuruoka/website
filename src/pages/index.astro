@@ -94,40 +94,22 @@ const decisionSheetRows = [
 
 const comparisonRows = [
   {
-    axis: '課題整理',
-    consulting: '強い傾向',
+    axis: '課題整理から実装まで',
+    consulting: '実装は別会社になる場合がある',
     development: '要件受領後が中心になりやすい',
-    beekle: '業務課題から整理',
-  },
-  {
-    axis: '要件定義',
-    consulting: '強い傾向',
-    development: '対応範囲に含まれることが多い',
-    beekle: '受入条件まで具体化',
+    beekle: '同じチームで判断材料から本開発まで',
   },
   {
     axis: '動くものによる検証',
     consulting: 'ケースによる',
     development: '開発後の確認になりやすい',
-    beekle: '発注前から早期に実施',
-  },
-  {
-    axis: '技術リスク確認',
-    consulting: 'ケースによる',
-    development: '本開発後に見えやすい',
-    beekle: '成立条件を先に確認',
-  },
-  {
-    axis: '本開発',
-    consulting: '別会社になる場合がある',
-    development: '強い傾向',
-    beekle: '同じチームで継続',
+    beekle: '発注前にプロトタイプで確認',
   },
   {
     axis: '見送り判断',
     consulting: '選択肢に含められる',
     development: '発注前提になりやすい',
-    beekle: '作らない判断も選択肢',
+    beekle: '作らない判断も材料にする',
   },
 ];
 
@@ -297,6 +279,12 @@ try {
             <p class="mt-4 text-base leading-relaxed text-neutral-700">
               コンサル会社、一般的な開発会社、Beekleの違いは、どこまで同じチームで判断材料を作れるかです。下記はあくまで一般的な傾向としての比較です。
             </p>
+            <a
+              href="/strengths#comparison"
+              class="mt-6 inline-flex min-h-[44px] items-center border-b border-accent-950 text-sm font-semibold text-accent-950 hover:border-primary-500 hover:text-primary-500"
+            >
+              既製サービス・仕様確定型の開発会社を含む詳しい比較を見る
+            </a>
           </div>
 
           <div class="border-y border-neutral-300 bg-white md:hidden">
