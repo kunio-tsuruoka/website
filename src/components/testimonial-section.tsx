@@ -16,7 +16,7 @@ const CATEGORIES = [
 
 type Category = (typeof CATEGORIES)[number];
 
-interface Testimonial {
+export interface Testimonial {
   id: number;
   name: string;
   role: string;
@@ -28,7 +28,7 @@ interface Testimonial {
   caseHref?: string;
 }
 
-const testimonialData: Testimonial[] = [
+export const testimonialData: Testimonial[] = [
   {
     id: 1,
     name: '森一真様',

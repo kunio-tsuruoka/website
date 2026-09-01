@@ -1,24 +1,182 @@
 ---
 import { Header } from '../components/header';
 import JsonLd from '../components/seo/json-ld.astro';
+import { testimonialData } from '../components/testimonial-section';
 import { ButtonLink } from '../components/ui/button';
 import Layout from '../layouts/layout.astro';
 
-const proofItems = [
+const pageTitle = 'Beekleはどんな開発会社か｜向いている案件・他社との違い・費用・実績';
+const pageDescription =
+  '動くプロトタイプ、受入条件、概算費用を揃え、進める、範囲を変える、いったん見送るを本開発前に判断できる状態へ進めます。';
+
+// ヒーロー横の数字。詳細は下の実績セクション（#proof）に置く
+const proofSummary = [
+  { label: '難航案件の立て直し', value: '3ヶ月停滞 → 3週間', anchor: 'proof-recovery' },
+  { label: '発注前の認識合わせ', value: '議事録 → デモ1日', anchor: 'proof-demo' },
+  { label: '新規事業の検証', value: '1週間で触れる形へ', anchor: 'proof-new-business' },
+  { label: 'PoCから本開発へ', value: 'PoC → 本開発2ヶ月で公開', anchor: 'proof-iroai' },
+];
+
+// 実績カード。数字だけでなく、何が止まっていたか → 担当範囲 → 完了とした状態 → 期間 → 詳細事例 → 顧客の声 まで書く。
+// 顧客の声は、対応が確認できている案件だけに載せる（testimonial-section.tsx の caseHref と同じ方針）。
+const proofCases = [
   {
+    id: 'proof-recovery',
     label: '難航案件の立て直し',
     value: '3ヶ月停滞 → 3週間',
-    text: '止まっていた開発を、要件・実装・インフラまで読み直して動く状態へ。',
+    rows: [
+      {
+        key: '止まっていた状態',
+        text: '先行ベンダーが約3ヶ月開発しても完成に至らず、仕様が固まりきらないまま実装が進み、リリース時期が見えなくなっていました。',
+      },
+      {
+        key: 'Beekleが担当した範囲',
+        text: '既存実装と資料を確認できたため、再開する範囲を絞ったうえで、要件、バックエンド、フロントエンド、インフラを読み直して再構築しました。',
+      },
+      {
+        key: '完了とした状態',
+        text: '発注者が確認できる動作状態。発注元の大手企業が外部に委託したセキュリティチェックを、指摘による差し戻しなく一度で通過しました。',
+      },
+      { key: '期間', text: '引き継ぎから3週間' },
+    ],
+    caseHref: '/case-studies?case=recovery#recovery',
+    voice: null,
   },
   {
+    id: 'proof-demo',
     label: '発注前の認識合わせ',
     value: '議事録 → デモ1日',
-    text: 'ヒアリング内容を、画面で確認できるプロトタイプまで落とし込み。',
+    rows: [
+      {
+        key: '止まっていた状態',
+        text: '構想段階で要件が言語化されておらず、議事録だけでは発注側と開発側の完成イメージが揃わない状態でした。',
+      },
+      {
+        key: 'Beekleが担当した範囲',
+        text: 'ヒアリング議事録からRFP（提案依頼書）を生成し、その仕様をもとに画面と操作へ落とし込みました。',
+      },
+      {
+        key: '完了とした状態',
+        text: '発注者が画面で確認できる動作デモ。以降の打ち合わせを認識合わせではなく中身の検討に使える状態です。',
+      },
+      { key: '期間', text: '1日' },
+    ],
+    caseHref: '/case-studies?case=demo-in-a-day#demo-in-a-day',
+    voice: {
+      quote: 'イメージとずれていない',
+      attribution: '発注者の評価（事例ページに記載）',
+      href: null,
+    },
   },
   {
+    id: 'proof-new-business',
     label: '新規事業の検証',
     value: '1週間で触れる形へ',
-    text: '構想、画面、API、インフラを分断せず、判断できる状態まで前進。',
+    rows: [
+      {
+        key: '止まっていた状態',
+        text: '大手商社の新規事業として構想はあるものの、要件も技術選定も固まっておらず、投資判断に使える材料がありませんでした。',
+      },
+      {
+        key: 'Beekleが担当した範囲',
+        text: '要件整理と技術選定から、フロントエンド、バックエンド、インフラまでを一つの体制で構築しました。',
+      },
+      {
+        key: '完了とした状態',
+        text: '企業側とインフルエンサー側の双方が触れる動作するプラットフォーム。本開発の範囲を議論できる状態です。',
+      },
+      { key: '期間', text: '1週間' },
+    ],
+    caseHref: '/case-studies?case=new-business-in-a-week#new-business-in-a-week',
+    voice: null,
+  },
+  {
+    id: 'proof-iroai',
+    label: 'PoCから本開発へ',
+    value: 'PoC → 本開発2ヶ月で公開',
+    rows: [
+      {
+        key: '止まっていた状態',
+        text: '介護サービスの情報が散在し、探す側は比較検討に時間がかかり、高齢の利用者には既存の画面が使いにくい状態でした。',
+      },
+      {
+        key: 'Beekleが担当した範囲',
+        text: 'PoC段階で優先する機能と後回しにする機能を切り分け、LINE上で選択肢をタップするだけで候補に届く仕組みを本開発まで担当しました。',
+      },
+      {
+        key: '完了とした状態',
+        text: '実サービスとして公開。高齢のご本人でも家族の手を借りずに最後まで進められ、事業者には絞り込み済みの相談が届きます。',
+      },
+      { key: '期間', text: 'PoCを経て本開発約2ヶ月' },
+    ],
+    caseHref: '/case-studies?case=iroai-care#iroai-care',
+    voice: {
+      quote:
+        'PoC段階で優先すべき機能と、あえて今は不要な機能を明確に整理・提案していただき、効率的な開発ロードマップを描くことができました',
+      attribution: '森一真様 株式会社iroAI 代表取締役',
+      href: '/testimonial',
+    },
+  },
+];
+
+const fitItems = [
+  '要件が固まらず、見積もりや社内合意が進まない',
+  'AI導入を任されたが、どの業務から始めるか決められない',
+  'Excel、メール、担当者の記憶に業務が散らばっている',
+  '他社で進まなくなった開発を立て直したい',
+];
+
+const cautionItems = [
+  '24時間監視や大規模常駐体制が最初から必須',
+  '作るものが完全に決まっており、単純な人月比較だけをしたい',
+  '社内で触れるデータや決裁者をまったく出せない',
+];
+
+// 他の選択肢との比較。一般的な傾向としての比較で、特定の会社を指すものではない
+const comparisonOptions = [
+  {
+    option: '既製サービス',
+    fit: '標準機能へ業務を合わせられる',
+    first: 'すぐ使える機能',
+    implementation: '原則不要',
+    highlight: false,
+  },
+  {
+    option: 'コンサル会社',
+    fit: '課題整理や構想が主目的',
+    first: '調査、計画、提言',
+    implementation: '別会社の場合がある',
+    highlight: false,
+  },
+  {
+    option: '仕様確定型の開発会社',
+    fit: '作るものが明確',
+    first: '見積もり、設計、実装',
+    implementation: '強い',
+    highlight: false,
+  },
+  {
+    option: 'Beekle',
+    fit: '要件が未確定で、実物を見ながら決めたい',
+    first: 'プロトタイプ、受入条件、概算費用',
+    implementation: '同じチームで継続',
+    highlight: true,
+  },
+];
+
+// 上の表で「同じチームで継続」できる理由。Beekleの強みを3点に絞る
+const whyDifferent = [
+  {
+    title: '要求から実装までを一つながりで管理する',
+    text: '要求、受入条件、実装タスク、確認結果を自社開発のPM基盤「PM on Rails」でつなぎ、仕様が変わったときにどこへ影響するかを追えるようにしています。担当者ごとの整理のばらつきが減り、なぜこの仕様なのかを後から説明できます。',
+  },
+  {
+    title: 'フロントエンドからインフラまで同じ体制で持つ',
+    text: '画面、API、データベース、クラウド構成を一つのチームで担当します。会社をまたぐ調整や責任範囲の押し付け合いがないため、動くものへのフィードバックがそのまま実装に反映されます。他社で難航した案件を、バックエンドからインフラまで一貫して立て直した実績があります。',
+  },
+  {
+    title: '動くものを見ながら要件を更新する',
+    text: '最初に巨大な仕様書を完成させるのではなく、短く動くものを出し、そこで見えたズレを受入条件へ戻します。構造化した仕様をそのままAIエージェントへ渡せるため、速く作っても要求と実装のつながりが切れません。',
   },
 ];
 
@@ -60,29 +218,59 @@ const methodSteps = [
   },
 ];
 
-const fitItems = [
-  '要件が固まらず、見積もりや社内合意が進まない',
-  'AI導入を任されたが、どの業務から始めるか決められない',
-  'Excel、メール、担当者の記憶に業務が散らばっている',
-  '他社で進まなくなった開発を立て直したい',
+// 費用と期間の要約。金額の条件は /column/ai-development-cost-guide の区分と同じ
+const costRows = [
+  { stage: '初回相談、既存デモ、簡易デモ', guide: '無料' },
+  { stage: '条件が合う案件の初期検証', guide: '1〜2週間。Beekle負担で行う場合があります' },
+  { stage: '小規模な実証実験', guide: '50〜300万円程度' },
+  { stage: '操作できる試作品', guide: '200〜600万円程度' },
+  { stage: '本番開発', guide: '500〜1,500万円以上' },
+  { stage: '保守、継続改善', guide: '対象範囲に応じて個別見積もり' },
 ];
 
-const cautionItems = [
-  '24時間監視や大規模常駐体制が最初から必須',
-  '作るものが完全に決まっており、単純な人月比較だけをしたい',
-  '社内で触れるデータや決裁者をまったく出せない',
+const costArticles = [
+  {
+    href: '/column/ai-development-cost-guide',
+    title: '生成AI開発の費用相場',
+    text: '上の区分ごとに、費用が変動する条件と見積もりで確認する点を説明しています。',
+  },
+  {
+    href: '/column/web-system-cost-by-scale',
+    title: 'Webシステム開発の費用相場',
+    text: '規模別の人日、期間、金額の目安と、予算超過を防ぐ契約の組み方。',
+  },
+  {
+    href: '/column/system-development-cost-breakdown',
+    title: 'システム開発費用の内訳',
+    text: '見積書のどこを見れば妥当性がわかるか。',
+  },
 ];
 
 const faqItems = [
   {
     question: 'まだ要件が決まっていなくても相談できますか？',
     answer:
-      'できます。むしろ要件が固まる前に、業務・利用者・受入条件を整理して、何を確かめるべきかを決めます。',
+      'できます。むしろ要件が固まる前に、業務、利用者、受入条件を整理して、何を確かめるべきかを決めます。',
   },
   {
     question: '開発しない方がよい場合もありますか？',
     answer:
-      'あります。データが足りない、対象業務が狭すぎる、投資判断の根拠が弱い場合は、先に見送り理由を出します。',
+      'あります。データが足りない、対象業務が狭すぎる、投資判断の根拠が弱い場合は、先に見送り理由を出します。既製サービスで足りる場合はその判断も材料に含めます。',
+  },
+  {
+    question: '会社の規模が小さいですが、任せて大丈夫ですか？',
+    answer:
+      '大手が受注した案件も、複数の協力会社を経由して専門会社が実装を担当することが多くあります。Beekleはお客様と開発チームが直接やり取りするため、中間マージンが乗らず、要望がそのまま伝わります。大手企業のDX案件を引き継ぎ、外部のセキュリティチェックを一度で通過した実績があります。',
+  },
+  {
+    question: 'システムに詳しくなくても相談できますか？',
+    answer:
+      'できます。システムの話ではなく、いま何に困っているかから伺います。Excelで十分な部分とシステム化すべき部分を切り分け、小さく始めて効果を確かめながら広げる進め方も選べます。',
+  },
+  {
+    question: 'どこに頼めばよいか、判断基準がわかりません。',
+    answer:
+      '業務内容を詳しく聞いてくれるか、予算に合わせて小さく始める提案ができるか、見積もりの内訳と運用後のサポートが明確か、で見てください。いきなり大規模な提案をする、技術の話ばかりする、何でもできますと言う会社は避けた方が無難です。',
   },
   {
     question: '仕様変更の影響はどう追いますか？',
@@ -92,22 +280,19 @@ const faqItems = [
   {
     question: 'PM on Railsとは何ですか？',
     answer:
-      'Beekleが自社開発しているPM基盤です。要求、受入条件、実装タスク、確認結果をつなぎ、仕様変更やフィードバックがどの画面・タスク・確認観点に影響するかを追えるようにするために使います。名前を覚えてもらうためではなく、発注後に説明し直しが起きにくい進め方の土台です。',
+      'Beekleが自社開発しているPM基盤です。要求、受入条件、実装タスク、確認結果をつなぎ、仕様変更やフィードバックがどの画面、タスク、確認観点に影響するかを追えるようにするために使います。名前を覚えてもらうためではなく、発注後に説明し直しが起きにくい進め方の土台です。',
   },
 ];
 ---
 
-<Layout
-  title="Beekleの進め方｜発注判断の材料まで作る | Beekle"
-  description="Beekleの進め方。要件が曖昧な相談を、検証用プロトタイプ、受入条件、投資条件と見送り条件まで整理します。"
->
+<Layout title={`${pageTitle} | Beekle`} description={pageDescription}>
   <JsonLd
     slot="head"
     type="breadcrumb"
     data={{
       items: [
         { name: 'ホーム', url: '/' },
-        { name: 'Beekleの進め方', url: '/strengths' },
+        { name: 'Beekleはどんな開発会社か', url: '/strengths' },
       ],
     }}
   />
@@ -116,28 +301,27 @@ const faqItems = [
     type="webPage"
     data={{
       pageType: 'AboutPage',
-      name: 'Beekleの進め方｜発注判断の材料まで作る | Beekle',
-      description:
-        'Beekleの進め方。要件が曖昧な相談を、検証用プロトタイプ、受入条件、投資条件と見送り条件まで整理します。',
+      name: `${pageTitle} | Beekle`,
+      description: pageDescription,
       url: 'https://beekle.jp/strengths',
     }}
   />
+  <JsonLd slot="head" type="faq" data={{ faqs: faqItems }} />
   <Header />
 
   <main class="bg-neutral-100 pt-20">
+    <!-- 1. Beekleを一文で説明 -->
     <section class="border-b border-neutral-300 bg-neutral-100 py-14 md:py-20">
       <div class="container mx-auto grid gap-10 px-8 lg:grid-cols-[0.9fr_0.85fr] lg:items-end lg:px-12">
         <div>
           <p class="border-l-8 border-primary-500 pl-5 text-sm font-bold text-primary-700">
-            Beekleの進め方
+            Beekleはどんな開発会社か
           </p>
-          <h1 class="mt-6 max-w-4xl text-4xl font-bold leading-[1.08] text-accent-950 sm:text-5xl md:text-6xl">
-            要件が曖昧でも、<br />
-            発注判断の材料まで<br />
-            作ります。
+          <h1 class="mt-6 max-w-4xl text-4xl font-bold leading-[1.12] text-accent-950 sm:text-5xl md:text-6xl">
+            要件が曖昧なAI・DX・システム開発を、発注できる状態に変えます。
           </h1>
           <p class="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-700">
-            動くプロトタイプ、受入条件、概算レンジを揃え、開発前に社内で判断できる状態にします。
+            {pageDescription}
           </p>
           <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
             <ButtonLink
@@ -149,104 +333,91 @@ const faqItems = [
             >
               実現可否を相談する
             </ButtonLink>
-            <a href="/case-studies" class="inline-flex min-h-[48px] items-center border-b border-accent-950 text-sm font-semibold text-accent-950 hover:border-primary-500 hover:text-primary-500">
-              実案件の変化を見る
+            <a href="#comparison" class="inline-flex min-h-[48px] items-center border-b border-accent-950 text-sm font-semibold text-accent-950 hover:border-primary-500 hover:text-primary-500">
+              他の選択肢との違いを見る
             </a>
           </div>
           <p class="mt-5 text-sm leading-relaxed text-neutral-600">
             NDA可。要件未確定でも可。見送り条件がある場合も、開発前に理由を残します。
           </p>
-          <div class="mt-6 border-y border-neutral-300 bg-white px-4 py-4 md:hidden">
-            <p class="text-sm font-bold text-primary-500">実案件ログ</p>
-            <p class="mt-2 text-base font-bold leading-relaxed text-accent-950">
-              3ヶ月停滞 → 3週間 / 議事録 → デモ1日
-            </p>
-          </div>
         </div>
 
-        <div class="case-log-table hidden border-t border-neutral-300 md:block">
+        <!-- 2. 主要な実績数字（要約。詳細は #proof） -->
+        <div class="case-log-table border-t border-neutral-300">
           <p class="border-b border-neutral-300 py-3 text-sm font-bold text-primary-700">実案件ログ</p>
-          {proofItems.map((item) => (
-            <a href="/case-studies" class="grid gap-2 border-b border-neutral-300 py-4 transition hover:bg-neutral-50 md:grid-cols-[0.7fr_0.8fr] md:px-2">
+          {proofSummary.map((item) => (
+            <a href={`#${item.anchor}`} class="grid gap-1 border-b border-neutral-300 py-4 transition hover:bg-neutral-50 md:grid-cols-[0.7fr_0.8fr] md:gap-2 md:px-2">
               <p class="text-sm font-bold text-primary-700">{item.label}</p>
-              <div>
-                <p class="text-2xl font-bold leading-tight text-primary-500">{item.value}</p>
-                <p class="mt-2 text-sm leading-relaxed text-neutral-700">{item.text}</p>
-              </div>
+              <p class="text-xl font-bold leading-tight text-primary-500 md:text-2xl">{item.value}</p>
             </a>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="bg-neutral-50 py-14 md:py-16">
+    <!-- 2. 主要な実績数字（詳細） -->
+    <section id="proof" class="scroll-mt-28 bg-neutral-50 py-14 md:py-16">
       <div class="container mx-auto px-8 lg:px-12">
-        <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-          <div>
-            <p class="text-sm font-bold text-primary-500">発注前に残すもの</p>
-            <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
-              発注判断シート
-            </h2>
-            <p class="mt-4 text-base leading-relaxed text-neutral-700">
-              サービス名や技術名を決める前に、社内で合意しやすい材料へ変換します。
-            </p>
-          </div>
+        <div class="max-w-3xl">
+          <p class="text-sm font-bold text-primary-500">実績</p>
+          <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+            数字の前後まで書いた実案件
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-neutral-700">
+            期間だけでは判断できないので、何が止まっていたか、Beekleがどこまで担当したか、どこまでを完了としたかを並べています。社名は掲載許諾のある案件のみ記載しています。
+          </p>
+        </div>
 
-          <div class="decision-sheet-table border-y border-neutral-300 bg-white">
-            <div class="border-b border-neutral-300 border-l-8 border-primary-500 px-5 py-4">
-              <p class="text-sm font-bold text-primary-700">BEEKLE / 発注判断</p>
-              <p class="mt-1 text-xl font-bold leading-snug text-accent-950">
-                投資条件と見送り条件を同じ紙面に置く
-              </p>
-            </div>
-            {decisionMaterials.map((item, index) => (
-              <div class="grid gap-3 border-b border-neutral-300 px-5 py-5 last:border-b-0 md:grid-cols-[112px_1fr]">
-                <p class="font-Poppins text-sm font-bold text-primary-600">
-                  {String(index + 1).padStart(2, '0')}
-                </p>
-                <div>
-                  <h3 class="text-xl font-bold leading-snug text-accent-950">{item.title}</h3>
-                  <p class="mt-2 text-sm leading-relaxed text-neutral-700">{item.text}</p>
-                </div>
+        <div class="mt-8 grid gap-6 lg:grid-cols-2">
+          {proofCases.map((item) => (
+            <article id={item.id} class="scroll-mt-28 border-y border-neutral-300 bg-white">
+              <div class="border-b border-neutral-300 border-l-8 border-primary-500 px-5 py-4">
+                <p class="text-sm font-bold text-primary-700">{item.label}</p>
+                <p class="mt-1 text-2xl font-bold leading-tight text-primary-500">{item.value}</p>
               </div>
-            ))}
-          </div>
+              <dl>
+                {item.rows.map((row) => (
+                  <div class="grid gap-1 border-b border-neutral-200 px-5 py-4 md:grid-cols-[152px_1fr] md:gap-4">
+                    <dt class="text-sm font-bold text-neutral-500">{row.key}</dt>
+                    <dd class="text-sm leading-relaxed text-neutral-700">{row.text}</dd>
+                  </div>
+                ))}
+                <div class="grid gap-1 border-b border-neutral-200 px-5 py-4 md:grid-cols-[152px_1fr] md:gap-4">
+                  <dt class="text-sm font-bold text-neutral-500">詳細事例</dt>
+                  <dd>
+                    <a href={item.caseHref} class="inline-flex min-h-[44px] items-center text-sm font-semibold text-primary-500 hover:text-primary-600">
+                      課題、対応、結果を事例ページで読む
+                    </a>
+                  </dd>
+                </div>
+                {item.voice && (
+                  <div class="grid gap-1 px-5 py-4 md:grid-cols-[152px_1fr] md:gap-4">
+                    <dt class="text-sm font-bold text-neutral-500">顧客の声</dt>
+                    <dd>
+                      <blockquote class="border-l-4 border-primary-500 pl-4 text-sm leading-relaxed text-neutral-800">
+                        「{item.voice.quote}」
+                      </blockquote>
+                      <p class="mt-2 text-sm text-neutral-600">
+                        {item.voice.href ? (
+                          <a href={item.voice.href} class="inline-flex min-h-[44px] items-center font-semibold text-primary-500 hover:text-primary-600">
+                            {item.voice.attribution}
+                          </a>
+                        ) : (
+                          item.voice.attribution
+                        )}
+                      </p>
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </article>
+          ))}
         </div>
       </div>
     </section>
 
+    <!-- 3. 向いている相談・先に確認する相談 -->
     <section class="bg-neutral-100 py-14 md:py-16">
-      <div class="container mx-auto px-8 lg:px-12">
-        <div class="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-          <div>
-            <p class="text-sm font-bold text-primary-500">Beekleの作り方</p>
-            <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
-              変更に強い理由
-            </h2>
-            <p class="mt-4 text-base leading-relaxed text-neutral-700">
-              要件定義を先に完成させようとせず、短く動くものを出し、そこで見えたズレを要件へ戻します。
-            </p>
-            <p class="mt-6 border-l-4 border-primary-500 pl-5 text-sm leading-relaxed text-neutral-700">
-              <a href="https://pmonrails.com" rel="noopener" class="font-bold text-primary-500 hover:text-primary-600">PM on Rails</a>で、要求・受入条件・実装タスク・確認結果をつなげています。名前を覚えてもらうためではなく、仕様が変わったときに影響を追うための基盤です。
-            </p>
-          </div>
-
-          <div class="border-t border-neutral-300">
-            {methodSteps.map((step) => (
-              <div class="grid gap-4 border-b border-neutral-300 py-5 md:grid-cols-[72px_1fr]">
-                <p class="font-Poppins text-2xl font-bold text-primary-500">{step.no}</p>
-                <div>
-                  <h3 class="text-xl font-bold leading-snug text-accent-950">{step.title}</h3>
-                  <p class="mt-2 text-sm leading-relaxed text-neutral-700">{step.text}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="bg-neutral-50 py-14 md:py-16">
       <div class="container mx-auto px-8 lg:px-12">
         <div class="max-w-3xl">
           <p class="text-sm font-bold text-primary-500">相談の相性</p>
@@ -284,6 +455,244 @@ const faqItems = [
       </div>
     </section>
 
+    <!-- 4. 他の選択肢との違い -->
+    <section id="comparison" class="scroll-mt-28 bg-neutral-50 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="max-w-3xl">
+          <p class="text-sm font-bold text-primary-500">他の選択肢との違い</p>
+          <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+            既製サービス、コンサル、仕様確定型の開発会社と、何が違うか
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-neutral-700">
+            Beekleが最適ではない状態もあります。いまの状態がどの行に近いかで見てください。一般的な傾向としての比較で、特定の会社を指すものではありません。
+          </p>
+        </div>
+
+        <div class="mt-8 border-y border-neutral-300 bg-white md:hidden">
+          {comparisonOptions.map((row) => (
+            <section class={`border-b border-neutral-200 px-4 py-4 last:border-b-0 ${row.highlight ? 'border-l-4 border-l-primary-500' : ''}`}>
+              <h3 class={`text-base font-bold ${row.highlight ? 'text-primary-700' : 'text-accent-950'}`}>{row.option}</h3>
+              <dl class="mt-3 grid gap-3 text-sm leading-relaxed">
+                <div>
+                  <dt class="font-bold text-neutral-500">向いている状態</dt>
+                  <dd class="mt-1 text-neutral-700">{row.fit}</dd>
+                </div>
+                <div>
+                  <dt class="font-bold text-neutral-500">最初に得られるもの</dt>
+                  <dd class="mt-1 text-neutral-700">{row.first}</dd>
+                </div>
+                <div>
+                  <dt class="font-bold text-neutral-500">実装</dt>
+                  <dd class="mt-1 text-neutral-700">{row.implementation}</dd>
+                </div>
+              </dl>
+            </section>
+          ))}
+        </div>
+
+        <div class="mt-8 hidden border-y border-neutral-300 bg-white md:block">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="border-b border-neutral-300 bg-neutral-50">
+                <th class="w-[22%] px-4 py-4 text-sm font-bold text-primary-700">選択肢</th>
+                <th class="w-[30%] px-4 py-4 text-sm font-bold text-neutral-600">向いている状態</th>
+                <th class="w-[28%] px-4 py-4 text-sm font-bold text-neutral-600">最初に得られるもの</th>
+                <th class="w-[20%] px-4 py-4 text-sm font-bold text-neutral-600">実装</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-neutral-200">
+              {comparisonOptions.map((row) => (
+                <tr class={row.highlight ? 'bg-primary-50/40' : ''}>
+                  <th class={`px-4 py-4 text-sm font-bold ${row.highlight ? 'border-l-4 border-primary-500 text-primary-700' : 'text-accent-950'}`}>
+                    {row.option}
+                  </th>
+                  <td class={`px-4 py-4 text-sm leading-relaxed ${row.highlight ? 'font-bold text-primary-700' : 'text-neutral-700'}`}>{row.fit}</td>
+                  <td class={`px-4 py-4 text-sm leading-relaxed ${row.highlight ? 'font-bold text-primary-700' : 'text-neutral-700'}`}>{row.first}</td>
+                  <td class={`px-4 py-4 text-sm leading-relaxed ${row.highlight ? 'font-bold text-primary-700' : 'text-neutral-700'}`}>{row.implementation}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-10 grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div>
+            <h3 class="text-2xl font-bold leading-snug text-accent-950">
+              同じチームで続けられる理由
+            </h3>
+            <p class="mt-3 text-sm leading-relaxed text-neutral-700">
+              判断材料を作った会社が、そのまま本開発と運用を持てるのは、この3点を仕組みにしているからです。
+            </p>
+          </div>
+          <div class="border-t border-neutral-300">
+            {whyDifferent.map((item) => (
+              <div class="border-b border-neutral-300 py-5">
+                <h4 class="text-lg font-bold leading-snug text-accent-950">{item.title}</h4>
+                <p class="mt-2 text-sm leading-relaxed text-neutral-700">{item.text}</p>
+              </div>
+            ))}
+            <p class="mt-4 text-sm leading-relaxed text-neutral-600">
+              <a href="https://pmonrails.com" rel="noopener" class="font-bold text-primary-500 hover:text-primary-600">PM on Rails</a>は、Beekleが自社開発し、実際の開発プロジェクトで毎日使っているPM基盤です。名前を覚えてもらうためではなく、仕様が変わったときに影響を追うための土台です。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 発注前に残すもの -->
+    <section class="bg-neutral-100 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div>
+            <p class="text-sm font-bold text-primary-500">発注前に残すもの</p>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+              発注判断シート
+            </h2>
+            <p class="mt-4 text-base leading-relaxed text-neutral-700">
+              サービス名や技術名を決める前に、社内で合意しやすい材料へ変換します。
+            </p>
+          </div>
+
+          <div class="decision-sheet-table border-y border-neutral-300 bg-white">
+            <div class="border-b border-neutral-300 border-l-8 border-primary-500 px-5 py-4">
+              <p class="text-sm font-bold text-primary-700">BEEKLE / 発注判断</p>
+              <p class="mt-1 text-xl font-bold leading-snug text-accent-950">
+                投資条件と見送り条件を同じ紙面に置く
+              </p>
+            </div>
+            {decisionMaterials.map((item, index) => (
+              <div class="grid gap-3 border-b border-neutral-300 px-5 py-5 last:border-b-0 md:grid-cols-[112px_1fr]">
+                <p class="font-Poppins text-sm font-bold text-primary-600">
+                  {String(index + 1).padStart(2, '0')}
+                </p>
+                <div>
+                  <h3 class="text-xl font-bold leading-snug text-accent-950">{item.title}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-neutral-700">{item.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. どう進めるか -->
+    <section class="bg-neutral-50 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+          <div>
+            <p class="text-sm font-bold text-primary-500">どう進めるか</p>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+              変更に強い進め方
+            </h2>
+            <p class="mt-4 text-base leading-relaxed text-neutral-700">
+              要件定義を先に完成させようとせず、短く動くものを出し、そこで見えたズレを要件へ戻します。
+            </p>
+          </div>
+
+          <div class="border-t border-neutral-300">
+            {methodSteps.map((step) => (
+              <div class="grid gap-4 border-b border-neutral-300 py-5 md:grid-cols-[72px_1fr]">
+                <p class="font-Poppins text-2xl font-bold text-primary-500">{step.no}</p>
+                <div>
+                  <h3 class="text-xl font-bold leading-snug text-accent-950">{step.title}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-neutral-700">{step.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. 費用と期間 -->
+    <section id="cost" class="scroll-mt-28 bg-neutral-100 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div>
+            <p class="text-sm font-bold text-primary-500">費用と期間</p>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+              段階ごとの目安
+            </h2>
+            <p class="mt-4 text-base leading-relaxed text-neutral-700">
+              判断に必要な要約だけを置いています。金額は対象業務、データの状態、連携するシステムで変わるため、この表だけで自社の金額は決まりません。条件の詳細は下の記事にまとめています。
+            </p>
+          </div>
+
+          <div>
+            <div class="border-y border-neutral-300 bg-white">
+              <div class="grid grid-cols-[1fr_1fr] border-b border-neutral-300 bg-neutral-50 px-5 py-3 md:grid-cols-[1.1fr_0.9fr]">
+                <p class="text-sm font-bold text-primary-700">段階</p>
+                <p class="text-sm font-bold text-neutral-600">目安</p>
+              </div>
+              {costRows.map((row) => (
+                <div class="grid grid-cols-[1fr_1fr] gap-4 border-b border-neutral-200 px-5 py-4 last:border-b-0 md:grid-cols-[1.1fr_0.9fr]">
+                  <p class="text-sm font-bold leading-relaxed text-accent-950">{row.stage}</p>
+                  <p class="text-sm leading-relaxed text-neutral-700">{row.guide}</p>
+                </div>
+              ))}
+            </div>
+
+            <ul class="mt-6 border-t border-neutral-300">
+              {costArticles.map((article) => (
+                <li class="border-b border-neutral-300">
+                  <a href={article.href} class="block py-4 transition hover:bg-neutral-50 md:px-2">
+                    <p class="text-base font-bold text-primary-500">{article.title}</p>
+                    <p class="mt-1 text-sm leading-relaxed text-neutral-700">{article.text}</p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. 詳細事例・お客様の声 -->
+    <section id="voices" class="scroll-mt-28 bg-neutral-50 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="max-w-3xl">
+          <p class="text-sm font-bold text-primary-500">お客様の声</p>
+          <h2 class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl">
+            どの進め方を評価いただいたか
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-neutral-700">
+            要件定義、優先順位づけ、推進など、評価いただいた進め方ごとに分類しています。引用は原文からの抜粋で、要約や改変はしていません。
+          </p>
+        </div>
+
+        <div class="mt-8 grid gap-6 md:grid-cols-2">
+          {testimonialData.map((t) => (
+            <figure class="flex h-full flex-col border-y border-neutral-300 bg-white px-5 py-5">
+              <div class="flex flex-wrap gap-2">
+                {t.categories.map((c) => (
+                  <span class="border border-primary-200 px-2 py-1 text-xs font-bold text-primary-700">{c}</span>
+                ))}
+              </div>
+              <blockquote class="mt-4 flex-1 border-l-4 border-primary-500 pl-4 text-sm leading-relaxed text-neutral-800 md:text-base">
+                「{t.shortQuote}」
+              </blockquote>
+              <figcaption class="mt-4 border-t border-neutral-200 pt-3">
+                <p class="text-sm font-bold text-accent-950">{t.name}</p>
+                <p class="text-sm text-neutral-600">{t.role}</p>
+                <p class="mt-2 text-sm leading-relaxed text-neutral-600">{t.meaning}</p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <div class="mt-8 flex flex-col gap-4 border-t border-neutral-300 pt-6 sm:flex-row sm:items-center">
+          <a href="/testimonial" class="inline-flex min-h-[44px] items-center border-b border-accent-950 text-sm font-semibold text-accent-950 hover:border-primary-500 hover:text-primary-500">
+            お客様の声を全文で読む
+          </a>
+          <a href="/case-studies" class="inline-flex min-h-[44px] items-center border-b border-accent-950 text-sm font-semibold text-accent-950 hover:border-primary-500 hover:text-primary-500">
+            導入事例の一覧を見る
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. FAQ -->
     <section class="bg-neutral-100 py-14 md:py-16">
       <div class="container mx-auto px-8 lg:px-12">
         <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
@@ -307,13 +716,14 @@ const faqItems = [
       </div>
     </section>
 
+    <!-- 10. 問い合わせ -->
     <section class="bg-primary-500 py-16 md:py-20">
       <div class="container mx-auto px-8 text-center lg:px-12">
         <h2 class="text-3xl font-bold leading-tight text-white md:text-5xl">
           作る前に、ズレと進め方を確認しませんか
         </h2>
         <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/90">
-          要件が固まりきっていない段階でも、業務・利用者・受入条件を整理し、社内判断に使える材料を作れます。
+          要件が固まりきっていない段階でも、業務、利用者、受入条件を整理し、社内判断に使える材料を作れます。
         </p>
         <div class="mt-8 flex flex-col items-center gap-4">
           <ButtonLink
