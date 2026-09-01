@@ -27,6 +27,9 @@ describe('transformAiDevelopmentCostOperations', () => {
     expect(result.content).toContain('<p>月20万〜100万円程度</p>');
     expect(result.content).toContain('監視、障害対応、データ更新、回答精度の改善');
     expect(result.content).toContain(`<p>${OPERATIONS_NOTE}</p>`);
+    expect(OPERATIONS_NOTE).toContain('AIエンジニア');
+    expect(OPERATIONS_NOTE).toContain('PM');
+    expect(OPERATIONS_NOTE).toContain('月120万円以上');
     expect(result.content.indexOf(OPERATIONS_ROW_LABEL)).toBeLessThan(
       result.content.indexOf('</tbody>')
     );
