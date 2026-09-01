@@ -5,7 +5,8 @@ const APPLY = process.argv.includes('--apply');
 const CONTENT_ID = 'ai-development-cost-guide';
 
 if (!process.env.MICROCMS_SERVICE_DOMAIN || !process.env.MICROCMS_API_KEY) {
-  throw new Error('MICROCMS_SERVICE_DOMAIN / MICROCMS_API_KEY are required');
+  console.log('[content-migration] skipped: MicroCMS write credentials unavailable');
+  process.exit(0);
 }
 
 const client = createClient({
