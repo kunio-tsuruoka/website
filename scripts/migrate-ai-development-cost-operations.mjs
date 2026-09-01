@@ -1,9 +1,15 @@
 import { createClient } from 'microcms-js-sdk';
-import { transformAiDevelopmentCostOperations } from './lib/ai-development-cost-operations.mjs';
+import {
+  shouldApplyAiDevelopmentCostOperations,
+  transformAiDevelopmentCostOperations,
+} from './lib/ai-development-cost-operations.mjs';
 
 const APPLY = process.argv.includes('--apply');
 const IS_PULL_REQUEST = process.env.GITHUB_EVENT_NAME === 'pull_request';
-const SHOULD_APPLY = APPLY && !IS_PULL_REQUEST;
+const SHOULD_APPLY = shouldApplyAiDevelopmentCostOperations({
+  apply: APPLY,
+  githubEventName: process.env.GITHUB_EVENT_NAME,
+});
 const CONTENT_ID = 'ai-development-cost-guide';
 
 if (!process.env.MICROCMS_SERVICE_DOMAIN || !process.env.MICROCMS_API_KEY) {
