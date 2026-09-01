@@ -23,9 +23,7 @@ function occurrenceCount(content, value) {
 function locatePricingTable(content) {
   const headerCount = occurrenceCount(content, PRICE_TABLE_HEADER_MARKER);
   if (headerCount !== 1) {
-    throw new Error(
-      `費用の目安を含む価格表を一意に特定できません（検出数: ${headerCount}）`
-    );
+    throw new Error(`費用の目安を含む価格表を一意に特定できません（検出数: ${headerCount}）`);
   }
 
   const headerIndex = content.indexOf(PRICE_TABLE_HEADER_MARKER);
@@ -87,9 +85,7 @@ export function transformAiDevelopmentCostOperations(content) {
       pricingTable.content.slice(insertAt);
 
     nextContent =
-      nextContent.slice(0, pricingTable.start) +
-      updatedTable +
-      nextContent.slice(pricingTable.end);
+      nextContent.slice(0, pricingTable.start) + updatedTable + nextContent.slice(pricingTable.end);
     changed = true;
     pricingTable = locatePricingTable(nextContent);
   }
