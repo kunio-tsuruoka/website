@@ -23,10 +23,7 @@ describe('service page copy', () => {
       resolve(process.cwd(), 'src/components/services/service-rag-deployment-modes.astro'),
       'utf8'
     );
-    const dataSource = readFileSync(
-      resolve(process.cwd(), 'src/data/rag-service-page.ts'),
-      'utf8'
-    );
+    const dataSource = readFileSync(resolve(process.cwd(), 'src/data/rag-service-page.ts'), 'utf8');
     const copy = JSON.stringify({
       definition: RAG_SERVICE_DEFINITION,
       deploymentModes: ragDeploymentModes,
