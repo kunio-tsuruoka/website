@@ -8,7 +8,8 @@ describe('technical cluster PM on Rails CTA migration', () => {
     expect(result).toContain('https://pmonrails.com/waitlist?');
     expect(result).toContain('utm_campaign=technical_cluster');
     expect(result).toContain('utm_content=gherkin-bdd-introduction');
-    expect(result).toContain('自分で書くのは大変');
+    expect(result).toContain('自分で書くのは');
+    expect(result).toContain('大変です');
     expect(result).toContain('自分たちが実際に困っていた');
     expect(result).toContain('ベータ版');
     expect(result).toContain('一般公開');
