@@ -10,7 +10,7 @@ export function buildPmOnRailsCta(slug) {
   const href = `https://pmonrails.com/waitlist?${params.toString()}`;
 
   return [
-    '<h2>GherkinやEARSを毎回自分で書くのは、正直かなり大変です</h2>',
+    '<h2>GherkinやEARSを自分で書くのは、正直かなり大変です</h2>',
     '<p>僕らも実案件でこれを全部手で書き続けるのが大変だったので、議事録や要望から、要求・ユーザーストーリー・受入条件・Gherkin・実装タスクまで生成してつなげる「PM on Rails」を作りました。自分たちが実際に困っていた作業を減らすために作ったもので、宣伝抜きでかなり良いものができたと思っています。</p>',
     '<p>現在はベータ版ですが、そろそろ一般公開する予定です。こういう仕様整理やGherkin作成を毎回手でやっているなら、一般公開の案内を受け取れるウェイティングリストに登録しておいてください。</p>',
     `<p><a href="${href}" target="_blank" rel="noopener noreferrer">PM on Railsのウェイティングリストに登録する</a></p>`,
