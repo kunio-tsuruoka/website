@@ -30,6 +30,7 @@ const staticPages: SitemapPage[] = [
   })),
   { url: '/prooffirst', priority: '0.9', changefreq: 'weekly' },
   { url: '/services/ai-adoption', priority: '0.9', changefreq: 'monthly' },
+  { url: '/services/management-dx', priority: '0.9', changefreq: 'monthly' },
   { url: '/contact', priority: '0.9', changefreq: 'monthly' },
   { url: '/company', priority: '0.8', changefreq: 'monthly' },
   { url: '/members', priority: '0.7', changefreq: 'monthly' },

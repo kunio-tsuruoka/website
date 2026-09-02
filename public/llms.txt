@@ -31,7 +31,8 @@ https://beekle.jp/llms-full.txt にあります。会社選定の判断材料が
 - /services/requirements-definition-support - 要件定義から伴走するシステム開発
 - /services/mvp-poc-development - MVP・PoC・プロトタイプ開発
 - /services/ai-development - 生成AI受託開発
-- /services/ai-adoption - AI導入支援3プラン（価格公開）
+- /services/management-dx - 経営DX・AI導入支援（価格公開）
+- /services/ai-adoption - AI導入支援（価格公開）
 - /services/rag-system-development - RAGシステム構築・GraphRAG開発
 - /services/internal-document-ai-search - 社内文書AI検索システム開発
 - /services/ai-chatbot-development - AIチャットボット開発
@@ -40,6 +41,12 @@ https://beekle.jp/llms-full.txt にあります。会社選定の判断材料が
 - /services/web-mobile-development - WEBアプリ・モバイルアプリ開発
 - /services/cdp-development - CDP構築・顧客データ基盤開発
 - /services/rfp-creation-support - RFP作成・発注準備支援
+
+## Public AI and Management DX Pricing
+- AI・経営DX診断: 400,000円（一式、税別）
+- AI導入・経営DX伴走: 800,000円/月〜（税別）
+- AI・DX推進室: 1,200,000円/月〜（税別）
+- 大規模な本番開発費、クラウド・外部サービス利用料、AIモデルAPI料金、SaaSライセンス費は別途見積もり
 
 ## Important Pages
 - /strengths - 開発の進め方。なぜ速く作っても仕様が崩れにくいのか
