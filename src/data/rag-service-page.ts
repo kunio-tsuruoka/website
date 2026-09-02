@@ -1,67 +1,71 @@
 import type { ServiceDetail } from '@/types/service';
+import { aiServicePageConfig } from './ai-service-page-config';
 import { services } from './service';
 
 export const RAG_SERVICE_DEFINITION =
-  '株式会社Beekleは、社内文書や業務データを安全に活用したい企業向けに、RAG・ハイブリッド検索・GraphRAGを、オンプレミス、閉域網、ローカルLLM、クラウドのセキュリティ要件に合わせて構築する開発会社です。';
+  '株式会社Beekleは、社内文書や業務データを活用したい企業向けに、RAG・ハイブリッド検索・GraphRAGを、クラウド環境で要件定義から本番運用まで構築する開発会社です。';
 
 export const ragDeploymentModes = [
   {
-    title: 'オンプレミス',
+    title: 'Azure OpenAI Service',
     description:
-      '顧客管理下のサーバーに、RAGアプリ、検索基盤、ベクトルDB、必要に応じたグラフDBを構築します。',
+      'Azureの利用方針に合わせ、既存の認証、ログ、データ保管ルールと接続したRAGシステムを構築します。',
   },
   {
-    title: '閉域網',
+    title: 'AWS Bedrock',
     description:
-      'インターネットへ公開しないネットワーク内で、認証、アクセス制御、監査ログを含めて構築します。',
+      'AWS上の業務システムやデータ保管先と接続し、検索基盤、回答画面、権限、運用監視まで構築します。',
   },
   {
-    title: 'ローカルLLM',
+    title: 'OpenAI・Anthropic API',
     description:
-      '文書や質問を外部のLLM APIへ送らず、ローカル推論環境と検索基盤を組み合わせます。',
+      '回答品質、応答時間、利用量、費用を実データで比較し、用途に合うモデルとAPI構成を選びます。',
   },
   {
-    title: 'クラウド',
+    title: 'AWS・Azure・VPS上の検索基盤',
     description:
-      'Azure OpenAI、AWS Bedrockなどを利用し、VNet・VPC、既存認証、データ保管要件に合わせて構築します。',
+      'ベクトルDB、Neo4j等のグラフDB、検索API、業務画面を、既存環境と運用条件に合わせて配置します。',
   },
 ] as const;
 
 export const ragPricingPhases = [
   {
-    phase: '検証（PoC）',
-    period: '1〜2か月',
-    price: '50万〜300万円',
-    scope: '実データで検索方式、回答品質、セキュリティ要件を検証',
+    phase: '検証・PoC',
+    price: '80万〜250万円',
+    scope: '実データで検索方式、回答品質、権限、更新方法を検証',
   },
   {
-    phase: '試作（プロトタイプ）',
-    period: '2〜3か月',
-    price: '200万〜600万円',
-    scope: '限られた利用者が、認証付きの画面で業務検証できる状態まで構築',
-  },
-  {
-    phase: '本番運用',
-    period: '3〜5か月',
+    phase: '本番開発',
     price: '500万〜1,500万円',
-    scope: '権限、監査ログ、更新、監視、既存システム連携まで実装',
+    scope: '検索基盤、画面、認証、権限、ログ、既存システム連携まで実装',
   },
   {
-    phase: '運用継続',
-    period: '毎月',
+    phase: '継続運用',
     price: '月20万〜100万円',
-    scope: '文書更新、精度評価、モデル変更、追加機能、問い合わせ対応',
+    scope: 'データ更新、精度評価、モデル変更、追加開発、運用監視',
+  },
+  {
+    phase: '大規模・複雑な運用',
+    price: '月120万円以上',
+    scope: '複数基盤、高い可用性、継続的なAI・PM体制が必要な運用',
   },
 ] as const;
 
-const ragServiceCopy = {
+const baseRagService = services.find((item) => item.id === 'rag-system-development');
+
+if (!baseRagService) {
+  throw new Error('RAG service definition was not found');
+}
+
+export const ragService: ServiceDetail = {
+  ...baseRagService,
   title: 'RAGシステム構築・GraphRAG開発',
-  seoTitle: 'RAG構築・GraphRAG開発会社｜オンプレ・閉域・ローカルLLM対応',
+  seoTitle: 'RAG構築・GraphRAG開発会社｜クラウドでPoCから本番運用まで',
   seoDescription:
-    '株式会社Beekleは、社内文書・業務データ向けのRAG、ハイブリッド検索、GraphRAGを、オンプレミス、閉域網、ローカルLLM、Azure OpenAI等のクラウド要件に合わせて構築します。要件定義、権限、評価、本番運用まで一貫対応します。',
+    '株式会社Beekleは、社内文書・業務データ向けのRAG、ハイブリッド検索、GraphRAGをクラウド環境で構築します。要件定義、Neo4j・Milvus等の検索基盤、権限、評価、画面、本番運用まで一貫して対応します。',
   description: RAG_SERVICE_DEFINITION,
   longDescription:
-    '社内文書検索、暗黙知の継承、問い合わせ対応、要件や設計判断の追跡に使うRAGを、要件定義から本番運用まで構築します。検索エンジンだけでなく、認証、権限、引用表示、評価、文書更新、監視、既存システム連携まで一つの開発範囲として引き受けます。',
+    '社内文書検索、暗黙知の継承、問い合わせ対応、要件や設計判断の追跡に使うRAGを、要件定義から本番運用まで構築します。検索APIだけでなく、認証、権限、引用表示、評価、データ更新、監視、既存システム連携まで一つの開発範囲として引き受けます。',
   painPoints: [
     {
       title: '社内文書検索',
@@ -88,7 +92,7 @@ const ragServiceCopy = {
     {
       title: '要件・正本・権限からRAGを設計する',
       description:
-        '誰が何を質問し、どの情報を正本とし、どこまで閲覧できるかを先に決めます。文書を一括投入する前に、回答、引用、アクセス制御の受入条件を定義します。',
+        '誰が何を質問し、どの情報を正本とし、どこまで閲覧できるかを先に決めます。データを一括投入する前に、回答、引用、アクセス制御の受入条件を定義します。',
       results: ['対象業務が明確になる', '古い版を参照しにくい', '権限外の検索を防げる'],
     },
     {
@@ -100,7 +104,7 @@ const ragServiceCopy = {
     {
       title: '検索基盤から業務画面・運用まで一体で構築する',
       description:
-        '検索APIだけで終わらせず、認証、引用表示、フィードバック、監査ログ、文書更新、既存システム連携、費用監視まで実装します。',
+        '検索APIだけで終わらせず、認証、引用表示、フィードバック、監査ログ、データ更新、既存システム連携、費用監視まで実装します。',
       results: ['現場が使う画面まで完成する', '情シスへ構成を説明できる', '導入後も精度を改善できる'],
     },
   ],
@@ -123,30 +127,25 @@ const ragServiceCopy = {
     {
       title: '既存システム連携と更新運用',
       description:
-        'ファイルサーバー、文書管理、業務システム、社内ポータルと接続し、追加・更新・削除を検索基盤へ反映します。',
+        '文書管理、業務システム、社内ポータルと接続し、追加・更新・削除を検索基盤へ反映します。',
     },
   ],
   benefits: [
-    'オンプレミス、閉域網、ローカルLLM、クラウドから構成を選べる',
+    'クラウド環境でRAG・GraphRAGを構築できる',
     '社内文書と業務データを根拠付きで検索できる',
     '通常RAGで足りない質問だけGraphRAGで補える',
     '要件定義から本番運用まで同じ開発会社へ任せられる',
   ],
   faq: [
     {
-      question: 'オンプレミス・閉域網でRAGを構築できますか？',
+      question: 'Azure OpenAI Serviceや既存のAzure環境を利用できますか？',
       answer:
-        '構築できます。顧客管理下のサーバーまたは閉域網内に、RAGアプリ、検索基盤、ベクトルDB、必要に応じてNeo4j等のグラフDBを配置します。既存の認証、アクセス権、監査ログ、外部通信の可否を確認して構成を決めます。',
+        '利用できます。既存の認証基盤、ログ基盤、データ保管方針に合わせてAzure OpenAI ServiceとRAG基盤を接続します。クラウド契約をお客さま側で持つ構成にも対応します。',
     },
     {
-      question: 'ローカルLLMだけでRAGを構築できますか？',
+      question: 'AWS Bedrock、OpenAI、AnthropicのAPIにも対応できますか？',
       answer:
-        '構築できます。文書や質問を外部のLLM APIへ送らない構成にし、利用可能なGPU・CPU、必要な回答品質、応答時間に合わせてモデルと検索基盤を選びます。',
-    },
-    {
-      question: 'Azure OpenAIなど既存のクラウド環境を利用できますか？',
-      answer:
-        '利用できます。Azure OpenAI、AWS Bedrock等を、既存のVNet・VPC、認証基盤、ログ基盤、データ保管方針に合わせて接続します。クラウド契約を顧客側で持つ構成にも対応します。',
+        '対応できます。回答品質、応答時間、利用量、費用を同じ質問セットで比較し、対象業務に合うモデルとAPIを選びます。モデルを一社へ固定せず、用途ごとに使い分ける構成も可能です。',
     },
     {
       question: 'Neo4jを使ったナレッジグラフ・GraphRAGを構築できますか？',
@@ -166,21 +165,45 @@ const ragServiceCopy = {
     {
       question: '部署や役職ごとにアクセス権が異なる文書も扱えますか？',
       answer:
-        '扱えます。既存のユーザー・グループ・文書権限を検索時の絞り込みへ反映し、権限外の文書を取得・回答しないことをテストします。閲覧と質問の監査ログも残します。',
+        '扱えます。既存のユーザー、グループ、文書権限を検索時の絞り込みへ反映し、権限外の文書を取得・回答しないことをテストします。閲覧と質問の監査ログも残します。',
     },
     {
-      question: 'RAGシステムの構築期間と費用を教えてください',
+      question: 'RAGシステムの構築費用を教えてください',
       answer:
-        '検証（PoC）は1〜2か月・50万〜300万円、試作は2〜3か月・200万〜600万円、本番運用は3〜5か月・500万〜1,500万円、運用継続は月20万〜100万円が目安です。文書量、連携先、権限、オンプレミス・閉域網・ローカルLLMの基盤要件によって変わるため、初回相談で対象範囲と総予算の概算を提示します。',
+        '検証・PoCは80万〜250万円、本番開発は500万〜1,500万円、継続運用は月20万〜100万円が目安です。複数基盤や高い可用性、継続的なAI・PM体制が必要な運用は月120万円以上になる場合があります。対象データ、連携先、権限、必要な評価範囲を確認し、初回相談後に内訳付きで提示します。',
+    },
+    {
+      question: '相談から本番運用まで、どのくらいかかりますか？',
+      answer:
+        '対象データの量、連携先、権限、評価質問の準備状況によって変わります。最初に検証範囲と完了条件を決め、PoCの結果を確認してから本番開発へ進みます。初回相談後に工程と判断時点を提示します。',
     },
   ],
   additionalSections: [],
-} satisfies Partial<ServiceDetail>;
+};
 
-export function applyRagServicePageCopy(): void {
-  const service = services.find((item) => item.id === 'rag-system-development');
-  if (!service) return;
-  Object.assign(service, ragServiceCopy);
-}
+const baseRagServicePageConfig = aiServicePageConfig['rag-system-development'];
 
-applyRagServicePageCopy();
+export const ragServicePageConfig = {
+  ...baseRagServicePageConfig,
+  eyebrow: 'RAG・GraphRAGの発注先を探している企業へ',
+  headline: ragService.title,
+  heroLead: RAG_SERVICE_DEFINITION,
+  primaryOutcome:
+    '検索基盤だけでなく、認証、権限、回答画面、引用、評価、データ更新、運用監視まで一つの開発範囲として構築します。',
+  contactIntent: 'rag-system-development',
+  contactLabel: '自社のクラウド環境でRAG構築を相談する',
+  showZeroStartLink: false,
+  visualTitle: 'Beekleへ発注できる範囲',
+  visualSubtitle: '要件定義から本番運用まで',
+  visualItems: [
+    '業務質問・正本・権限の整理',
+    'RAG・GraphRAGの方式検証',
+    '回答画面・引用・ログの実装',
+    'データ更新・評価・運用監視',
+  ],
+  metrics: [
+    { label: '対応環境', value: 'クラウド' },
+    { label: '対応方式', value: 'RAG / GraphRAG' },
+    { label: '担当範囲', value: '要件定義〜運用' },
+  ],
+};
