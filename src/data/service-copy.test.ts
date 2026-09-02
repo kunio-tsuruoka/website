@@ -2,11 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { aiServicePageConfig } from './ai-service-page-config';
-import {
-  RAG_SERVICE_DEFINITION,
-  ragDeploymentModes,
-  ragPricingPhases,
-} from './rag-service-page';
+import { RAG_SERVICE_DEFINITION, ragDeploymentModes, ragPricingPhases } from './rag-service-page';
 import { services } from './service';
 
 describe('service page copy', () => {
