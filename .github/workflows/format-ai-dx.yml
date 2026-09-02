@@ -1,0 +1,54 @@
+name: Format AI DX changes
+
+on:
+  push:
+    branches:
+      - feat/ai-management-dx-service
+    paths:
+      - .github/workflows/format-ai-dx.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/ai-management-dx-service
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Apply Biome formatting
+        run: |
+          bunx biome format --write \
+            src/components/footer.astro \
+            src/components/header.tsx \
+            src/components/services/ai-dx-service-page.astro \
+            src/lib/ai-management-dx-service.test.ts \
+            src/lib/site-design-regression.test.tsx \
+            src/pages/llms-full.txt.ts \
+            src/pages/services/ai-adoption.astro \
+            src/pages/services/management-dx.astro \
+            src/pages/sitemap.xml.ts
+      - name: Commit formatted files
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/components/footer.astro \
+            src/components/header.tsx \
+            src/components/services/ai-dx-service-page.astro \
+            src/lib/ai-management-dx-service.test.ts \
+            src/lib/site-design-regression.test.tsx \
+            src/pages/llms-full.txt.ts \
+            src/pages/services/ai-adoption.astro \
+            src/pages/services/management-dx.astro \
+            src/pages/sitemap.xml.ts
+          git commit -m "style: apply Biome formatting"
+          git push origin HEAD:feat/ai-management-dx-service
