@@ -1,11 +1,12 @@
 /**
- * エンジニア向け記事 (Gherkin/EARS) の末尾ハードコードCTAを
- * {{BRIDGE_CTA}} マーカーに差し替える。
+ * エンジニア向け記事 (Gherkin/EARS) の末尾CTAを PM on Rails へ切り替える。
  *
- * これらの記事は {{CONTACT_CTA}} マーカーではなく、直書きの
- * <h2>...CTA見出し...</h2><p>...誘導文...</p><p><a href="/contact">...</a>...</p>
- * パターンで CTA を持っている。このスクリプトはそのブロックを検出し
- * {{BRIDGE_CTA}} に置き換える。
+ * 対象記事には、過去の移行状況によって次のどちらかが存在する。
+ *   1. {{BRIDGE_CTA}} マーカー
+ *   2. /contact や /prooffirst へ向く旧ハードコードCTA
+ *
+ * どちらの場合も PM on Rails の直接CTAへ置換し、技術検索流入を
+ * 受託相談ではなく PM on Rails の獲得導線として扱う。
  *
  * 対象記事:
  *   - gherkin-bdd-introduction
@@ -18,6 +19,7 @@
  */
 import 'dotenv/config';
 import { createClient } from 'microcms-js-sdk';
+import { replaceTechnicalClusterCta } from './lib/technical-cluster-cta.mjs';
 
 const apply = process.argv.includes('--apply');
 const dryRun = !apply;
@@ -28,8 +30,8 @@ const client = createClient({
 });
 
 /**
- * 各記事ごとに、置換対象のCTAブロックを正規表現で定義。
- * 関連記事セクションは残し、CTAの h2 + 本文 + リンク段落だけを差し替える。
+ * 各記事ごとに、旧ハードコードCTAのパターンを定義。
+ * {{BRIDGE_CTA}} が存在する場合は helper 側でそちらを優先して置換する。
  */
 const TARGETS = [
   {
@@ -57,10 +59,9 @@ const TARGETS = [
   },
 ];
 
-const BRIDGE_MARKER = '{{BRIDGE_CTA}}';
-
 console.log(`Mode: ${dryRun ? 'DRY-RUN (no API writes)' : 'APPLY (PATCH to MicroCMS)'}`);
 console.log(`Targets: ${TARGETS.length} articles`);
+console.log('Destination: PM on Rails (https://pmonrails.com/)');
 console.log('---');
 
 let succeeded = 0;
@@ -88,38 +89,24 @@ for (const { slug, pattern } of TARGETS) {
   const content = article.content || '';
   console.log(`   content length: ${content.length} chars`);
 
-  // Check if already has bridge marker
-  const hasBridgeCta = /\{\{BRIDGE_CTA\}\}/.test(content);
-  if (hasBridgeCta) {
-    console.log('   SKIP: already has {{BRIDGE_CTA}}');
+  const migrated = replaceTechnicalClusterCta(content, pattern, slug);
+  if (migrated.status === 'not-found') {
+    console.log('   SKIP: {{BRIDGE_CTA}} / legacy CTA block not found');
+    console.log('   hint: the article may already have a PM on Rails CTA or may have been edited');
     skipped.push(slug);
     continue;
   }
 
-  // Find hardcoded CTA block
-  const match = content.match(pattern);
-  if (!match) {
-    console.log('   SKIP: hardcoded CTA block not found (pattern mismatch)');
-    console.log('   hint: the article may have been edited since this script was written');
-    skipped.push(slug);
-    continue;
-  }
-
-  console.log(`   found CTA block (${match[0].length} chars):`);
-  const preview = match[0].length > 120 ? `${match[0].slice(0, 120)}...` : match[0];
-  console.log(`     ${preview}`);
-
-  const newContent = content.replace(pattern, BRIDGE_MARKER);
-
-  if (newContent === content) {
+  if (migrated.content === content) {
     console.log('   SKIP: content unchanged after replacement');
     skipped.push(slug);
     continue;
   }
 
-  console.log('   replacement: hardcoded CTA -> {{BRIDGE_CTA}}');
+  console.log(`   found: ${migrated.status}`);
+  console.log('   replacement: technical CTA -> PM on Rails');
   console.log(
-    `   new content length: ${newContent.length} chars (delta: ${newContent.length - content.length})`
+    `   new content length: ${migrated.content.length} chars (delta: ${migrated.content.length - content.length})`
   );
 
   if (dryRun) {
@@ -132,7 +119,7 @@ for (const { slug, pattern } of TARGETS) {
     await client.update({
       endpoint: 'columns',
       contentId: slug,
-      content: { content: newContent },
+      content: { content: migrated.content },
     });
     console.log('   OK: PATCH applied');
     succeeded++;
