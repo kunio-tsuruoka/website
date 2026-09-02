@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { aiServicePageConfig } from './ai-service-page-config';
 import { services } from './service';
@@ -13,39 +15,89 @@ describe('service page copy', () => {
     expect(service?.solutions[0]?.results).toContain('追加開発でも壊れにくい');
   });
 
-  it('turns the RAG hero and comparison into an evidence-based architecture consultation', () => {
+  it('presents RAG as a procurement-ready service in the required order', () => {
     const config = aiServicePageConfig['rag-system-development'];
     const service = services.find((item) => item.id === 'rag-system-development');
-    const comparison = service?.additionalSections?.find((section) =>
-      section.title.includes('RAGで十分か')
+    const definition =
+      '株式会社Beekleは、社内文書や業務データを安全に活用したい企業向けに、RAG・ハイブリッド検索・GraphRAGを、オンプレミス、閉域網、ローカルLLM、クラウドのセキュリティ要件に合わせて構築する開発会社です。';
+
+    expect(service).toBeDefined();
+    expect(service?.title).toBe('RAGシステム構築・GraphRAG開発');
+    expect(service?.description).toBe(definition);
+    expect(config.headline).toBe('RAGシステム構築・GraphRAG開発');
+    expect(config.heroLead).toBe(definition);
+    expect(config.contactLabel).toBe('自社環境でのRAG構築を相談する');
+    expect(config.showZeroStartLink).toBe(false);
+    expect(service?.seoTitle).toContain('オンプレ');
+    expect(service?.seoTitle).toContain('ローカルLLM');
+
+    const pageSource = readFileSync(
+      fileURLToPath(new URL('../pages/services/[id].astro', import.meta.url)),
+      'utf8'
     );
-    const comparisonCopy = comparison?.paragraphs.join('');
-    const updateFaq = service?.faq.find((item) => item.question.includes('更新頻度'));
-    const requirementsCase = service?.caseStudies.find((item) =>
-      item.title.includes('要件管理システム')
+    const deploymentSource = readFileSync(
+      fileURLToPath(
+        new URL('../components/services/service-rag-deployment-modes.astro', import.meta.url)
+      ),
+      'utf8'
+    );
+    const pricingSource = readFileSync(
+      fileURLToPath(new URL('../components/services/service-rag-pricing.astro', import.meta.url)),
+      'utf8'
     );
 
-    expect(config.contactLabel).toBe('自社のデータでRAGが成立するか相談する');
-    expect(config.showZeroStartLink).toBe(false);
-    expect(config.heroLead).toContain('社内資料');
-    expect(config.heroLead).toContain('根拠付き');
-    expect(comparisonCopy).toContain('通常RAG');
-    expect(comparisonCopy).toContain('GraphRAG');
-    expect(comparisonCopy).toContain('検索ノイズ');
-    expect(comparisonCopy).toContain('正本');
-    expect(comparisonCopy).toContain('更新');
-    expect(comparisonCopy).toContain('ハイブリッド');
-    expect(comparisonCopy).toContain('PM on Rails');
-    expect(comparisonCopy).toContain('NDA');
-    expect(comparisonCopy).toContain('実データ');
-    expect(comparisonCopy).toContain('Beekleが判断');
-    expect(comparison).toMatchObject({ placement: 'middle' });
-    expect(updateFaq?.answer).toContain('正本');
-    expect(updateFaq?.answer).toContain('派生');
-    expect(updateFaq?.answer).toContain('許容');
-    expect(updateFaq?.answer).toContain('ドリフト');
-    expect(`${requirementsCase?.solution}${requirementsCase?.whyUs}`).toContain('正本');
-    expect(`${requirementsCase?.solution}${requirementsCase?.whyUs}`).toContain('複製せず');
+    const heroIndex = pageSource.indexOf('<ServiceHero');
+    const deploymentIndex = pageSource.indexOf('<ServiceRagDeploymentModes');
+    const painPointsIndex = pageSource.indexOf('<ServicePainPoints');
+
+    expect(heroIndex).toBeGreaterThan(-1);
+    expect(deploymentIndex).toBeGreaterThan(heroIndex);
+    expect(painPointsIndex).toBeGreaterThan(deploymentIndex);
+    expect(deploymentSource).toContain(
+      'オンプレミス・閉域網・ローカルLLM・クラウドのRAG構築に対応'
+    );
+    expect(deploymentSource).toContain('Azure OpenAI');
+    expect(deploymentSource).toContain('AWS Bedrock');
+    expect(deploymentSource).toContain('data-cta-source');
+    expect(deploymentSource).toContain('data-cta-id');
+
+    expect(service?.painPoints.map((item) => item.title)).toEqual([
+      '社内文書検索',
+      '属人化・暗黙知の継承',
+      '問い合わせ対応の効率化',
+      '要件・設計判断・変更影響の追跡',
+    ]);
+
+    const faqCopy = service?.faq.map((item) => `${item.question}${item.answer}`).join('') ?? '';
+    for (const term of [
+      'オンプレミス',
+      '閉域網',
+      'ローカルLLM',
+      'Azure OpenAI',
+      'Neo4j',
+      '精度改善',
+      'アクセス権',
+      '費用',
+    ]) {
+      expect(faqCopy).toContain(term);
+    }
+
+    expect(pricingSource).toContain('50万〜300万円');
+    expect(pricingSource).toContain('200万〜600万円');
+    expect(pricingSource).toContain('500万〜1,500万円');
+    expect(pricingSource).toContain('月20万〜100万円');
+    expect(pricingSource).toContain('data-cta-source');
+    expect(pricingSource).toContain('data-cta-id');
+
+    const additionalSectionCopy =
+      service?.additionalSections?.map((section) => section.title).join('') ?? '';
+    expect(additionalSectionCopy).not.toContain('RAGで十分か');
+    expect(additionalSectionCopy).not.toContain('なぜ「先に用途を決める」');
+
+    const fullCopy = JSON.stringify({ service, config, deploymentSource, pricingSource });
+    expect(fullCopy).not.toContain('ナレナレサポート');
+    expect(fullCopy).not.toContain('一般的には');
+    expect(fullCopy).not.toContain('と言われています');
   });
 
   it('keeps the AI development hero concise and outcome-led', () => {
