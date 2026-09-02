@@ -2,18 +2,20 @@ import { describe, expect, it } from 'vitest';
 import { buildPmOnRailsCta, replaceTechnicalClusterCta } from './technical-cluster-cta.mjs';
 
 describe('technical cluster PM on Rails CTA migration', () => {
-  it('builds a candid waitlist CTA for people who do not want to write Gherkin and EARS by hand', () => {
+  it('builds the approved candid waitlist CTA copy', () => {
     const result = buildPmOnRailsCta('gherkin-bdd-introduction');
 
     expect(result).toContain('https://pmonrails.com/waitlist?');
     expect(result).toContain('utm_campaign=technical_cluster');
     expect(result).toContain('utm_content=gherkin-bdd-introduction');
-    expect(result).toContain('自分で書くのは');
-    expect(result).toContain('大変です');
-    expect(result).toContain('自分たちが実際に困っていた');
-    expect(result).toContain('ベータ版');
-    expect(result).toContain('一般公開');
-    expect(result).toContain('ウェイティングリスト');
+    expect(result).toContain('私たちも、実案件でこれらを全部手書きしたり、レビューしたりするのが大変だったので');
+    expect(result).toContain('「PM on Rails」というシステムを作りました');
+    expect(result).toContain('お客さまの要望からコーディングまで自動でつなげられるように');
+    expect(result).toContain('要件やGherkinをベストプラクティスに沿って生成してくれます');
+    expect(result).toContain('宣伝抜きで、かなり良いものができたと思っています');
+    expect(result).toContain('現在はベータ版');
+    expect(result).toContain('そろそろ一般公開する予定');
+    expect(result).toContain('ウェイティングリストに登録しておいてください');
     expect(result).toContain('ウェイティングリストに登録する');
     expect(result).not.toContain('/contact');
     expect(result).not.toContain('/prooffirst');
