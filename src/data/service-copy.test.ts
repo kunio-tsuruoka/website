@@ -23,11 +23,21 @@ describe('service page copy', () => {
       resolve(process.cwd(), 'src/components/services/service-rag-deployment-modes.astro'),
       'utf8'
     );
+    const pricingSource = readFileSync(
+      resolve(process.cwd(), 'src/components/services/service-rag-pricing.astro'),
+      'utf8'
+    );
+    const pageSource = readFileSync(
+      resolve(process.cwd(), 'src/pages/services/rag-system-development.astro'),
+      'utf8'
+    );
     const dataSource = readFileSync(resolve(process.cwd(), 'src/data/rag-service-page.ts'), 'utf8');
     const copy = JSON.stringify({
       definition: RAG_SERVICE_DEFINITION,
       deploymentModes: ragDeploymentModes,
       deploymentSource,
+      pricingSource,
+      pageSource,
       dataSource,
     });
 
@@ -46,7 +56,14 @@ describe('service page copy', () => {
     expect(deploymentSource).toContain('data-cta-source');
     expect(deploymentSource).toContain('data-cta-id');
 
-    for (const unsupported of ['オンプレミス', 'オンプレ', '閉域網', '閉域', 'ローカルLLM']) {
+    for (const unsupported of [
+      'オンプレミス',
+      'オンプレ',
+      '閉域網',
+      '閉域',
+      'ローカルLLM',
+      'ナレナレ',
+    ]) {
       expect(copy).not.toContain(unsupported);
     }
   });
