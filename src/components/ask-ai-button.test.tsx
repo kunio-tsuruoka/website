@@ -89,7 +89,7 @@ describe('AskAiButton', () => {
       expect(navigator.clipboard.writeText).toHaveBeenCalled();
     });
     const copied = vi.mocked(navigator.clipboard.writeText).mock.calls[0]?.[0];
-    expect(copied).toContain('Beekle株式会社');
+    expect(copied).toContain('株式会社Beekle');
     expect(copied).toContain('合う理由と、合わない理由');
   });
 });

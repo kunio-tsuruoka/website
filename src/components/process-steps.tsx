@@ -13,6 +13,8 @@ interface ProcessStep {
   beekle: string[];
   customer: string[];
   decision: string;
+  /** この段階を実際に通った案件。工程の説明だけで終わらせないために置く */
+  evidence?: string;
   highlight?: boolean;
 }
 
@@ -27,6 +29,8 @@ const processSteps: ProcessStep[] = [
     beekle: ['業務フロー・利用者・課題の整理', '既存デモまたは簡易デモの提示'],
     customer: ['現行業務・資料・関係者の共有', '判断者と利用者の整理'],
     decision: '発注前に何を確かめるべきか',
+    evidence:
+      '実案件では、ヒアリング議事録からRFPを作り、その日のうちに動くデモまで進めました。発注者から「イメージとずれていない」と評価いただいています。',
   },
   {
     icon: Lightbulb,
@@ -38,6 +42,7 @@ const processSteps: ProcessStep[] = [
     beekle: ['コア機能に絞った検証用プロトタイプ開発', '成立条件と技術リスクの整理'],
     customer: ['検証用データ・サンプルの用意', '検証担当者の参加'],
     decision: '実物で何を確認し、何を判断するか',
+    evidence: 'HR領域の案件では、PoC 2週間で「何を作るか」の範囲が確定しました。',
     highlight: true,
   },
   {
@@ -50,6 +55,8 @@ const processSteps: ProcessStep[] = [
     beekle: ['代表ケースでの効果確認', '効果の方向性・改善余地の整理'],
     customer: ['実業務に近いケースで触る', '利用者の反応・気づきの共有'],
     decision: '業務に合うか。何を直せば使えるか',
+    evidence:
+      '介護情報サービスでは、LINE上でタップするだけのプロトタイプを高齢の利用者に触っていただき、文字入力をなくす判断をしてから本開発へ進みました。',
   },
   {
     icon: CheckCircle,
@@ -61,6 +68,8 @@ const processSteps: ProcessStep[] = [
     beekle: ['検証結果の整理', '本開発の見積・進め方のご提案'],
     customer: ['社内での投資判断'],
     decision: '次に投資する条件。PoC・MVP・本開発のどこから始めるか',
+    evidence:
+      '発注準備の案件では、2週間の試作で発注範囲と要件が確定し、見積もりの前提が揺れない状態になりました。',
   },
   {
     icon: Rocket,
@@ -72,6 +81,8 @@ const processSteps: ProcessStep[] = [
     beekle: ['本番品質での開発・公開', '保守サポート・継続的な改善提案'],
     customer: ['フィードバックと優先順位の判断'],
     decision: '次に何を改善するか',
+    evidence:
+      'PoC 2週間から本開発 約3ヶ月で構築した案件があります。他社が約3ヶ月かけて完成に至らなかった案件を引き継ぎ、3週間で動作状態へ戻し、発注元の外部セキュリティチェックを一度で通過した実績もあります。',
   },
 ];
 
@@ -180,6 +191,12 @@ export const ProcessSteps = () => {
                       </p>
                     </div>
                   </div>
+                  {step.evidence && (
+                    <div className="mt-4 border-t border-neutral-200 pt-4">
+                      <p className="text-xs font-bold text-primary-600 mb-1">実案件</p>
+                      <p className="text-sm leading-relaxed text-gray-700">{step.evidence}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

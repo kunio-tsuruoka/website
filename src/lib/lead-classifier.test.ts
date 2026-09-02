@@ -44,6 +44,13 @@ describe('parseClassification', () => {
     });
   });
 
+  it('partnership を読み取る', () => {
+    expect(parseClassification('{"verdict":"partnership","reason":"業務提携の打診"}')).toEqual({
+      verdict: 'partnership',
+      reason: '業務提携の打診',
+    });
+  });
+
   it('コードフェンス付きでも読み取る', () => {
     const text = '```json\n{"verdict":"SALES","reason":"人材紹介の営業"}\n```';
     expect(parseClassification(text).verdict).toBe('sales');

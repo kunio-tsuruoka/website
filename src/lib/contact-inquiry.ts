@@ -12,7 +12,10 @@ export const BUSINESS_TYPE_LABELS: Record<string, string> = {
   mvp_poc: 'MVP・PoC・新規事業検証について',
   // legacy: サービス終了済みだが、キャッシュされた旧フォームからの送信をラベル不明にしないため残す
   global: '海外向けサービス開発について',
-  partner: '開発パートナー・協業のご相談（開発会社・SIer様）',
+  // 発注側（元請けが Beekle に実装を任せたい）と、対等な協業は別物なので種別を分ける。
+  // partner_request は顧客リード、partner は顧客リードにしない。
+  partner_request: '開発の依頼・外注のご相談（開発会社・SIer様）',
+  partner: '協業・提携のご相談',
   other: 'その他',
 };
 
@@ -39,4 +42,15 @@ export function requiresCompanyName(type: string): boolean {
 
 export function contactTypeLabel(type: string): string {
   return TYPE_LABELS[type] || type || '未選択';
+}
+
+/**
+ * 協業・提携のご相談は「Beekle に発注する顧客」ではないため、顧客リード（CRM）には載せない。
+ * Slack 通知は従来どおり全件出すので、取りこぼしにはならない。
+ *
+ * 開発の依頼・外注（partner_request）は発注側なので、ここには含めない。
+ * 前方一致ではなく完全一致で判定するのはそのため。
+ */
+export function isPartnershipInquiry(type: string): boolean {
+  return type === 'partner';
 }

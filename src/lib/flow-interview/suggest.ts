@@ -41,7 +41,7 @@ export type SuggestEnv = {
   SLACK_WEBHOOK_URL?: string;
 };
 
-const SYSTEM_PROMPT = `あなたはBeekle株式会社の業務改善コンサルタントAIです。
+const SYSTEM_PROMPT = `あなたは株式会社Beekleの業務改善コンサルタントAIです。
 渡された「現状業務フロー（As-Is）」をもとに、システム開発・自動化・AI活用で実現できる改善案（To-Be の方向性）を提案します。
 
 【提案の方針】

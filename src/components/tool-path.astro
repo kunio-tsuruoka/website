@@ -1,0 +1,72 @@
+---
+import { TOOL_PATH, type ToolPathId } from '@/data/tool-path';
+
+type Props = {
+  current?: ToolPathId;
+};
+
+const { current } = Astro.props;
+const currentIndex = current ? TOOL_PATH.findIndex((step) => step.id === current) : -1;
+const next = currentIndex >= 0 ? TOOL_PATH[currentIndex + 1] : undefined;
+const currentStep = currentIndex >= 0 ? TOOL_PATH[currentIndex] : undefined;
+---
+
+<nav class="overflow-hidden rounded-lg border border-neutral-200 bg-white" aria-label="発注準備の順番">
+  <div class="border-b border-neutral-200 px-5 py-4 md:px-7">
+    <p class="font-Poppins text-[11px] font-semibold tracking-[0.16em] text-primary-500">PATH</p>
+    <h2 class="mt-1 text-lg font-bold text-accent-950">発注準備は、この順で進む</h2>
+    <p class="mt-1 text-sm text-neutral-700">
+      見る → 書く → 切る → 出す。途中から入ってもよい。中身がないまま最後だけ開くと、空の章立てになる。
+    </p>
+  </div>
+  <ol class="grid md:grid-cols-4">
+    {
+      TOOL_PATH.map((step, i) => {
+        const active = step.id === current;
+        return (
+          <li
+            class:list={[
+              i > 0 && 'md:border-l md:border-neutral-200',
+              i > 0 && 'border-t border-neutral-200 md:border-t-0',
+            ]}
+          >
+            <a
+              href={step.href}
+              aria-current={active ? 'page' : undefined}
+              class:list={[
+                'flex h-full min-h-[96px] flex-col justify-center border-l-4 px-4 py-4 no-underline',
+                active
+                  ? 'border-l-primary-500 bg-primary-50'
+                  : 'border-l-transparent bg-white hover:bg-neutral-50',
+              ]}
+            >
+              <span
+                class:list={[
+                  'font-Poppins text-[11px] font-semibold tracking-[0.16em]',
+                  active ? 'text-primary-500' : 'text-neutral-500',
+                ]}
+              >
+                {step.n}
+              </span>
+              <span class="mt-1 text-sm font-semibold text-accent-950">{step.label}</span>
+              <span class="mt-1 text-xs leading-relaxed text-neutral-600">{step.hint}</span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ol>
+  {
+    next && currentStep && (
+      <div class="flex flex-wrap items-center gap-3 border-t border-neutral-200 px-5 py-4 md:px-7">
+        <a
+          href={next.href}
+          class="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-primary-500 px-5 py-3 text-sm font-semibold text-white no-underline hover:bg-primary-600"
+        >
+          {currentStep.nextCta}
+        </a>
+        <span class="text-sm text-neutral-600">{next.name}</span>
+      </div>
+    )
+  }
+</nav>

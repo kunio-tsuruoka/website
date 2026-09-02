@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from 'vitest';
-import { EMPTY_INPUTS, buildRfpMarkdown } from './build-rfp-draft';
+import { EMPTY_INPUTS, buildRfpMarkdown, hasRfpSourceData } from './build-rfp-draft';
 import { normalizeStorySpec } from './story-spec';
 
 const spec = normalizeStorySpec({
@@ -64,5 +64,14 @@ describe('buildRfpMarkdown', () => {
     expect(md).toContain('# RFP（提案依頼書）ドラフト: 社内精算刷新');
     expect(md).toContain('リモート勤務で承認が滞る');
     expect(md).not.toContain('紙の精算が月末に集中している。');
+  });
+
+  test('ソースが無いと hasRfpSourceData はすべて false', () => {
+    expect(hasRfpSourceData()).toEqual({ story: false, flow: false, scope: false });
+  });
+
+  test('ストーリーがあれば hasRfpSourceData.story が true', () => {
+    localStorage.setItem('beekle-story-builder-v2', JSON.stringify({ spec }));
+    expect(hasRfpSourceData().story).toBe(true);
   });
 });

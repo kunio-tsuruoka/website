@@ -206,6 +206,27 @@ describe('site-wide editorial design foundations', () => {
     expect(offenders).toEqual([]);
   });
 
+  it('keeps the collaboration page discoverable from the global footer', () => {
+    const footer = readSource('../components/footer.astro');
+
+    expect(footer).toContain("{ label: '開発会社・SIer様へ（協業）', href: '/partner' }");
+  });
+
+  it('uses the formal company name in source content and public metadata', () => {
+    const checkedFiles = [
+      ...allSourceFiles(),
+      path.join(process.cwd(), 'public/llms.txt'),
+      path.join(process.cwd(), 'scripts/beekle-glossary.mjs'),
+      path.join(process.cwd(), 'AGENTS.md'),
+      path.join(process.cwd(), 'CLAUDE.md'),
+    ];
+    const offenders = checkedFiles
+      .filter((sourcePath) => readFileSync(sourcePath, 'utf8').includes('Beekle株式会社'))
+      .map((sourcePath) => path.relative(process.cwd(), sourcePath));
+
+    expect(offenders).toEqual([]);
+  });
+
   it('keeps primary consultation copy buyer-sided instead of start-stop wording', () => {
     const checkedPaths = [
       'src/pages/index.astro',

@@ -17,7 +17,7 @@ export interface Props {
 
 const {
   title,
-  description = `Beekle株式会社は、${companyPositioning.short}${companyPositioning.zeroStart}`,
+  description = `株式会社Beekleは、${companyPositioning.short}${companyPositioning.zeroStart}`,
   canonical,
   ogImage = '/og-image.png',
   ogType = 'website',
@@ -79,5 +79,5 @@ const ogImageUrl = ogImage.startsWith('http') ? ogImage : new URL(ogImage, siteU
 <meta name="msapplication-TileColor" content="#3D4DB7" />
 
 {/* その他 */}
-<meta name="author" content="Beekle株式会社" />
+<meta name="author" content="株式会社Beekle" />
 <meta name="format-detection" content="telephone=no" />

@@ -6,7 +6,7 @@ import { PageHero } from '../components/ui/page-hero';
 import Layout from '../layouts/layout.astro';
 
 // ページネーション設定
-const ITEMS_PER_PAGE = 4;
+const ITEMS_PER_PAGE = 8;
 const url = new URL(Astro.request.url);
 const currentPage = Math.max(1, Number(url.searchParams.get('page')) || 1);
 
@@ -384,7 +384,7 @@ const allCases = [
       { label: '対象者', value: '高齢者も単独で完結' },
       { label: '事業者', value: '整理済みで相談が届く' },
     ],
-    featured: false,
+    featured: true,
     strength: {
       category: 'ユーザー起点のUX設計',
       title: '技術にユーザーを合わせず、使う人の行動にシステムを合わせる',
@@ -429,7 +429,7 @@ const allCases = [
       { label: '引き継ぎ', value: '設計判断の経緯が残る' },
       { label: 'リリース前', value: '動作確認を自動化' },
     ],
-    featured: false,
+    featured: true,
     strength: {
       category: '仕様駆動・継続開発',
       title: '動くコードだけでなく、次の担当者も判断できる仕様を残す',

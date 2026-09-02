@@ -6,17 +6,38 @@ const visibleText = (html: string) => html.replace(/<[^>]+>/g, '').replace(/\s+/
 const renderHeroHtml = () => render(<HeroSection />).container.innerHTML;
 
 describe('HeroSection', () => {
-  it('keeps the first view to one message, one proof line, and one CTA', () => {
+  it('renders the approved short benefit headline', () => {
+    const { container } = render(<HeroSection />);
+    const html = container.innerHTML;
+    const text = visibleText(html);
+
+    expect(text).toContain('資料より、まず爆速デモ。見て決めたら、そのまま本番へ。');
+    expect(container.querySelectorAll('h1 br')).toHaveLength(3);
+  });
+
+  it('removes the explanatory paragraph from the first view', () => {
+    const { container } = render(<HeroSection />);
+    const html = container.innerHTML;
+
+    expect(container.querySelector('p')).toBeNull();
+    expect(html).not.toContain('資料と見積書だけで何週間も悩まず');
+  });
+
+  it('uses the wider consultation CTA', () => {
     const html = renderHeroHtml();
     const text = visibleText(html);
 
-    expect(text).toContain('爆速開発。だから、開発費を抑えられる。');
-    expect(text).toContain('AI前提で開発工数を圧縮。1日でデモ、1週間で触れる形に。');
-    expect(text).toContain('相談する');
-    expect(text).not.toContain('開発が速い。だから、同じ予算でより多く前に進める。');
-    expect(text).not.toContain('発注前に相談する');
-    expect(text).not.toContain('速さの実績を見る');
-    expect(text).not.toContain('AIに相談する');
+    expect(text).toContain('爆速デモについて相談する');
+    expect(text).not.toContain('爆速デモを相談する');
+  });
+
+  it('separates the CTA arrow into its own visual segment', () => {
+    const { getByRole } = render(<HeroSection />);
+    const cta = getByRole('link', { name: '爆速デモについて相談する' });
+
+    expect(cta.children).toHaveLength(2);
+    expect(cta.lastElementChild).toHaveAttribute('aria-hidden', 'true');
+    expect(cta).toHaveClass('w-full', 'text-base', 'sm:w-auto', 'sm:text-lg');
   });
 
   it('uses the supplied background image instead of a faux app dashboard', () => {
@@ -45,20 +66,36 @@ describe('HeroSection', () => {
     expect(html).not.toContain('NDA可');
   });
 
-  it('uses a full-bleed background with copy constrained to the left', () => {
-    const html = renderHeroHtml();
+  it('uses a full-bleed background with short copy constrained to the left', () => {
+    const { container } = render(<HeroSection />);
+    const html = container.innerHTML;
+    const content = container.querySelector('section > div');
+    const heading = container.querySelector('h1');
 
     expect(html).toContain('absolute inset-0 h-full w-full object-cover');
-    expect(html).toContain('home-hero-veil');
-    expect(html).toContain('lg:min-h-[560px]');
+    expect(html).not.toContain('home-hero-veil');
+    expect(content).toHaveClass(
+      'w-full',
+      'max-w-[1440px]',
+      'px-4',
+      'sm:px-8',
+      'lg:min-h-[560px]',
+      'lg:px-12'
+    );
+    expect(content).not.toHaveClass('container');
+    expect(heading).toHaveClass('text-3xl', 'sm:text-4xl', 'lg:text-5xl', 'xl:text-6xl');
     expect(html).not.toContain('lg:min-h-[640px]');
     expect(html).not.toContain('lg:grid-cols');
     expect(html).not.toContain('w-[54%]');
     expect(html).not.toContain('w-[52%]');
     expect(html).not.toContain('md:hidden');
     expect(html).not.toContain('hidden border-y border-neutral-300 bg-white md:block');
-    expect(html).toContain('max-w-[20rem]');
-    expect(html).toContain('xl:max-w-[26rem]');
+    expect(html).toContain('max-w-[24rem]');
+    expect(html).toContain('max-w-[28rem]');
+    expect(html).toContain('xl:max-w-[36rem]');
+    expect(html).not.toContain('md:text-4xl');
+    expect(html).not.toContain('max-w-[20rem]');
+    expect(html).not.toContain('xl:max-w-[26rem]');
     expect(html).not.toContain('xl:text-8xl');
     expect(html).not.toContain('md:text-7xl');
   });

@@ -9,7 +9,7 @@ const pageUrl = `${siteUrl}${consultationHub.href}`;
 ---
 
 <Layout
-  title="相談が始まる場面一覧 | Beekle株式会社"
+  title="相談が始まる場面一覧 | 株式会社Beekle"
   description="要件が固まらない、AI導入、属人業務、社内資料検索、顧客データ、止まった開発。Beekleへの相談が始まる場面ごとに、初回で見る判断材料と見送り条件をまとめています。"
   canonical={pageUrl}
 >
@@ -102,6 +102,12 @@ const pageUrl = `${siteUrl}${consultationHub.href}`;
                       <p class="mt-1 text-sm font-bold leading-snug text-accent-950">{item.value}</p>
                     </div>
                   ))}
+                </div>
+                <div class="mt-5 border-t border-neutral-200 pt-5">
+                  <p class="text-xs font-bold text-primary-700">{situation.proof.label}</p>
+                  <p class="mt-1 text-sm font-bold leading-snug text-accent-950">
+                    {situation.proof.title}
+                  </p>
                 </div>
                 <p class="mt-5 text-sm font-bold text-primary-500 group-hover:text-primary-600">
                   場面別に判断材料を見る

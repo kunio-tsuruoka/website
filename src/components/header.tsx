@@ -8,12 +8,13 @@ const methodItems = [
   { label: '進め方の全体像', href: '/strengths' },
   { label: '動くもので判断するゼロスタート', href: '/prooffirst' },
   { label: '要件定義から伴走する開発', href: '/services/requirements-definition-support' },
-  { label: '進行管理と仕様の見える化', href: '/strengths' },
+  { label: '導入の流れ', href: '/process' },
 ];
 
 const serviceItems = [
   { label: 'MVP・PoC・プロトタイプ開発', href: '/services/mvp-poc-development' },
   { label: '生成AI受託開発', href: '/services/ai-development' },
+  { label: 'AIエージェント開発', href: '/services/ai-agent-development' },
   { label: 'RAGシステム構築', href: '/services/rag-system-development' },
   { label: 'Webアプリ・モバイルアプリ開発', href: '/services/web-mobile-development' },
   { label: 'CDP構築・顧客データ基盤開発', href: '/services/cdp-development' },
@@ -25,6 +26,7 @@ const knowledgeItems = [
   { label: '生成AI導入', href: '/column/genai-adoption' },
   { label: 'Beekleのナレッジ', href: '/knowledge' },
   { label: 'AIデモ', href: '/demos' },
+  { label: '発注準備キット', href: '/tools' },
   { label: '資料・判断材料', href: '/materials' },
 ];
 
@@ -42,7 +44,7 @@ const mobileSections: { heading: string; items: { label: string; href: string }[
   { heading: '進め方', items: methodItems },
   { heading: 'サービス', items: serviceItems },
   { heading: '判断材料', items: knowledgeItems },
-  { heading: 'Beekleについて', items: aboutItems },
+  { heading: '会社情報', items: aboutItems },
 ];
 
 function Dropdown({
@@ -124,7 +126,7 @@ export function Header() {
               />
             </svg>
           </summary>
-          <div className="fixed inset-x-0 top-[76px] max-h-[calc(100vh-76px)] overflow-y-auto bg-navy-950 px-8 py-8 text-white">
+          <div className="fixed inset-x-0 top-[76px] min-h-[calc(100vh-76px)] max-h-[calc(100vh-76px)] overflow-y-auto bg-navy-950 px-8 py-8 text-white">
             <h2 className="mb-5 text-center text-2xl font-bold">メニュー</h2>
             <ul className="mx-auto flex w-full max-w-sm flex-col items-center space-y-4 pb-6">
               <li>
@@ -133,24 +135,39 @@ export function Header() {
                 </a>
               </li>
               {mobileSections.map((section) => (
-                <li
-                  key={section.heading}
-                  className="w-full border-t border-white/20 pt-4 text-center"
-                >
-                  <p className="mb-2 text-sm text-white/60">{section.heading}</p>
-                  <ul className="space-y-2">
-                    {section.items.map((item) => (
-                      <li key={`${section.heading}-${item.href}-${item.label}`}>
-                        <a
-                          href={item.href}
-                          {...(item.href.startsWith('http') ? { rel: 'noopener' } : {})}
-                          className="text-base transition-colors hover:text-accent-300"
-                        >
-                          {item.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                <li key={section.heading} className="w-full border-t border-white/20 pt-2">
+                  <details className="w-full [&[open]>summary>svg]:rotate-180">
+                    <summary className="flex min-h-[44px] cursor-pointer list-none items-center justify-between text-left text-base font-semibold [&::-webkit-details-marker]:hidden">
+                      {section.heading}
+                      <svg
+                        className="h-4 w-4 flex-shrink-0 transition-transform"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="m6 9 6 6 6-6"
+                        />
+                      </svg>
+                    </summary>
+                    <ul className="space-y-1 pb-3 pt-1 text-left">
+                      {section.items.map((item) => (
+                        <li key={`${section.heading}-${item.href}-${item.label}`}>
+                          <a
+                            href={item.href}
+                            {...(item.href.startsWith('http') ? { rel: 'noopener' } : {})}
+                            className="flex min-h-[40px] items-center pl-3 text-sm text-white/80 transition-colors hover:text-accent-300"
+                          >
+                            {item.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
                 </li>
               ))}
               <li className="flex w-full flex-col items-center gap-3 pt-2">
@@ -180,6 +197,7 @@ export function Header() {
             </a>
           </li>
           <Dropdown label="判断材料" items={knowledgeItems} />
+          <Dropdown label="会社情報" items={aboutItems} />
           <li>
             <a
               href="/contact?source=header-desktop"

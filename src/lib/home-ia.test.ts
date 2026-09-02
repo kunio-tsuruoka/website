@@ -68,7 +68,7 @@ describe('home page information architecture', () => {
   });
 
   it('frames the home page around decision risk instead of price anchoring', () => {
-    expect(mainSource).toContain('数百万円を発注する前に');
+    expect(mainSource).toContain('数千万円を発注する前に');
     expect(mainSource).toContain('作る価値が薄い場合は、作らない判断も選択肢に含めます');
     expect(mainSource).toContain('条件が合う案件では、初期検証を当社負担で行う場合があります');
     expect(mainSource).toContain('初回相談・簡易デモは無料');
