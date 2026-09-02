@@ -1,0 +1,646 @@
+---
+import { Header } from '@/components/header';
+import JsonLd from '@/components/seo/json-ld.astro';
+import { Section, SectionHeader } from '@/components/ui';
+import Layout from '../../layouts/layout.astro';
+
+type ServiceMode = 'ai-adoption' | 'management-dx';
+
+interface Props {
+  mode: ServiceMode;
+}
+
+type Plan = {
+  no: string;
+  code: string;
+  name: string;
+  tagline: string;
+  target: string;
+  chooseWhen: string;
+  deliverable: string;
+  scope: string;
+  meetings: string;
+  period: string;
+  implementation: string;
+  contract: string;
+  price: string;
+  priceUnit: string;
+  featured: boolean;
+};
+
+const { mode } = Astro.props;
+const siteUrl = 'https://beekle.jp';
+
+const pageConfigs = {
+  'ai-adoption': {
+    path: '/services/ai-adoption',
+    seoTitle: 'AI導入支援｜業務選定からPoC・本番運用まで伴走',
+    seoDescription:
+      'AIを導入する業務の選定、評価設計、データ連携、PoC、本番運用、社内定着まで支援します。診断40万円、伴走月80万円、AI・DX推進室月120万円から。',
+    serviceName: 'AI導入支援',
+    serviceType: 'AI導入支援・コンサルティング・実装伴走',
+    breadcrumb: 'AI導入支援',
+    eyebrow: '新規事業・DX・情シス担当者へ',
+    heading: 'AI導入を、検討だけで終わらせない。',
+    lead:
+      'どの業務から始めるかを決め、評価基準を作り、必要なデータをつなぎます。簡易PoCから本番運用、社内定着まで同じチームで伴走します。',
+    heroNote: 'NDA後に詳細確認可 / 診断だけの依頼可 / 今やらない判断も可',
+    heroCta: 'AIを導入する業務を相談する',
+    memoTitle: 'AI導入判断メモ',
+    memoSubtitle: '相談前ドラフト',
+    memoRows: [
+      ['誰向け', '新規事業 / DX / 情シス'],
+      ['返すもの', '対象業務、評価基準、概算、進め方'],
+      ['実装範囲', '簡易PoCから運用設計まで'],
+      ['判断', '今やらない判断も明記'],
+    ],
+    issueTitle: 'AI導入は、ツールを選ぶ前に決めることがあります',
+    issueSubtitle: '業務・データ・評価・運用のどこが未整理かで、必要な支援は変わります',
+    painPoints: [
+      {
+        title: 'どの業務にAIを使うべきか決まらない',
+        description:
+          '候補は多いものの、効果、必要データ、失敗条件を比べられず、ツールの試用だけが増えている。',
+      },
+      {
+        title: 'PoCは動いたが、本番運用へ進めない',
+        description:
+          '精度だけを確認し、権限、ログ、費用、現場の確認手順が未整理のため、試作のまま止まっている。',
+      },
+      {
+        title: '社内開発の技術判断を検証できない',
+        description:
+          'モデル、RAG、AIエージェント、評価方法の選択が妥当か、社内だけでは判断しにくい。',
+      },
+      {
+        title: 'AIを契約したが、実際の業務データとつながっていない',
+        description:
+          'ChatGPTなどは使い始めたが、社内文書、CRM、メール、業務システムを参照できず、個人利用に留まっている。',
+      },
+    ],
+    finalTitle: 'AIを入れる業務と、まだ入れない業務を分けませんか',
+    finalLead:
+      '業務、データ、体制、すでに試したことを伺い、必要な支援範囲と費用をご案内します。',
+    source: 'services-ai-adoption',
+  },
+  'management-dx': {
+    path: '/services/management-dx',
+    seoTitle: '経営DX・AI導入支援｜経営データの整理からAI実装まで',
+    seoDescription:
+      '売上、案件、利益、資金繰り、顧客、マーケティングなどの経営データを整理し、AIレポート、アラート、RAG、AIエージェントの実装まで支援します。',
+    serviceName: '経営DX・AI導入支援',
+    serviceType: '経営DX・AI導入コンサルティング・実装伴走',
+    breadcrumb: '経営DX・AI導入支援',
+    eyebrow: '経営者・経営企画・事業責任者へ',
+    heading: '経営数字と業務データを、毎週判断できる状態へ。',
+    lead:
+      '売上、案件、利益、資金繰り、顧客、マーケティングの情報を整理し、AIが状況とリスクをまとめる仕組みを作ります。コンサルティングだけでなく、データ連携と実装まで支援します。',
+    heroNote: '課題整理だけの依頼可 / 既存ツールを活用 / AI実装まで一貫支援',
+    heroCta: '経営課題とデータの状況を相談する',
+    memoTitle: '経営DX判断メモ',
+    memoSubtitle: '相談前ドラフト',
+    memoRows: [
+      ['誰向け', '経営者 / 経営企画 / 事業責任者'],
+      ['見る数字', '売上、案件、利益、資金、顧客'],
+      ['返すもの', '課題マップ、接続案、優先順位'],
+      ['実装例', 'AIレポート、アラート、検索、エージェント'],
+    ],
+    issueTitle: '経営DXは、システム導入だけでは進みません',
+    issueSubtitle: '経営上の判断と、現場にあるデータをつなぐところから始めます',
+    painPoints: [
+      {
+        title: '経営数字が複数の資料に分かれている',
+        description:
+          '売上、案件、利益、資金繰りが別々に管理され、会議のたびに人が集計しないと現状を確認できない。',
+      },
+      {
+        title: '問題を発生後に知る',
+        description:
+          '案件不足、入金遅延、費用超過、期限漏れに気づくのが遅く、対応が後手に回っている。',
+      },
+      {
+        title: '営業・財務・マーケティングがつながらない',
+        description:
+          '問い合わせから商談、受注、売上、入金までの数字が分断され、どこを改善すべきか判断しにくい。',
+      },
+      {
+        title: '社長や一部の担当者に判断が集中している',
+        description:
+          '情報の場所と判断基準が共有されておらず、確認や承認が特定の人に集まり続けている。',
+      },
+    ],
+    finalTitle: '経営会議で毎週見る情報から、AIにつなぎませんか',
+    finalLead:
+      '現在使っている会計、CRM、メール、資料を伺い、最初に整理すべき課題とデータをご案内します。',
+    source: 'services-management-dx',
+  },
+} as const;
+
+const page = pageConfigs[mode];
+const pageUrl = `${siteUrl}${page.path}`;
+const contactHref = `/contact?source=${page.source}&intent=genai-adoption`;
+
+const plans: Plan[] = [
+  {
+    no: '01',
+    code: 'ASSESS',
+    name: 'AI・経営DX診断',
+    tagline: '課題とデータを棚卸しし、着手するテーマを絞る',
+    target: 'AIやDXを進めたいが、対象業務、優先順位、費用対効果が決まっていない',
+    chooseWhen: 'まず経営課題、業務、既存ツール、利用可能なデータを整理したい',
+    deliverable: '課題マップ、AI・DX候補の優先順位、想定効果、概算費用、90日ロードマップ',
+    scope: '経営・業務ヒアリング、ツールとデータの棚卸し、候補の評価、実施順序の設計',
+    meetings: 'ヒアリング3回＋報告会1回',
+    period: '3〜4週間',
+    implementation: '含まない',
+    contract: '準委任（スポット）',
+    price: '400,000',
+    priceUnit: '一式',
+    featured: false,
+  },
+  {
+    no: '02',
+    code: 'DELIVER',
+    name: 'AI導入・経営DX伴走',
+    tagline: '優先テーマを簡易PoCにし、評価と運用まで進める',
+    target: '対象テーマは見えているが、社内だけではデータ連携、検証、運用設計まで進めにくい',
+    chooseWhen: '週次で意思決定しながら、1つの優先テーマを実際に動かして評価したい',
+    deliverable: '簡易PoC、評価記録、データ接続設計、運用ルール、改善バックログ',
+    scope: '週次定例、KPI・評価設計、データ連携、AIレポート・アラート、業務改善、社内定着支援',
+    meetings: '定例MTG 週1回＋チャット相談',
+    period: '最低3ヶ月、以降は月単位',
+    implementation: '簡易PoC・小規模改善を含む',
+    contract: '準委任（月額）',
+    price: '800,000',
+    priceUnit: '月〜',
+    featured: true,
+  },
+  {
+    no: '03',
+    code: 'TEAM',
+    name: 'AI・DX推進室',
+    tagline: 'PMとAIエンジニアが入り、複数テーマを継続的に実装する',
+    target: '専任のAI・DXチームがなく、複数部門の課題を継続して整理・実装する体制が必要',
+    chooseWhen: 'CRM、会計、メール、文書、マーケティングなどを横断して改善したい',
+    deliverable: '優先順位表、データ連携、RAG、AIエージェント、自動レポート、運用記録',
+    scope: 'PM・AIエンジニアの参画、複数テーマ管理、設計、実装、検証、社内展開、継続改善',
+    meetings: '週次経営・推進定例＋作業セッション',
+    period: '最低3ヶ月、以降は月単位',
+    implementation: '合意した月次体制の範囲で含む',
+    contract: '準委任（月額）',
+    price: '1,200,000',
+    priceUnit: '月〜',
+    featured: false,
+  },
+];
+
+const comparisonRows: { label: string; key: keyof Plan }[] = [
+  { label: 'こんな方に', key: 'target' },
+  { label: '選ぶ状態', key: 'chooseWhen' },
+  { label: '成果物', key: 'deliverable' },
+  { label: '支援内容', key: 'scope' },
+  { label: '接触頻度', key: 'meetings' },
+  { label: '期間', key: 'period' },
+  { label: '実装', key: 'implementation' },
+  { label: '契約形態', key: 'contract' },
+];
+
+const outputs = [
+  {
+    title: '経営・業務課題マップ',
+    description: '売上、利益、資金、営業、マーケティング、組織、業務の課題と優先順位を整理します。',
+  },
+  {
+    title: 'データ接続マップ',
+    description: 'CRM、会計、Gmail、Drive、Slack、GA4など、必要な情報の場所と接続方法を整理します。',
+  },
+  {
+    title: 'AIレポートとアラート',
+    description: '実績、変化、リスク、確認事項、次の行動をまとめ、異常の検知条件を設計します。',
+  },
+  {
+    title: '90日ロードマップ',
+    description: '何を先に検証し、どの条件を満たしたら本番化するかを、費用と担当を含めて決めます。',
+  },
+];
+
+const steps = [
+  {
+    no: '01',
+    title: '無料相談・NDA確認',
+    description: '公開できる範囲で、課題、体制、利用中のツール、すでに試したことを伺います。',
+  },
+  {
+    no: '02',
+    title: '課題・業務・データを整理',
+    description: '経営上の目的と現場業務をつなぎ、利用者、データ、評価指標、運用上の制約を確認します。',
+  },
+  {
+    no: '03',
+    title: '優先テーマと支援範囲を提案',
+    description: '着手するテーマ、見送るテーマ、成果物、期間、費用、別途必要になる費用を明示します。',
+  },
+  {
+    no: '04',
+    title: '簡易PoC・データ連携・評価',
+    description: '小さく動かし、精度、業務効果、権限、ログ、費用、現場の確認手順を評価します。',
+  },
+  {
+    no: '05',
+    title: '本番化・定着・継続改善',
+    description: '本番化する場合は運用ルールと担当を決め、利用状況と効果を見ながら改善します。',
+  },
+];
+
+const faqs = [
+  {
+    question: 'AI導入支援と経営DX支援は別のサービスですか？',
+    answer:
+      '提供する体制と料金は共通です。AI導入支援は業務担当者・DX担当者の課題から、経営DX支援は経営数字と意思決定の課題から入ります。相談内容に応じて同じチームが支援します。',
+  },
+  {
+    question: '診断だけ依頼し、実装は他社に任せてもよいですか？',
+    answer:
+      '可能です。診断で作成した課題マップ、優先順位、概算、90日ロードマップは、社内実装や他社への発注にも利用できます。',
+  },
+  {
+    question: '月額料金に本番システムの開発費も含まれますか？',
+    answer:
+      '簡易PoC、小規模な連携・改善は各プランで合意した体制の範囲に含みます。専任開発チームが必要な本番開発費は、対象範囲を決めたうえで別途見積もりします。',
+  },
+  {
+    question: 'クラウドやAIモデルの利用料は含まれますか？',
+    answer:
+      '含まれません。クラウド・外部サービス利用料、AIモデルのAPI料金、SaaSライセンス費は、お客様の利用量と契約条件に応じて別途必要です。',
+  },
+  {
+    question: '最低契約期間はありますか？',
+    answer:
+      'AI・経営DX診断はスポットです。月額の2プランは、検証と運用まで確認するため最低3ヶ月とし、4ヶ月目以降は月単位で見直せます。',
+  },
+  {
+    question: 'オンプレミスや完全閉域環境に対応していますか？',
+    answer:
+      '現在、オンプレミス・完全閉域構成は標準提供していません。クラウド環境で、アクセス権限、ログ、保存範囲、モデル学習への利用有無を整理して設計します。',
+  },
+  {
+    question: 'NDAは相談前に締結できますか？',
+    answer:
+      '可能です。初回は公開できる範囲で伺い、詳細な業務資料や顧客情報が必要になった段階でNDA締結後に確認します。',
+  },
+  {
+    question: 'PoC後に本番化しない判断もできますか？',
+    answer:
+      'できます。精度、効果、利用者、データ、運用負荷、費用を確認し、本番化しない場合は理由と再検討条件を残します。',
+  },
+];
+---
+
+<Layout title={`${page.seoTitle} | Beekle`} description={page.seoDescription} canonical={pageUrl}>
+  <JsonLd
+    slot="head"
+    type="service"
+    data={{
+      serviceName: page.serviceName,
+      serviceDescription: page.seoDescription,
+      url: pageUrl,
+      serviceType: page.serviceType,
+      image: `${siteUrl}/og-image.png`,
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: page.breadcrumb, url: page.path },
+      ],
+    }}
+  />
+  <JsonLd slot="head" type="faq" data={{ faqs }} />
+
+  <Header />
+
+  <main class="bg-neutral-100 pt-20">
+    <section class="relative overflow-hidden border-b border-neutral-300 bg-neutral-100 py-14 md:py-20">
+      <div class="container relative mx-auto px-8 lg:px-12">
+        <div class="grid gap-10 lg:grid-cols-[0.82fr_0.72fr] lg:items-center">
+          <div class="max-w-3xl">
+            <span class="mb-6 inline-block border-l-8 border-primary-500 pl-5 text-sm font-bold text-primary-700">
+              {page.eyebrow}
+            </span>
+            <h1 class="mb-6 text-3xl font-bold leading-tight text-accent-950 sm:text-4xl lg:text-5xl">
+              {page.heading}
+            </h1>
+            <p class="mb-8 text-lg leading-relaxed text-neutral-700 md:text-xl">{page.lead}</p>
+            <p class="mb-8 border-y border-neutral-200 py-3 text-sm font-bold leading-relaxed text-accent-950">
+              {page.heroNote}
+            </p>
+            <a
+              href={contactHref}
+              data-cta-source={`${page.source}-hero`}
+              data-cta-id="contact"
+              class="inline-flex min-h-[52px] items-center justify-center rounded-md border border-primary-500 bg-primary-500 px-6 py-3 text-center text-base font-bold leading-snug text-white transition hover:border-primary-600 hover:bg-primary-600 sm:px-8"
+            >
+              {page.heroCta}
+              <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </a>
+          </div>
+
+          <aside class="border-y border-neutral-300 bg-white">
+            <div class="grid grid-cols-[1fr_auto] gap-4 border-b border-l-8 border-neutral-300 border-l-primary-500 px-5 py-4">
+              <div>
+                <p class="text-sm font-bold text-primary-700">{page.memoTitle}</p>
+                <p class="mt-1 text-2xl font-bold leading-tight text-accent-950">{page.memoSubtitle}</p>
+              </div>
+              <p class="font-Poppins text-xs font-bold text-neutral-500">BEEKLE / AI・DX</p>
+            </div>
+            <dl class="divide-y divide-neutral-300">
+              {page.memoRows.map(([label, value]) => (
+                <div class="grid grid-cols-[112px_1fr]">
+                  <dt class="border-r border-neutral-200 bg-neutral-50 px-5 py-4 text-sm font-bold text-primary-700">
+                    {label}
+                  </dt>
+                  <dd class="px-5 py-4 text-base font-bold leading-relaxed text-accent-950">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <Section variant="light" padding="lg">
+      <SectionHeader
+        title={page.issueTitle}
+        subtitle={page.issueSubtitle}
+        number="01"
+        label="ISSUES"
+      />
+      <div class="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2">
+        {page.painPoints.map((pain) => (
+          <article class="rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
+            <h2 class="mb-3 text-lg font-bold leading-snug text-navy-950 md:text-xl">{pain.title}</h2>
+            <p class="text-sm leading-relaxed text-neutral-700 md:text-base">{pain.description}</p>
+          </article>
+        ))}
+      </div>
+    </Section>
+
+    <Section variant="white" padding="lg" id="plans">
+      <SectionHeader
+        title="支援範囲で選べる3つのプラン"
+        subtitle="相談だけの顧問ではなく、診断、簡易PoC、データ連携、運用まで必要な深さで支援します"
+        number="02"
+        label="PLANS"
+      />
+
+      <div class="space-y-6 md:hidden">
+        {plans.map((plan) => (
+          <article
+            class:list={[
+              'rounded-lg border bg-white p-6',
+              plan.featured ? 'border-primary-300' : 'border-neutral-200',
+            ]}
+          >
+            <div class="mb-2 flex items-baseline gap-3">
+              <span class="font-Poppins text-3xl font-bold text-primary-500">{plan.no}</span>
+              <span class="text-xs font-semibold uppercase tracking-wide text-primary-500">{plan.code}</span>
+            </div>
+            <h2 class="mb-2 text-xl font-bold text-navy-950">{plan.name}</h2>
+            <p class="mb-4 text-sm leading-relaxed text-neutral-700">{plan.tagline}</p>
+            <p class="mb-5">
+              <span class="font-Poppins text-3xl font-bold text-navy-950">&yen;{plan.price}</span>
+              <span class="ml-1 text-sm font-medium text-neutral-600">/ {plan.priceUnit}（税別）</span>
+            </p>
+            <dl class="space-y-3 border-t border-neutral-200 pt-4">
+              {comparisonRows.map((row) => (
+                <div>
+                  <dt class="text-xs font-bold text-primary-700">{row.label}</dt>
+                  <dd class="text-sm leading-relaxed text-neutral-700">{plan[row.key]}</dd>
+                </div>
+              ))}
+            </dl>
+            <a
+              href={`/contact?source=${page.source}-plan-${plan.no}&intent=genai-adoption`}
+              data-cta-source={`${page.source}-plan-${plan.no}`}
+              data-cta-id="contact"
+              class="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-md bg-primary-500 px-6 py-3 text-base font-bold text-white transition hover:bg-primary-600"
+            >
+              このプランを相談する
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <div class="mx-auto hidden max-w-6xl md:block">
+        <table class="w-full border-separate border-spacing-x-3">
+          <caption class="sr-only">AI導入・経営DX支援3プランの比較表</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="w-40"><span class="sr-only">項目</span></th>
+              {plans.map((plan) => (
+                <th scope="col" class="p-0 align-bottom">
+                  <div
+                    class:list={[
+                      'rounded-t-lg border-x border-t bg-white px-6 pt-8 pb-6 text-left',
+                      plan.featured ? 'border-primary-300' : 'border-neutral-200',
+                    ]}
+                  >
+                    <div class="mb-2 flex items-baseline gap-3">
+                      <span class="font-Poppins text-4xl font-bold text-primary-500">{plan.no}</span>
+                      <span class="text-xs font-semibold uppercase tracking-wide text-primary-500">{plan.code}</span>
+                    </div>
+                    <p class="mb-2 text-xl font-bold text-navy-950">{plan.name}</p>
+                    <p class="mb-5 text-sm font-normal leading-relaxed text-neutral-700">{plan.tagline}</p>
+                    <p>
+                      <span class="font-Poppins text-3xl font-bold text-navy-950">&yen;{plan.price}</span>
+                      <span class="ml-1 text-sm font-medium text-neutral-600">
+                        / {plan.priceUnit}（税別）
+                      </span>
+                    </p>
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {comparisonRows.map((row) => (
+              <tr>
+                <th scope="row" class="py-4 pr-4 text-left align-top text-sm font-bold text-primary-700">
+                  {row.label}
+                </th>
+                {plans.map((plan) => (
+                  <td
+                    class:list={[
+                      'border-x border-b border-neutral-100 bg-white px-6 py-4 align-top text-sm leading-relaxed text-neutral-700',
+                      plan.featured ? 'border-x-primary-300' : 'border-x-neutral-200',
+                    ]}
+                  >
+                    {plan[row.key]}
+                  </td>
+                ))}
+              </tr>
+            ))}
+            <tr>
+              <td></td>
+              {plans.map((plan) => (
+                <td
+                  class:list={[
+                    'rounded-b-lg border-x border-b bg-white px-6 pt-2 pb-8',
+                    plan.featured ? 'border-primary-300' : 'border-neutral-200',
+                  ]}
+                >
+                  <a
+                    href={`/contact?source=${page.source}-plan-${plan.no}&intent=genai-adoption`}
+                    data-cta-source={`${page.source}-plan-${plan.no}`}
+                    data-cta-id="contact"
+                    class="inline-flex min-h-[52px] w-full items-center justify-center rounded-md bg-primary-500 px-6 py-3 text-base font-bold text-white transition hover:bg-primary-600"
+                  >
+                    このプランを相談する
+                  </a>
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mx-auto mt-8 max-w-5xl border-y border-neutral-300 bg-neutral-50 px-6 py-5">
+        <p class="text-sm font-bold leading-relaxed text-accent-950">
+          表示価格はすべて税別です。本番開発費、クラウド・外部サービス利用料、AIモデルのAPI料金、SaaSライセンス費、出張交通費は別途見積もりです。
+        </p>
+        <p class="mt-2 text-sm leading-relaxed text-neutral-700">
+          月額プランの実装範囲は、対象テーマと体制を提案時に明示します。大規模な本番開発を月額内で無制限に行うプランではありません。
+        </p>
+      </div>
+    </Section>
+
+    <Section variant="light" padding="lg">
+      <SectionHeader
+        title="納品するのは、助言だけではありません"
+        subtitle="次の判断と実装に使える成果物を残します"
+        number="03"
+        label="OUTPUTS"
+      />
+      <div class="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">
+        {outputs.map((output) => (
+          <article class="rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
+            <h2 class="text-xl font-bold leading-snug text-navy-950">{output.title}</h2>
+            <p class="mt-3 text-sm leading-relaxed text-neutral-700 md:text-base">{output.description}</p>
+          </article>
+        ))}
+      </div>
+    </Section>
+
+    <Section variant="white" padding="lg">
+      <SectionHeader
+        title="実装力は、公開デモと事例で確認できます"
+        subtitle="RAG、OCR、AIエージェント、業務システムまで、必要な方式を選んで実装します"
+        number="04"
+        label="PROOF"
+      />
+      <div class="mx-auto grid max-w-5xl gap-6 md:grid-cols-2">
+        <a
+          href="/demos/it-advisor"
+          data-cta-source={`${page.source}-demo-rag`}
+          data-cta-id="demo-it-advisor"
+          class="group block rounded-lg border border-neutral-200 bg-white p-6 transition hover:border-primary-300"
+        >
+          <p class="text-sm font-bold text-primary-700">社内資料・ナレッジ検索</p>
+          <h2 class="mt-2 text-xl font-bold text-navy-950 transition group-hover:text-primary-600">
+            AIナレッジ相談デモ
+          </h2>
+          <p class="mt-3 text-sm leading-relaxed text-neutral-700">
+            社内資料を探し、根拠を示しながら回答するRAGの利用イメージを確認できます。
+          </p>
+          <span class="mt-4 inline-flex items-center text-sm font-bold text-primary-600">デモを試す →</span>
+        </a>
+        <a
+          href="/case-studies"
+          data-cta-source={`${page.source}-cases`}
+          data-cta-id="case-studies"
+          class="group block rounded-lg border border-neutral-200 bg-white p-6 transition hover:border-primary-300"
+        >
+          <p class="text-sm font-bold text-primary-700">導入・開発の実績</p>
+          <h2 class="mt-2 text-xl font-bold text-navy-950 transition group-hover:text-primary-600">
+            導入事例と対応範囲
+          </h2>
+          <p class="mt-3 text-sm leading-relaxed text-neutral-700">
+            AI検索、業務システム、データ基盤など、課題から実装・運用までの対応内容を確認できます。
+          </p>
+          <span class="mt-4 inline-flex items-center text-sm font-bold text-primary-600">導入事例を見る →</span>
+        </a>
+      </div>
+    </Section>
+
+    <Section variant="light" padding="lg">
+      <SectionHeader
+        title="ご相談から運用までの流れ"
+        subtitle="プランを決める前の段階から無料でご相談いただけます"
+        number="05"
+        label="FLOW"
+      />
+      <div class="mx-auto max-w-4xl space-y-5">
+        {steps.map((step) => (
+          <article class="flex flex-col gap-4 rounded-lg border border-neutral-200 bg-white p-6 sm:flex-row sm:items-start sm:gap-6 md:p-8">
+            <span class="shrink-0 font-Poppins text-4xl font-bold leading-none text-primary-500">{step.no}</span>
+            <div>
+              <h2 class="mb-2 text-lg font-bold text-navy-950 md:text-xl">{step.title}</h2>
+              <p class="text-sm leading-relaxed text-neutral-700 md:text-base">{step.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </Section>
+
+    <Section variant="white" padding="lg">
+      <SectionHeader
+        title="よくあるご質問"
+        subtitle="料金、契約、実装範囲、データの扱いについてまとめました"
+        number="06"
+        label="FAQ"
+      />
+      <div class="mx-auto max-w-3xl space-y-4">
+        {faqs.map((faq) => (
+          <details class="group rounded-lg border border-neutral-200 bg-white p-6 md:p-8">
+            <summary class="flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-4 text-base font-bold text-navy-950 md:text-lg">
+              {faq.question}
+              <svg
+                class="h-5 w-5 shrink-0 text-primary-500 transition-transform group-open:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </summary>
+            <p class="mt-4 text-sm leading-relaxed text-neutral-700 md:text-base">{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </Section>
+
+    <section class="relative overflow-hidden bg-navy-950 py-20 md:py-32">
+      <div class="container relative mx-auto max-w-4xl px-6 text-center md:px-8">
+        <h2 class="mb-6 text-3xl font-bold text-white md:text-5xl">{page.finalTitle}</h2>
+        <p class="mb-10 text-lg leading-relaxed text-white/90 md:text-xl">{page.finalLead}</p>
+        <a
+          href={`/contact?source=${page.source}-final&intent=genai-adoption`}
+          data-cta-source={`${page.source}-final`}
+          data-cta-id="contact"
+          class="inline-flex min-h-[56px] items-center justify-center rounded-md bg-white px-6 py-4 text-center text-base font-semibold leading-snug text-accent-950 transition hover:bg-neutral-100 md:px-10 md:text-lg"
+        >
+          無料相談で状況を整理する
+          <svg class="ml-3 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+        </a>
+      </div>
+    </section>
+  </main>
+</Layout>
