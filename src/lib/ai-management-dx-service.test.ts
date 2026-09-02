@@ -43,16 +43,14 @@ describe('AI導入・経営DX支援', () => {
     const llmsFull = readSource('../pages/llms-full.txt.ts');
 
     expect(header).toContain(
-      "{ label: '経営DX・AI導入支援', href: '/services/management-dx' }"
+      "{ label: '経営DX・AI導入支援', href: '/services/management-dx' }",
     );
     expect(footer).toContain(
-      "{ label: '経営DX・AI導入支援', href: '/services/management-dx' }"
+      "{ label: '経営DX・AI導入支援', href: '/services/management-dx' }",
     );
     expect(footer).toContain("{ label: 'AI導入支援', href: '/services/ai-adoption' }");
     expect(sitemap).toContain("{ url: '/services/management-dx'");
-    expect(llms).toContain(
-      '/services/management-dx - 経営DX・AI導入支援（価格公開）'
-    );
+    expect(llms).toContain('/services/management-dx - 経営DX・AI導入支援（価格公開）');
     expect(llmsFull).toContain('AI・経営DX診断 400,000円');
     expect(llmsFull).toContain('AI導入・経営DX伴走 800,000円 月〜');
     expect(llmsFull).toContain('AI・DX推進室 1,200,000円 月〜');
