@@ -82,6 +82,7 @@ export type Blog = {
   content?: string;
   body?: string;
   description?: string;
+  ogimage?: MicroCMSImage;
   eyecatch?: MicroCMSImage;
   thumbnail?: MicroCMSImage;
   cover?: MicroCMSImage;
