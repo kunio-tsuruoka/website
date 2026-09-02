@@ -8,9 +8,9 @@ import { ragDeploymentModes } from '@/data/rag-service-page';
     <div class="mx-auto max-w-6xl">
       <SectionHeader
         client:visible
-        title="オンプレミス・閉域網・ローカルLLM・クラウドのRAG構築に対応"
-        subtitle="機密情報の保存先、外部通信の可否、既存クラウド、認証基盤を確認し、セキュリティ要件に合う構成を選びます"
-        label="DEPLOYMENT OPTIONS"
+        title="クラウド環境でのRAG構築に対応"
+        subtitle="利用中のクラウド、認証、データ保管方針、コスト上限を確認し、業務要件に合う構成を選びます"
+        label="CLOUD DEPLOYMENT"
       />
 
       <div class="grid gap-4 md:grid-cols-2">
@@ -34,10 +34,10 @@ import { ragDeploymentModes } from '@/data/rag-service-page';
       <div class="mt-8 flex flex-col items-start justify-between gap-5 rounded-lg border border-primary-200 bg-primary-50 p-6 md:flex-row md:items-center md:p-8">
         <div class="max-w-3xl">
           <h3 class="text-xl font-bold leading-snug text-navy-950">
-            構成を決めてから相談する必要はありません
+            利用するクラウドやモデルが決まっていなくても相談できます
           </h3>
           <p class="mt-2 text-sm leading-relaxed text-neutral-700 md:text-base">
-            現在のネットワーク、利用できるクラウド、データの機密区分を伺い、オンプレミス、閉域網、ローカルLLM、クラウドの候補を比較して提案します。
+            既存契約、データ保管方針、利用量、必要な回答品質を伺い、Azure OpenAI Service、AWS Bedrock、OpenAI・Anthropic APIから候補を比較して提案します。
           </p>
         </div>
         <a
@@ -46,9 +46,20 @@ import { ragDeploymentModes } from '@/data/rag-service-page';
           data-cta-id="contact-rag-system-development"
           class="inline-flex min-h-[52px] w-full shrink-0 items-center justify-center rounded-md bg-primary-500 px-6 py-3 text-center text-sm font-bold leading-snug text-white transition-colors hover:bg-primary-600 md:w-auto md:text-base"
         >
-          セキュリティ要件に合う構成を相談する
-          <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          自社のクラウド環境でRAG構成を相談する
+          <svg
+            class="ml-2 h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            ></path>
           </svg>
         </a>
       </div>
