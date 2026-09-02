@@ -2,6 +2,11 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { aiServicePageConfig } from './ai-service-page-config';
+import {
+  RAG_SERVICE_DEFINITION,
+  ragDeploymentModes,
+  ragPricingPhases,
+} from './rag-service-page';
 import { services } from './service';
 
 describe('service page copy', () => {
@@ -15,89 +20,64 @@ describe('service page copy', () => {
     expect(service?.solutions[0]?.results).toContain('追加開発でも壊れにくい');
   });
 
-  it('presents RAG as a procurement-ready service in the required order', () => {
-    const config = aiServicePageConfig['rag-system-development'];
-    const service = services.find((item) => item.id === 'rag-system-development');
+  it('limits the RAG procurement page to cloud deployment modes Beekle actually provides', () => {
     const definition =
-      '株式会社Beekleは、社内文書や業務データを安全に活用したい企業向けに、RAG・ハイブリッド検索・GraphRAGを、オンプレミス、閉域網、ローカルLLM、クラウドのセキュリティ要件に合わせて構築する開発会社です。';
-
-    expect(service).toBeDefined();
-    expect(service?.title).toBe('RAGシステム構築・GraphRAG開発');
-    expect(service?.description).toBe(definition);
-    expect(config.headline).toBe('RAGシステム構築・GraphRAG開発');
-    expect(config.heroLead).toBe(definition);
-    expect(config.contactLabel).toBe('自社環境でのRAG構築を相談する');
-    expect(config.showZeroStartLink).toBe(false);
-    expect(service?.seoTitle).toContain('オンプレ');
-    expect(service?.seoTitle).toContain('ローカルLLM');
-
-    const pageSource = readFileSync(
-      fileURLToPath(new URL('../pages/services/[id].astro', import.meta.url)),
-      'utf8'
-    );
+      '株式会社Beekleは、社内文書や業務データを活用したい企業向けに、RAG・ハイブリッド検索・GraphRAGを、クラウド環境で要件定義から本番運用まで構築する開発会社です。';
     const deploymentSource = readFileSync(
       fileURLToPath(
         new URL('../components/services/service-rag-deployment-modes.astro', import.meta.url)
       ),
       'utf8'
     );
-    const pricingSource = readFileSync(
-      fileURLToPath(new URL('../components/services/service-rag-pricing.astro', import.meta.url)),
-      'utf8'
-    );
+    const copy = JSON.stringify({
+      definition: RAG_SERVICE_DEFINITION,
+      deploymentModes: ragDeploymentModes,
+      deploymentSource,
+    });
 
-    const heroIndex = pageSource.indexOf('<ServiceHero');
-    const deploymentIndex = pageSource.indexOf('<ServiceRagDeploymentModes');
-    const painPointsIndex = pageSource.indexOf('<ServicePainPoints');
-
-    expect(heroIndex).toBeGreaterThan(-1);
-    expect(deploymentIndex).toBeGreaterThan(heroIndex);
-    expect(painPointsIndex).toBeGreaterThan(deploymentIndex);
-    expect(deploymentSource).toContain(
-      'オンプレミス・閉域網・ローカルLLM・クラウドのRAG構築に対応'
-    );
-    expect(deploymentSource).toContain('Azure OpenAI');
-    expect(deploymentSource).toContain('AWS Bedrock');
+    expect(RAG_SERVICE_DEFINITION).toBe(definition);
+    expect(ragDeploymentModes.map((mode) => mode.title)).toEqual([
+      'Azure OpenAI Service',
+      'AWS Bedrock',
+      'OpenAI・Anthropic API',
+      'AWS・Azure・VPS上の検索基盤',
+    ]);
+    expect(copy).toContain('Azure OpenAI Service');
+    expect(copy).toContain('AWS Bedrock');
+    expect(copy).toContain('OpenAI・Anthropic');
+    expect(copy).toContain('VPS');
+    expect(deploymentSource).toContain('クラウド環境でのRAG構築に対応');
     expect(deploymentSource).toContain('data-cta-source');
     expect(deploymentSource).toContain('data-cta-id');
 
-    expect(service?.painPoints.map((item) => item.title)).toEqual([
-      '社内文書検索',
-      '属人化・暗黙知の継承',
-      '問い合わせ対応の効率化',
-      '要件・設計判断・変更影響の追跡',
-    ]);
-
-    const faqCopy = service?.faq.map((item) => `${item.question}${item.answer}`).join('') ?? '';
-    for (const term of [
-      'オンプレミス',
-      '閉域網',
-      'ローカルLLM',
-      'Azure OpenAI',
-      'Neo4j',
-      '精度改善',
-      'アクセス権',
-      '費用',
-    ]) {
-      expect(faqCopy).toContain(term);
+    for (const unsupported of ['オンプレミス', 'オンプレ', '閉域網', '閉域', 'ローカルLLM']) {
+      expect(copy).not.toContain(unsupported);
     }
+  });
 
-    expect(pricingSource).toContain('50万〜300万円');
-    expect(pricingSource).toContain('200万〜600万円');
-    expect(pricingSource).toContain('500万〜1,500万円');
-    expect(pricingSource).toContain('月20万〜100万円');
-    expect(pricingSource).toContain('data-cta-source');
-    expect(pricingSource).toContain('data-cta-id');
-
-    const additionalSectionCopy =
-      service?.additionalSections?.map((section) => section.title).join('') ?? '';
-    expect(additionalSectionCopy).not.toContain('RAGで十分か');
-    expect(additionalSectionCopy).not.toContain('なぜ「先に用途を決める」');
-
-    const fullCopy = JSON.stringify({ service, config, deploymentSource, pricingSource });
-    expect(fullCopy).not.toContain('ナレナレサポート');
-    expect(fullCopy).not.toContain('一般的には');
-    expect(fullCopy).not.toContain('と言われています');
+  it('uses the approved RAG price ranges without inventing a separate prototype tier', () => {
+    expect(ragPricingPhases).toEqual([
+      {
+        phase: '検証・PoC',
+        price: '80万〜250万円',
+        scope: '実データで検索方式、回答品質、権限、更新方法を検証',
+      },
+      {
+        phase: '本番開発',
+        price: '500万〜1,500万円',
+        scope: '検索基盤、画面、認証、権限、ログ、既存システム連携まで実装',
+      },
+      {
+        phase: '継続運用',
+        price: '月20万〜100万円',
+        scope: 'データ更新、精度評価、モデル変更、追加開発、運用監視',
+      },
+      {
+        phase: '大規模・複雑な運用',
+        price: '月120万円以上',
+        scope: '複数基盤、高い可用性、継続的なAI・PM体制が必要な運用',
+      },
+    ]);
   });
 
   it('keeps the AI development hero concise and outcome-led', () => {
