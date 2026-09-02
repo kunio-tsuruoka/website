@@ -1,0 +1,39 @@
+name: Apply LLMO LP fixes
+
+on:
+  push:
+    branches:
+      - fix/llmo-lp-consistency
+    paths:
+      - scripts/apply-llmo-lp-fixes.mjs
+      - .github/workflows/apply-llmo-lp-fixes.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/llmo-lp-consistency
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - run: bun install --frozen-lockfile
+      - run: node scripts/apply-llmo-lp-fixes.mjs
+      - run: bun run check
+      - run: bun run check:ci
+      - run: bun run test:ci
+      - run: bun run build
+      - name: Commit verified implementation
+        run: |
+          rm scripts/apply-llmo-lp-fixes.mjs
+          rm .github/workflows/apply-llmo-lp-fixes.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix: align LP claims and evidence for LLMO"
+          git push origin HEAD:fix/llmo-lp-consistency
