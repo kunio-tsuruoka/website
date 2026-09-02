@@ -5,7 +5,7 @@ describe('technical cluster PM on Rails CTA migration', () => {
   it('builds a candid waitlist CTA for people who do not want to write Gherkin and EARS by hand', () => {
     const result = buildPmOnRailsCta('gherkin-bdd-introduction');
 
-    expect(result).toContain('https://pmonrails.com/');
+    expect(result).toContain('https://pmonrails.com/waitlist?');
     expect(result).toContain('utm_campaign=technical_cluster');
     expect(result).toContain('utm_content=gherkin-bdd-introduction');
     expect(result).toContain('自分で書くのは大変');
@@ -23,7 +23,7 @@ describe('technical cluster PM on Rails CTA migration', () => {
     const result = replaceTechnicalClusterCta(source, /never-match/, 'ears-gherkin-workflow');
 
     expect(result.status).toBe('bridge-marker');
-    expect(result.content).toContain('https://pmonrails.com/');
+    expect(result.content).toContain('https://pmonrails.com/waitlist?');
     expect(result.content).not.toContain('{{BRIDGE_CTA}}');
   });
 
@@ -36,7 +36,7 @@ describe('technical cluster PM on Rails CTA migration', () => {
     );
 
     expect(result.status).toBe('hardcoded-cta');
-    expect(result.content).toContain('https://pmonrails.com/');
+    expect(result.content).toContain('https://pmonrails.com/waitlist?');
     expect(result.content).not.toContain('/contact');
   });
 });
