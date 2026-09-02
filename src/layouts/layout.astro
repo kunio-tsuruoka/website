@@ -1,5 +1,6 @@
 ---
 // src/layouts/layout.astro
+import { normalizeBeeklePageTitle } from '@/lib/seo-title';
 import '@/styles/global.css';
 import Clarity from '../components/analytics/clarity.astro';
 import GA4 from '../components/analytics/ga4.astro';
@@ -21,7 +22,7 @@ interface Props {
 const { title, description, canonical, ogImage, ogType, publishedTime, modifiedTime, noindex } =
   Astro.props;
 
-const fullTitle = title.includes('Beekle') ? title : `${title} | Beekle`;
+const fullTitle = normalizeBeeklePageTitle(title);
 ---
 
 <!DOCTYPE html>

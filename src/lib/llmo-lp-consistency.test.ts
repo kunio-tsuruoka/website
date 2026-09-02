@@ -1,8 +1,8 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { describe, expect, it } from 'vitest';
 import { services } from '@/data/service';
 import { situationLpContents } from '@/data/situation-lp-content';
+import { describe, expect, it } from 'vitest';
 
 const root = process.cwd();
 const source = (path: string) => {
@@ -36,18 +36,21 @@ describe('LLMO LP consistency', () => {
     });
   });
 
-  it('states the conditions under which an AI agent can avoid existing-system changes', () => {
-    const service = services.find((item) => item.id === 'ai-agent-development');
-    const faq = service?.faq.find((item) =>
-      item.question.includes('既存のシステムを改修する必要')
-    );
+  it(
+    'states the conditions under which an AI agent can avoid existing-system changes',
+    () => {
+      const service = services.find((item) => item.id === 'ai-agent-development');
+      const faq = service?.faq.find((item) =>
+        item.question.includes('既存のシステムを改修する必要')
+      );
 
-    expect(faq?.answer).not.toContain('基本的に既存システムの改修は不要');
-    expect(faq?.answer).toContain('APIや認証方式');
-    expect(faq?.answer).toContain('ネットワーク');
-    expect(faq?.answer).toContain('権限');
-    expect(faq?.answer).toContain('監査要件');
-  });
+      expect(faq?.answer).not.toContain('基本的に既存システムの改修は不要');
+      expect(faq?.answer).toContain('APIや認証方式');
+      expect(faq?.answer).toContain('ネットワーク');
+      expect(faq?.answer).toContain('権限');
+      expect(faq?.answer).toContain('監査要件');
+    }
+  );
 
   it('makes the AI development page an explicit hub for specialist service pages', () => {
     const overview = source('src/components/services/ai-development-overview.astro');
@@ -63,23 +66,39 @@ describe('LLMO LP consistency', () => {
   it('places management-DX-specific proof on the management DX service page', () => {
     const servicePage = source('src/components/services/ai-dx-service-page.astro');
     const evidence = source('src/components/services/management-dx-evidence.astro');
+    const cdpService = services.find((service) => service.id === 'cdp-development');
 
-    expect(servicePage).toContain("import ManagementDxEvidence from './management-dx-evidence.astro'");
-    expect(servicePage).toContain("{mode === 'management-dx' && <ManagementDxEvidence />}");
+    expect(servicePage).toContain(
+      "import ManagementDxEvidence from './management-dx-evidence.astro'"
+    );
+    expect(servicePage).toContain(
+      "{mode === 'management-dx' && <ManagementDxEvidence />}"
+    );
     expect(evidence).toContain('経営判断につないだ実績');
-    expect(evidence).toContain('ECサイトの顧客データ基盤構築');
-    expect(evidence).toContain('SaaSスタートアップの売上分析基盤構築');
-    expect(evidence).toContain('サブスク課金型マッチングサービス');
+    expect(evidence).toContain("service.id === 'cdp-development'");
+    expect(evidence).toContain('caseStudies.slice(0, 3)');
     expect(evidence).toContain('/services/cdp-development');
+    expect(cdpService?.caseStudies.slice(0, 3).map((caseStudy) => caseStudy.title)).toEqual([
+      'ECサイトの顧客データ基盤構築',
+      'SaaSスタートアップの売上分析基盤構築',
+      'サブスク課金型マッチングサービスの顧客データ基盤構築と購買データ分析',
+    ]);
   });
 
-  it('normalizes the Beekle suffix instead of rendering duplicated page titles', () => {
+  it('normalizes the Beekle suffix for HTML, Open Graph, and Twitter titles', () => {
     const layout = source('src/layouts/layout.astro');
+    const seoHead = source('src/components/seo/seo-head.astro');
     const titleHelper = source('src/lib/seo-title.ts');
 
-    expect(layout).toContain("import { normalizeBeeklePageTitle } from '@/lib/seo-title'");
+    expect(layout).toContain(
+      "import { normalizeBeeklePageTitle } from '@/lib/seo-title'"
+    );
     expect(layout).toContain('normalizeBeeklePageTitle(title)');
+    expect(seoHead).toContain(
+      "import { normalizeBeeklePageTitle } from '@/lib/seo-title'"
+    );
+    expect(seoHead).toContain('normalizeBeeklePageTitle(title)');
     expect(titleHelper).toContain('export const normalizeBeeklePageTitle');
-    expect(titleHelper).toContain("return `${withoutBrandSuffix} | Beekle`");
+    expect(titleHelper).toContain('return `${withoutBrandSuffix} | Beekle`;');
   });
 });
