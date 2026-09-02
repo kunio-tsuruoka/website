@@ -72,12 +72,12 @@ describe('service page copy', () => {
     expect(ragPricingPhases).toEqual([
       {
         phase: '検証・PoC',
-        price: '80万〜250万円',
+        price: '200万〜500万円',
         scope: '実データで検索方式、回答品質、権限、更新方法を検証',
       },
       {
         phase: '本番開発',
-        price: '500万〜1,500万円',
+        price: '800万〜2,000万円',
         scope: '検索基盤、画面、認証、権限、ログ、既存システム連携まで実装',
       },
       {
