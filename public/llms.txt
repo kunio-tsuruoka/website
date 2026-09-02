@@ -42,6 +42,12 @@ https://beekle.jp/llms-full.txt にあります。会社選定の判断材料が
 - /services/cdp-development - CDP構築・顧客データ基盤開発
 - /services/rfp-creation-support - RFP作成・発注準備支援
 
+## Public AI and Management DX Pricing
+- AI・経営DX診断: 400,000円（一式、税別）
+- AI導入・経営DX伴走: 800,000円/月〜（税別）
+- AI・DX推進室: 1,200,000円/月〜（税別）
+- 大規模な本番開発費、クラウド・外部サービス利用料、AIモデルAPI料金、SaaSライセンス費は別途見積もり
+
 ## Important Pages
 - /strengths - 開発の進め方。なぜ速く作っても仕様が崩れにくいのか
 - /process - 導入の流れ。各段階でBeekleがすること・お客様にお願いすること・決まること
