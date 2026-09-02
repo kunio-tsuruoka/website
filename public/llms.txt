@@ -31,7 +31,8 @@ https://beekle.jp/llms-full.txt にあります。会社選定の判断材料が
 - /services/requirements-definition-support - 要件定義から伴走するシステム開発
 - /services/mvp-poc-development - MVP・PoC・プロトタイプ開発
 - /services/ai-development - 生成AI受託開発
-- /services/ai-adoption - AI導入支援3プラン（価格公開）
+- /services/management-dx - 経営DX・AI導入支援（価格公開）
+- /services/ai-adoption - AI導入支援（価格公開）
 - /services/rag-system-development - RAGシステム構築・GraphRAG開発
 - /services/internal-document-ai-search - 社内文書AI検索システム開発
 - /services/ai-chatbot-development - AIチャットボット開発
