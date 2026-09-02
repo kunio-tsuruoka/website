@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { aiServicePageConfig } from './ai-service-page-config';
 import {
@@ -24,15 +24,18 @@ describe('service page copy', () => {
     const definition =
       '株式会社Beekleは、社内文書や業務データを活用したい企業向けに、RAG・ハイブリッド検索・GraphRAGを、クラウド環境で要件定義から本番運用まで構築する開発会社です。';
     const deploymentSource = readFileSync(
-      fileURLToPath(
-        new URL('../components/services/service-rag-deployment-modes.astro', import.meta.url)
-      ),
+      resolve(process.cwd(), 'src/components/services/service-rag-deployment-modes.astro'),
+      'utf8'
+    );
+    const dataSource = readFileSync(
+      resolve(process.cwd(), 'src/data/rag-service-page.ts'),
       'utf8'
     );
     const copy = JSON.stringify({
       definition: RAG_SERVICE_DEFINITION,
       deploymentModes: ragDeploymentModes,
       deploymentSource,
+      dataSource,
     });
 
     expect(RAG_SERVICE_DEFINITION).toBe(definition);
