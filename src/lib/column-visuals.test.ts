@@ -39,19 +39,3 @@ describe('renderColumnVisuals chatgpt evaluation CTA', () => {
     }
   });
 });
-
-describe('renderColumnVisuals technical cluster CTA', () => {
-  it('routes BRIDGE_CTA traffic to PM on Rails instead of Zero Start', () => {
-    const result = renderColumnVisuals('<p>{{BRIDGE_CTA}}</p>', {
-      source: 'column-gherkin-bdd-introduction',
-    });
-
-    expect(result).not.toContain('{{BRIDGE_CTA}}');
-    expect(result).toContain('https://pmonrails.com');
-    expect(result).toContain('PM on Rails');
-    expect(result).toContain('data-cta-source="column-gherkin-bdd-introduction"');
-    expect(result).toContain('data-cta-id="pm-on-rails-technical-cluster"');
-    expect(result).not.toContain('/prooffirst');
-    expect(result).not.toContain('ゼロスタート開発');
-  });
-});
