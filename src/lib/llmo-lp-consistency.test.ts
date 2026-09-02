@@ -54,7 +54,7 @@ describe('LLMO LP consistency', () => {
     expect(overview).toContain("href: '/services/rag-system-development'");
     expect(overview).toContain("href: '/services/ocr-ai-development'");
     expect(overview).toContain("href: '/services/ai-agent-development'");
-    expect(overview).toContain("href: '/services/management-dx'");
+    expect(overview).toContain("href: '/services/ai-chatbot-development'");
     expect(overview).toContain('専門ページで詳しく見る');
   });
 
