@@ -2,7 +2,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-const readSource = (path: string) => readFileSync(resolve(process.cwd(), path), 'utf8');
+const readSource = (path: string) =>
+  readFileSync(resolve(process.cwd(), path), 'utf8');
 
 describe('RAG service procurement page', () => {
   it('renders a dedicated service route in procurement-decision order', () => {
@@ -30,13 +31,17 @@ describe('RAG service procurement page', () => {
   it('reuses canonical, Service JSON-LD, FAQ JSON-LD and CTA tracking', () => {
     const page = readSource('src/pages/services/rag-system-development.astro');
 
-    expect(page).toContain("const serviceUrl = `${siteUrl}/services/rag-system-development`");
+    expect(page).toContain(
+      'const serviceUrl = `${siteUrl}/services/rag-system-development`'
+    );
     expect(page).toContain('canonical={serviceUrl}');
     expect(page).toContain('type="service"');
     expect(page).toContain('serviceDescription: service.description');
     expect(page).toContain('type="faq"');
     expect(page).toContain('faqs: service.faq.map');
-    expect(page).toContain('data-cta-source="services-rag-system-development-final"');
+    expect(page).toContain(
+      'data-cta-source="services-rag-system-development-final"'
+    );
     expect(page).toContain('data-cta-id="contact-rag-system-development"');
     expect(page).not.toContain('ナレナレ');
   });
@@ -46,7 +51,9 @@ describe('RAG service procurement page', () => {
 
     expect(pricing).toContain('ragPricingPhases.map');
     expect(pricing).toContain('RAG構築の費用目安');
-    expect(pricing).toContain('data-cta-source="services-rag-system-development-pricing"');
+    expect(pricing).toContain(
+      'data-cta-source="services-rag-system-development-pricing"'
+    );
     expect(pricing).toContain('data-cta-id="contact-rag-system-development"');
   });
 
