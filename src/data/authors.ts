@@ -97,4 +97,6 @@ export const slugReviewerMap: Record<string, string> = {
   'ears-gherkin-workflow': 'nakamura',
   'gherkin-bdd-introduction': 'nakamura',
   'ears-requirements-syntax-guide': 'nakamura',
+  // 仕様駆動開発(SDD)も同じ理由で中村。実装技術ではなく「何を決めてから作るか」の話。
+  'spec-driven-development': 'nakamura',
 };
