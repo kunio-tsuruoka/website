@@ -143,11 +143,11 @@ describe('site-wide editorial design foundations', () => {
     }
   });
 
-  it('keeps service heroes and the AI adoption page in the editorial system', () => {
+  it('keeps service heroes and the shared AI DX page in the editorial system', () => {
     const serviceHero = readSource('../components/services/service-hero.astro');
-    const aiAdoption = readSource('../pages/services/ai-adoption.astro');
+    const aiDxServicePage = readSource('../components/services/ai-dx-service-page.astro');
 
-    for (const source of [serviceHero, aiAdoption]) {
+    for (const source of [serviceHero, aiDxServicePage]) {
       expect(source).not.toContain('bg-primary-500 py-20');
       expect(source).not.toMatch(/rounded-[tblr][a-z-]*-(2xl|3xl)/);
       expect(source).not.toContain('rounded-3xl');
@@ -159,10 +159,10 @@ describe('site-wide editorial design foundations', () => {
     expect(serviceHero).toContain('border-b border-neutral-300 bg-neutral-100');
     expect(serviceHero).not.toContain('<img');
     expect(serviceHero).toContain('判断メモ');
-    expect(aiAdoption).toContain('border-b border-neutral-300 bg-neutral-100');
-    expect(aiAdoption).toContain('AI導入判断メモ');
-    expect(aiAdoption).toContain('今やらない判断');
-    expect(aiAdoption).toContain('PoC後に本番化しない判断もできますか？');
+    expect(aiDxServicePage).toContain('border-b border-neutral-300 bg-neutral-100');
+    expect(aiDxServicePage).toContain('AI導入判断メモ');
+    expect(aiDxServicePage).toContain('今やらない判断');
+    expect(aiDxServicePage).toContain('PoC後に本番化しない判断もできますか？');
   });
 
   it('keeps proof-first and partner landing pages out of the old decorative style', () => {
