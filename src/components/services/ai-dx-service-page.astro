@@ -3,6 +3,7 @@ import { Header } from '@/components/header';
 import JsonLd from '@/components/seo/json-ld.astro';
 import { Section, SectionHeader } from '@/components/ui';
 import Layout from '../../layouts/layout.astro';
+import ManagementDxEvidence from './management-dx-evidence.astro';
 
 type ServiceMode = 'ai-adoption' | 'management-dx';
 
@@ -389,6 +390,8 @@ const faqs = [
         ))}
       </div>
     </Section>
+
+    {mode === 'management-dx' && <ManagementDxEvidence />}
 
     <Section variant="white" padding="lg" id="plans">
       <SectionHeader

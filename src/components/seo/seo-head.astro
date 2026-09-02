@@ -2,6 +2,7 @@
 // src/components/seo/seo-head.astro
 // 再利用可能なSEOメタタグコンポーネント
 
+import { normalizeBeeklePageTitle } from '@/lib/seo-title';
 import { companyPositioning } from '../../data/company';
 
 export interface Props {
@@ -27,7 +28,7 @@ const {
 } = Astro.props;
 
 const siteUrl = 'https://beekle.jp';
-const fullTitle = title.includes('Beekle') ? title : `${title} | Beekle`;
+const fullTitle = normalizeBeeklePageTitle(title);
 const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).href;
 const ogImageUrl = ogImage.startsWith('http') ? ogImage : new URL(ogImage, siteUrl).href;
 ---

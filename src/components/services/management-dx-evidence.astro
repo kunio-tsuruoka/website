@@ -1,0 +1,67 @@
+---
+import { services } from '@/data/service';
+
+const cdpService = services.find((service) => service.id === 'cdp-development');
+const caseStudies = cdpService?.caseStudies.slice(0, 3) ?? [];
+---
+
+<section
+  class="border-y border-neutral-200 bg-white py-16 md:py-24"
+  aria-labelledby="management-dx-evidence-title"
+>
+  <div class="container mx-auto px-8 lg:px-12">
+    <div class="mx-auto max-w-6xl">
+      <div class="max-w-3xl">
+        <p class="text-sm font-bold tracking-wide text-primary-600">MANAGEMENT DATA PROOF</p>
+        <h2
+          id="management-dx-evidence-title"
+          class="mt-3 text-3xl font-bold leading-tight text-accent-950 md:text-4xl"
+        >
+          経営判断につないだ実績
+        </h2>
+        <p class="mt-4 text-base leading-relaxed text-neutral-700 md:text-lg">
+          顧客データを集めるだけで終わらせず、売上分析、顧客分類、施策改善など、次の判断に使える状態まで構築した事例です。
+        </p>
+      </div>
+
+      <div class="mt-10 grid gap-6 lg:grid-cols-3">
+        {caseStudies.map((caseStudy) => (
+          <article class="rounded-lg border border-neutral-200 bg-neutral-50 p-6 md:p-7">
+            <p class="text-xs font-bold tracking-wide text-primary-600">顧客・売上データ基盤</p>
+            <h3 class="mt-2 text-xl font-bold leading-snug text-accent-950">
+              {caseStudy.title}
+            </h3>
+            <dl class="mt-5 space-y-4 text-sm leading-relaxed">
+              <div>
+                <dt class="font-bold text-primary-700">課題</dt>
+                <dd class="mt-1 text-neutral-700">{caseStudy.challenge}</dd>
+              </div>
+              <div>
+                <dt class="font-bold text-primary-700">対応</dt>
+                <dd class="mt-1 text-neutral-700">{caseStudy.solution}</dd>
+              </div>
+            </dl>
+            <ul class="mt-5 space-y-2 border-t border-neutral-200 pt-5">
+              {caseStudy.results.map((result) => (
+                <li class="flex gap-2 text-sm leading-relaxed text-neutral-700">
+                  <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-500"></span>
+                  <span>{result}</span>
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+
+      <a
+        href="/services/cdp-development"
+        data-cta-source="management-dx-evidence"
+        data-cta-id="cdp-development"
+        class="mt-8 inline-flex min-h-[48px] items-center font-bold text-primary-600 transition hover:text-primary-700"
+      >
+        顧客データ基盤の詳細を見る
+        <span class="ml-2" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
