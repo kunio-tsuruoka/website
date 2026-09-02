@@ -7,7 +7,7 @@ export function buildPmOnRailsCta(slug) {
     utm_campaign: 'technical_cluster',
     utm_content: slug,
   });
-  const href = `https://pmonrails.com/?${params.toString()}`;
+  const href = `https://pmonrails.com/waitlist?${params.toString()}`;
 
   return [
     '<h2>GherkinやEARSを毎回自分で書くのは、正直かなり大変です</h2>',
