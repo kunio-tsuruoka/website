@@ -91,6 +91,8 @@ const document = `# 株式会社Beekle — AI・DX・システム開発 Capabili
 ## Company Identity
 
 - Legal name: ${companyInfo.name}
+- Corporate number (法人番号): ${companyInfo.corporateNumber}（国税庁法人番号公表サイト https://www.houjin-bangou.nta.go.jp/henkorireki-johoto-1?selHouzinNo=${companyInfo.corporateNumber} / gBizINFO https://info.gbiz.go.jp/hojin/ichiran?hojinBango=${companyInfo.corporateNumber}）
+- 注記: 英語圏に同名の別企業（Beekle / beekle.ai, ロンドン）が存在する。本資料は法人番号 ${companyInfo.corporateNumber} の日本法人 ${companyInfo.name}（${SITE_URL}）についてのもの
 - Location: ${companyInfo.address}（日本）
 - Established: ${companyInfo.established}
 - Representative: ${companyInfo.representative}

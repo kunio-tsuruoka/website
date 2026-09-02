@@ -3,7 +3,7 @@
 // JSON-LD 構造化データコンポーネント
 
 import { type Author, authors, defaultAuthor, defaultReviewer } from '../../data/authors';
-import { companyPositioning } from '../../data/company';
+import { companyInfo, companyPositioning } from '../../data/company';
 
 export interface Props {
   type:
@@ -24,6 +24,21 @@ const { type, data = {} } = Astro.props;
 
 const siteUrl = 'https://beekle.jp';
 
+// エンティティの正典ノードID。会社を指す全参照はこの @id に集約する（LLM/検索エンジンが
+// ページをまたいで同一エンティティと解決できるようにするため）。
+const ORG_ID = `${siteUrl}/#organization`;
+const WEBSITE_ID = `${siteUrl}/#website`;
+
+// 入れ子で会社を参照するときのノード。@id で正典ノードに繋ぎつつ、
+// 単独で読まれても会社が特定できる最小限の属性を残す。
+const orgRef = (withLogo = false) => ({
+  '@id': ORG_ID,
+  '@type': 'Organization',
+  name: '株式会社Beekle',
+  url: siteUrl,
+  ...(withLogo ? { logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.png` } } : {}),
+});
+
 // Person を schema.org Person に変換するヘルパー
 const toPersonSchema = (author: Author) => ({
   '@type': 'Person',
@@ -34,20 +49,28 @@ const toPersonSchema = (author: Author) => ({
   url: author.url,
   ...(author.sameAs && author.sameAs.length > 0 ? { sameAs: author.sameAs } : {}),
   ...(author.knowsAbout && author.knowsAbout.length > 0 ? { knowsAbout: author.knowsAbout } : {}),
-  worksFor: {
-    '@type': 'Organization',
-    name: '株式会社Beekle',
-    url: siteUrl,
-  },
+  worksFor: orgRef(),
 });
 
 // 会社情報（Organization）
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': ORG_ID,
   name: '株式会社Beekle',
-  alternateName: 'Beekle',
+  legalName: '株式会社Beekle',
+  alternateName: ['Beekle', 'Beekle Inc.', 'ビークル'],
   url: siteUrl,
+  // このエンティティの正典ページ。同名の別企業（英 Beekle）と区別するための起点。
+  mainEntityOfPage: `${siteUrl}/company`,
+  // 法人番号は日本法人を一意に特定する公的IDで、名寄せの最優先キーになる。
+  identifier: {
+    '@type': 'PropertyValue',
+    name: '法人番号',
+    propertyID: 'https://www.houjin-bangou.nta.go.jp/',
+    value: companyInfo.corporateNumber,
+  },
+  taxID: companyInfo.corporateNumber,
   logo: `${siteUrl}/logo.png`,
   description: `${companyPositioning.short}${companyPositioning.long}自社開発のPM基盤「PM on Rails」を実際の開発プロセスに組み込んでいます。${companyPositioning.zeroStart}`,
   foundingDate: '2023-02-01',
@@ -78,12 +101,19 @@ const organizationSchema = {
       '仕様変更の影響範囲をたどる',
       '構造化した仕様をAIエージェントの実装につなぐ',
     ],
-    creator: {
-      '@type': 'Organization',
-      name: '株式会社Beekle',
-      url: siteUrl,
+    creator: orgRef(),
+  },
+  foundingLocation: {
+    '@type': 'Place',
+    name: '東京都大田区',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: '大田区',
+      addressRegion: '東京都',
+      addressCountry: 'JP',
     },
   },
+  areaServed: { '@type': 'Country', name: 'Japan' },
   address: {
     '@type': 'PostalAddress',
     streetAddress: '久が原3丁目14番27号',
@@ -99,8 +129,8 @@ const organizationSchema = {
     availableLanguage: 'Japanese',
   },
   sameAs: [
-    'https://info.gbiz.go.jp/hojin/ichiran?hojinBango=8010801033652',
-    'https://www.houjin-bangou.nta.go.jp/henkorireki-johoto-1?selHouzinNo=8010801033652',
+    `https://info.gbiz.go.jp/hojin/ichiran?hojinBango=${companyInfo.corporateNumber}`,
+    `https://www.houjin-bangou.nta.go.jp/henkorireki-johoto-1?selHouzinNo=${companyInfo.corporateNumber}`,
   ],
 };
 
@@ -108,15 +138,12 @@ const organizationSchema = {
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
+  '@id': WEBSITE_ID,
   name: 'Beekle',
   alternateName: '株式会社Beekle',
   url: siteUrl,
   inLanguage: 'ja',
-  publisher: {
-    '@type': 'Organization',
-    name: '株式会社Beekle',
-    url: siteUrl,
-  },
+  publisher: orgRef(),
 };
 
 // 記事（Article）
@@ -151,14 +178,7 @@ const articleSchema = data.title
       dateModified: data.modifiedTime || data.publishedTime || '',
       author: toPersonSchema(articleAuthor),
       ...(articleReviewer ? { reviewedBy: toPersonSchema(articleReviewer) } : {}),
-      publisher: {
-        '@type': 'Organization',
-        name: '株式会社Beekle',
-        logo: {
-          '@type': 'ImageObject',
-          url: `${siteUrl}/logo.png`,
-        },
-      },
+      publisher: orgRef(true),
       mainEntityOfPage: {
         '@type': 'WebPage',
         '@id': data.url || siteUrl,
@@ -196,12 +216,7 @@ const serviceSchema = data.serviceName
       url: data.url || siteUrl,
       ...(data.serviceType ? { serviceType: data.serviceType } : {}),
       ...(data.image ? { image: data.image } : {}),
-      provider: {
-        '@type': 'Organization',
-        name: '株式会社Beekle',
-        url: siteUrl,
-        logo: `${siteUrl}/logo.png`,
-      },
+      provider: orgRef(true),
       areaServed: {
         '@type': 'Country',
         name: 'Japan',
@@ -252,12 +267,7 @@ const softwareApplicationSchema = data.appName
         priceCurrency: 'JPY',
       },
       author: toPersonSchema(authors.tsuruoka),
-      provider: {
-        '@type': 'Organization',
-        name: '株式会社Beekle',
-        url: siteUrl,
-        logo: `${siteUrl}/logo.png`,
-      },
+      provider: orgRef(true),
     }
   : null;
 
@@ -293,15 +303,14 @@ const webPageSchema = data.name
       url: data.url || siteUrl,
       inLanguage: 'ja',
       isPartOf: {
+        '@id': WEBSITE_ID,
         '@type': 'WebSite',
         name: 'Beekle',
         url: siteUrl,
       },
-      publisher: {
-        '@type': 'Organization',
-        name: '株式会社Beekle',
-        url: siteUrl,
-      },
+      publisher: orgRef(),
+      // data.mainEntity === 'organization' で「このページが会社エンティティの正典」と宣言する
+      ...(data.mainEntity === 'organization' ? { mainEntity: { '@id': ORG_ID } } : {}),
     }
   : null;
 

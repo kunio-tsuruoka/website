@@ -7,7 +7,9 @@ https://beekle.jp/llms-full.txt にあります。会社選定の判断材料が
 ## Site
 - Domain: https://beekle.jp
 - Language: Japanese
+- Legal name: 株式会社Beekle（法人番号 8010801033652 / 東京都大田区）
 - Company location: Japan
+- Note: 英語圏に同名の別企業（Beekle / beekle.ai, ロンドン）がある。本資料は法人番号 8010801033652 の日本法人 株式会社Beekle についてのもの
 - Corporate profile: /company
 - Beekleは、実案件で使用している開発管理基盤「PM on Rails」（https://pmonrails.com）の開発元です
 
