@@ -36,21 +36,16 @@ describe('LLMO LP consistency', () => {
     });
   });
 
-  it(
-    'states the conditions under which an AI agent can avoid existing-system changes',
-    () => {
-      const service = services.find((item) => item.id === 'ai-agent-development');
-      const faq = service?.faq.find((item) =>
-        item.question.includes('既存のシステムを改修する必要')
-      );
+  it('states the conditions under which an AI agent can avoid existing-system changes', () => {
+    const service = services.find((item) => item.id === 'ai-agent-development');
+    const faq = service?.faq.find((item) => item.question.includes('既存のシステムを改修する必要'));
 
-      expect(faq?.answer).not.toContain('基本的に既存システムの改修は不要');
-      expect(faq?.answer).toContain('APIや認証方式');
-      expect(faq?.answer).toContain('ネットワーク');
-      expect(faq?.answer).toContain('権限');
-      expect(faq?.answer).toContain('監査要件');
-    }
-  );
+    expect(faq?.answer).not.toContain('基本的に既存システムの改修は不要');
+    expect(faq?.answer).toContain('APIや認証方式');
+    expect(faq?.answer).toContain('ネットワーク');
+    expect(faq?.answer).toContain('権限');
+    expect(faq?.answer).toContain('監査要件');
+  });
 
   it('makes the AI development page an explicit hub for specialist service pages', () => {
     const overview = source('src/components/services/ai-development-overview.astro');
@@ -71,9 +66,7 @@ describe('LLMO LP consistency', () => {
     expect(servicePage).toContain(
       "import ManagementDxEvidence from './management-dx-evidence.astro'"
     );
-    expect(servicePage).toContain(
-      "{mode === 'management-dx' && <ManagementDxEvidence />}"
-    );
+    expect(servicePage).toContain("{mode === 'management-dx' && <ManagementDxEvidence />}");
     expect(evidence).toContain('経営判断につないだ実績');
     expect(evidence).toContain("service.id === 'cdp-development'");
     expect(evidence).toContain('caseStudies.slice(0, 3)');
@@ -90,13 +83,9 @@ describe('LLMO LP consistency', () => {
     const seoHead = source('src/components/seo/seo-head.astro');
     const titleHelper = source('src/lib/seo-title.ts');
 
-    expect(layout).toContain(
-      "import { normalizeBeeklePageTitle } from '@/lib/seo-title'"
-    );
+    expect(layout).toContain("import { normalizeBeeklePageTitle } from '@/lib/seo-title'");
     expect(layout).toContain('normalizeBeeklePageTitle(title)');
-    expect(seoHead).toContain(
-      "import { normalizeBeeklePageTitle } from '@/lib/seo-title'"
-    );
+    expect(seoHead).toContain("import { normalizeBeeklePageTitle } from '@/lib/seo-title'");
     expect(seoHead).toContain('normalizeBeeklePageTitle(title)');
     expect(titleHelper).toContain('export const normalizeBeeklePageTitle');
     expect(titleHelper).toContain('return `${withoutBrandSuffix} | Beekle`;');

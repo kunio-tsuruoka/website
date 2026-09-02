@@ -60,7 +60,7 @@ export const situationLpContents: SituationLpContent[] = [
     caseStudyRefs: [
       { serviceId: 'requirements-definition-support', caseIndex: 0 },
       { serviceId: 'mvp-poc-development', caseIndex: 0 },
-      { serviceId: 'ai-development', caseIndex: 0 },
+      { serviceId: 'web-mobile-development', caseIndex: 2 },
     ],
     deepDiveLinks: [
       {
@@ -182,9 +182,9 @@ export const situationLpContents: SituationLpContent[] = [
       },
     ],
     caseStudyRefs: [
-      { serviceId: 'web-mobile-development', caseIndex: 0 },
+      { serviceId: 'web-mobile-development', caseIndex: 2 },
+      { serviceId: 'web-mobile-development', caseIndex: 3 },
       { serviceId: 'requirements-definition-support', caseIndex: 0 },
-      { serviceId: 'ai-development', caseIndex: 0 },
     ],
     deepDiveLinks: [
       {
@@ -366,8 +366,8 @@ export const situationLpContents: SituationLpContent[] = [
     ],
     caseStudyRefs: [
       { serviceId: 'cdp-development', caseIndex: 0 },
-      { serviceId: 'web-mobile-development', caseIndex: 0 },
-      { serviceId: 'ai-development', caseIndex: 0 },
+      { serviceId: 'cdp-development', caseIndex: 1 },
+      { serviceId: 'cdp-development', caseIndex: 2 },
     ],
     deepDiveLinks: [
       {
