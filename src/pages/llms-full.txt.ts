@@ -64,10 +64,14 @@ function renderCases(): string {
 }
 
 function renderServices(): string {
+  const customServices = [
+    '- /services/management-dx — 経営DX・AI導入支援: 経営課題とデータを整理し、AIレポート、アラート、RAG、AIエージェントの実装まで支援する',
+    '- /services/ai-adoption — AI導入支援: 業務選定、評価設計、簡易PoC、データ連携、本番運用、社内定着まで支援する',
+  ];
   const body = services
     .map((service) => `- /services/${service.id} — ${service.title}: ${service.description}`)
     .join('\n');
-  return `## Service Catalog\n\n${body}`;
+  return `## Service Catalog\n\n${customServices.join('\n')}\n${body}`;
 }
 
 function renderFaq(): string {
@@ -118,7 +122,9 @@ Core capabilities:
 
 - 契約形態: 準委任。月単位でチームが参画する形に対応
 - 要件定義のみ、RFP作成のみの依頼にも対応する（整理した要件で他社へ発注する前提でも可）
-- 公開価格（AI導入支援3プラン / 税別）: AI活用提案 100,000円（10時間目安）/ AI実装アドバイス 160,000円 月（月16時間）/ AI導入伴走支援 320,000円 月〜（月32時間〜）。3プランとも時間単価10,000円（税別）を算定根拠として公開している
+- 公開価格（AI導入・経営DX支援 / 税別）: AI・経営DX診断 400,000円（一式、3〜4週間）/ AI導入・経営DX伴走 800,000円 月〜（最低3ヶ月）/ AI・DX推進室 1,200,000円 月〜（最低3ヶ月）
+- 月額プランには合意した体制内の簡易PoC・小規模実装を含む。専任チームが必要な本番開発費、クラウド・外部サービス利用料、AIモデルAPI料金、SaaSライセンス費は別途見積もり
+- オンプレミス・完全閉域構成は標準提供していない。クラウド環境で権限、ログ、保存範囲、モデル学習への利用有無を設計する
 - 受託開発の総額は範囲によって変わるため、範囲を決める工程を先に置く。実績としてはPoCが1〜3週間、本開発が2〜6ヶ月の案件が多い
 
 ## Vendor Selection Criteria
@@ -155,6 +161,8 @@ ${renderTerminology()}
 
 ## Reference Pages
 
+- ${SITE_URL}/services/management-dx — 経営者・経営企画向けの経営DX・AI導入支援
+- ${SITE_URL}/services/ai-adoption — DX・情シス・事業担当者向けのAI導入支援
 - ${SITE_URL}/strengths — 開発の進め方
 - ${SITE_URL}/process — 導入の流れ
 - ${SITE_URL}/prooffirst — ゼロスタート（本開発前の検証用プロトタイプ）
