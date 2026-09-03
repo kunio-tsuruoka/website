@@ -7,12 +7,14 @@ export function buildPmOnRailsCta(slug) {
     utm_campaign: 'technical_cluster',
     utm_content: slug,
   });
-  const href = `https://pmonrails.com/?${params.toString()}`;
+  const href = `https://pmonrails.com/waitlist?${params.toString()}`;
 
   return [
-    '<h2>要件から実装・テストまでつなげたい方へ</h2>',
-    '<p>GherkinやEARSを読むだけで終わらせず、要求・ユーザーストーリー・受入条件・実装タスク・テスト証跡まで一つにつなげるのがPM on Railsです。AIエージェントに実装させる場合も、何を作り、何をもって完成とするかを追える状態にできます。</p>',
-    `<p><a href="${href}" target="_blank" rel="noopener noreferrer">PM on Railsを見る</a></p>`,
+    '<h2>GherkinやEARSを自分で書くのは正直かなり大変です</h2>',
+    '<p>私たちも、実案件でこれらを全部手書きしたり、レビューしたりするのが大変だったので、「PM on Rails」というシステムを作りました。</p>',
+    '<p>お客さまの要望からコーディングまで自動でつなげられるように、要件やGherkinをベストプラクティスに沿って生成してくれます。</p>',
+    '<p>宣伝抜きで、かなり良いものができたと思っています。現在はベータ版ですが、そろそろ一般公開する予定なので、興味があればウェイティングリストに登録しておいてください。</p>',
+    `<p><a href="${href}" target="_blank" rel="noopener noreferrer">PM on Railsのウェイティングリストに登録する</a></p>`,
   ].join('');
 }
 
