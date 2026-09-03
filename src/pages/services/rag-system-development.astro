@@ -1,0 +1,192 @@
+---
+import { AskAiButton } from '@/components/ask-ai-button';
+import { AskAiSection } from '@/components/ask-ai-section';
+import { Header } from '@/components/header';
+import JsonLd from '@/components/seo/json-ld.astro';
+import ServiceCaseStudies from '@/components/services/service-case-studies.astro';
+import ServiceContactCta from '@/components/services/service-contact-cta.astro';
+import ServiceFaq from '@/components/services/service-faq.astro';
+import ServiceFeatures from '@/components/services/service-features.astro';
+import ServiceHero from '@/components/services/service-hero.astro';
+import ServicePainPoints from '@/components/services/service-pain-points.astro';
+import ServiceRagDeploymentModes from '@/components/services/service-rag-deployment-modes.astro';
+import ServiceRagPricing from '@/components/services/service-rag-pricing.astro';
+import ServiceSolutions from '@/components/services/service-solutions.astro';
+import ServiceWhyBeekle from '@/components/services/service-why-beekle.astro';
+import { Section, SectionHeader } from '@/components/ui';
+import { ragService, ragServicePageConfig } from '@/data/rag-service-page';
+import Layout from '../../layouts/layout.astro';
+
+export const prerender = false;
+
+const service = ragService;
+const siteUrl = 'https://beekle.jp';
+const serviceUrl = `${siteUrl}/services/rag-system-development`;
+const seoTitle = service.seoTitle ?? service.title;
+const seoDescription = service.seoDescription ?? service.description;
+
+const relatedGuides = [
+  {
+    href: '/column/what-is-rag',
+    title: 'RAGの意味と仕組みを確認する',
+    description: 'RAGを導入候補として検討し始めた方向けの基礎解説です。',
+  },
+  {
+    href: '/column/ai-rag-accuracy-graphrag',
+    title: 'RAGの回答精度と評価方法を確認する',
+    description: '回答精度を業務利用の水準まで引き上げる判断材料をまとめています。',
+  },
+  {
+    href: '/knowledge/graphrag-knowledge-search',
+    title: 'Hybrid GraphRAGの実装を確認する',
+    description: 'ベクトル・全文・グラフ等を組み合わせたBeekleの実装内容です。',
+  },
+  {
+    href: '/column/eliminate-work-attribution',
+    title: '属人化と暗黙知の継承方法を確認する',
+    description: '特定の担当者へ知識が集中する状態を解消する進め方です。',
+  },
+] as const;
+---
+
+<Layout title={`${seoTitle} | Beekle`} description={seoDescription} canonical={serviceUrl}>
+  <JsonLd
+    slot="head"
+    type="service"
+    data={{
+      serviceName: service.title,
+      serviceDescription: service.description,
+      url: serviceUrl,
+      serviceType: service.title,
+      image: `${siteUrl}/og-image.png`,
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: service.title, url: '/services/rag-system-development' },
+      ],
+    }}
+  />
+  <JsonLd
+    slot="head"
+    type="faq"
+    data={{
+      faqs: service.faq.map((faq) => ({ question: faq.question, answer: faq.answer })),
+    }}
+  />
+
+  <Header />
+  <main class="bg-neutral-100 pt-20">
+    <ServiceHero service={service} config={ragServicePageConfig} />
+    <ServiceRagDeploymentModes />
+    <ServicePainPoints
+      painPoints={service.painPoints}
+      number="01"
+      title="社内文書検索・属人化・問い合わせ対応・要件管理をRAGで改善"
+      subtitle="BeekleがRAG・GraphRAGを構築する代表的な業務課題"
+    />
+    <ServiceWhyBeekle rtb={ragServicePageConfig.rtb} number="02" />
+    <ServiceCaseStudies
+      caseStudies={service.caseStudies}
+      number="03"
+      title="RAG・GraphRAGを実際に構築した事例"
+      subtitle="Neo4j・Milvus等を使い、検索基盤から業務画面・運用まで担当した実案件"
+    />
+    <ServiceContactCta serviceId={service.id} placement="cases" />
+    <ServiceSolutions
+      solutions={service.solutions}
+      number="04"
+      title="Beekleへ発注できるRAG構築の工程"
+      subtitle="要件、正本、権限を整理し、必要な検索方式を検証して本番運用へつなげます"
+    />
+    <ServiceFeatures
+      features={service.features}
+      number="05"
+      title="検索基盤だけでなく、業務で使うところまで実装"
+      subtitle="認証、権限、引用、評価、データ更新、既存システム連携まで引き受けます"
+    />
+    <ServiceRagPricing />
+
+    <Section variant="lightPurple" padding="lg" decoration="blursPurple">
+      <div class="relative z-10 mx-auto max-w-6xl">
+        <SectionHeader
+          title="方式や導入背景を詳しく確認する"
+          subtitle="サービスページでは発注範囲だけを示し、技術や課題の解説は既存記事に分けています"
+          number="07"
+          label="RELATED GUIDES"
+        />
+        <div class="grid gap-5 md:grid-cols-2">
+          {relatedGuides.map((guide) => (
+            <a
+              href={guide.href}
+              class="group block rounded-lg border border-neutral-200 bg-white p-6 transition-colors hover:border-primary-300"
+            >
+              <h3 class="text-lg font-bold leading-snug text-navy-950 transition-colors group-hover:text-primary-600">
+                {guide.title}
+              </h3>
+              <p class="mt-2 text-sm leading-relaxed text-neutral-600 md:text-base">
+                {guide.description}
+              </p>
+              <span class="mt-4 inline-flex items-center text-sm font-bold text-primary-600">
+                記事を読む
+                <span aria-hidden="true" class="ml-1">→</span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </Section>
+
+    <ServiceFaq faq={service.faq} number="08" />
+
+    <AskAiSection
+      client:visible
+      source="services-rag-system-development-ask-ai"
+      pageTitle={ragServicePageConfig.headline}
+      pageSummary={ragServicePageConfig.heroLead}
+      serviceName={service.title}
+    />
+
+    <section class="relative overflow-hidden bg-navy-950 py-20 md:py-32">
+      <div class="container relative z-10 mx-auto max-w-4xl px-6 text-center md:px-8">
+        <h2 class="text-3xl font-bold text-white md:text-5xl">
+          自社データでRAGが成立するか、発注前に整理しませんか
+        </h2>
+        <p class="mt-6 text-lg leading-relaxed text-white/90 md:text-xl">
+          想定質問、データ、権限、既存環境を伺い、最初に検証する範囲と概算費用をご案内します。
+        </p>
+        <div class="mt-10 flex flex-col items-center justify-center gap-4">
+          <a
+            href="/contact?source=services-rag-system-development-final&intent=rag-system-development"
+            data-cta-source="services-rag-system-development-final"
+            data-cta-id="contact-rag-system-development"
+            class="inline-flex min-h-[56px] items-center justify-center rounded-md bg-white px-6 py-4 text-center text-base font-semibold leading-snug text-accent-950 transition-colors hover:bg-neutral-100 md:px-10 md:py-5 md:text-xl"
+          >
+            自社データでのRAG構築を相談する
+            <svg class="ml-3 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              ></path>
+            </svg>
+          </a>
+          <AskAiButton
+            client:visible
+            source="services-rag-system-development-final"
+            variant="link"
+            tone="dark"
+            pageTitle={ragServicePageConfig.headline}
+            pageSummary="想定質問、データ、権限、既存環境を伺い、最初に検証する範囲と概算費用をご案内します。"
+            serviceName={service.title}
+          />
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

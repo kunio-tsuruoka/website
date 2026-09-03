@@ -1,0 +1,68 @@
+---
+import { SectionHeader } from '@/components/ui';
+import { ragDeploymentModes } from '@/data/rag-service-page';
+---
+
+<section id="deployment-options" class="relative overflow-hidden bg-white py-20 md:py-28">
+  <div class="container relative mx-auto px-6 lg:px-12">
+    <div class="mx-auto max-w-6xl">
+      <SectionHeader
+        client:visible
+        title="クラウド環境でのRAG構築に対応"
+        subtitle="利用中のクラウド、認証、データ保管方針、コスト上限を確認し、業務要件に合う構成を選びます"
+        label="CLOUD DEPLOYMENT"
+      />
+
+      <div class="grid gap-4 md:grid-cols-2">
+        {ragDeploymentModes.map((mode, index) => (
+          <article class="rounded-lg border border-neutral-200 bg-neutral-50 p-6 md:p-7">
+            <div class="flex items-start gap-4">
+              <span class="font-Poppins text-sm font-bold text-primary-500">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <h3 class="text-xl font-bold leading-snug text-navy-950">{mode.title}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-neutral-700 md:text-base">
+                  {mode.description}
+                </p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div class="mt-8 flex flex-col items-start justify-between gap-5 rounded-lg border border-primary-200 bg-primary-50 p-6 md:flex-row md:items-center md:p-8">
+        <div class="max-w-3xl">
+          <h3 class="text-xl font-bold leading-snug text-navy-950">
+            利用するクラウドやモデルが決まっていなくても相談できます
+          </h3>
+          <p class="mt-2 text-sm leading-relaxed text-neutral-700 md:text-base">
+            既存契約、データ保管方針、利用量、必要な回答品質を伺い、Azure OpenAI Service、AWS Bedrock、OpenAI・Anthropic APIから候補を比較して提案します。
+          </p>
+        </div>
+        <a
+          href="/contact?source=services-rag-system-development-deployment&intent=rag-system-development"
+          data-cta-source="services-rag-system-development-deployment"
+          data-cta-id="contact-rag-system-development"
+          class="inline-flex min-h-[52px] w-full shrink-0 items-center justify-center rounded-md bg-primary-500 px-6 py-3 text-center text-sm font-bold leading-snug text-white transition-colors hover:bg-primary-600 md:w-auto md:text-base"
+        >
+          自社のクラウド環境でRAG構成を相談する
+          <svg
+            class="ml-2 h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            ></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
