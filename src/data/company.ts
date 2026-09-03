@@ -11,6 +11,10 @@ export const companyPositioning = {
 
 export const companyInfo = {
   name: '株式会社Beekle',
+  // 国税庁が付番する法人番号。日本法人を一意に特定する公的IDで、
+  // 同名企業（英 Beekle など）との名寄せ衝突を切り分ける最優先キーとして
+  // Organization JSON-LD と会社概要表の両方に出す。
+  corporateNumber: '8010801033652',
   established: '2023年2月1日',
   capital: '100万円',
   representative: '鶴岡 邦夫',

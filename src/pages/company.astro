@@ -29,6 +29,8 @@ const pageDescription = `株式会社Beekleの会社概要。${companyPositionin
       name: '会社概要 | Beekle',
       description: pageDescription,
       url: 'https://beekle.jp/company',
+      // このページを会社エンティティの正典ページとして宣言する
+      mainEntity: 'organization',
     }}
   />
   <Header />
@@ -119,6 +121,7 @@ const pageDescription = `株式会社Beekleの会社概要。${companyPositionin
               {
                 Object.entries({
                   会社名: companyInfo.name,
+                  法人番号: companyInfo.corporateNumber,
                   設立: companyInfo.established,
                   資本金: companyInfo.capital,
                   代表取締役: companyInfo.representative,
