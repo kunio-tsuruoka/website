@@ -8,7 +8,9 @@ describe('technical cluster PM on Rails CTA migration', () => {
     expect(result).toContain('https://pmonrails.com/waitlist?');
     expect(result).toContain('utm_campaign=technical_cluster');
     expect(result).toContain('utm_content=gherkin-bdd-introduction');
-    expect(result).toContain('私たちも、実案件でこれらを全部手書きしたり、レビューしたりするのが大変だったので');
+    expect(result).toContain(
+      '私たちも、実案件でこれらを全部手書きしたり、レビューしたりするのが大変だったので'
+    );
     expect(result).toContain('「PM on Rails」というシステムを作りました');
     expect(result).toContain('お客さまの要望からコーディングまで自動でつなげられるように');
     expect(result).toContain('要件やGherkinをベストプラクティスに沿って生成してくれます');
