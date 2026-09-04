@@ -25,11 +25,15 @@ describe('technical cluster PM on Rails CTA migration', () => {
 
   it('replaces an existing BRIDGE_CTA marker before checking old hardcoded CTA patterns', () => {
     const source = '<p>本文</p><p>{{BRIDGE_CTA}}</p>';
-    const result = replaceTechnicalClusterCta(source, /never-match/, 'ears-gherkin-workflow');
+    const result = replaceTechnicalClusterCta(source, /never-match/, 'gherkin-bdd-introduction');
 
     expect(result.status).toBe('bridge-marker');
     expect(result.content).toContain('https://pmonrails.com/waitlist?');
     expect(result.content).not.toContain('{{BRIDGE_CTA}}');
+    // <p> の内側に <h2> を残すと MicroCMS のサニタイザに本文ごと弾かれる
+    expect(result.content).not.toContain('<p>\n<h2>');
+    expect(result.content).not.toContain('<p></p>');
+    expect(result.content.indexOf('<h2>')).toBeGreaterThan(result.content.indexOf('</p>'));
   });
 
   it('replaces legacy hardcoded CTAs when the bridge marker is absent', () => {
@@ -37,7 +41,7 @@ describe('technical cluster PM on Rails CTA migration', () => {
     const result = replaceTechnicalClusterCta(
       source,
       /<h2>相談<\/h2><p><a href="\/contact">相談する<\/a><\/p>/,
-      'ears-requirements-syntax-guide'
+      'gherkin-bdd-introduction'
     );
 
     expect(result.status).toBe('hardcoded-cta');
