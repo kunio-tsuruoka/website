@@ -44,10 +44,10 @@ function pricingSection(
 ): NonNullable<ServiceDetail['additionalSections']>[number] {
   return {
     title: '費用・期間の考え方',
-    subtitle: 'モデルケース（仮定）と、段階ごとの目安。実績と分けて書いています',
+    subtitle: 'モデルケースと、段階ごとの目安',
     paragraphs: [
       STAGE_LEAD,
-      `モデルケース（仮定）: ${modelCaseTitle}。${modelCaseBody}`,
+      `モデルケース: ${modelCaseTitle}。${modelCaseBody}`,
       production,
       EXTRA_COST,
       STAGE_NOTE,
