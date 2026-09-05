@@ -1343,7 +1343,6 @@ export const services: ServiceDetail[] = [
           'RAGかGraphRAGかを、お客さま側で決める必要はありません。NDA締結後に実データと想定質問をお預かりし、通常RAG・GraphRAG・ハイブリッドを同じ条件で検証します。その結果から、必要な精度、更新性、運用コストを満たす構成をBeekleが判断し、最適な進め方をご提案します。',
         ],
       },
-      serviceModelCases['rag-system-development'],
     ],
     relatedColumns: [
       {
