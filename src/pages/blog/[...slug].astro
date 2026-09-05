@@ -13,6 +13,7 @@ import {
   getBlog,
   getRelatedBlogs,
 } from '../../lib/microcms';
+import { extractPreBlocks, restorePreBlocks } from '../../lib/pre-block-guard';
 import { type TocItem, slugify } from '../../lib/toc';
 
 export const prerender = false;
@@ -93,7 +94,9 @@ marked.setOptions({
 });
 marked.use({ renderer });
 
-let htmlContent = marked(getBlogBody(blog)) as string;
+// <pre> は marked に食わせず退避する（空行を含む <pre> が <p>/<br> に割れるのを防ぐ）
+const { text: contentForMarked, blocks: preBlocks } = extractPreBlocks(getBlogBody(blog));
+let htmlContent = marked(contentForMarked) as string;
 
 htmlContent = htmlContent.replace(
   /<h([23])([^>]*)>([\s\S]*?)<\/h\1>/g,
@@ -111,6 +114,9 @@ htmlContent = htmlContent.replace(
 );
 
 htmlContent = renderBlogContentVisuals(htmlContent, blogId);
+
+// 退避しておいた <pre> ブロックを最後に戻す
+htmlContent = restorePreBlocks(htmlContent, preBlocks);
 
 const relatedBlogs = await getRelatedBlogs(blogId, 4, env);
 const metaDescription = getExcerpt(blog);

@@ -15,6 +15,7 @@ import {
   getRelatedColumns,
   isPillarArticle,
 } from '../../lib/microcms';
+import { extractPreBlocks, restorePreBlocks } from '../../lib/pre-block-guard';
 import { upgradeRequirementsContent } from '../../lib/requirements-content-upgrades.js';
 import { type TocItem, slugify } from '../../lib/toc';
 
@@ -93,7 +94,9 @@ marked.setOptions({
 });
 marked.use({ renderer });
 
-let htmlContent = marked(column.content || '') as string;
+// <pre> は marked に食わせず退避する（空行を含む <pre> が <p>/<br> に割れるのを防ぐ）
+const { text: contentForMarked, blocks: preBlocks } = extractPreBlocks(column.content || '');
+let htmlContent = marked(contentForMarked) as string;
 
 // HTML直書きの<h2>/<h3>からも目次データを収集する（リッチエディタHTML対応）。
 // MicroCMSサニタイザは見出しに id="h..." を自動付与するため、属性付き見出しもマッチさせる。
@@ -152,6 +155,9 @@ htmlContent = htmlContent.replace(
     return `${open}${content}</div>`;
   }
 );
+
+// 退避しておいた <pre> ブロックを最後に戻す
+htmlContent = restorePreBlocks(htmlContent, preBlocks);
 // 日付が欠落・不正な場合に "Invalid Date" を出さない安全フォーマッタ。
 // publishedAt が無ければ updatedAt にフォールバックし、どちらも不正なら空文字を返す。
 function formatJaDate(...values: (string | undefined)[]): string {
@@ -796,6 +802,11 @@ const reviewerId =
   .markdown-content :global(pre code) {
     @apply bg-transparent text-gray-100;
     padding: 0;
+  }
+
+  /* 万一 <pre> 内に <p> 等が混ざっても、暗い背景に本文色が乗って読めなくならないようにする */
+  .markdown-content :global(pre) :global(*) {
+    color: inherit;
   }
 
   /* テーブル */
