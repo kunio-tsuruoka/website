@@ -383,7 +383,7 @@ export const industryPageConfig: Record<string, IndustryPageConfig> = {
     metrics: [
       { label: '最初の対象', value: '問い合わせの多い一領域' },
       { label: '検証期間', value: '4〜6週間' },
-      { label: '検証費用の目安', value: '150〜300万円程度' },
+      { label: '検証費用の目安', value: '200〜400万円程度' },
     ],
     flow: {
       eyebrow: 'BEFORE / AFTER',
