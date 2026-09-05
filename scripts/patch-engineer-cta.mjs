@@ -42,21 +42,6 @@ const TARGETS = [
     pattern:
       /<h2 id="h794b7c1204">BDD[^<]*<\/h2><p>Beekle[^<]*<\/p><p><a href="\/contact">[^<]*<\/a>[^<]*<a href="\/prooffirst">[^<]*<\/a><\/p>/,
   },
-  {
-    slug: 'ears-requirements-syntax-guide',
-    // <h2 id="h340c799757">要件記述でお困りなら</h2>
-    // <p>複雑な業務要件をEARSで整理する支援も行っています。</p>
-    // <p><a href="/contact">無料相談を予約する</a> / <a href="/tools/story-builder">Story Builder を試す</a></p>
-    pattern:
-      /<h2 id="h340c799757">要件記述[^<]*<\/h2><p>[^<]*支援も行っています。<\/p><p><a href="\/contact">[^<]*<\/a>[^<]*<a href="\/tools\/story-builder">[^<]*<\/a><\/p>/,
-  },
-  {
-    slug: 'ears-gherkin-workflow',
-    // <h2 id="ha784afc1b2">このワークフローを試してみたい方へ</h2>
-    // <p><a href="/contact">無料相談を予約する</a> / <a href="/prooffirst">ゼロスタートを詳しく見る</a></p>
-    pattern:
-      /<h2 id="ha784afc1b2">この[^<]*<\/h2><p><a href="\/contact">[^<]*<\/a>[^<]*<a href="\/prooffirst">[^<]*<\/a><\/p>/,
-  },
 ];
 
 console.log(`Mode: ${dryRun ? 'DRY-RUN (no API writes)' : 'APPLY (PATCH to MicroCMS)'}`);
