@@ -1,0 +1,79 @@
+---
+import { SectionHeader } from '@/components/ui';
+import { ragPricingPhases } from '@/data/rag-service-page';
+---
+
+<section id="pricing" class="relative overflow-hidden bg-white py-20 md:py-28">
+  <div class="container relative mx-auto px-6 lg:px-12">
+    <div class="mx-auto max-w-6xl">
+      <SectionHeader
+        client:visible
+        title="RAG構築の費用目安"
+        subtitle="対象データ、連携先、権限、評価範囲によって変わります。初回相談後に、工程と内訳を分けて提示します"
+        number="06"
+        label="PRICING"
+      />
+
+      <div class="overflow-hidden rounded-lg border border-neutral-200 bg-white">
+        <div class="hidden grid-cols-[1fr_1fr_2fr] border-b border-neutral-200 bg-neutral-100 px-6 py-4 text-sm font-bold text-neutral-700 md:grid">
+          <span>フェーズ</span>
+          <span>費用目安</span>
+          <span>主な範囲</span>
+        </div>
+        <div class="divide-y divide-neutral-200">
+          {ragPricingPhases.map((item) => (
+            <div class="grid gap-3 px-6 py-5 md:grid-cols-[1fr_1fr_2fr] md:items-center md:gap-6">
+              <div>
+                <p class="text-xs font-bold text-neutral-500 md:hidden">フェーズ</p>
+                <p class="mt-1 font-bold text-navy-950 md:mt-0">{item.phase}</p>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-neutral-500 md:hidden">費用目安</p>
+                <p class="mt-1 text-lg font-bold text-primary-700 md:mt-0">{item.price}</p>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-neutral-500 md:hidden">主な範囲</p>
+                <p class="mt-1 text-sm leading-relaxed text-neutral-700 md:mt-0 md:text-base">
+                  {item.scope}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="mt-8 flex flex-col items-start justify-between gap-5 rounded-lg border border-primary-200 bg-primary-50 p-6 md:flex-row md:items-center md:p-8">
+        <div class="max-w-3xl">
+          <h3 class="text-xl font-bold leading-snug text-navy-950">
+            まず、何を検証すべきかと概算費用を整理します
+          </h3>
+          <p class="mt-2 text-sm leading-relaxed text-neutral-700 md:text-base">
+            文書の量だけでは費用は決まりません。想定質問、既存システム、権限、更新頻度を伺い、PoCで確認する範囲と本番開発を分けて提案します。
+          </p>
+        </div>
+        <a
+          href="/contact?source=services-rag-system-development-pricing&intent=rag-system-development"
+          data-cta-source="services-rag-system-development-pricing"
+          data-cta-id="contact-rag-system-development"
+          class="inline-flex min-h-[52px] w-full shrink-0 items-center justify-center rounded-md bg-primary-500 px-6 py-3 text-center text-sm font-bold leading-snug text-white transition-colors hover:bg-primary-600 md:w-auto md:text-base"
+        >
+          自社のRAG構築費用を相談する
+          <svg
+            class="ml-2 h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            ></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
