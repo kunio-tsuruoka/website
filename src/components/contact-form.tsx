@@ -44,7 +44,12 @@ const INTENT_TYPE_MAP: Record<string, string> = {
   'cdp-selection': 'cdp',
   'cost-breakdown': 'estimate',
   'document-ai-search': 'ai',
+  'document-processing-automation': 'ai',
   'genai-adoption': 'ai',
+  'internal-it-helpdesk-ai': 'ai',
+  'manufacturing-parts-knowledge-search': 'ai',
+  'sales-data-coaching': 'ai',
+  'technical-manual-knowledge-search': 'ai',
   'genai-roi': 'ai',
   'pm-on-rails-ai-cost': 'estimate',
   'pm-on-rails-cost': 'estimate',
@@ -65,6 +70,42 @@ const INTENT_TYPE_MAP: Record<string, string> = {
 };
 
 const INTENT_GUIDES: Record<string, IntentGuide> = {
+  'sales-data-coaching': {
+    title: '営業データを育成に戻す相談として受け付けます',
+    body: 'いまのCRM・電話システム・商談記録で何が残っているかを確認し、最初に手をつける1チーム・1テーマの候補と概算をお伝えします。',
+    placeholder:
+      '例: 営業人数、使っているCRM、商談や架電の記録の形式、育成で困っている点などがあればご記入ください。',
+    emptyMessage: '営業データを営業育成に使える仕組みについて相談したいです。',
+  },
+  'manufacturing-parts-knowledge-search': {
+    title: '型番・仕様・適合検索の相談として受け付けます',
+    body: '来ている問い合わせの型と、仕様書・適合表の形式を確認し、文書検索で足りる部分と関係の構造化が要る部分を切り分けます。',
+    placeholder:
+      '例: 製品群と点数、よく来る問い合わせ、仕様書や適合表の形式（PDF/Excel/基幹）、ベテラン依存で困っている点などがあればご記入ください。',
+    emptyMessage: '製品の型番・仕様・適合情報を検索できる仕組みについて相談したいです。',
+  },
+  'technical-manual-knowledge-search': {
+    title: '整備・技術マニュアル検索の相談として受け付けます',
+    body: '担当者が手順を確定するまでにどの文書をどの順に開いているかを確認し、条件で絞る構造化が要る部分と、人が確認する範囲を切り分けます。',
+    placeholder:
+      '例: 対象の機種や作業領域、マニュアルの量と版管理の現状、適用条件の分岐、セキュリティ要件などがあればご記入ください。',
+    emptyMessage:
+      '機種・部品・条件から適用手順と根拠を探せるマニュアル検索について相談したいです。',
+  },
+  'internal-it-helpdesk-ai': {
+    title: '情シスの社内問い合わせ削減の相談として受け付けます',
+    body: '過去の問い合わせを分類し、AIが一次対応できる比率と、最初に対象にする一領域の候補、概算をお伝えします。',
+    placeholder:
+      '例: 従業員数と情シスの人数、多い問い合わせの種類、使っているチャット（Slack/Teams）、資料の散らばり方などがあればご記入ください。',
+    emptyMessage: '情シスに集中する社内問い合わせをAIで減らす仕組みについて相談したいです。',
+  },
+  'document-processing-automation': {
+    title: '帳票処理の自動化の相談として受け付けます',
+    body: '一番手間のかかっている帳票1種類について、件数・到着形式・確認内容・登録先を確認し、自動で通せる範囲と人に残る範囲を見立てます。',
+    placeholder:
+      '例: 帳票の種類と月間件数、FAX/PDF/紙の比率、確認している内容、登録先の業務システムとAPIの有無などがあればご記入ください。',
+    emptyMessage: '帳票の読取から確認・照合・登録までの自動化について相談したいです。',
+  },
   'genai-adoption': {
     title: 'AI導入をPoCで終わらせない相談として受け付けます',
     body: '対象業務、使える判断基準、必要なデータ、社内説明に使う材料を分けて確認します。',

@@ -1,3 +1,5 @@
+import { industryPageConfig } from './industry-page-config';
+
 export const aiServicePageConfig = {
   'ai-development': {
     eyebrow: '「AIを使え」と言われたが、どの業務から始めるか決まらない',
@@ -670,5 +672,5 @@ export const aiServicePageConfig = {
 export type AiServicePageId = keyof typeof aiServicePageConfig;
 
 export function getAiServicePageConfig(id: string) {
-  return aiServicePageConfig[id as AiServicePageId];
+  return aiServicePageConfig[id as AiServicePageId] ?? industryPageConfig[id];
 }

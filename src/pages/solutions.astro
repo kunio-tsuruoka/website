@@ -1,0 +1,173 @@
+---
+import { Header } from '@/components/header';
+import JsonLd from '@/components/seo/json-ld.astro';
+import { industryPageConfig } from '@/data/industry-page-config';
+import { industryServices } from '@/data/industry-services';
+import Layout from '@/layouts/layout.astro';
+
+const siteUrl = 'https://beekle.jp';
+const pageUrl = `${siteUrl}/solutions`;
+
+// 誰向けか、を先頭に出す（技術名ではなく状況で選ばせる）
+const audienceLabels: Record<string, string> = {
+  'sales-data-coaching': '営業組織 × 営業育成',
+  'manufacturing-parts-knowledge-search': '製造業 × 型番・仕様・適合',
+  'technical-manual-knowledge-search': '自動車・航空 × 大量マニュアル',
+  'internal-it-helpdesk-ai': '情シス × 社内問い合わせ',
+  'document-processing-automation': '経理・管理 × 帳票処理',
+};
+
+const cards = industryServices.map((service) => {
+  const config = industryPageConfig[service.id];
+  return {
+    id: service.id,
+    href: `/services/${service.id}`,
+    audience: audienceLabels[service.id] ?? service.title,
+    headline: config?.headline ?? service.title,
+    description: service.description,
+    metrics: config?.metrics ?? [],
+  };
+});
+---
+
+<Layout
+  title="業種・業務別ソリューション | 株式会社Beekle"
+  description="営業組織、製造業、自動車・航空、情シス、経理・管理。業種と業務ごとに、いま起きている損失、原因、Beekleの設計、モデルケースの費用と期間をまとめています。まず1業務から始めます。"
+  canonical={pageUrl}
+>
+  <JsonLd
+    slot="head"
+    type="breadcrumb"
+    data={{
+      items: [
+        { name: 'ホーム', url: '/' },
+        { name: '業種・業務別ソリューション', url: '/solutions' },
+      ],
+    }}
+  />
+  <Header />
+  <main class="bg-neutral-100 pt-20">
+    <section class="border-b border-neutral-300 bg-neutral-100 py-14 md:py-20">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="grid gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
+          <div>
+            <p class="border-l-8 border-primary-500 pl-5 text-sm font-bold text-primary-700">
+              業種・業務別ソリューション
+            </p>
+            <h1 class="mt-6 text-4xl font-bold leading-tight text-accent-950 md:text-5xl">
+              AIで何が作れるかではなく、
+              <br class="hidden lg:block" />
+              その会社で何に時間とお金が使われているか。
+            </h1>
+            <p class="mt-6 text-lg leading-relaxed text-neutral-700">
+              業種と業務ごとに、いま起きている損失、業務構造上の原因、Beekleの設計、モデルケースの費用と期間をまとめています。
+              いきなり全部をAI化する提案はしません。業務を整理し、1業務に絞って実装し、前後を測ってから広げます。
+            </p>
+          </div>
+
+          <div class="border-y border-neutral-300 bg-white">
+            <div class="grid gap-2 border-b border-neutral-300 border-l-8 border-primary-500 px-5 py-4 md:grid-cols-[0.55fr_1fr]">
+              <p class="text-sm font-bold text-primary-700">共通の進め方</p>
+              <p class="text-sm font-bold text-accent-950">
+                要件定義から入り、動くもので確かめ、成果が数字で出た部分だけを広げます。
+              </p>
+            </div>
+            <div class="divide-y divide-neutral-300">
+              {[
+                'ヒアリングでいまの業務（As-Is）とあるべき形（To-Be）を書き出す',
+                '改善対象の業務を1つ選ぶ',
+                '受入条件を書いてから、実データで動くデモを作る',
+                '小さく本番に載せてBefore/Afterを測る',
+                '数字が出たものだけ他業務へ広げる',
+              ].map((item, index) => (
+                <div class="grid gap-3 px-5 py-4 md:grid-cols-[96px_1fr]">
+                  <p class="font-Poppins text-sm font-bold text-primary-600">
+                    {String(index + 1).padStart(2, '0')}
+                  </p>
+                  <p class="text-base font-bold text-navy-950">{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="mb-8 flex flex-col gap-4 border-b border-neutral-300 pb-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p class="section-label">業種・業務から探す</p>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
+              いま起きている状態に近いものを選ぶ
+            </h2>
+          </div>
+          <p class="max-w-xl text-sm leading-relaxed text-neutral-700">
+            費用と期間はBeekleの過去案件をもとにしたモデルケースです。実際は対象業務・データ・連携先・権限要件で変わります。
+          </p>
+        </div>
+
+        <div class="grid gap-5 lg:grid-cols-2">
+          {cards.map((card, index) => (
+            <a href={card.href} class="group block">
+              <article class="card-base card-hover h-full p-6">
+                <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                  <p class="font-Poppins text-sm font-bold text-primary-600">
+                    {String(index + 1).padStart(2, '0')}
+                  </p>
+                  <p class="border-l-4 border-primary-500 pl-3 text-xs font-bold text-primary-700">
+                    {card.audience}
+                  </p>
+                </div>
+                <h3 class="mt-4 text-2xl font-bold leading-snug text-navy-950 group-hover:text-primary-600">
+                  {card.headline}
+                </h3>
+                <p class="mt-4 leading-relaxed text-neutral-700">{card.description}</p>
+                {card.metrics.length > 0 && (
+                  <div class="mt-5 grid gap-3 border-t border-neutral-200 pt-5 sm:grid-cols-3">
+                    {card.metrics.map((metric) => (
+                      <div>
+                        <p class="text-xs font-bold text-primary-700">{metric.label}</p>
+                        <p class="mt-1 text-sm font-bold leading-snug text-accent-950">{metric.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <p class="mt-5 text-sm font-bold text-primary-500 group-hover:text-primary-600">
+                  詳しく見る
+                </p>
+              </article>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t border-neutral-300 bg-neutral-50 py-14 md:py-16">
+      <div class="container mx-auto px-8 lg:px-12">
+        <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div>
+            <p class="section-label">CONTACT</p>
+            <h2 class="mt-3 text-3xl font-bold leading-tight text-navy-950 md:text-4xl">
+              業種が一覧にない場合も、そのまま相談できます。
+            </h2>
+          </div>
+          <div class="border-l-8 border-primary-500 bg-white p-6">
+            <p class="text-lg leading-relaxed text-neutral-700">
+              いま繰り返している業務、関わっている人数と時間、遅延やミスで起きている損失をうかがえれば、
+              最初に手をつけると元が取れやすい1業務の候補と、モデルケースに照らした概算をお伝えします。
+            </p>
+            <a
+              href="/contact?source=solutions-index"
+              data-cta-source="solutions-index"
+              data-cta-id="contact"
+              class="mt-6 inline-flex min-h-[52px] items-center justify-center rounded-md bg-primary-500 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-primary-600"
+            >
+              業務の棚卸しから相談する
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

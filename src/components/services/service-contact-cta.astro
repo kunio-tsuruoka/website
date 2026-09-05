@@ -61,6 +61,26 @@ const SERVICE_CTA: Record<string, { title: string; label: string }> = {
     title: '自社の要件定義を、実装につながる形にできますか',
     label: '要件定義の進め方を相談する',
   },
+  'sales-data-coaching': {
+    title: '自社の営業データで、育成に戻せる形にできますか',
+    label: '営業データの活用について相談する',
+  },
+  'manufacturing-parts-knowledge-search': {
+    title: '自社の型番・仕様・適合表で、根拠つきの検索にできますか',
+    label: '製品・型番検索について相談する',
+  },
+  'technical-manual-knowledge-search': {
+    title: '自社のマニュアルで、条件から根拠に着く検索にできますか',
+    label: '技術マニュアル検索について相談する',
+  },
+  'internal-it-helpdesk-ai': {
+    title: '自社の問い合わせの、どこまでをAIの一次対応にできますか',
+    label: '情シス問い合わせの削減を相談する',
+  },
+  'document-processing-automation': {
+    title: '自社の帳票で、確認・照合・登録までどこまで流せますか',
+    label: '帳票処理の自動化を相談する',
+  },
 };
 
 const base = content[placement];
@@ -74,6 +94,11 @@ const AI_SERVICE_INTENTS: Record<string, string> = {
   'internal-document-ai-search': 'document-ai-search',
   'ocr-ai-development': 'ocr-ai-development',
   'rag-system-development': 'rag-system-development',
+  'sales-data-coaching': 'sales-data-coaching',
+  'manufacturing-parts-knowledge-search': 'manufacturing-parts-knowledge-search',
+  'technical-manual-knowledge-search': 'technical-manual-knowledge-search',
+  'internal-it-helpdesk-ai': 'internal-it-helpdesk-ai',
+  'document-processing-automation': 'document-processing-automation',
 };
 const contactIntent = AI_SERVICE_INTENTS[serviceId] ?? 'consult';
 ---

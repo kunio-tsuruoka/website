@@ -45,9 +45,24 @@ describe('Header', () => {
       details.querySelector('summary')?.textContent?.trim()
     );
 
-    expect(sectionDetails).toHaveLength(5);
+    expect(sectionDetails).toHaveLength(6);
     expect(mobilePanel).toHaveClass('min-h-[calc(100vh-76px)]');
-    expect(sectionLabels).toEqual(['課題から探す', '進め方', 'サービス', '判断材料', '会社情報']);
+    expect(sectionLabels).toEqual([
+      '課題から探す',
+      '進め方',
+      'サービス',
+      '業種・業務別',
+      '判断材料',
+      '会社情報',
+    ]);
+  });
+
+  it('exposes the industry solutions hub in both desktop and mobile menus', () => {
+    const html = renderToStaticMarkup(<Header />);
+
+    expect(html.match(/href="\/solutions"/g)).toHaveLength(2);
+    expect(html.match(/\/services\/sales-data-coaching/g)).toHaveLength(2);
+    expect(html.match(/\/services\/document-processing-automation/g)).toHaveLength(2);
   });
 
   it('exposes AI agent development in both desktop and mobile service menus', () => {
