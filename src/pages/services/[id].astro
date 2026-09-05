@@ -49,10 +49,25 @@ const FINAL_CTA_HEADINGS: Record<string, string> = {
   'ocr-ai-development': '自社の帳票なら、どこまで手入力を減らせるでしょうか',
   'ai-agent-development': 'どこまで任せて、どこから人が承認するか決めませんか',
   'requirements-definition-support': '要件が固まっていなくても、進め方から相談できます',
+  'sales-data-coaching': '営業データの現状を、まず棚卸ししませんか',
+  'manufacturing-parts-knowledge-search': 'いま来ている問い合わせを、まず分類してみませんか',
+  'technical-manual-knowledge-search': 'いま担当者が手順を探している手順を、一度たどってみませんか',
+  'internal-it-helpdesk-ai': 'まず、いまの問い合わせを分類してみませんか',
+  'document-processing-automation': 'いま一番手間のかかっている帳票を、1種類教えてください',
 };
 const FINAL_CTA_LEADS: Record<string, string> = {
   'requirements-definition-support':
     '課題と今ある資料を伺い、要求と受入条件まで落とせる範囲をご案内します。',
+  'sales-data-coaching':
+    'いまのCRMと電話システムで、どこまで記録が残っていて、どこから消えているか。御社の営業の流れをうかがい、最初に手をつける1テーマの候補と、モデルケースに照らした概算をお伝えします。',
+  'manufacturing-parts-knowledge-search':
+    '過去数か月の問い合わせをお預かりできれば、文書検索で解けるものと、関係をたどらないと解けないものの比率をお伝えします。そこから最初に対象にする製品群と概算をご提案します。',
+  'technical-manual-knowledge-search':
+    '一つの質問に対して、どの資料をどの順番で開いているか。それを一緒に確認できれば、構造化が要る部分と文書検索で足りる部分を切り分けてお伝えします。',
+  'internal-it-helpdesk-ai':
+    '過去1〜3か月分の問い合わせ（チャットのログやメールで構いません）を見せていただければ、AIが一次対応できる比率と、最初に対象にする領域の候補、概算をお伝えします。',
+  'document-processing-automation':
+    'その帳票について、月間件数、到着形式、確認している内容、登録先をうかがえれば、自動で通せる範囲と人に残る範囲の見立てと、概算をお伝えします。',
 };
 const finalCtaHeading = servicePageConfig
   ? (FINAL_CTA_HEADINGS[service.id] ?? 'PoCで止めず、業務で使える形にしませんか')
@@ -106,6 +121,19 @@ const caseStudiesCopy: Record<string, { title: string; subtitle: string }> = {
     subtitle: '全件入力を、どこまで確認作業に変えられたか',
   },
 };
+const INDUSTRY_CASE_COPY = {
+  title: '関係する実績を、事実の範囲で挙げます',
+  subtitle: 'この業界での納入実績と、持ち込める経験を分けて書いています',
+};
+for (const id of [
+  'sales-data-coaching',
+  'manufacturing-parts-knowledge-search',
+  'technical-manual-knowledge-search',
+  'internal-it-helpdesk-ai',
+  'document-processing-automation',
+]) {
+  caseStudiesCopy[id] = INDUSTRY_CASE_COPY;
+}
 const caseStudiesTitle = caseStudiesCopy[service.id]?.title ?? '実際に、こう作ってきました';
 const caseStudiesSubtitle =
   caseStudiesCopy[service.id]?.subtitle ?? 'どのような課題を、どう実装に落としたか';
@@ -165,6 +193,25 @@ const sectionCopy: Record<
     },
   },
 };
+const INDUSTRY_SECTION_COPY = {
+  solutions: {
+    title: 'Beekleではこうする',
+    subtitle: 'ヒアリングとAs-Is/To-Beから入り、1業務に絞って実装し、測ってから広げます',
+  },
+  features: {
+    title: 'このサービスで引き受ける範囲',
+    subtitle: 'ヒアリングから、動く仕組みと運用まで',
+  },
+};
+for (const id of [
+  'sales-data-coaching',
+  'manufacturing-parts-knowledge-search',
+  'technical-manual-knowledge-search',
+  'internal-it-helpdesk-ai',
+  'document-processing-automation',
+]) {
+  sectionCopy[id] = INDUSTRY_SECTION_COPY;
+}
 const solutionsCopy = sectionCopy[service.id]?.solutions;
 const featuresCopy = sectionCopy[service.id]?.features;
 ---

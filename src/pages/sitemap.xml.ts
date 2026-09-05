@@ -29,6 +29,7 @@ const staticPages: SitemapPage[] = [
     changefreq: 'monthly',
   })),
   { url: '/prooffirst', priority: '0.9', changefreq: 'weekly' },
+  { url: '/solutions', priority: '0.9', changefreq: 'monthly' },
   { url: '/services/ai-adoption', priority: '0.9', changefreq: 'monthly' },
   { url: '/services/management-dx', priority: '0.9', changefreq: 'monthly' },
   { url: '/contact', priority: '0.9', changefreq: 'monthly' },

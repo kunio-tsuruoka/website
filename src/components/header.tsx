@@ -21,6 +21,25 @@ const serviceItems = [
   { label: 'CDP構築・顧客データ基盤開発', href: '/services/cdp-development' },
 ];
 
+// 業種・業務別ソリューション（2026-09 追加）。技術名でなく「誰の何を解決するか」で並べる。
+const industryItems = [
+  { label: '業種・業務別ソリューション一覧', href: '/solutions' },
+  { label: '営業組織 | 営業データを育成に戻す', href: '/services/sales-data-coaching' },
+  {
+    label: '製造業 | 型番・仕様・適合の検索',
+    href: '/services/manufacturing-parts-knowledge-search',
+  },
+  {
+    label: '自動車・航空 | 技術マニュアル検索',
+    href: '/services/technical-manual-knowledge-search',
+  },
+  { label: '情シス | 社内問い合わせのAI一次対応', href: '/services/internal-it-helpdesk-ai' },
+  {
+    label: '経理・管理 | 帳票の確認・照合・登録',
+    href: '/services/document-processing-automation',
+  },
+];
+
 const knowledgeItems = [
   { label: 'コラム（発注者向け）', href: '/column' },
   { label: 'ブログ（雑記）', href: '/blog' },
@@ -44,6 +63,7 @@ const mobileSections: { heading: string; items: { label: string; href: string }[
   { heading: '課題から探す', items: problemItems },
   { heading: '進め方', items: methodItems },
   { heading: 'サービス', items: serviceItems },
+  { heading: '業種・業務別', items: industryItems },
   { heading: '判断材料', items: knowledgeItems },
   { heading: '会社情報', items: aboutItems },
 ];
@@ -189,6 +209,7 @@ export function Header() {
           <Dropdown label="課題別" items={problemItems} />
           <Dropdown label="進め方" items={methodItems} />
           <Dropdown label="サービス" items={serviceItems} />
+          <Dropdown label="業種・業務別" items={industryItems} />
           <li>
             <a
               href="/case-studies"

@@ -41,6 +41,20 @@ const columns: { heading: string; links: { label: string; href: string }[] }[] =
     ],
   },
   {
+    heading: '業種・業務別',
+    links: [
+      { label: 'ソリューション一覧', href: '/solutions' },
+      { label: '営業データを育成に戻す', href: '/services/sales-data-coaching' },
+      { label: '製造業の型番・適合検索', href: '/services/manufacturing-parts-knowledge-search' },
+      {
+        label: '自動車・航空の技術マニュアル検索',
+        href: '/services/technical-manual-knowledge-search',
+      },
+      { label: '情シスの社内問い合わせAI', href: '/services/internal-it-helpdesk-ai' },
+      { label: '帳票の確認・照合・登録の自動化', href: '/services/document-processing-automation' },
+    ],
+  },
+  {
     heading: 'ナレッジ・ツール',
     links: [
       { label: '相談が始まる場面', href: '/situations' },
@@ -57,7 +71,7 @@ const columns: { heading: string; links: { label: string; href: string }[] }[] =
 
 <footer class="bg-navy-950 text-white/80">
   <div class="container mx-auto px-6 py-14">
-    <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
+    <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-6">
       <div class="md:pr-6">
         <a href="/" class="inline-flex min-h-[44px] items-center font-Poppins text-2xl font-bold text-white">Beekle</a>
         <p class="mt-4 text-sm leading-relaxed text-white/60">

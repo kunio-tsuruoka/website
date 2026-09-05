@@ -1,4 +1,6 @@
 import type { ServiceDetail } from '@/types/service';
+import { industryServices } from './industry-services';
+import { serviceModelCases } from './service-model-cases';
 
 export const services: ServiceDetail[] = [
   {
@@ -855,6 +857,7 @@ export const services: ServiceDetail[] = [
           },
         ],
       },
+      { ...serviceModelCases['ai-development'], placement: 'middle' },
     ],
     relatedColumns: [
       {
@@ -1084,6 +1087,7 @@ export const services: ServiceDetail[] = [
           'さらにオーダーメイドのデータベース設計により、文書の種類（規程・マニュアル・議事録）ごとに最適な検索方法を使い分けます。規程なら条項単位で検索し、議事録なら議題単位で検索する、といった業務に合った精度を実現します。',
         ],
       },
+      serviceModelCases['internal-document-ai-search'],
     ],
     relatedColumns: [
       {
@@ -1339,6 +1343,7 @@ export const services: ServiceDetail[] = [
           'RAGかGraphRAGかを、お客さま側で決める必要はありません。NDA締結後に実データと想定質問をお預かりし、通常RAG・GraphRAG・ハイブリッドを同じ条件で検証します。その結果から、必要な精度、更新性、運用コストを満たす構成をBeekleが判断し、最適な進め方をご提案します。',
         ],
       },
+      serviceModelCases['rag-system-development'],
     ],
     relatedColumns: [
       {
@@ -1550,6 +1555,7 @@ export const services: ServiceDetail[] = [
           'ただし万能ではありません。回答精度が100%にならない以上、間違えたときのフォローが必要です。確信度の低い回答を検知して自動で有人に引き継ぐ、回答に根拠文書を併記して利用者が自分で確認できるようにする、といった「間違える前提の設計」が、実際に現場で使われるチャットボットには不可欠です。',
         ],
       },
+      serviceModelCases['ai-chatbot-development'],
     ],
     relatedColumns: [
       {
@@ -1755,6 +1761,7 @@ export const services: ServiceDetail[] = [
           'ただし万能ではありません。図面やグラフの構造的な読み取り、極端に画質の悪い原本、手書きの崩し字などは精度が下がります。PoCの段階で実際の帳票サンプルを使って「どこまで読めるか」を検証し、苦手な箇所は人間確認で補う設計を標準としています。',
         ],
       },
+      serviceModelCases['ocr-ai-development'],
     ],
     relatedColumns: [
       {
@@ -1941,6 +1948,7 @@ export const services: ServiceDetail[] = [
           '複数のシステムをまたいで業務を完遂するために、MCP（Model Context Protocol）という仕組みで各システムと安全に接続します。既存システムを改修する必要はなく、外部からAPI経由でアクセスする設計です。ただし、AIが自律的に動く以上、暴走リスクへの対策が必須です。金額の大きな処理や外部送信には人間の承認を挟み、全操作を記録する監査ログを標準で組み込みます。',
         ],
       },
+      serviceModelCases['ai-agent-development'],
     ],
     relatedColumns: [
       {
@@ -2603,4 +2611,5 @@ export const services: ServiceDetail[] = [
       },
     ],
   },
+  ...industryServices,
 ];
