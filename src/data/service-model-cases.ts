@@ -27,9 +27,9 @@ const NOTE =
 function build(mc: ModelCase): Section {
   return {
     title: `費用・期間のモデルケース｜${mc.subject}`,
-    subtitle: '「これくらいの依頼なら、これくらいでできる」を、実績とモデルケースに分けて書きます',
+    subtitle: '具体的な金額を、モデルケースで説明します',
     paragraphs: [
-      '「便利そうなのは分かった。でも、うちが頼める金額なのか」に先に答えます。',
+      '金額は、対象業務と連携先、データの状態で動きます。',
       `実績（事実）: ${mc.fact}`,
       `モデルケース: ${mc.model}`,
       `本番展開の目安: ${mc.production}`,
