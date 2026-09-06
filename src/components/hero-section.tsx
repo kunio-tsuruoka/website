@@ -20,9 +20,9 @@ export const HeroSection = () => (
           <br />
           <span className="text-primary-500">爆速デモ。</span>
           <br />
-          見て決めたら、
+          見て決めて、
           <br />
-          <span className="text-primary-500">そのまま本番へ。</span>
+          <span className="text-primary-500">本番まで同じチームで。</span>
         </h1>
 
         <a
