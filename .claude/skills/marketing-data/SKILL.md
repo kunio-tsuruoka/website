@@ -65,12 +65,29 @@ bun run data:clarity-dash     # メインダッシュボード CSV を取込 →
   - **メインダッシュボード** (Dashboard → Export): トラフィック/挙動 (Sessions, bot%, Scroll, Dead/Rage click, Top pages, Referrer=AI流入含む, Smart events, Web Vitals)。`bun run data:clarity-dash`。
 - **注意**: ハブの日付ディレクトリは *インポート日* で切る (データ期間ではない)。同じ日に別期間のCSVを2回入れると日付dirが上書きされる。時系列比較が要るデータは import 前に `latest/` を退避するか、raw CSV から再生成する。
 
-## 2.5 実問い合わせ台帳 (leads) — 北極星指標の記録
+## 2.5 実問い合わせ — 正は beekle-crm、台帳は分析用の写し
 
-GA4 の form_submit はスパム込みで使えない (analytics-ga4.md)。実問い合わせは
-**Slack 到着ベースで手動記録**する。Slack 通知が来たら（またはユーザーから
-問い合わせの報告を受けたら）必ずこの台帳に1行追加する。施策のROI判定は
-この台帳を正とする。
+**リード件数の正は beekle-crm（MCP）。** 2026-09-06 のユーザー決定。
+`docs/marketing/data/leads/leads.jsonl` は分析用の写しで、単独では信用しない。
+
+GA4 の form_submit はスパムとフォーム営業ツールを含むので、件数には使えない
+(analytics-ga4.md)。件数を数えるときは必ず CRM を見る。
+
+```
+mcp__beekle-crm__search_leads            # 一覧。status/source/owner で絞れる
+mcp__beekle-crm__get_lead                # 問い合わせ本文と attribution（着地ページ・UTM）まで取れる
+```
+
+`get_lead` の `inquiry.attribution` に着地ページと `utm_source` が入る。
+AI検索経由の判定はここが唯一の機械的な証拠になる（例: `/contact?utm_source=chatgpt.com`）。
+GA4 の last-touch では Direct に化けるので、GA4 のチャネル別では追えない。
+
+**2026-09-06 の突合で分かったこと**: 台帳と CRM は双方に記録漏れがあり、片方だけ見ると
+件数を読み違える。台帳にしか無かった3件（ワオンズ・ゴールドトラスト・口野様）を CRM へ
+失注で登録し、CRM にしか無かった2件を台帳へ追加して揃えた。資料請求（要件定義テンプレート
+希望など）は商談にならないので件数から外す。
+
+分析で台帳を使う場合も、件数の裏取りは CRM で行う。台帳への追記は次のコマンド。
 
 ```bash
 bun run data:leads add -- --intent partner --persona B --quality high \
