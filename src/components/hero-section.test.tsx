@@ -11,7 +11,7 @@ describe('HeroSection', () => {
     const html = container.innerHTML;
     const text = visibleText(html);
 
-    expect(text).toContain('資料より、まず爆速デモ。見て決めて、本番まで同じチームで。');
+    expect(text).toContain('資料より、まず爆速デモ。見て決めたら、そのまま本番へ。');
     expect(container.querySelectorAll('h1 br')).toHaveLength(3);
   });
 
