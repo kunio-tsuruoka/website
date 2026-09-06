@@ -27,7 +27,7 @@ const NOTE =
 function build(mc: ModelCase): Section {
   return {
     title: `費用・期間のモデルケース｜${mc.subject}`,
-    subtitle: '実績と、条件を組み替えたモデルケース',
+    subtitle: '具体的な金額を、モデルケースで説明します',
     paragraphs: [
       '金額は、対象業務と連携先、データの状態で動きます。',
       `実績（事実）: ${mc.fact}`,
