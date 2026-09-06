@@ -92,7 +92,10 @@ const COLUMN_LABELS = {
   decision: 'この段階で決まること',
 } as const;
 
-export const ProcessSteps = () => {
+// 見出しレベルは置き場所で変える。/process では h1 の直下なので h2、
+// トップではセクション見出し（ProcessHero の h2）の下に入るので h3 を渡す。
+export const ProcessSteps = ({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) => {
+  const StepHeading = headingLevel === 3 ? 'h3' : 'h2';
   return (
     <div className="bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -124,7 +127,9 @@ export const ProcessSteps = () => {
                   }`}
                 >
                   <div className="flex flex-wrap items-center gap-3 mb-2">
-                    <h2 className="text-xl font-bold text-gray-900">{step.title}</h2>
+                    <StepHeading className="text-xl font-bold text-gray-900">
+                      {step.title}
+                    </StepHeading>
                     {step.highlight && (
                       <span className="inline-flex items-center rounded-md bg-primary-500 px-3 py-1 text-xs font-semibold text-white">
                         共同でリスクを見る
