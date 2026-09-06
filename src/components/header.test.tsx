@@ -82,6 +82,17 @@ describe('Header', () => {
     expect(html).toContain('導入の流れ');
   });
 
+  it('does not keep the desktop dropdown open after a mouse click focuses the trigger', () => {
+    const html = renderToStaticMarkup(<Header />);
+
+    // group-focus-within だと、クリックでボタンにフォーカスが残った時に開きっぱなしになる
+    expect(html).not.toContain('group-focus-within');
+    expect(html).toContain('peer-focus-visible:visible');
+    expect(html).toContain('focus-within:visible');
+    // renderToStaticMarkup は & と > をエスケープする
+    expect(html).toContain('[&amp;:focus-visible&gt;svg]:rotate-180');
+  });
+
   it('keeps the desktop dropdown hover path connected to the trigger', () => {
     const html = renderToStaticMarkup(<Header />);
 
