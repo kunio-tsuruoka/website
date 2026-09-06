@@ -872,8 +872,8 @@ export const services: ServiceDetail[] = [
       },
       {
         slug: 'ai-era-development-flow',
-        title: 'AI受託開発・生成AI開発の流れと進め方｜PoCからプロトタイプ・本番化までの全工程',
-        description: '受託開発のフェーズごとに発注側がやることを整理した実務ガイド。',
+        title: '生成AI開発で一番成功率が高い開発パターン',
+        description: '確実なところは先にデモにし、不確実なところだけ検証する進め方。',
       },
       {
         slug: 'ai-poc-to-production',
@@ -1569,8 +1569,8 @@ export const services: ServiceDetail[] = [
       },
       {
         slug: 'ai-era-development-flow',
-        title: 'AI受託開発・生成AI開発の流れと進め方｜PoCからプロトタイプ・本番化までの全工程',
-        description: '受託開発のフェーズごとに発注側がやることを整理した実務ガイド。',
+        title: '生成AI開発で一番成功率が高い開発パターン',
+        description: '確実なところは先にデモにし、不確実なところだけ検証する進め方。',
       },
       {
         slug: 'ai-development-cost-guide',
@@ -1780,8 +1780,8 @@ export const services: ServiceDetail[] = [
       },
       {
         slug: 'ai-era-development-flow',
-        title: 'AI受託開発・生成AI開発の流れと進め方｜PoCからプロトタイプ・本番化までの全工程',
-        description: '受託開発のフェーズごとに発注側がやることを整理した実務ガイド。',
+        title: '生成AI開発で一番成功率が高い開発パターン',
+        description: '確実なところは先にデモにし、不確実なところだけ検証する進め方。',
       },
     ],
   },
@@ -1967,8 +1967,8 @@ export const services: ServiceDetail[] = [
       },
       {
         slug: 'ai-era-development-flow',
-        title: 'AI受託開発・生成AI開発の流れと進め方｜PoCからプロトタイプ・本番化までの全工程',
-        description: '受託開発のフェーズごとに発注側がやることを整理した実務ガイド。',
+        title: '生成AI開発で一番成功率が高い開発パターン',
+        description: '確実なところは先にデモにし、不確実なところだけ検証する進め方。',
       },
     ],
   },
