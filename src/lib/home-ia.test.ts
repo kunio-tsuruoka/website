@@ -22,9 +22,9 @@ describe('home page information architecture', () => {
 
     const positions = [
       indexOfCopy('発注前の不安'),
-      indexOfCopy('実案件の変化'),
-      indexOfCopy('Beekleの判断支援'),
-      indexOfCopy('一般的な傾向として比較'),
+      indexOfCopy('止まっていた判断が動いた例'),
+      indexOfCopy('Beekleがすること'),
+      indexOfCopy('他の頼み先との違い'),
       indexOfCopy('相談が始まる場面'),
       indexOfCopy('進め方'),
       indexOfCopy('発注前の判断材料'),
@@ -35,8 +35,14 @@ describe('home page information architecture', () => {
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
   });
 
+  it('stacks the decision sections vertically instead of splitting them left and right', () => {
+    // 左右2カラムが続くと、左を読んで右へ視線を飛ばす動きを繰り返すことになり読みにくい
+    expect(mainSource).not.toMatch(/lg:grid-cols-\[0?\.\d+fr_\d?\.?\d*fr\]/);
+    expect(mainSource).toContain('<div class="max-w-3xl">');
+  });
+
   it('does not explain PM on Rails in the first decision sections', () => {
-    const earlyDecisionEnd = indexOfCopy('一般的な傾向として比較');
+    const earlyDecisionEnd = indexOfCopy('他の頼み先との違い');
     const earlySource = mainSource.slice(0, earlyDecisionEnd);
 
     expect(earlySource).not.toContain('PM on Rails');
@@ -44,7 +50,7 @@ describe('home page information architecture', () => {
   });
 
   it('uses case logs and ruled sections instead of repeating rounded marketing cards up front', () => {
-    const earlyDecisionEnd = indexOfCopy('一般的な傾向として比較');
+    const earlyDecisionEnd = indexOfCopy('他の頼み先との違い');
     const earlySource = mainSource.slice(0, earlyDecisionEnd);
 
     expect(earlySource).toContain('case-log-table');
@@ -55,7 +61,7 @@ describe('home page information architecture', () => {
   });
 
   it('uses editorial brand accents instead of generated-looking purple surfaces', () => {
-    const earlyDecisionEnd = indexOfCopy('一般的な傾向として比較');
+    const earlyDecisionEnd = indexOfCopy('他の頼み先との違い');
     const earlySource = mainSource.slice(0, earlyDecisionEnd);
 
     expect(earlySource).toContain('case-log-table border-t border-neutral-300');
