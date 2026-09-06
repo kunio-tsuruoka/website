@@ -55,3 +55,7 @@
 /category/*      /  301
 /2023/           /  301
 /2023            /  301
+
+# 旧 running-cost-signal（2026-09-06 削除）。ベンダー営業向けの内容で、発注者向けというコラムの対象から外れていた
+/column/running-cost-signal   /column/estimate-concerns  301
+/column/running-cost-signal/  /column/estimate-concerns  301
