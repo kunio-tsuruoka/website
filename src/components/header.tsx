@@ -79,11 +79,11 @@ function Dropdown({
     <li className="group relative">
       <button
         type="button"
-        className="inline-flex cursor-pointer items-baseline gap-1 text-sm font-medium text-neutral-600 transition-colors hover:text-accent-600"
+        className="peer inline-flex cursor-pointer items-baseline gap-1 text-sm font-medium text-neutral-600 transition-colors hover:text-accent-600 [&:focus-visible>svg]:rotate-180"
       >
         {label}
         <svg
-          className="h-2.5 w-2.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180"
+          className="h-2.5 w-2.5 transition-transform group-hover:rotate-180"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -92,7 +92,10 @@ function Dropdown({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      <div className="invisible absolute left-0 top-full z-50 w-72 pt-2 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+      {/* マウスは hover、キーボードは トリガーの focus-visible とパネル内の focus-within で開く。
+          group-focus-within にすると、クリックでボタンにフォーカスが残ったとき、
+          カーソルを離してもパネルが開いたままになる（2026-09-06 のバグ報告の原因）。 */}
+      <div className="invisible absolute left-0 top-full z-50 w-72 pt-2 opacity-0 transition-opacity focus-within:visible focus-within:opacity-100 group-hover:visible group-hover:opacity-100 peer-focus-visible:visible peer-focus-visible:opacity-100">
         <div className="rounded-lg border border-neutral-200 bg-white py-2">
           {items.map((item) => (
             <a
