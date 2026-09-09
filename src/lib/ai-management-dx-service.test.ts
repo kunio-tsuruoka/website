@@ -13,18 +13,25 @@ describe('AI導入・経営DX支援', () => {
     expect(managementDx).toContain('<AiDxServicePage mode="management-dx" />');
   });
 
-  it('publishes implementation-backed plans at market-aligned prices', () => {
+  it('publishes an advisory entry plan before implementation-backed plans', () => {
     const servicePage = readSource('../components/services/ai-dx-service-page.astro');
 
-    expect(servicePage).toContain("name: 'AI・経営DX診断'");
-    expect(servicePage).toContain("price: '400,000'");
+    expect(servicePage).toContain("name: 'AI顧問'");
+    expect(servicePage).toContain("price: '200,000'");
+    expect(servicePage).toContain("implementation: '含まない'");
     expect(servicePage).toContain("name: 'AI導入・経営DX伴走'");
     expect(servicePage).toContain("price: '800,000'");
     expect(servicePage).toContain("name: 'AI・DX推進室'");
     expect(servicePage).toContain("price: '1,200,000'");
-    expect(servicePage).not.toContain("price: '100,000'");
-    expect(servicePage).not.toContain("price: '160,000'");
-    expect(servicePage).not.toContain("price: '320,000'");
+  });
+
+  it('keeps the fixed-price diagnosis as a separate spot option', () => {
+    const servicePage = readSource('../components/services/ai-dx-service-page.astro');
+
+    expect(servicePage).toContain('const spotPlan: Plan = {');
+    expect(servicePage).toContain("name: 'AI・経営DX診断'");
+    expect(servicePage).toContain("price: '400,000'");
+    expect(servicePage).toContain('継続支援の前に、課題と優先順位だけを整理したい方へ');
   });
 
   it('separates recurring accompaniment from unlimited production development', () => {
@@ -47,6 +54,7 @@ describe('AI導入・経営DX支援', () => {
     expect(footer).toContain("{ label: 'AI導入支援', href: '/services/ai-adoption' }");
     expect(sitemap).toContain("{ url: '/services/management-dx'");
     expect(llms).toContain('/services/management-dx - 経営DX・AI導入支援（価格公開）');
+    expect(llmsFull).toContain('AI顧問 200,000円 月〜');
     expect(llmsFull).toContain('AI・経営DX診断 400,000円');
     expect(llmsFull).toContain('AI導入・経営DX伴走 800,000円 月〜');
     expect(llmsFull).toContain('AI・DX推進室 1,200,000円 月〜');
