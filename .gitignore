@@ -50,3 +50,5 @@ tasks-v3.md
 
 # CMS PATCH の作業スクリプトと本文バックアップ（ローカル限定）
 .tmp/
+# MicroCMS PATCH 前のバックアップ（ローカル専用）
+claudedocs/backups/
