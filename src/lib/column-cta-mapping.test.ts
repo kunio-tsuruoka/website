@@ -56,11 +56,11 @@ describe('getCategoryCta: 仕様・要件定義ノウハウの記事末CTA', () 
   });
 
   it('買い手向けの費用・見積もり記事は相談のまま', () => {
-    expect(getCategoryCta('estimate-concerns', 'scenario-test-cost-reduction').primary.href).toMatch(
-      /^\/contact/
-    );
-    expect(getCategoryCta('estimate-concerns', 'system-development-cost-breakdown').primary.href).toMatch(
-      /^\/contact/
-    );
+    expect(
+      getCategoryCta('estimate-concerns', 'scenario-test-cost-reduction').primary.href
+    ).toMatch(/^\/contact/);
+    expect(
+      getCategoryCta('estimate-concerns', 'system-development-cost-breakdown').primary.href
+    ).toMatch(/^\/contact/);
   });
 });

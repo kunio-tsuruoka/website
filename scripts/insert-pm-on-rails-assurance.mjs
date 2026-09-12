@@ -44,10 +44,15 @@ const CATEGORY = 'project-management';
 /** 末尾側の相談マーカー（_MID は本文中盤用なので触らない） */
 const TRAILING_CONSULT_RE =
   /<p>\s*\{\{(CONTACT_CTA|ZERO_START_CONSULT_CTA|[A-Z_]+_CONSULT)\}\}\s*<\/p>\n?/g;
-const TAIL_H2_RE = /<h2(?:\s[^>]*)?>\s*(関連記事|次に読むべき記事|参考文献|ご相談|あわせて読みたい)\s*<\/h2>/;
+const TAIL_H2_RE =
+  /<h2(?:\s[^>]*)?>\s*(関連記事|次に読むべき記事|参考文献|ご相談|あわせて読みたい)\s*<\/h2>/;
 
 function hasPmOnRailsLink(html) {
-  return html.includes('pmonrails.com') || html.includes('{{PM_ON_RAILS_BRIDGE}}') || html.includes(MARKER);
+  return (
+    html.includes('pmonrails.com') ||
+    html.includes('{{PM_ON_RAILS_BRIDGE}}') ||
+    html.includes(MARKER)
+  );
 }
 
 function transform(html) {
@@ -56,12 +61,15 @@ function transform(html) {
   if (consults.length > 0) {
     // 最後の相談マーカーをブロックに置き換え、他の末尾相談マーカーは削除
     const last = consults[consults.length - 1];
-    let next = html.slice(0, last.index) + `${BLOCK}\n` + html.slice(last.index + last[0].length);
+    let next = `${html.slice(0, last.index)}${BLOCK}\n${html.slice(last.index + last[0].length)}`;
     for (const m of consults.slice(0, -1).reverse()) {
       next = next.slice(0, m.index) + next.slice(m.index + m[0].length);
     }
     // 「ご相談」見出しの直下にあった場合は、その見出しも外す（PM on Rails ブロックの見出しは自前で持つ）
-    next = next.replace(/<h2(?:\s[^>]*)?>\s*ご相談\s*<\/h2>\n?(?=<p>\{\{PM_ON_RAILS_ASSURANCE\}\}<\/p>)/, '');
+    next = next.replace(
+      /<h2(?:\s[^>]*)?>\s*ご相談\s*<\/h2>\n?(?=<p>\{\{PM_ON_RAILS_ASSURANCE\}\}<\/p>)/,
+      ''
+    );
     return { html: next, note: `相談マーカー ${consults.map((m) => m[1]).join(',')} を置換` };
   }
   const h2 = html.match(TAIL_H2_RE);
@@ -79,7 +87,12 @@ async function fetchAll() {
   for (let offset = 0; ; offset += 100) {
     const res = await client.get({
       endpoint: 'columns',
-      queries: { limit: 100, offset, fields: 'id,title,content', filters: `category[equals]${CATEGORY}` },
+      queries: {
+        limit: 100,
+        offset,
+        fields: 'id,title,content',
+        filters: `category[equals]${CATEGORY}`,
+      },
     });
     out.push(...res.contents);
     if (out.length >= res.totalCount) break;
@@ -111,8 +124,14 @@ for (const col of columns) {
   writeFileSync(`${backupDir}/${col.id}.before.html`, col.content);
   try {
     await client.update({ endpoint: 'columns', contentId: col.id, content: { content: html } });
-    const after = await client.get({ endpoint: 'columns', contentId: col.id, queries: { fields: 'content' } });
-    console.log(`  -> ${after.content.includes(MARKER) ? 'OK' : 'NG: マーカーが反映されていない（公開ステータスを確認）'}`);
+    const after = await client.get({
+      endpoint: 'columns',
+      contentId: col.id,
+      queries: { fields: 'content' },
+    });
+    console.log(
+      `  -> ${after.content.includes(MARKER) ? 'OK' : 'NG: マーカーが反映されていない（公開ステータスを確認）'}`
+    );
   } catch (e) {
     console.log(`  -> PATCH 失敗: ${e.message ?? e}`);
   }
