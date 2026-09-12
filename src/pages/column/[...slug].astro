@@ -247,10 +247,14 @@ const categoryCta = getCategoryCta(column.category?.id, columnId);
 const ctaSource = `column-${columnId}`;
 // 計測・アトリビューション用に source を各CTAのhrefに付与する
 const isDirectDownloadHref = (href: string) => /\.(?:pdf|md)$/i.test(href.split('?')[0]);
-const withSource = (href: string) =>
-  isDirectDownloadHref(href)
-    ? href
-    : `${href}${href.includes('?') ? '&' : '?'}source=${encodeURIComponent(ctaSource)}`;
+const isExternalHref = (href: string) => /^https?:\/\//.test(href);
+const withSource = (href: string) => {
+  if (isDirectDownloadHref(href)) return href;
+  const sep = href.includes('?') ? '&' : '?';
+  // 外部サイト（pmonrails.com）は先方の計測に乗るよう UTM で識別する
+  if (isExternalHref(href)) return `${href}${sep}utm_content=${encodeURIComponent(columnId)}`;
+  return `${href}${sep}source=${encodeURIComponent(ctaSource)}`;
+};
 const primaryCtaHref = withSource(categoryCta.primary.href);
 const secondaryCtaHref = categoryCta.secondary ? withSource(categoryCta.secondary.href) : undefined;
 const secondaryDownloadFileName =
@@ -414,6 +418,8 @@ const reviewerId =
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href={primaryCtaHref}
+            target={categoryCta.primary.external ? '_blank' : undefined}
+            rel={categoryCta.primary.external ? 'noopener noreferrer' : undefined}
             data-cta-source={ctaSource}
             data-cta-id={categoryCta.primary.ctaId}
             class="column-cta-primary inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-500 bg-white rounded-full hover:bg-gray-100 transition-all"

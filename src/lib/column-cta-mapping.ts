@@ -3,6 +3,8 @@ export type CtaItem = {
   label: string;
   description: string;
   ctaId: string;
+  /** 外部サイト（pmonrails.com 等）。別タブで開き、source の代わりに utm_content=<slug> を付ける */
+  external?: boolean;
 };
 
 export type CategoryCta = {
@@ -33,6 +35,18 @@ const DOWNLOAD_DECK: CtaItem = {
   description:
     'ゼロスタート開発（動くプロトタイプで発注前に確かめる進め方）のサービス資料を直接ダウンロードできます',
   ctaId: 'pdf-zero-start-sales-deck',
+};
+
+// ---- 例外: 仕様・要件定義ノウハウ（読者＝エンジニア／テックリード）の主動線は PM on Rails ----
+// 受託の問い合わせではなく自社プロダクトのウェイトリスト登録が KPI（.claude/rules/cro-strategy.md）。
+// utm_content=<slug> は [...slug].astro 側で付与する。
+const PM_ON_RAILS_WAITLIST: CtaItem = {
+  href: 'https://pmonrails.com/waitlist?utm_source=beekle.jp&utm_medium=column&utm_campaign=technical_cluster',
+  label: 'PM on Rails のウェイティングリストに登録する',
+  description:
+    '要求からユーザーストーリー、Gherkin、実装、動作確認までをつないで管理する、Beekle自社開発のシステムです。現在ベータ版で、一般公開に向けて登録を受け付けています',
+  ctaId: 'pm-on-rails-waitlist',
+  external: true,
 };
 
 // ---- 主動線（すべて /contact へのリード獲得）。intent はカテゴリ別に計測用で分ける ----
@@ -326,6 +340,24 @@ const MAPPING: Record<string, CategoryCta> = {
 // AI検索が買い手を送り込む高インテント記事（Clarity AI Citations 上位）は、カテゴリの汎用CTAでなく
 // クエリ意図に合った相談＋資料DLにする。project-management に入っている発注準備系が主対象。
 const SLUG_CTA: Record<string, CategoryCta> = {
+  // 仕様・要件定義ノウハウ（Gherkin / ユーザーストーリー / DoR / 仕様駆動開発）。
+  // knowledge のうちこのクラスタだけ主動線を PM on Rails にする。RAG/GraphRAG 系は knowledge の既定のまま。
+  ...Object.fromEntries(
+    [
+      'gherkin-bdd-introduction',
+      'spec-driven-development',
+      'ai-development-dor-gherkin',
+      'user-story-template-examples',
+      'ai-agent-gherkin-evidence',
+    ].map((slug) => [
+      slug,
+      buildCta(
+        '要求からGherkin、実装、動作確認まで、手でつなぎ続けていませんか？',
+        PM_ON_RAILS_WAITLIST,
+        PARTNER_CONSULT
+      ),
+    ])
+  ),
   'requirements-definition-template': buildCta(
     'テンプレートはある。でも、自社向けにどう埋めるかで止まっていませんか？',
     REQ_TEMPLATE_CONSULT,
