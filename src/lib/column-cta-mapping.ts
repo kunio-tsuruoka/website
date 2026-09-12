@@ -207,14 +207,6 @@ const AI_COST_CONSULT: CtaItem = {
   ctaId: 'consult-pm-on-rails-ai-cost',
 };
 
-const PM_ON_RAILS_REQUIREMENTS_CONSULT: CtaItem = {
-  href: '/contact?intent=pm-on-rails-requirements',
-  label: 'RFP・As-Isを送って論点をもらう',
-  description:
-    'RFP、現状業務（As-Is）、議事録をもとに、最初のユースケース候補、抜けやすい受入条件、優先順位の論点を返します',
-  ctaId: 'consult-pm-on-rails-requirements',
-};
-
 const PM_ON_RAILS_COST_CONSULT: CtaItem = {
   href: '/contact?intent=pm-on-rails-cost',
   label: '見積もり前提を整理する',
@@ -349,6 +341,8 @@ const SLUG_CTA: Record<string, CategoryCta> = {
       'ai-development-dor-gherkin',
       'user-story-template-examples',
       'ai-agent-gherkin-evidence',
+      // 要件定義の完全ガイドは読者がエンジニアに寄ったため 2026-09-12 にこのクラスタへ移した
+      'requirements-definition-complete-guide',
     ].map((slug) => [
       slug,
       buildCta(
@@ -361,11 +355,6 @@ const SLUG_CTA: Record<string, CategoryCta> = {
   'requirements-definition-template': buildCta(
     'テンプレートはある。でも、自社向けにどう埋めるかで止まっていませんか？',
     REQ_TEMPLATE_CONSULT,
-    DOWNLOAD_DECK
-  ),
-  'requirements-definition-complete-guide': buildCta(
-    'RFPやAs-Isから、最初の論点を返します',
-    PM_ON_RAILS_REQUIREMENTS_CONSULT,
     DOWNLOAD_DECK
   ),
   'requirements-definition-process': buildCta(

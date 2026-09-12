@@ -8,6 +8,8 @@ describe('getCategoryCta: 仕様・要件定義ノウハウの記事末CTA', () 
     'ai-development-dor-gherkin',
     'user-story-template-examples',
     'ai-agent-gherkin-evidence',
+    // 2026-09-12: 読者がエンジニアに寄ったため PM on Rails 側へ移した
+    'requirements-definition-complete-guide',
   ];
 
   it('主動線が PM on Rails ウェイトリスト（外部）、副動線が協業相談になる', () => {
@@ -42,7 +44,6 @@ describe('getCategoryCta: 仕様・要件定義ノウハウの記事末CTA', () 
 
   it('買い手向けの要件定義記事は PM on Rails にしない', () => {
     for (const slug of [
-      'requirements-definition-complete-guide',
       'requirements-definition-template',
       'requirements-vs-requests',
       'scenario-test-cost-reduction',
