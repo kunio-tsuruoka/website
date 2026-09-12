@@ -10,7 +10,8 @@
       ".tmp/**",
       "*.generated.*",
       "src/data/column-embeddings.json",
-      "docs/marketing/data/**"
+      "docs/marketing/data/**",
+      "claudedocs/backups/**"
     ]
   },
   "organizeImports": {

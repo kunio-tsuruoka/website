@@ -1010,6 +1010,19 @@ function buildPmOnRailsBridge(source: string): string {
   });
 }
 
+// project-management カテゴリ用。記事末の主CTAが PM on Rails なので、本文側でも
+// 「エンジニアはこれを使っておけば安心、発注側も開発側がこれを使っていれば安心」を1ブロックで揃える
+// （ユーザー判断 2026-09-12）。ブリッジカードを内包するので pmonrails.com への導線はこの1本。
+const PM_ON_RAILS_ASSURANCE_MARKER = 'PM_ON_RAILS_ASSURANCE';
+
+function buildPmOnRailsAssurance(source: string): string {
+  return `<h3>エンジニアがPM on Railsを使っておけば、この進め方はそのまま回る</h3>
+<p><strong>PM on Rails</strong>は、Beekleが自社の開発で使うために作った、要件と開発作業の管理システムです。議事録や文字起こしから要求を整理し、FMで採否を決め、採用した要求をユーザーストーリーとGherkinに具体化し、開発作業と動作確認に関連付けるところまでを、一つの場所で管理します。</p>
+<p>エンジニアにとっては、これを使っておけば、仕様と作業の対応を手で探し直す必要がなくなります。決まっていない点は質問として発注側へ戻り、作業はどのシナリオを実現するものかが決まった状態で始まり、動作確認の結果はそのシナリオに残ります。要件が変わっても、影響するシナリオ・作業・テストをたどれます。</p>
+<p>発注側にとっても、開発側がPM on Railsで管理していれば安心できる材料になります。打ち合わせで話したことがどの要求として記録され、どう判定され、どこまで動作確認が終わったかが記録に残るからです。「言ったはずのことが入っていない」「作ったのに思っていたものと違う」を、実装後ではなく要求や仕様の段階で見つけられます。</p>
+${buildPmOnRailsBridge(source)}`;
+}
+
 function buildConsultCta(source: string, cta: ConsultCta): string {
   return buildCtaCard({
     href: `${cta.hrefBase ?? '/contact'}?source=${encodeURIComponent(source)}&intent=${encodeURIComponent(cta.intent)}`,
@@ -1144,6 +1157,14 @@ export function renderColumnVisuals(html: string, ctx?: ColumnVisualContext): st
       const visual = buildPmOnRailsBridge(ctx.source);
       const wrapped = new RegExp(`<p>\\s*\\{\\{${PM_ON_RAILS_BRIDGE_MARKER}\\}\\}\\s*</p>`, 'g');
       const bare = new RegExp(`\\{\\{${PM_ON_RAILS_BRIDGE_MARKER}\\}\\}`, 'g');
+      result = result.replace(wrapped, visual).replace(bare, visual);
+    }
+
+    // project-management 向けの本文ブロック（{{PM_ON_RAILS_ASSURANCE}}）
+    {
+      const visual = buildPmOnRailsAssurance(ctx.source);
+      const wrapped = new RegExp(`<p>\\s*\\{\\{${PM_ON_RAILS_ASSURANCE_MARKER}\\}\\}\\s*</p>`, 'g');
+      const bare = new RegExp(`\\{\\{${PM_ON_RAILS_ASSURANCE_MARKER}\\}\\}`, 'g');
       result = result.replace(wrapped, visual).replace(bare, visual);
     }
 

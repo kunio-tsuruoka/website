@@ -40,14 +40,32 @@ describe('getCategoryCta: 仕様・要件定義ノウハウの記事末CTA', () 
     }
   });
 
-  it('買い手向けの要件定義記事は PM on Rails にしない', () => {
+  it('project-management はカテゴリごと PM on Rails（2026-09-12 ユーザー判断: 買い手クエリではない）', () => {
     for (const slug of [
       'requirements-definition-complete-guide',
       'requirements-definition-template',
       'requirements-vs-requests',
-      'scenario-test-cost-reduction',
+      'project-management-complete-guide',
     ]) {
-      expect(getCategoryCta('project-management', slug).primary.href).toMatch(/^\/contact/);
+      const cta = getCategoryCta('project-management', slug);
+      expect(cta.primary.ctaId).toBe('pm-on-rails-waitlist');
+      expect(cta.primary.external).toBe(true);
+      expect(cta.secondary?.href).toBe('/contact?intent=partner');
     }
+  });
+
+  it('how-to-write-rfp は project-management でも RFP 相談のまま（買い手経路を残す）', () => {
+    const cta = getCategoryCta('project-management', 'how-to-write-rfp');
+    expect(cta.primary.href).toMatch(/^\/contact/);
+    expect(cta.primary.external).toBeUndefined();
+  });
+
+  it('買い手向けの費用・見積もり記事は相談のまま', () => {
+    expect(
+      getCategoryCta('estimate-concerns', 'scenario-test-cost-reduction').primary.href
+    ).toMatch(/^\/contact/);
+    expect(
+      getCategoryCta('estimate-concerns', 'system-development-cost-breakdown').primary.href
+    ).toMatch(/^\/contact/);
   });
 });
