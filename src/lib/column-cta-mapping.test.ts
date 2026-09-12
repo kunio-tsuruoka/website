@@ -45,7 +45,6 @@ describe('getCategoryCta: 仕様・要件定義ノウハウの記事末CTA', () 
       'requirements-definition-complete-guide',
       'requirements-definition-template',
       'requirements-vs-requests',
-      'how-to-write-rfp',
       'project-management-complete-guide',
     ]) {
       const cta = getCategoryCta('project-management', slug);
@@ -53,6 +52,12 @@ describe('getCategoryCta: 仕様・要件定義ノウハウの記事末CTA', () 
       expect(cta.primary.external).toBe(true);
       expect(cta.secondary?.href).toBe('/contact?intent=partner');
     }
+  });
+
+  it('how-to-write-rfp は project-management でも RFP 相談のまま（買い手経路を残す）', () => {
+    const cta = getCategoryCta('project-management', 'how-to-write-rfp');
+    expect(cta.primary.href).toMatch(/^\/contact/);
+    expect(cta.primary.external).toBeUndefined();
   });
 
   it('買い手向けの費用・見積もり記事は相談のまま', () => {

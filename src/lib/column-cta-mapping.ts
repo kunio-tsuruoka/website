@@ -230,6 +230,14 @@ const RAG_FIT_CONSULT: CtaItem = {
   ctaId: 'consult-rag-fit',
 };
 
+const RFP_REVIEW_CONSULT: CtaItem = {
+  href: '/contact?intent=pm-on-rails-rfp',
+  label: 'RFPを出す前に論点を確認する',
+  description:
+    'RFPやAs-Isの業務整理をもとに、提案が比較不能になりそうな前提、受入条件、見積もり範囲の抜けを確認します',
+  ctaId: 'consult-pm-on-rails-rfp',
+};
+
 function buildCta(heading: string, primary: CtaItem, secondary?: CtaItem): CategoryCta {
   return {
     heading,
@@ -289,7 +297,7 @@ const MAPPING: Record<string, CategoryCta> = {
 
 // 記事スラッグ単位の上書き。カテゴリより優先。
 // AI検索が買い手を送り込む高インテント記事（Clarity AI Citations 上位）は、カテゴリの汎用CTAでなく
-// クエリ意図に合った相談＋資料DLにする。project-management は 2026-09-12 にカテゴリごと PM on Rails へ移したので、ここでは扱わない。
+// クエリ意図に合った相談＋資料DLにする。project-management は 2026-09-12 にカテゴリごと PM on Rails へ移した。例外は how-to-write-rfp だけ。
 const SLUG_CTA: Record<string, CategoryCta> = {
   // 仕様・要件定義ノウハウ（Gherkin / ユーザーストーリー / DoR / 仕様駆動開発）。
   // knowledge のうちこのクラスタだけ主動線を PM on Rails にする。RAG/GraphRAG 系は knowledge の既定のまま。
@@ -308,6 +316,12 @@ const SLUG_CTA: Record<string, CategoryCta> = {
         PARTNER_CONSULT
       ),
     ])
+  ),
+  // how-to-write-rfp は RFP 系クエリの AI 引用権威（買い手経路）なので、project-management でも相談 CTA を残す（ユーザー判断 2026-09-12）
+  'how-to-write-rfp': buildCta(
+    'RFPを出す前に、比較不能になりそうな前提を確認しませんか？',
+    RFP_REVIEW_CONSULT,
+    DOWNLOAD_DECK
   ),
   'ai-development-cost-guide': buildCta(
     'AI開発の見積もり、PoCだけの金額になっていませんか？',

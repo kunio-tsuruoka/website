@@ -40,6 +40,8 @@ const client = createClient({
 const MARKER = '{{PM_ON_RAILS_ASSURANCE}}';
 const BLOCK = `<p>${MARKER}</p>`;
 const CATEGORY = 'project-management';
+/** 買い手経路として残す記事（記事末も本文も相談のまま）。ユーザー判断 2026-09-12 */
+const EXCLUDE = new Set(['how-to-write-rfp']);
 
 /** 末尾側の相談マーカー（_MID は本文中盤用なので触らない） */
 const TRAILING_CONSULT_RE =
@@ -105,7 +107,9 @@ console.log(`${CATEGORY}: ${columns.length} 記事 (${apply ? 'APPLY' : 'dry-run
 if (apply) mkdirSync(backupDir, { recursive: true });
 let changed = 0;
 for (const col of columns) {
-  const { html, note } = transform(col.content);
+  const { html, note } = EXCLUDE.has(col.id)
+    ? { html: col.content, note: '買い手記事として除外（skip）' }
+    : transform(col.content);
   if (html === col.content) {
     console.log(`- ${col.id}: ${note}`);
     continue;
