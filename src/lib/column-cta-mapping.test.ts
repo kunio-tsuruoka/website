@@ -8,8 +8,6 @@ describe('getCategoryCta: 仕様・要件定義ノウハウの記事末CTA', () 
     'ai-development-dor-gherkin',
     'user-story-template-examples',
     'ai-agent-gherkin-evidence',
-    // 2026-09-12: 読者がエンジニアに寄ったため PM on Rails 側へ移した
-    'requirements-definition-complete-guide',
   ];
 
   it('主動線が PM on Rails ウェイトリスト（外部）、副動線が協業相談になる', () => {
@@ -42,13 +40,27 @@ describe('getCategoryCta: 仕様・要件定義ノウハウの記事末CTA', () 
     }
   });
 
-  it('買い手向けの要件定義記事は PM on Rails にしない', () => {
+  it('project-management はカテゴリごと PM on Rails（2026-09-12 ユーザー判断: 買い手クエリではない）', () => {
     for (const slug of [
+      'requirements-definition-complete-guide',
       'requirements-definition-template',
       'requirements-vs-requests',
-      'scenario-test-cost-reduction',
+      'how-to-write-rfp',
+      'project-management-complete-guide',
     ]) {
-      expect(getCategoryCta('project-management', slug).primary.href).toMatch(/^\/contact/);
+      const cta = getCategoryCta('project-management', slug);
+      expect(cta.primary.ctaId).toBe('pm-on-rails-waitlist');
+      expect(cta.primary.external).toBe(true);
+      expect(cta.secondary?.href).toBe('/contact?intent=partner');
     }
+  });
+
+  it('買い手向けの費用・見積もり記事は相談のまま', () => {
+    expect(getCategoryCta('estimate-concerns', 'scenario-test-cost-reduction').primary.href).toMatch(
+      /^\/contact/
+    );
+    expect(getCategoryCta('estimate-concerns', 'system-development-cost-breakdown').primary.href).toMatch(
+      /^\/contact/
+    );
   });
 });

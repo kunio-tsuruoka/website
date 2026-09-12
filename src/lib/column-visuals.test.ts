@@ -72,3 +72,18 @@ describe('renderColumnVisuals PM on Rails bridge', () => {
     expect(result).not.toContain('target="_blank"');
   });
 });
+
+describe('renderColumnVisuals PM on Rails assurance block', () => {
+  it('expands {{PM_ON_RAILS_ASSURANCE}} into the reassurance copy plus one waitlist card', () => {
+    const result = renderColumnVisuals('<p>{{PM_ON_RAILS_ASSURANCE}}</p>', {
+      source: 'column-requirements-definition-process',
+    });
+
+    expect(result).not.toContain('{{PM_ON_RAILS_ASSURANCE}}');
+    expect(result).toContain('エンジニアがPM on Railsを使っておけば');
+    expect(result).toContain('発注側にとっても');
+    expect((result.match(/pmonrails\.com\/waitlist/g) ?? []).length).toBe(1);
+    expect(result).toContain('utm_content=requirements-definition-process');
+    expect(result).toContain('data-cta-id="bridge-pm-on-rails"');
+  });
+});
