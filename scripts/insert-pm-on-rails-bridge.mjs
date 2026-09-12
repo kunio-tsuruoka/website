@@ -137,8 +137,8 @@ for (const [slug, transform] of Object.entries(TARGETS)) {
   }
 
   const before = current.content;
-  if (before.includes(MARKER)) {
-    console.log(`[${slug}] 既に ${MARKER} あり — スキップ`);
+  if (before.includes(MARKER) || before.includes('utm_campaign=technical_cluster')) {
+    console.log(`[${slug}] 既に PM on Rails 導線（カード or UTM付きリンク）あり — スキップ`);
     continue;
   }
 
