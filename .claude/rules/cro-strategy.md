@@ -19,6 +19,7 @@
 - **1記事1本まで。** 本文中に何本も置かない。
 - **出す記事を限定する。** 仕様駆動開発・AI駆動開発・要件定義の実装寄りクラスタ（読者＝エンジニア／テックリード）だけ。費用・発注・ベンダー選定など買い手クラスタには出さない（あちらの主動線は相談のまま）。
 - ブリッジを新マーカーで実装する場合は、**コード先 → MicroCMS後**の順序を守る（[[microcms]]）。
+- **実装済み（2026-09-12）**: `{{PM_ON_RAILS_BRIDGE}}`（`src/lib/column-visuals.ts`）。カード型CTAで `https://pmonrails.com/waitlist?utm_source=beekle.jp&utm_medium=column&utm_campaign=technical_cluster&utm_content=<slug>` へ別タブ遷移、`data-cta-id="bridge-pm-on-rails"` で cta_click 計測。投入は `scripts/insert-pm-on-rails-bridge.mjs`（dry-run既定、`--apply --backup-dir` 必須、pmonrails.com への導線が1記事1本になることをスクリプト側で固定）。対象6記事: gherkin-bdd-introduction / user-story-template-examples / requirements-definition-template / ai-agent-gherkin-evidence（カード）、spec-driven-development / ai-development-dor-gherkin（地の文リンクの href を UTM 化のみ）。買い手クラスタ（scenario-test-cost-reduction, project-management-complete-guide, ai-driven-development）には入れない。
 
 ## 仕様駆動開発クラスタの位置づけ（2026-09-02）
 

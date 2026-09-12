@@ -39,3 +39,36 @@ describe('renderColumnVisuals chatgpt evaluation CTA', () => {
     }
   });
 });
+
+describe('renderColumnVisuals PM on Rails bridge', () => {
+  it('expands {{PM_ON_RAILS_BRIDGE}} into an external waitlist card with UTM and tracking metadata', () => {
+    const result = renderColumnVisuals('<p>{{PM_ON_RAILS_BRIDGE}}</p>', {
+      source: 'column-gherkin-bdd-introduction',
+    });
+
+    expect(result).not.toContain('{{PM_ON_RAILS_BRIDGE}}');
+    expect(result).toContain('class="cv-card cv-card-cta"');
+    expect(result).toContain(
+      'href="https://pmonrails.com/waitlist?utm_source=beekle.jp&amp;utm_medium=column&amp;utm_campaign=technical_cluster&amp;utm_content=gherkin-bdd-introduction"'
+    );
+    expect(result).toContain('target="_blank" rel="noopener noreferrer"');
+    expect(result).toContain('data-cta-source="column-gherkin-bdd-introduction"');
+    expect(result).toContain('data-cta-id="bridge-pm-on-rails"');
+    expect(result).toContain('ウェイティングリストに登録する');
+  });
+
+  it('replaces a bare marker too and leaves other markup untouched', () => {
+    const result = renderColumnVisuals('<h2>x</h2>{{PM_ON_RAILS_BRIDGE}}<p>y</p>', {
+      source: 'column-spec-driven-development',
+    });
+    expect(result).not.toContain('{{PM_ON_RAILS_BRIDGE}}');
+    expect(result).toContain('<h2>x</h2>');
+    expect(result).toContain('<p>y</p>');
+    expect(result).toContain('utm_content=spec-driven-development');
+  });
+
+  it('keeps internal CTA cards without target/rel', () => {
+    const result = renderColumnVisuals('<p>{{CONTACT_CTA}}</p>', { source: 'column-x' });
+    expect(result).not.toContain('target="_blank"');
+  });
+});
