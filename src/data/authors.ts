@@ -99,4 +99,8 @@ export const slugReviewerMap: Record<string, string> = {
   'ears-requirements-syntax-guide': 'nakamura',
   // 仕様駆動開発(SDD)も同じ理由で中村。実装技術ではなく「何を決めてから作るか」の話。
   'spec-driven-development': 'nakamura',
+  // 仕様・要件定義ノウハウのクラスタ（2026-09-12 に knowledge へ移動／同クラスタとして扱う）も中村。
+  'ai-development-dor-gherkin': 'nakamura',
+  'user-story-template-examples': 'nakamura',
+  'ai-agent-gherkin-evidence': 'nakamura',
 };

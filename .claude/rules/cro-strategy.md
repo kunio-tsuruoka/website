@@ -16,6 +16,7 @@
 **守る条件（これを外すと `/tools/*` と同じ失敗になる）**
 
 - **記事末の主CTAは常に `/contact`。** PM on Rails は本文中の文脈リンクか、専用ブリッジのみ。`column-cta-mapping.ts` の primary を書き換えない。
+  - **例外（2026-09-12 ユーザー決定）**: 仕様・要件定義ノウハウで読者がエンジニアの記事（`column-cta-mapping.ts` の SLUG_CTA 仕様クラスタ = gherkin-bdd-introduction / spec-driven-development / ai-development-dor-gherkin / user-story-template-examples / ai-agent-gherkin-evidence）は、記事末の主CTAを PM on Rails ウェイトリスト（外部・別タブ・`utm_content=<slug>`、`data-cta-id=pm-on-rails-waitlist`）、副CTAを協業相談にする。ナレッジ全体ではない。RAG/GraphRAG 系の knowledge は従来どおり相談。発注者向けの要件定義記事（complete-guide / vs-requests / process / template / how-to-write-rfp / scenario-test-cost-reduction）は買い手リードの源泉なので変えない。カテゴリ移動は `scripts/move-columns-to-knowledge.mjs`。
 - **1記事1本まで。** 本文中に何本も置かない。
 - **出す記事を限定する。** 仕様駆動開発・AI駆動開発・要件定義の実装寄りクラスタ（読者＝エンジニア／テックリード）だけ。費用・発注・ベンダー選定など買い手クラスタには出さない（あちらの主動線は相談のまま）。
 - ブリッジを新マーカーで実装する場合は、**コード先 → MicroCMS後**の順序を守る（[[microcms]]）。
