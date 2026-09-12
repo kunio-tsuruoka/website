@@ -37,15 +37,15 @@ const pageConfigs = {
     path: '/services/ai-adoption',
     seoTitle: 'AI導入支援｜業務選定からPoC・本番運用まで伴走',
     seoDescription:
-      'AIを導入する業務の選定、評価設計、データ連携、PoC、本番運用、社内定着まで支援します。診断40万円、伴走月80万円、AI・DX推進室月120万円から。',
+      'AIを導入する業務の選定、評価設計、データ連携、PoC、本番運用、社内定着まで支援します。AI顧問月20万円、導入伴走月80万円、AI・DX推進室月120万円から。',
     serviceName: 'AI導入支援',
     serviceType: 'AI導入支援・コンサルティング・実装伴走',
     breadcrumb: 'AI導入支援',
     eyebrow: '新規事業・DX・情シス担当者へ',
     heading: 'AI導入を、検討だけで終わらせない。',
-    lead: 'どの業務から始めるかを決め、評価基準を作り、必要なデータをつなぎます。簡易PoCから本番運用、社内定着まで同じチームで伴走します。',
-    heroNote: 'NDA後に詳細確認可 / 診断だけの依頼可 / 今やらない判断も可',
-    heroCta: 'AIを導入する業務を相談する',
+    lead: '社内のAI相談役として、どの業務から始めるか、何を選び、何を見送るかを一緒に決めます。実装が必要になったら、簡易PoCから本番運用、社内定着まで同じチームで進めます。',
+    heroNote: 'NDA後に詳細確認可 / AI顧問のみの依頼可 / 今やらない判断も可',
+    heroCta: 'AI顧問・導入支援を相談する',
     memoTitle: 'AI導入判断メモ',
     memoSubtitle: '相談前ドラフト',
     memoRows: [
@@ -86,14 +86,14 @@ const pageConfigs = {
     path: '/services/management-dx',
     seoTitle: '経営DX・AI導入支援｜経営データの整理からAI実装まで',
     seoDescription:
-      '売上、案件、利益、資金繰り、顧客、マーケティングなどの経営データを整理し、AIレポート、アラート、RAG、AIエージェントの実装まで支援します。',
+      '売上、案件、利益、資金繰り、顧客、マーケティングなどの経営データを整理し、AIの判断支援からデータ連携・実装まで伴走します。AI顧問は月20万円から。',
     serviceName: '経営DX・AI導入支援',
     serviceType: '経営DX・AI導入コンサルティング・実装伴走',
     breadcrumb: '経営DX・AI導入支援',
     eyebrow: '経営者・経営企画・事業責任者へ',
     heading: '経営数字と業務データを、毎週判断できる状態へ。',
-    lead: '売上、案件、利益、資金繰り、顧客、マーケティングの情報を整理し、AIが状況とリスクをまとめる仕組みを作ります。コンサルティングだけでなく、データ連携と実装まで支援します。',
-    heroNote: '課題整理だけの依頼可 / 既存ツールを活用 / AI実装まで一貫支援',
+    lead: '経営数字と業務データをどこから整えるか、毎月の判断を支援します。AIレポート、アラート、RAGなどが必要になったら、データ連携と実装まで同じチームで進めます。',
+    heroNote: 'AI顧問のみの依頼可 / 既存ツールを活用 / AI実装まで一貫支援',
     heroCta: '経営課題とデータの状況を相談する',
     memoTitle: '経営DX判断メモ',
     memoSubtitle: '相談前ドラフト',
@@ -138,23 +138,42 @@ const page = pageConfigs[mode];
 const pageUrl = `${siteUrl}${page.path}`;
 const contactHref = `/contact?source=${page.source}&intent=genai-adoption`;
 
+const spotPlan: Plan = {
+  no: 'SPOT',
+  code: 'ASSESS',
+  name: 'AI・経営DX診断',
+  tagline: '課題とデータを棚卸しし、着手するテーマを絞る',
+  target: 'AIやDXを進めたいが、対象業務、優先順位、費用対効果が決まっていない',
+  chooseWhen: 'まず経営課題、業務、既存ツール、利用可能なデータを整理したい',
+  deliverable: '課題マップ、AI・DX候補の優先順位、想定効果、概算費用、90日ロードマップ',
+  scope: '経営・業務ヒアリング、ツールとデータの棚卸し、候補の評価、実施順序の設計',
+  meetings: 'ヒアリング3回＋報告会1回',
+  period: '3〜4週間',
+  implementation: '含まない',
+  contract: '準委任（スポット）',
+  price: '400,000',
+  priceUnit: '一式',
+  featured: false,
+};
+
 const plans: Plan[] = [
   {
     no: '01',
-    code: 'ASSESS',
-    name: 'AI・経営DX診断',
-    tagline: '課題とデータを棚卸しし、着手するテーマを絞る',
-    target: 'AIやDXを進めたいが、対象業務、優先順位、費用対効果が決まっていない',
-    chooseWhen: 'まず経営課題、業務、既存ツール、利用可能なデータを整理したい',
-    deliverable: '課題マップ、AI・DX候補の優先順位、想定効果、概算費用、90日ロードマップ',
-    scope: '経営・業務ヒアリング、ツールとデータの棚卸し、候補の評価、実施順序の設計',
-    meetings: 'ヒアリング3回＋報告会1回',
-    period: '3〜4週間',
+    code: 'ADVISORY',
+    name: 'AI顧問',
+    tagline: '社内にAIの相談役を持ち、毎月やることを決める',
+    target: 'AI活用を進めたいが、方針や技術を継続的に相談できる人が社内にいない',
+    chooseWhen:
+      '社内担当者が手を動かせるが、優先順位、ツール選定、要件、ベンダー提案を専門家と確かめたい',
+    deliverable: '月次AI活用メモ（優先課題、判断、次のアクション）、資料・提案へのレビューコメント',
+    scope: '定例MTG、チャット相談、AI活用テーマ選定、ツール・ベンダー比較、要件・提案レビュー',
+    meetings: '定例MTG 月2回（各60分）＋チャット相談（月10件程度）',
+    period: '最低3ヶ月、以降は月単位',
     implementation: '含まない',
-    contract: '準委任（スポット）',
-    price: '400,000',
-    priceUnit: '一式',
-    featured: false,
+    contract: '準委任（月額）',
+    price: '200,000',
+    priceUnit: '月〜',
+    featured: true,
   },
   {
     no: '02',
@@ -171,7 +190,7 @@ const plans: Plan[] = [
     contract: '準委任（月額）',
     price: '800,000',
     priceUnit: '月〜',
-    featured: true,
+    featured: false,
   },
   {
     no: '03',
@@ -204,6 +223,11 @@ const comparisonRows: { label: string; key: keyof Plan }[] = [
 ];
 
 const outputs = [
+  {
+    title: '月次AI活用メモ',
+    description:
+      'その月に扱った優先課題、決めたこと、次にやることを1枚に整理し、相談だけで終わらせません。',
+  },
   {
     title: '経営・業務課題マップ',
     description: '売上、利益、資金、営業、マーケティング、組織、業務の課題と優先順位を整理します。',
@@ -243,8 +267,9 @@ const steps = [
   },
   {
     no: '04',
-    title: '簡易PoC・データ連携・評価',
-    description: '小さく動かし、精度、業務効果、権限、ログ、費用、現場の確認手順を評価します。',
+    title: '判断支援、または簡易PoC・データ連携',
+    description:
+      'AI顧問は判断と次のアクションを月次メモに残します。実装プランは小さく動かし、精度、業務効果、権限、ログ、費用を評価します。',
   },
   {
     no: '05',
@@ -267,7 +292,7 @@ const faqs = [
   {
     question: '月額料金に本番システムの開発費も含まれますか？',
     answer:
-      '簡易PoC、小規模な連携・改善は各プランで合意した体制の範囲に含みます。専任開発チームが必要な本番開発費は、対象範囲を決めたうえで別途見積もりします。',
+      'AI顧問にコード実装やデータ連携は含まれません。AI導入・経営DX伴走とAI・DX推進室は、簡易PoCや小規模な連携・改善を合意した体制の範囲に含みます。専任開発チームが必要な本番開発費は別途見積もりします。',
   },
   {
     question: 'クラウドやAIモデルの利用料は含まれますか？',
@@ -277,7 +302,7 @@ const faqs = [
   {
     question: '最低契約期間はありますか？',
     answer:
-      'AI・経営DX診断はスポットです。月額の2プランは、検証と運用まで確認するため最低3ヶ月とし、4ヶ月目以降は月単位で見直せます。',
+      'AI・経営DX診断はスポットです。月額の3プランは、判断、検証、運用の変化を確認するため最低3ヶ月とし、4ヶ月目以降は月単位で見直せます。',
   },
   {
     question: 'オンプレミスや完全閉域環境に対応していますか？',
@@ -395,11 +420,37 @@ const faqs = [
 
     <Section variant="white" padding="lg" id="plans">
       <SectionHeader
-        title="支援範囲で選べる3つのプラン"
-        subtitle="相談だけの顧問ではなく、診断、簡易PoC、データ連携、運用まで必要な深さで支援します"
+        title="判断支援から実装まで選べる3つの月額プラン"
+        subtitle="社内のAI相談役が必要な段階から、専任チームで複数テーマを進める段階まで対応します"
         number="02"
         label="PLANS"
       />
+
+      <aside class="mx-auto mb-8 max-w-5xl border-y border-neutral-300 bg-neutral-50 px-6 py-6 md:px-8">
+        <div class="grid gap-5 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <p class="text-xs font-bold tracking-wide text-primary-700">スポット支援</p>
+            <h2 class="mt-2 text-xl font-bold text-navy-950">{spotPlan.name}</h2>
+            <p class="mt-2 text-sm leading-relaxed text-neutral-700">
+              継続支援の前に、課題と優先順位だけを整理したい方へ。{spotPlan.deliverable}を{spotPlan.period}でまとめます。
+            </p>
+          </div>
+          <div class="md:text-right">
+            <p>
+              <span class="font-Poppins text-3xl font-bold text-navy-950">&yen;{spotPlan.price}</span>
+              <span class="ml-1 text-sm font-medium text-neutral-600">/ {spotPlan.priceUnit}（税別）</span>
+            </p>
+            <a
+              href={`/contact?source=${page.source}-plan-assess&intent=genai-adoption`}
+              data-cta-source={`${page.source}-plan-assess`}
+              data-cta-id="contact"
+              class="mt-4 inline-flex min-h-[48px] items-center justify-center rounded-md border border-primary-500 px-5 py-3 text-sm font-bold text-primary-600 transition hover:bg-primary-50"
+            >
+              診断だけ相談する
+            </a>
+          </div>
+        </div>
+      </aside>
 
       <div class="space-y-6 md:hidden">
         {plans.map((plan) => (
@@ -517,15 +568,15 @@ const faqs = [
           表示価格はすべて税別です。本番開発費、クラウド・外部サービス利用料、AIモデルのAPI料金、SaaSライセンス費、出張交通費は別途見積もりです。
         </p>
         <p class="mt-2 text-sm leading-relaxed text-neutral-700">
-          月額プランの実装範囲は、対象テーマと体制を提案時に明示します。大規模な本番開発を月額内で無制限に行うプランではありません。
+          AI顧問に実装は含まれません。実装を含むプランの対象テーマと体制は提案時に明示し、大規模な本番開発は別途範囲と費用を合意します。
         </p>
       </div>
     </Section>
 
     <Section variant="light" padding="lg">
       <SectionHeader
-        title="納品するのは、助言だけではありません"
-        subtitle="次の判断と実装に使える成果物を残します"
+        title="毎月の相談を、次の判断と行動に変えます"
+        subtitle="AI顧問は月次メモ、実装プランは設計・検証記録・運用ルールまで残します"
         number="03"
         label="OUTPUTS"
       />
